@@ -41,9 +41,35 @@
     const script = `
         document.getElementById('calculateButton').addEventListener('click', function() {
             var input = document.getElementById('inputField').value;
+            var scriptTag = document.currentScript;  // Get the current script tag
+            var webhookUrl = scriptTag.getAttribute('data-webhook-url');  // Get the webhook URL from the data attribute
+
+            if (!webhookUrl) {
+                console.error('Webhook URL not provided.');
+                return;
+            }
+
             try {
                 var result = eval(input);
                 document.getElementById('result').innerText = 'Result: ' + result;
+
+                // Send data to the webhook
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', webhookUrl, true);
+                xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                xhr.send(JSON.stringify({
+                    expression: input,
+                    result: result
+                }));
+
+                // Notify the host page that the calculation was completed
+                if (window.onCalculationComplete) {
+                    window.onCalculationComplete({
+                        expression: input,
+                        result: result
+                    });
+                }
+
             } catch (e) {
                 document.getElementById('result').innerText = 'Error: Invalid expression';
             }
