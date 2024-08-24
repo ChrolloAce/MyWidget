@@ -41,7 +41,7 @@
     const script = `
         document.getElementById('calculateButton').addEventListener('click', function() {
             var input = document.getElementById('inputField').value;
-            var scriptTag = document.currentScript;  // Get the current script tag
+            var scriptTag = document.querySelector('script[src*="code.js"]');  // Get the current script tag by src attribute
             var webhookUrl = scriptTag.getAttribute('data-webhook-url');  // Get the webhook URL from the data attribute
 
             if (!webhookUrl) {
