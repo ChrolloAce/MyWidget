@@ -261,29 +261,31 @@ initInterface();
         // Show updated item list
         updateItemList(container);
     }
-
-    function updateItemList(container) {
-        const itemListDiv = document.getElementById('itemList');
-        
-        // Check if itemListDiv exists
-        if (!itemListDiv) {
-            console.error('itemListDiv not found. Make sure the element exists in the DOM.');
-            return;
-        }
-
-        itemListDiv.innerHTML = '<h3>Items:</h3>';
-
-        items.forEach((item, index) => {
-            const itemDiv = document.createElement('div');
-            itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
-            itemListDiv.appendChild(itemDiv);
-        });
-
-        const totalDiv = document.createElement('div');
-        totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-        totalDiv.style.marginTop = '20px';
-        itemListDiv.appendChild(totalDiv);
+function updateItemList(container) {
+    let itemListDiv = document.getElementById('itemList');
+    
+    // Recreate itemListDiv if it doesn't exist
+    if (!itemListDiv) {
+        console.error('itemListDiv not found. Recreating the element.');
+        itemListDiv = document.createElement('div');
+        itemListDiv.id = 'itemList';
+        itemListDiv.style.marginTop = '20px';
+        container.appendChild(itemListDiv);
     }
+
+    itemListDiv.innerHTML = '<h3>Items:</h3>';
+
+    items.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
+        itemListDiv.appendChild(itemDiv);
+    });
+
+    const totalDiv = document.createElement('div');
+    totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
+    totalDiv.style.marginTop = '20px';
+    itemListDiv.appendChild(totalDiv);
+}
 
     // Function to finalize the invoice
     function finalizeInvoice(container) {
