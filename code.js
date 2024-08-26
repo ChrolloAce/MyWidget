@@ -210,15 +210,20 @@
         styleButton(calculateBtn);
         formDiv.appendChild(calculateBtn);
 
-        calculateBtn.addEventListener('click', function() {
-            calculateAndAddItem(shape, finishSelect.value, container);
-        });
+     calculateBtn.addEventListener('click', function() {
+    console.log('Calculate button clicked');
+    calculateAndAddItem(shape, finishSelect.value, container);
+});
 
         container.appendChild(formDiv);
     }
 
 function calculateAndAddItem(shape, finishType, container) {
+    console.log('Add Item button clicked');
     const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
+    
+    console.log('Measurements:', measurements);
+    
     if (measurements.some(isNaN)) {
         alert('Please enter valid measurements.');
         return;
@@ -226,8 +231,11 @@ function calculateAndAddItem(shape, finishType, container) {
 
     // Calculate square footage based on shape formula
     const squareFootage = shape.formula(measurements);
+    console.log('Square Footage:', squareFootage);
+    
     const pricePerSqFt = (finishType === 'regular') ? PRICE_REGULAR : PRICE_CRYSTAL;
     const cost = squareFootage * pricePerSqFt;
+    console.log('Cost:', cost);
 
     // Add to items list
     items.push({
@@ -237,8 +245,11 @@ function calculateAndAddItem(shape, finishType, container) {
         cost: cost.toFixed(2)
     });
 
+    console.log('Items:', items);
+
     // Update total cost
     totalCost += cost;
+    console.log('Total Cost:', totalCost);
 
     // Show updated item list
     updateItemList(container);
