@@ -10,33 +10,50 @@
     // Function to initialize the interface
     function initInterface() {
         document.body.innerHTML = '';
+        document.body.style.display = 'flex';
+        document.body.style.justifyContent = 'center';
+        document.body.style.alignItems = 'center';
+        document.body.style.height = '100vh';
+        document.body.style.backgroundColor = '#f0f0f0';
+
+        const container = document.createElement('div');
+        container.style.width = '90%';
+        container.style.maxWidth = '600px';
+        container.style.backgroundColor = 'white';
+        container.style.padding = '20px';
+        container.style.borderRadius = '10px';
+        container.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+        container.style.textAlign = 'center';
+        document.body.appendChild(container);
+
         const startInvoiceBtn = document.createElement('button');
         startInvoiceBtn.textContent = 'Start New Invoice';
         styleButton(startInvoiceBtn);
-        document.body.appendChild(startInvoiceBtn);
+        container.appendChild(startInvoiceBtn);
 
         startInvoiceBtn.addEventListener('click', function() {
-            createInvoicePage();
+            createInvoicePage(container);
         });
     }
 
     // Function to create the invoice page
-    function createInvoicePage() {
-        document.body.innerHTML = '';
+    function createInvoicePage(container) {
+        container.innerHTML = '';
 
         // Add New Item Button
         const addItemBtn = document.createElement('button');
         addItemBtn.textContent = 'Add New Item';
         styleButton(addItemBtn);
-        document.body.appendChild(addItemBtn);
+        container.appendChild(addItemBtn);
 
         // Item List
         const itemListDiv = document.createElement('div');
         itemListDiv.id = 'itemList';
-        document.body.appendChild(itemListDiv);
+        itemListDiv.style.marginTop = '20px';
+        container.appendChild(itemListDiv);
 
         addItemBtn.addEventListener('click', function() {
-            selectType();
+            selectType(container);
         });
 
         // Finalize Invoice Button
@@ -44,7 +61,7 @@
         finalizeBtn.textContent = 'Finalize Invoice';
         styleButton(finalizeBtn);
         finalizeBtn.style.marginTop = '20px';
-        document.body.appendChild(finalizeBtn);
+        container.appendChild(finalizeBtn);
 
         finalizeBtn.addEventListener('click', function() {
             finalizeInvoice();
@@ -52,12 +69,13 @@
     }
 
     // Function to handle type selection (Kitchen/Bathroom)
-    function selectType() {
-        document.body.innerHTML = '';
+    function selectType(container) {
+        container.innerHTML = '';
         const choiceDiv = document.createElement('div');
         choiceDiv.style.display = 'flex';
-        choiceDiv.style.justifyContent = 'center';
+        choiceDiv.style.justifyContent = 'space-around';
         choiceDiv.style.gap = '20px';
+        choiceDiv.style.flexWrap = 'wrap';
 
         const kitchenBtn = createImageButton(
             'Kitchen',
@@ -70,21 +88,20 @@
 
         choiceDiv.appendChild(kitchenBtn);
         choiceDiv.appendChild(bathroomBtn);
-
-        document.body.appendChild(choiceDiv);
+        container.appendChild(choiceDiv);
 
         kitchenBtn.addEventListener('click', function() {
-            selectKitchenType();
+            selectKitchenType(container);
         });
 
         bathroomBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Bathroom');
+            selectShapeAndCalculate('Bathroom', container);
         });
     }
 
     // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
-    function selectKitchenType() {
-        document.body.innerHTML = '';
+    function selectKitchenType(container) {
+        container.innerHTML = '';
         const kitchenOptions = document.createElement('div');
         kitchenOptions.style.display = 'flex';
         kitchenOptions.style.flexDirection = 'column';
@@ -99,24 +116,24 @@
         kitchenOptions.appendChild(counterBtn);
         kitchenOptions.appendChild(barTopBtn);
 
-        document.body.appendChild(kitchenOptions);
+        container.appendChild(kitchenOptions);
 
         islandBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Island');
+            selectShapeAndCalculate('Island', container);
         });
 
         counterBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Regular Counter');
+            selectShapeAndCalculate('Regular Counter', container);
         });
 
         barTopBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Bar Top');
+            selectShapeAndCalculate('Bar Top', container);
         });
     }
 
     // Function to handle shape selection and calculations
-    function selectShapeAndCalculate(type) {
-        document.body.innerHTML = '';
+    function selectShapeAndCalculate(type, container) {
+        container.innerHTML = '';
         const shapeDiv = document.createElement('div');
         shapeDiv.innerHTML = `<h3>${type} - Select Shape</h3>`;
         shapeDiv.style.display = 'flex';
@@ -130,16 +147,16 @@
             shapeDiv.appendChild(shapeBtn);
 
             shapeBtn.addEventListener('click', function() {
-                promptMeasurements(shape, type);
+                promptMeasurements(shape, type, container);
             });
         });
 
-        document.body.appendChild(shapeDiv);
+        container.appendChild(shapeDiv);
     }
 
     // Function to prompt user for measurements and finish selection
-    function promptMeasurements(shape, type) {
-        document.body.innerHTML = '';
+    function promptMeasurements(shape, type, container) {
+        container.innerHTML = '';
         const formDiv = document.createElement('div');
         formDiv.innerHTML = `<h3>${shape.name} - ${type}</h3>`;
         formDiv.style.display = 'flex';
@@ -159,6 +176,8 @@
             input.style.width = '100%';
             input.style.padding = '10px';
             input.style.marginBottom = '10px';
+            input.style.border = '1px solid #ccc';
+            input.style.borderRadius = '5px';
             formDiv.appendChild(input);
         });
 
@@ -169,6 +188,9 @@
         formDiv.appendChild(finishLabel);
 
         const finishSelect = document.createElement('select');
+        finishSelect.style.padding = '10px';
+        finishSelect.style.border = '1px solid #ccc';
+        finishSelect.style.borderRadius = '5px';
         const regularOption = document.createElement('option');
         regularOption.value = 'regular';
         regularOption.textContent = 'Regular Pour - $26/sq ft';
@@ -188,14 +210,14 @@
         formDiv.appendChild(calculateBtn);
 
         calculateBtn.addEventListener('click', function() {
-            calculateAndAddItem(shape, finishSelect.value);
+            calculateAndAddItem(shape, finishSelect.value, container);
         });
 
-        document.body.appendChild(formDiv);
+        container.appendChild(formDiv);
     }
 
     // Function to calculate square footage and add item to invoice
-    function calculateAndAddItem(shape, finishType) {
+    function calculateAndAddItem(shape, finishType, container) {
         const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
         if (measurements.some(isNaN)) {
             alert('Please enter valid measurements.');
@@ -219,11 +241,11 @@
         totalCost += cost;
 
         // Show updated item list
-        updateItemList();
+        updateItemList(container);
     }
 
     // Function to update and display the item list
-    function updateItemList() {
+    function updateItemList(container) {
         const itemListDiv = document.getElementById('itemList');
         itemListDiv.innerHTML = '<h3>Items:</h3>';
 
@@ -313,8 +335,9 @@
     function createImageButton(text, imageUrl) {
         const button = document.createElement('div');
         button.style.position = 'relative';
-        button.style.width = '200px';
-        button.style.height = '200px';
+        button.style.width = '100%';
+        button.style.height = '150px';
+        button.style.maxWidth = '250px';
         button.style.border = '2px solid #4CAF50';
         button.style.borderRadius = '10px';
         button.style.overflow = 'hidden';
