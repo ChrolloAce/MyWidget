@@ -7,6 +7,41 @@
     let items = [];
     let totalCost = 0;
 
+    function initInterface() {
+    document.body.innerHTML = '';
+    document.body.style.display = 'flex';
+    document.body.style.justifyContent = 'center';
+    document.body.style.alignItems = 'center';
+    document.body.style.height = '100vh';
+    document.body.style.backgroundColor = '#f0f0f0';
+
+    const container = document.createElement('div');
+    container.style.width = '90%';
+    container.style.maxWidth = '1200px';
+    container.style.backgroundColor = 'white';
+    container.style.padding = '20px';
+    container.style.borderRadius = '10px';
+    container.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+    container.style.textAlign = 'center';
+    container.style.margin = '20px auto';
+    document.body.appendChild(container);
+
+    const startInvoiceBtn = document.createElement('button');
+    startInvoiceBtn.textContent = 'Start New Invoice';
+    styleButton(startInvoiceBtn);
+    container.appendChild(startInvoiceBtn);
+
+    startInvoiceBtn.addEventListener('click', function() {
+        createInvoicePage(container);
+    });
+}
+
+// Call the initInterface function to initialize the interface
+initInterface();
+
+
+
+    
     // Function to handle type selection (Kitchen/Bathroom)
     function selectType(container) {
         container.innerHTML = '';
