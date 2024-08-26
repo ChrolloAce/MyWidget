@@ -217,50 +217,54 @@
         container.appendChild(formDiv);
     }
 
-    // Function to calculate square footage and add item to invoice
-    function calculateAndAddItem(shape, finishType, container) {
-        const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
-        if (measurements.some(isNaN)) {
-            alert('Please enter valid measurements.');
-            return;
-        }
-
-        // Calculate square footage based on shape formula
-        const squareFootage = shape.formula(measurements);
-        const pricePerSqFt = (finishType === 'regular') ? PRICE_REGULAR : PRICE_CRYSTAL;
-        const cost = squareFootage * pricePerSqFt;
-
-        // Add to items list
-        items.push({
-            type: `${shape.name} - ${shape.type}`,
-            squareFootage: squareFootage.toFixed(2),
-            finish: finishType,
-            cost: cost.toFixed(2)
-        });
-
-        // Update total cost
-        totalCost += cost;
-
-        // Show updated item list
-        updateItemList(container);
+  // Function to calculate square footage and add item to invoice
+function calculateAndAddItem(shape, finishType, container) {
+    const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
+    if (measurements.some(isNaN)) {
+        alert('Please enter valid measurements.');
+        return;
     }
 
-    // Function to update and display the item list
-    function updateItemList(container) {
-        const itemListDiv = document.getElementById('itemList');
-        itemListDiv.innerHTML = '<h3>Items:</h3>';
+    // Calculate square footage based on shape formula
+    const squareFootage = shape.formula(measurements);
+    const pricePerSqFt = (finishType === 'regular') ? PRICE_REGULAR : PRICE_CRYSTAL;
+    const cost = squareFootage * pricePerSqFt;
 
-        items.forEach((item, index) => {
-            const itemDiv = document.createElement('div');
-            itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
-            itemListDiv.appendChild(itemDiv);
-        });
+    // Add to items list
+    items.push({
+        type: `${shape.name} - ${shape.type}`,
+        squareFootage: squareFootage.toFixed(2),
+        finish: finishType,
+        cost: cost.toFixed(2)
+    });
 
-        const totalDiv = document.createElement('div');
-        totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-        totalDiv.style.marginTop = '20px';
-        itemListDiv.appendChild(totalDiv);
-    }
+    // Update total cost
+    totalCost += cost;
+
+    // Show updated item list
+    updateItemList(container);
+
+    // Reset the form to allow adding more items
+    container.innerHTML = ''; 
+    createInvoicePage(container);
+}
+
+// Function to update and display the item list
+function updateItemList(container) {
+    const itemListDiv = document.getElementById('itemList');
+    itemListDiv.innerHTML = '<h3>Items:</h3>';
+
+    items.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
+        itemListDiv.appendChild(itemDiv);
+    });
+
+    const totalDiv = document.createElement('div');
+    totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
+    totalDiv.style.marginTop = '20px';
+    itemListDiv.appendChild(totalDiv);
+}
 
     // Function to finalize the invoice
     function finalizeInvoice(container) {
