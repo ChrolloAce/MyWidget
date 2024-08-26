@@ -19,7 +19,7 @@
         const container = document.createElement('div');
         container.style.width = '95%';
         container.style.maxWidth = '1300px';
-        container.style.backgroundColor = '#0C1729';
+        container.style.backgroundColor = '#ffffff';
         container.style.padding = '40px';
         container.style.borderRadius = '15px';
         container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
@@ -29,14 +29,14 @@
 
         const header = document.createElement('h1');
         header.textContent = 'Invoice Calculator';
-        header.style.color = '#FF3131';
+        header.style.color = '#000000';
         header.style.marginBottom = '40px';
         header.style.fontSize = '36px';
         container.appendChild(header);
 
         const description = document.createElement('p');
         description.textContent = 'Calculate your countertop costs easily. Start by adding items to your invoice below.';
-        description.style.color = '#ffffff';
+        description.style.color = '#000000';
         description.style.fontSize = '18px';
         description.style.marginBottom = '30px';
         container.appendChild(description);
@@ -60,7 +60,7 @@
 
         const header = document.createElement('h2');
         header.textContent = 'Choose a Room Type';
-        header.style.color = '#FF3131';
+        header.style.color = '#000000';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
@@ -99,7 +99,7 @@
 
         const header = document.createElement('h2');
         header.textContent = 'Current Invoice';
-        header.style.color = '#FF3131';
+        header.style.color = '#000000';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
@@ -115,7 +115,7 @@
         itemListDiv.id = 'itemList';
         itemListDiv.style.marginTop = '30px';
         itemListDiv.style.textAlign = 'left';
-        itemListDiv.innerHTML = '<h3 style="color: #FF3131;">Items:</h3><p style="color: #777;">No items added yet.</p>';
+        itemListDiv.innerHTML = '<h3 style="color: #000000;">Items:</h3><p style="color: #777;">No items added yet.</p>';
         container.appendChild(itemListDiv);
 
         // Update the item list immediately upon creating the page
@@ -143,7 +143,7 @@
 
         const header = document.createElement('h2');
         header.textContent = 'Choose a Kitchen Counter Type';
-        header.style.color = '#FF3131';
+        header.style.color = '#000000';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
@@ -183,7 +183,7 @@
 
         const header = document.createElement('h2');
         header.textContent = `Select Shape for ${type}`;
-        header.style.color = '#FF3131';
+        header.style.color = '#000000';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
@@ -213,7 +213,7 @@
 
         const header = document.createElement('h2');
         header.textContent = `${shape.name} - ${type}`;
-        header.style.color = '#FF3131';
+        header.style.color = '#000000';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
@@ -227,7 +227,7 @@
         shape.measurements.forEach((measurement, index) => {
             const label = document.createElement('label');
             label.textContent = `Measurement ${index + 1} (inches):`;
-            label.style.color = '#ffffff';
+            label.style.color = '#000000';
             label.style.marginBottom = '5px';
             label.style.fontSize = '18px';
             formDiv.appendChild(label);
@@ -249,7 +249,7 @@
         // Finish Selection
         const finishLabel = document.createElement('label');
         finishLabel.textContent = 'Select Finish:';
-        finishLabel.style.color = '#ffffff';
+        finishLabel.style.color = '#000000';
         finishLabel.style.marginBottom = '10px';
         finishLabel.style.fontSize = '18px';
         formDiv.appendChild(finishLabel);
@@ -278,28 +278,31 @@
         formDiv.appendChild(calculateBtn);
 
         calculateBtn.addEventListener('click', function() {
-            calculateAndAddItem(shape, finishSelect.value, container);
+            calculateAndAddItem(shape, finishSelect.value, container, type);
         });
 
         container.appendChild(formDiv);
     }
 
-    function calculateAndAddItem(shape, finishType, container) {
+    function calculateAndAddItem(shape, finishType, container, type) {
         console.log('Add Item button clicked');
         const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
-        
+
         console.log('Measurements:', measurements);
-        
+
         if (measurements.some(isNaN)) {
             alert('Please enter valid measurements.');
             return;
         }
 
+        // Determine depth automatically based on type
+        const depth = type === 'Kitchen' ? 25 : 22;
+
         // Calculate square footage based on shape formula
-        const squareFootage = shape.formula(measurements);
+        const squareFootage = shape.formula(measurements, depth);
         console.log('Square Footage:', squareFootage);
-        
-        const pricePerSqFt = (finishType === 'regular') ? PRICE_REGULAR : PRICE_CRYSTAL;
+
+        const pricePerSqFt = finishType === 'regular' ? PRICE_REGULAR : PRICE_CRYSTAL;
         const cost = squareFootage * pricePerSqFt;
         console.log('Cost:', cost);
 
@@ -323,7 +326,7 @@
 
     function updateItemList(container) {
         let itemListDiv = document.getElementById('itemList');
-        
+
         // Recreate itemListDiv if it doesn't exist
         if (!itemListDiv) {
             console.error('itemListDiv not found. Recreating the element.');
@@ -333,7 +336,7 @@
             container.appendChild(itemListDiv);
         }
 
-        itemListDiv.innerHTML = '<h3 style="color: #FF3131;">Items:</h3>';
+        itemListDiv.innerHTML = '<h3 style="color: #000000;">Items:</h3>';
 
         if (items.length === 0) {
             itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
@@ -344,7 +347,7 @@
                 itemDiv.style.padding = '10px';
                 itemDiv.style.marginBottom = '15px';
                 itemDiv.style.borderBottom = '1px solid #ddd';
-                itemDiv.style.color = '#ffffff';
+                itemDiv.style.color = '#000000';
                 itemListDiv.appendChild(itemDiv);
             });
 
@@ -380,7 +383,7 @@
                     name: 'Island Shape 1',
                     type: 'Island',
                     measurements: ['1', '2'],
-                    formula: measurements => ((measurements[0] * measurements[1]) / 144)
+                    formula: (measurements, depth) => ((measurements[0] * depth) / 144)
                 });
                 break;
             case 'Regular Counter':
@@ -388,7 +391,7 @@
                     name: 'Regular Counter Shape 1',
                     type: 'Regular Counter',
                     measurements: ['1', '2', '3'],
-                    formula: measurements => ((measurements[0] + measurements[1] + measurements[2]) * 25) / 144
+                    formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144
                 });
                 break;
             case 'Bar Top':
@@ -396,7 +399,7 @@
                     name: 'Bar Top Shape 1',
                     type: 'Bar Top',
                     measurements: ['1', '2', '3', '4'],
-                    formula: measurements => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * 25) / 144
+                    formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144
                 });
                 break;
             case 'Bathroom':
@@ -404,7 +407,7 @@
                     name: 'Bathroom Shape 1',
                     type: 'Bathroom',
                     measurements: ['1', '2'],
-                    formula: measurements => ((measurements[0] * 22) / 144)
+                    formula: (measurements, depth) => ((measurements[0] * depth) / 144)
                 });
                 break;
         }
