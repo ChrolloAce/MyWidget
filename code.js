@@ -55,18 +55,29 @@
     function selectType() {
         document.body.innerHTML = '';
         const choiceDiv = document.createElement('div');
-        choiceDiv.innerHTML = `
-            <p>Select Type:</p>
-            <button id="kitchenBtn">Kitchen</button>
-            <button id="bathroomBtn">Bathroom</button>
-        `;
+        choiceDiv.style.display = 'flex';
+        choiceDiv.style.justifyContent = 'center';
+        choiceDiv.style.gap = '20px';
+
+        const kitchenBtn = createImageButton(
+            'Kitchen',
+            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ccf4e697630121dd1ee09d_2.png'
+        );
+        const bathroomBtn = createImageButton(
+            'Bathroom',
+            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ccf4e642c5166829b52585_1.png'
+        );
+
+        choiceDiv.appendChild(kitchenBtn);
+        choiceDiv.appendChild(bathroomBtn);
+
         document.body.appendChild(choiceDiv);
 
-        document.getElementById('kitchenBtn').addEventListener('click', function() {
+        kitchenBtn.addEventListener('click', function() {
             selectKitchenType();
         });
 
-        document.getElementById('bathroomBtn').addEventListener('click', function() {
+        bathroomBtn.addEventListener('click', function() {
             selectShapeAndCalculate('Bathroom');
         });
     }
@@ -75,23 +86,30 @@
     function selectKitchenType() {
         document.body.innerHTML = '';
         const kitchenOptions = document.createElement('div');
-        kitchenOptions.innerHTML = `
-            <p>Select Kitchen Type:</p>
-            <button id="islandBtn">Island</button>
-            <button id="counterBtn">Regular Counter</button>
-            <button id="barTopBtn">Bar Top</button>
-        `;
+        kitchenOptions.style.display = 'flex';
+        kitchenOptions.style.flexDirection = 'column';
+        kitchenOptions.style.alignItems = 'center';
+        kitchenOptions.style.gap = '10px';
+
+        const islandBtn = createOptionButton('Island');
+        const counterBtn = createOptionButton('Regular Counter');
+        const barTopBtn = createOptionButton('Bar Top');
+
+        kitchenOptions.appendChild(islandBtn);
+        kitchenOptions.appendChild(counterBtn);
+        kitchenOptions.appendChild(barTopBtn);
+
         document.body.appendChild(kitchenOptions);
 
-        document.getElementById('islandBtn').addEventListener('click', function() {
+        islandBtn.addEventListener('click', function() {
             selectShapeAndCalculate('Island');
         });
 
-        document.getElementById('counterBtn').addEventListener('click', function() {
+        counterBtn.addEventListener('click', function() {
             selectShapeAndCalculate('Regular Counter');
         });
 
-        document.getElementById('barTopBtn').addEventListener('click', function() {
+        barTopBtn.addEventListener('click', function() {
             selectShapeAndCalculate('Bar Top');
         });
     }
@@ -100,14 +118,15 @@
     function selectShapeAndCalculate(type) {
         document.body.innerHTML = '';
         const shapeDiv = document.createElement('div');
-        shapeDiv.innerHTML = `<p>Select Shape for ${type}:</p>`;
+        shapeDiv.innerHTML = `<h3>${type} - Select Shape</h3>`;
+        shapeDiv.style.display = 'flex';
+        shapeDiv.style.flexDirection = 'column';
+        shapeDiv.style.alignItems = 'center';
+        shapeDiv.style.gap = '10px';
 
-        // Based on type, show different shape options
         const shapes = getShapesForType(type);
         shapes.forEach(shape => {
-            const shapeBtn = document.createElement('button');
-            shapeBtn.textContent = shape.name;
-            styleButton(shapeBtn);
+            const shapeBtn = createOptionButton(shape.name);
             shapeDiv.appendChild(shapeBtn);
 
             shapeBtn.addEventListener('click', function() {
@@ -123,12 +142,17 @@
         document.body.innerHTML = '';
         const formDiv = document.createElement('div');
         formDiv.innerHTML = `<h3>${shape.name} - ${type}</h3>`;
-        
+        formDiv.style.display = 'flex';
+        formDiv.style.flexDirection = 'column';
+        formDiv.style.alignItems = 'center';
+        formDiv.style.gap = '10px';
+
         shape.measurements.forEach((measurement, index) => {
             const label = document.createElement('label');
             label.textContent = `Measurement ${index + 1} (inches):`;
+            label.style.marginBottom = '5px';
             formDiv.appendChild(label);
-            
+
             const input = document.createElement('input');
             input.type = 'number';
             input.id = `measurement${index + 1}`;
@@ -141,6 +165,7 @@
         // Finish Selection
         const finishLabel = document.createElement('label');
         finishLabel.textContent = 'Select Finish:';
+        finishLabel.style.marginBottom = '5px';
         formDiv.appendChild(finishLabel);
 
         const finishSelect = document.createElement('select');
@@ -282,6 +307,48 @@
         button.style.margin = '10px 0';
         button.style.display = 'block';
         button.style.width = '100%';
+    }
+
+    // Helper function to create image buttons
+    function createImageButton(text, imageUrl) {
+        const button = document.createElement('div');
+        button.style.position = 'relative';
+        button.style.width = '200px';
+        button.style.height = '200px';
+        button.style.border = '2px solid #4CAF50';
+        button.style.borderRadius = '10px';
+        button.style.overflow = 'hidden';
+        button.style.cursor = 'pointer';
+        button.style.textAlign = 'center';
+        button.style.display = 'flex';
+        button.style.flexDirection = 'column';
+        button.style.justifyContent = 'center';
+        button.style.alignItems = 'center';
+        button.style.backgroundImage = `url(${imageUrl})`;
+        button.style.backgroundSize = 'cover';
+        button.style.backgroundPosition = 'center';
+
+        const overlay = document.createElement('div');
+        overlay.style.position = 'absolute';
+        overlay.style.bottom = '0';
+        overlay.style.width = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        overlay.style.color = 'white';
+        overlay.style.padding = '10px';
+        overlay.style.textAlign = 'center';
+        overlay.textContent = text;
+        button.appendChild(overlay);
+
+        return button;
+    }
+
+    // Helper function to create option buttons
+    function createOptionButton(text) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        styleButton(button);
+        button.style.width = '200px';  // Make these smaller than the image buttons
+        return button;
     }
 
     // Initialize the interface
