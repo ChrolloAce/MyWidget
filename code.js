@@ -13,25 +13,33 @@
         document.body.style.justifyContent = 'center';
         document.body.style.alignItems = 'center';
         document.body.style.minHeight = '100vh';
-        document.body.style.backgroundColor = '#f4f7f6';
+        document.body.style.backgroundColor = '#ffffff';
         document.body.style.fontFamily = 'Arial, sans-serif';
 
         const container = document.createElement('div');
-        container.style.width = '90%';
-        container.style.maxWidth = '1200px';
-        container.style.backgroundColor = '#ffffff';
-        container.style.padding = '30px';
-        container.style.borderRadius = '12px';
-        container.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.15)';
+        container.style.width = '95%';
+        container.style.maxWidth = '1300px';
+        container.style.backgroundColor = '#0C1729';
+        container.style.padding = '40px';
+        container.style.borderRadius = '15px';
+        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
         container.style.textAlign = 'center';
-        container.style.margin = '20px auto';
+        container.style.margin = '30px auto';
         document.body.appendChild(container);
 
         const header = document.createElement('h1');
         header.textContent = 'Invoice Calculator';
-        header.style.color = '#333';
-        header.style.marginBottom = '30px';
+        header.style.color = '#FF3131';
+        header.style.marginBottom = '40px';
+        header.style.fontSize = '36px';
         container.appendChild(header);
+
+        const description = document.createElement('p');
+        description.textContent = 'Calculate your countertop costs easily. Start by adding items to your invoice below.';
+        description.style.color = '#ffffff';
+        description.style.fontSize = '18px';
+        description.style.marginBottom = '30px';
+        container.appendChild(description);
 
         const startInvoiceBtn = document.createElement('button');
         startInvoiceBtn.textContent = 'Start New Invoice';
@@ -49,10 +57,18 @@
     // Function to handle type selection (Kitchen/Bathroom)
     function selectType(container) {
         container.innerHTML = '';
+
+        const header = document.createElement('h2');
+        header.textContent = 'Choose a Room Type';
+        header.style.color = '#FF3131';
+        header.style.marginBottom = '30px';
+        header.style.fontSize = '28px';
+        container.appendChild(header);
+
         const choiceDiv = document.createElement('div');
         choiceDiv.style.display = 'flex';
         choiceDiv.style.justifyContent = 'space-around';
-        choiceDiv.style.gap = '20px';
+        choiceDiv.style.gap = '40px';
         choiceDiv.style.flexWrap = 'wrap';
 
         const kitchenBtn = createImageButton(
@@ -81,6 +97,13 @@
     function createInvoicePage(container) {
         container.innerHTML = '';
 
+        const header = document.createElement('h2');
+        header.textContent = 'Current Invoice';
+        header.style.color = '#FF3131';
+        header.style.marginBottom = '30px';
+        header.style.fontSize = '28px';
+        container.appendChild(header);
+
         // Add New Item Button
         const addItemBtn = document.createElement('button');
         addItemBtn.textContent = 'Add New Item';
@@ -90,9 +113,9 @@
         // Item List
         const itemListDiv = document.createElement('div');
         itemListDiv.id = 'itemList';
-        itemListDiv.style.marginTop = '20px';
+        itemListDiv.style.marginTop = '30px';
         itemListDiv.style.textAlign = 'left';
-        itemListDiv.innerHTML = '<h3>Items:</h3><p style="color: #777;">No items added yet.</p>'; // Initialize with 0 items message
+        itemListDiv.innerHTML = '<h3 style="color: #FF3131;">Items:</h3><p style="color: #777;">No items added yet.</p>';
         container.appendChild(itemListDiv);
 
         // Update the item list immediately upon creating the page
@@ -106,7 +129,7 @@
         const finalizeBtn = document.createElement('button');
         finalizeBtn.textContent = 'Finalize Invoice';
         styleButton(finalizeBtn);
-        finalizeBtn.style.marginTop = '20px';
+        finalizeBtn.style.marginTop = '30px';
         container.appendChild(finalizeBtn);
 
         finalizeBtn.addEventListener('click', function() {
@@ -117,11 +140,19 @@
     // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
     function selectKitchenType(container) {
         container.innerHTML = '';
+
+        const header = document.createElement('h2');
+        header.textContent = 'Choose a Kitchen Counter Type';
+        header.style.color = '#FF3131';
+        header.style.marginBottom = '30px';
+        header.style.fontSize = '28px';
+        container.appendChild(header);
+
         const kitchenOptions = document.createElement('div');
         kitchenOptions.style.display = 'flex';
         kitchenOptions.style.flexDirection = 'column';
         kitchenOptions.style.alignItems = 'center';
-        kitchenOptions.style.gap = '10px';
+        kitchenOptions.style.gap = '20px';
 
         const islandBtn = createOptionButton('Island');
         const counterBtn = createOptionButton('Regular Counter');
@@ -149,12 +180,19 @@
     // Function to handle shape selection and calculations
     function selectShapeAndCalculate(type, container) {
         container.innerHTML = '';
+
+        const header = document.createElement('h2');
+        header.textContent = `Select Shape for ${type}`;
+        header.style.color = '#FF3131';
+        header.style.marginBottom = '30px';
+        header.style.fontSize = '28px';
+        container.appendChild(header);
+
         const shapeDiv = document.createElement('div');
-        shapeDiv.innerHTML = `<h3>${type} - Select Shape</h3>`;
         shapeDiv.style.display = 'flex';
         shapeDiv.style.flexDirection = 'column';
         shapeDiv.style.alignItems = 'center';
-        shapeDiv.style.gap = '10px';
+        shapeDiv.style.gap = '20px';
 
         const shapes = getShapesForType(type);
         shapes.forEach(shape => {
@@ -172,42 +210,55 @@
     // Function to prompt user for measurements and finish selection
     function promptMeasurements(shape, type, container) {
         container.innerHTML = '';
+
+        const header = document.createElement('h2');
+        header.textContent = `${shape.name} - ${type}`;
+        header.style.color = '#FF3131';
+        header.style.marginBottom = '30px';
+        header.style.fontSize = '28px';
+        container.appendChild(header);
+
         const formDiv = document.createElement('div');
-        formDiv.innerHTML = `<h3>${shape.name} - ${type}</h3>`;
         formDiv.style.display = 'flex';
         formDiv.style.flexDirection = 'column';
         formDiv.style.alignItems = 'center';
-        formDiv.style.gap = '10px';
+        formDiv.style.gap = '20px';
 
         shape.measurements.forEach((measurement, index) => {
             const label = document.createElement('label');
             label.textContent = `Measurement ${index + 1} (inches):`;
+            label.style.color = '#ffffff';
             label.style.marginBottom = '5px';
+            label.style.fontSize = '18px';
             formDiv.appendChild(label);
 
             const input = document.createElement('input');
             input.type = 'number';
             input.id = `measurement${index + 1}`;
-            input.style.width = '100%';
-            input.style.padding = '10px';
-            input.style.marginBottom = '10px';
+            input.style.width = '80%';
+            input.style.padding = '15px';
+            input.style.marginBottom = '20px';
             input.style.border = '1px solid #ddd';
             input.style.borderRadius = '5px';
-            input.style.fontSize = '16px';
+            input.style.fontSize = '18px';
+            input.style.color = '#0264D9';
+            input.style.textAlign = 'center';
             formDiv.appendChild(input);
         });
 
         // Finish Selection
         const finishLabel = document.createElement('label');
         finishLabel.textContent = 'Select Finish:';
-        finishLabel.style.marginBottom = '5px';
+        finishLabel.style.color = '#ffffff';
+        finishLabel.style.marginBottom = '10px';
+        finishLabel.style.fontSize = '18px';
         formDiv.appendChild(finishLabel);
 
         const finishSelect = document.createElement('select');
-        finishSelect.style.padding = '10px';
+        finishSelect.style.padding = '15px';
         finishSelect.style.border = '1px solid #ddd';
         finishSelect.style.borderRadius = '5px';
-        finishSelect.style.fontSize = '16px';
+        finishSelect.style.fontSize = '18px';
         const regularOption = document.createElement('option');
         regularOption.value = 'regular';
         regularOption.textContent = 'Regular Pour - $26/sq ft';
@@ -278,11 +329,11 @@
             console.error('itemListDiv not found. Recreating the element.');
             itemListDiv = document.createElement('div');
             itemListDiv.id = 'itemList';
-            itemListDiv.style.marginTop = '20px';
+            itemListDiv.style.marginTop = '30px';
             container.appendChild(itemListDiv);
         }
 
-        itemListDiv.innerHTML = '<h3>Items:</h3>';
+        itemListDiv.innerHTML = '<h3 style="color: #FF3131;">Items:</h3>';
 
         if (items.length === 0) {
             itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
@@ -291,8 +342,9 @@
                 const itemDiv = document.createElement('div');
                 itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
                 itemDiv.style.padding = '10px';
-                itemDiv.style.marginBottom = '10px';
+                itemDiv.style.marginBottom = '15px';
                 itemDiv.style.borderBottom = '1px solid #ddd';
+                itemDiv.style.color = '#ffffff';
                 itemListDiv.appendChild(itemDiv);
             });
 
@@ -300,7 +352,8 @@
             totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
             totalDiv.style.marginTop = '20px';
             totalDiv.style.fontWeight = 'bold';
-            totalDiv.style.fontSize = '18px';
+            totalDiv.style.fontSize = '22px';
+            totalDiv.style.color = '#0264D9';
             itemListDiv.appendChild(totalDiv);
         }
     }
@@ -329,7 +382,6 @@
                     measurements: ['1', '2'],
                     formula: measurements => ((measurements[0] * measurements[1]) / 144)
                 });
-                // Add more shapes for Island if needed
                 break;
             case 'Regular Counter':
                 shapes.push({
@@ -338,7 +390,6 @@
                     measurements: ['1', '2', '3'],
                     formula: measurements => ((measurements[0] + measurements[1] + measurements[2]) * 25) / 144
                 });
-                // Add more shapes for Regular Counter if needed
                 break;
             case 'Bar Top':
                 shapes.push({
@@ -347,7 +398,6 @@
                     measurements: ['1', '2', '3', '4'],
                     formula: measurements => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * 25) / 144
                 });
-                // Add more shapes for Bar Top if needed
                 break;
             case 'Bathroom':
                 shapes.push({
@@ -356,9 +406,7 @@
                     measurements: ['1', '2'],
                     formula: measurements => ((measurements[0] * 22) / 144)
                 });
-                // Add more shapes for Bathroom if needed
                 break;
-            // Add more cases and shapes as necessary
         }
 
         return shapes;
@@ -366,24 +414,24 @@
 
     // Helper function to style buttons
     function styleButton(button) {
-        button.style.padding = '15px 25px';
-        button.style.backgroundColor = '#4CAF50';
+        button.style.padding = '20px 30px';
+        button.style.backgroundColor = '#FF3131';
         button.style.color = 'white';
         button.style.border = 'none';
         button.style.borderRadius = '25px';
         button.style.cursor = 'pointer';
-        button.style.fontSize = '16px';
+        button.style.fontSize = '18px';
         button.style.fontWeight = 'bold';
-        button.style.margin = '10px 0';
+        button.style.margin = '20px 0';
         button.style.display = 'inline-block';
         button.style.transition = 'background-color 0.3s ease';
 
         button.addEventListener('mouseenter', function() {
-            button.style.backgroundColor = '#45a049';
+            button.style.backgroundColor = '#e62e2e';
         });
 
         button.addEventListener('mouseleave', function() {
-            button.style.backgroundColor = '#4CAF50';
+            button.style.backgroundColor = '#FF3131';
         });
     }
 
@@ -391,10 +439,10 @@
     function createImageButton(text, imageUrl) {
         const button = document.createElement('div');
         button.style.position = 'relative';
-        button.style.width = 'calc(50% - 20px)';
-        button.style.height = '150px';
-        button.style.maxWidth = '250px';
-        button.style.border = '2px solid #4CAF50';
+        button.style.width = '500px';
+        button.style.height = '500px';
+        button.style.maxWidth = '500px';
+        button.style.border = '2px solid #FF3131';
         button.style.borderRadius = '10px';
         button.style.overflow = 'hidden';
         button.style.cursor = 'pointer';
@@ -406,17 +454,17 @@
         button.style.backgroundImage = `url(${imageUrl})`;
         button.style.backgroundSize = 'cover';
         button.style.backgroundPosition = 'center';
-        button.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.1)';
+        button.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.15)';
         button.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
 
         button.addEventListener('mouseenter', function() {
             button.style.transform = 'scale(1.05)';
-            button.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.2)';
+            button.style.boxShadow = '0 14px 28px rgba(0, 0, 0, 0.25)';
         });
 
         button.addEventListener('mouseleave', function() {
             button.style.transform = 'scale(1)';
-            button.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.1)';
+            button.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.15)';
         });
 
         const overlay = document.createElement('div');
@@ -425,9 +473,9 @@
         overlay.style.width = '100%';
         overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
         overlay.style.color = 'white';
-        overlay.style.padding = '10px';
+        overlay.style.padding = '15px';
         overlay.style.textAlign = 'center';
-        overlay.style.fontSize = '16px';
+        overlay.style.fontSize = '20px';
         overlay.style.fontWeight = 'bold';
         overlay.textContent = text;
         button.appendChild(overlay);
@@ -440,7 +488,8 @@
         const button = document.createElement('button');
         button.textContent = text;
         styleButton(button);
-        button.style.width = '200px';  // Make these smaller than the image buttons
+        button.style.width = '300px';  // Make these larger
+        button.style.marginBottom = '15px';
         return button;
     }
 
