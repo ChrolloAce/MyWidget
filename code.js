@@ -18,12 +18,13 @@
 
         const container = document.createElement('div');
         container.style.width = '90%';
-        container.style.maxWidth = '600px';
+        container.style.maxWidth = '1200px';
         container.style.backgroundColor = 'white';
         container.style.padding = '20px';
         container.style.borderRadius = '10px';
         container.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
         container.style.textAlign = 'center';
+        container.style.margin = '20px auto';
         document.body.appendChild(container);
 
         const startInvoiceBtn = document.createElement('button');
@@ -64,7 +65,7 @@
         container.appendChild(finalizeBtn);
 
         finalizeBtn.addEventListener('click', function() {
-            finalizeInvoice();
+            finalizeInvoice(container);
         });
     }
 
@@ -231,7 +232,7 @@
 
         // Add to items list
         items.push({
-            type: shape.name,
+            type: `${shape.name} - ${shape.type}`,
             squareFootage: squareFootage.toFixed(2),
             finish: finishType,
             cost: cost.toFixed(2)
@@ -262,7 +263,7 @@
     }
 
     // Function to finalize the invoice
-    function finalizeInvoice() {
+    function finalizeInvoice(container) {
         if (totalCost < MINIMUM_PRICE) {
             totalCost = MINIMUM_PRICE;
         }
@@ -270,7 +271,7 @@
         alert(`Finalized Invoice Total: $${totalCost.toFixed(2)}`);
         items = [];
         totalCost = 0;
-        initInterface();
+        createInvoicePage(container);
     }
 
     // Helper function to get shapes for a specific type
@@ -281,6 +282,7 @@
             case 'Island':
                 shapes.push({
                     name: 'Island Shape 1',
+                    type: 'Island',
                     measurements: ['1', '2'],
                     formula: measurements => ((measurements[0] * measurements[1]) / 144)
                 });
@@ -289,6 +291,7 @@
             case 'Regular Counter':
                 shapes.push({
                     name: 'Regular Counter Shape 1',
+                    type: 'Regular Counter',
                     measurements: ['1', '2', '3'],
                     formula: measurements => ((measurements[0] + measurements[1] + measurements[2]) * 25) / 144
                 });
@@ -297,6 +300,7 @@
             case 'Bar Top':
                 shapes.push({
                     name: 'Bar Top Shape 1',
+                    type: 'Bar Top',
                     measurements: ['1', '2', '3', '4'],
                     formula: measurements => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * 25) / 144
                 });
@@ -305,6 +309,7 @@
             case 'Bathroom':
                 shapes.push({
                     name: 'Bathroom Shape 1',
+                    type: 'Bathroom',
                     measurements: ['1', '2'],
                     formula: measurements => ((measurements[0] * 22) / 144)
                 });
@@ -335,7 +340,7 @@
     function createImageButton(text, imageUrl) {
         const button = document.createElement('div');
         button.style.position = 'relative';
-        button.style.width = '100%';
+        button.style.width = 'calc(50% - 20px)';
         button.style.height = '150px';
         button.style.maxWidth = '250px';
         button.style.border = '2px solid #4CAF50';
