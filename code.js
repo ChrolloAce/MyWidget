@@ -217,7 +217,6 @@
         container.appendChild(formDiv);
     }
 
-  // Function to calculate square footage and add item to invoice
 function calculateAndAddItem(shape, finishType, container) {
     const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
     if (measurements.some(isNaN)) {
@@ -243,13 +242,8 @@ function calculateAndAddItem(shape, finishType, container) {
 
     // Show updated item list
     updateItemList(container);
-
-    // Reset the form to allow adding more items
-    container.innerHTML = ''; 
-    createInvoicePage(container);
 }
 
-// Function to update and display the item list
 function updateItemList(container) {
     const itemListDiv = document.getElementById('itemList');
     itemListDiv.innerHTML = '<h3>Items:</h3>';
@@ -265,6 +259,7 @@ function updateItemList(container) {
     totalDiv.style.marginTop = '20px';
     itemListDiv.appendChild(totalDiv);
 }
+
 
     // Function to finalize the invoice
     function finalizeInvoice(container) {
