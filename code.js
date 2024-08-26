@@ -226,41 +226,42 @@ initInterface();
     }
 
     function calculateAndAddItem(shape, finishType, container) {
-        console.log('Add Item button clicked');
-        const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
-        
-        console.log('Measurements:', measurements);
-        
-        if (measurements.some(isNaN)) {
-            alert('Please enter valid measurements.');
-            return;
-        }
-
-        // Calculate square footage based on shape formula
-        const squareFootage = shape.formula(measurements);
-        console.log('Square Footage:', squareFootage);
-        
-        const pricePerSqFt = (finishType === 'regular') ? PRICE_REGULAR : PRICE_CRYSTAL;
-        const cost = squareFootage * pricePerSqFt;
-        console.log('Cost:', cost);
-
-        // Add to items list
-        items.push({
-            type: `${shape.name} - ${shape.type}`,
-            squareFootage: squareFootage.toFixed(2),
-            finish: finishType,
-            cost: cost.toFixed(2)
-        });
-
-        console.log('Items:', items);
-
-        // Update total cost
-        totalCost += cost;
-        console.log('Total Cost:', totalCost);
-
-        // Show updated item list
-        updateItemList(container);
+    console.log('Add Item button clicked');
+    const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
+    
+    console.log('Measurements:', measurements);
+    
+    if (measurements.some(isNaN)) {
+        alert('Please enter valid measurements.');
+        return;
     }
+
+    // Calculate square footage based on shape formula
+    const squareFootage = shape.formula(measurements);
+    console.log('Square Footage:', squareFootage);
+    
+    const pricePerSqFt = (finishType === 'regular') ? PRICE_REGULAR : PRICE_CRYSTAL;
+    const cost = squareFootage * pricePerSqFt;
+    console.log('Cost:', cost);
+
+    // Add to items list
+    items.push({
+        type: `${shape.name} - ${shape.type}`,
+        squareFootage: squareFootage.toFixed(2),
+        finish: finishType,
+        cost: cost.toFixed(2)
+    });
+
+    console.log('Items:', items);
+
+    // Update total cost
+    totalCost += cost;
+    console.log('Total Cost:', totalCost);
+
+    // Redirect back to the invoice page and show the updated item list
+    createInvoicePage(container);
+}
+
 function updateItemList(container) {
     let itemListDiv = document.getElementById('itemList');
     
