@@ -38,41 +38,6 @@
         });
     }
 
-    // Function to create the invoice page
-    function createInvoicePage(container) {
-        container.innerHTML = '';
-
-        // Add New Item Button
-        const addItemBtn = document.createElement('button');
-        addItemBtn.textContent = 'Add New Item';
-        styleButton(addItemBtn);
-        container.appendChild(addItemBtn);
-
-        // Item List
-        const itemListDiv = document.createElement('div');
-        itemListDiv.id = 'itemList';
-        itemListDiv.style.marginTop = '20px';
-        itemListDiv.innerHTML = '<h3>Items:</h3><p>No items added yet.</p>'; // Initialize with 0 items message
-        container.appendChild(itemListDiv);
-
-        console.log('ItemListDiv initialized and added to the container:', itemListDiv);
-
-        addItemBtn.addEventListener('click', function() {
-            selectType(container);
-        });
-
-        // Finalize Invoice Button
-        const finalizeBtn = document.createElement('button');
-        finalizeBtn.textContent = 'Finalize Invoice';
-        styleButton(finalizeBtn);
-        finalizeBtn.style.marginTop = '20px';
-        container.appendChild(finalizeBtn);
-
-        finalizeBtn.addEventListener('click', function() {
-            finalizeInvoice(container);
-        });
-    }
-
     // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
     function selectKitchenType(container) {
         container.innerHTML = '';
@@ -260,6 +225,41 @@
         items = [];
         totalCost = 0;
         createInvoicePage(container);
+    }
+
+    // Function to create the invoice page
+    function createInvoicePage(container) {
+        container.innerHTML = '';
+
+        // Add New Item Button
+        const addItemBtn = document.createElement('button');
+        addItemBtn.textContent = 'Add New Item';
+        styleButton(addItemBtn);
+        container.appendChild(addItemBtn);
+
+        // Item List
+        const itemListDiv = document.createElement('div');
+        itemListDiv.id = 'itemList';
+        itemListDiv.style.marginTop = '20px';
+        itemListDiv.innerHTML = '<h3>Items:</h3><p>No items added yet.</p>'; // Initialize with 0 items message
+        container.appendChild(itemListDiv);
+
+        console.log('ItemListDiv initialized and added to the container:', itemListDiv);
+
+        addItemBtn.addEventListener('click', function() {
+            selectType(container);
+        });
+
+        // Finalize Invoice Button
+        const finalizeBtn = document.createElement('button');
+        finalizeBtn.textContent = 'Finalize Invoice';
+        styleButton(finalizeBtn);
+        finalizeBtn.style.marginTop = '20px';
+        container.appendChild(finalizeBtn);
+
+        finalizeBtn.addEventListener('click', function() {
+            finalizeInvoice(container);
+        });
     }
 
     // Helper function to get shapes for a specific type
