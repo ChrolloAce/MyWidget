@@ -10,6 +10,16 @@
     container.style.fontFamily = 'Arial, sans-serif';
     container.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
     container.style.margin = '20px auto';
+    container.style.textAlign = 'center';
+
+    // Add the specific image
+    const image = document.createElement('img');
+    image.src = 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cce80c07dc7509ff609c23_dasdasdasdas.PNG'; // Image URL
+    image.alt = 'Countertop Measurement Diagram';
+    image.style.maxWidth = '100%';
+    image.style.borderRadius = '10px';
+    image.style.marginBottom = '20px';
+    container.appendChild(image);
 
     // Create and append the title
     const title = document.createElement('h3');
