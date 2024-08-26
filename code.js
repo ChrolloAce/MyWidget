@@ -37,37 +37,36 @@
         });
     }
 
-    // Function to create the invoice page
     function createInvoicePage(container) {
-        container.innerHTML = '';
+    container.innerHTML = '';
 
-        // Add New Item Button
-        const addItemBtn = document.createElement('button');
-        addItemBtn.textContent = 'Add New Item';
-        styleButton(addItemBtn);
-        container.appendChild(addItemBtn);
+    // Add New Item Button
+    const addItemBtn = document.createElement('button');
+    addItemBtn.textContent = 'Add New Item';
+    styleButton(addItemBtn);
+    container.appendChild(addItemBtn);
 
-        // Item List
-        const itemListDiv = document.createElement('div');
-        itemListDiv.id = 'itemList';
-        itemListDiv.style.marginTop = '20px';
-        container.appendChild(itemListDiv);
+    // Item List
+    const itemListDiv = document.createElement('div');
+    itemListDiv.id = 'itemList';
+    itemListDiv.style.marginTop = '20px';
+    container.appendChild(itemListDiv); // Make sure this line is adding the itemListDiv to the container
 
-        addItemBtn.addEventListener('click', function() {
-            selectType(container);
-        });
+    addItemBtn.addEventListener('click', function() {
+        selectType(container);
+    });
 
-        // Finalize Invoice Button
-        const finalizeBtn = document.createElement('button');
-        finalizeBtn.textContent = 'Finalize Invoice';
-        styleButton(finalizeBtn);
-        finalizeBtn.style.marginTop = '20px';
-        container.appendChild(finalizeBtn);
+    // Finalize Invoice Button
+    const finalizeBtn = document.createElement('button');
+    finalizeBtn.textContent = 'Finalize Invoice';
+    styleButton(finalizeBtn);
+    finalizeBtn.style.marginTop = '20px';
+    container.appendChild(finalizeBtn);
 
-        finalizeBtn.addEventListener('click', function() {
-            finalizeInvoice(container);
-        });
-    }
+    finalizeBtn.addEventListener('click', function() {
+        finalizeInvoice(container);
+    });
+}
 
     // Function to handle type selection (Kitchen/Bathroom)
     function selectType(container) {
@@ -257,6 +256,13 @@ function calculateAndAddItem(shape, finishType, container) {
 
 function updateItemList(container) {
     const itemListDiv = document.getElementById('itemList');
+    
+    // Check if itemListDiv exists
+    if (!itemListDiv) {
+        console.error('itemListDiv not found. Make sure the element exists in the DOM.');
+        return;
+    }
+
     itemListDiv.innerHTML = '<h3>Items:</h3>';
 
     items.forEach((item, index) => {
@@ -270,6 +276,7 @@ function updateItemList(container) {
     totalDiv.style.marginTop = '20px';
     itemListDiv.appendChild(totalDiv);
 }
+
 
 
     // Function to finalize the invoice
