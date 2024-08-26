@@ -8,40 +8,44 @@
     let totalCost = 0;
 
     function initInterface() {
-    document.body.innerHTML = '';
-    document.body.style.display = 'flex';
-    document.body.style.justifyContent = 'center';
-    document.body.style.alignItems = 'center';
-    document.body.style.height = '100vh';
-    document.body.style.backgroundColor = '#f0f0f0';
+        document.body.innerHTML = '';
+        document.body.style.display = 'flex';
+        document.body.style.justifyContent = 'center';
+        document.body.style.alignItems = 'center';
+        document.body.style.minHeight = '100vh';
+        document.body.style.backgroundColor = '#f4f7f6';
+        document.body.style.fontFamily = 'Arial, sans-serif';
 
-    const container = document.createElement('div');
-    container.style.width = '90%';
-    container.style.maxWidth = '1200px';
-    container.style.backgroundColor = 'white';
-    container.style.padding = '20px';
-    container.style.borderRadius = '10px';
-    container.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-    container.style.textAlign = 'center';
-    container.style.margin = '20px auto';
-    document.body.appendChild(container);
+        const container = document.createElement('div');
+        container.style.width = '90%';
+        container.style.maxWidth = '1200px';
+        container.style.backgroundColor = '#ffffff';
+        container.style.padding = '30px';
+        container.style.borderRadius = '12px';
+        container.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.15)';
+        container.style.textAlign = 'center';
+        container.style.margin = '20px auto';
+        document.body.appendChild(container);
 
-    const startInvoiceBtn = document.createElement('button');
-    startInvoiceBtn.textContent = 'Start New Invoice';
-    styleButton(startInvoiceBtn);
-    container.appendChild(startInvoiceBtn);
+        const header = document.createElement('h1');
+        header.textContent = 'Invoice Calculator';
+        header.style.color = '#333';
+        header.style.marginBottom = '30px';
+        container.appendChild(header);
 
-    startInvoiceBtn.addEventListener('click', function() {
-        createInvoicePage(container);
-    });
-}
+        const startInvoiceBtn = document.createElement('button');
+        startInvoiceBtn.textContent = 'Start New Invoice';
+        styleButton(startInvoiceBtn);
+        container.appendChild(startInvoiceBtn);
 
-// Call the initInterface function to initialize the interface
-initInterface();
+        startInvoiceBtn.addEventListener('click', function() {
+            createInvoicePage(container);
+        });
+    }
 
+    // Call the initInterface function to initialize the interface
+    initInterface();
 
-
-    
     // Function to handle type selection (Kitchen/Bathroom)
     function selectType(container) {
         container.innerHTML = '';
@@ -74,42 +78,41 @@ initInterface();
     }
 
     // Function to create the invoice page
-   // Function to create the invoice page
-function createInvoicePage(container) {
-    container.innerHTML = '';
+    function createInvoicePage(container) {
+        container.innerHTML = '';
 
-    // Add New Item Button
-    const addItemBtn = document.createElement('button');
-    addItemBtn.textContent = 'Add New Item';
-    styleButton(addItemBtn);
-    container.appendChild(addItemBtn);
+        // Add New Item Button
+        const addItemBtn = document.createElement('button');
+        addItemBtn.textContent = 'Add New Item';
+        styleButton(addItemBtn);
+        container.appendChild(addItemBtn);
 
-    // Item List
-    const itemListDiv = document.createElement('div');
-    itemListDiv.id = 'itemList';
-    itemListDiv.style.marginTop = '20px';
-    itemListDiv.innerHTML = '<h3>Items:</h3><p>No items added yet.</p>'; // Initialize with 0 items message
-    container.appendChild(itemListDiv);
+        // Item List
+        const itemListDiv = document.createElement('div');
+        itemListDiv.id = 'itemList';
+        itemListDiv.style.marginTop = '20px';
+        itemListDiv.style.textAlign = 'left';
+        itemListDiv.innerHTML = '<h3>Items:</h3><p style="color: #777;">No items added yet.</p>'; // Initialize with 0 items message
+        container.appendChild(itemListDiv);
 
-    // Update the item list immediately upon creating the page
-    updateItemList(container);
+        // Update the item list immediately upon creating the page
+        updateItemList(container);
 
-    addItemBtn.addEventListener('click', function() {
-        selectType(container);
-    });
+        addItemBtn.addEventListener('click', function() {
+            selectType(container);
+        });
 
-    // Finalize Invoice Button
-    const finalizeBtn = document.createElement('button');
-    finalizeBtn.textContent = 'Finalize Invoice';
-    styleButton(finalizeBtn);
-    finalizeBtn.style.marginTop = '20px';
-    container.appendChild(finalizeBtn);
+        // Finalize Invoice Button
+        const finalizeBtn = document.createElement('button');
+        finalizeBtn.textContent = 'Finalize Invoice';
+        styleButton(finalizeBtn);
+        finalizeBtn.style.marginTop = '20px';
+        container.appendChild(finalizeBtn);
 
-    finalizeBtn.addEventListener('click', function() {
-        finalizeInvoice(container);
-    });
-}
-
+        finalizeBtn.addEventListener('click', function() {
+            finalizeInvoice(container);
+        });
+    }
 
     // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
     function selectKitchenType(container) {
@@ -188,8 +191,9 @@ function createInvoicePage(container) {
             input.style.width = '100%';
             input.style.padding = '10px';
             input.style.marginBottom = '10px';
-            input.style.border = '1px solid #ccc';
+            input.style.border = '1px solid #ddd';
             input.style.borderRadius = '5px';
+            input.style.fontSize = '16px';
             formDiv.appendChild(input);
         });
 
@@ -201,8 +205,9 @@ function createInvoicePage(container) {
 
         const finishSelect = document.createElement('select');
         finishSelect.style.padding = '10px';
-        finishSelect.style.border = '1px solid #ccc';
+        finishSelect.style.border = '1px solid #ddd';
         finishSelect.style.borderRadius = '5px';
+        finishSelect.style.fontSize = '16px';
         const regularOption = document.createElement('option');
         regularOption.value = 'regular';
         regularOption.textContent = 'Regular Pour - $26/sq ft';
@@ -229,73 +234,76 @@ function createInvoicePage(container) {
     }
 
     function calculateAndAddItem(shape, finishType, container) {
-    console.log('Add Item button clicked');
-    const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
-    
-    console.log('Measurements:', measurements);
-    
-    if (measurements.some(isNaN)) {
-        alert('Please enter valid measurements.');
-        return;
-    }
+        console.log('Add Item button clicked');
+        const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
+        
+        console.log('Measurements:', measurements);
+        
+        if (measurements.some(isNaN)) {
+            alert('Please enter valid measurements.');
+            return;
+        }
 
-    // Calculate square footage based on shape formula
-    const squareFootage = shape.formula(measurements);
-    console.log('Square Footage:', squareFootage);
-    
-    const pricePerSqFt = (finishType === 'regular') ? PRICE_REGULAR : PRICE_CRYSTAL;
-    const cost = squareFootage * pricePerSqFt;
-    console.log('Cost:', cost);
+        // Calculate square footage based on shape formula
+        const squareFootage = shape.formula(measurements);
+        console.log('Square Footage:', squareFootage);
+        
+        const pricePerSqFt = (finishType === 'regular') ? PRICE_REGULAR : PRICE_CRYSTAL;
+        const cost = squareFootage * pricePerSqFt;
+        console.log('Cost:', cost);
 
-    // Add to items list
-    items.push({
-        type: `${shape.name} - ${shape.type}`,
-        squareFootage: squareFootage.toFixed(2),
-        finish: finishType,
-        cost: cost.toFixed(2)
-    });
-
-    console.log('Items:', items);
-
-    // Update total cost
-    totalCost += cost;
-    console.log('Total Cost:', totalCost);
-
-    // Redirect back to the invoice page and show the updated item list
-    createInvoicePage(container);
-}
-
-function updateItemList(container) {
-    let itemListDiv = document.getElementById('itemList');
-    
-    // Recreate itemListDiv if it doesn't exist
-    if (!itemListDiv) {
-        console.error('itemListDiv not found. Recreating the element.');
-        itemListDiv = document.createElement('div');
-        itemListDiv.id = 'itemList';
-        itemListDiv.style.marginTop = '20px';
-        container.appendChild(itemListDiv);
-    }
-
-    itemListDiv.innerHTML = '<h3>Items:</h3>';
-
-    if (items.length === 0) {
-        itemListDiv.innerHTML += '<p>No items added yet.</p>';
-    } else {
-        items.forEach((item, index) => {
-            const itemDiv = document.createElement('div');
-            itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
-            itemListDiv.appendChild(itemDiv);
+        // Add to items list
+        items.push({
+            type: `${shape.name} - ${shape.type}`,
+            squareFootage: squareFootage.toFixed(2),
+            finish: finishType,
+            cost: cost.toFixed(2)
         });
 
-        const totalDiv = document.createElement('div');
-        totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-        totalDiv.style.marginTop = '20px';
-        itemListDiv.appendChild(totalDiv);
+        console.log('Items:', items);
+
+        // Update total cost
+        totalCost += cost;
+        console.log('Total Cost:', totalCost);
+
+        // Redirect back to the invoice page and show the updated item list
+        createInvoicePage(container);
     }
-}
 
+    function updateItemList(container) {
+        let itemListDiv = document.getElementById('itemList');
+        
+        // Recreate itemListDiv if it doesn't exist
+        if (!itemListDiv) {
+            console.error('itemListDiv not found. Recreating the element.');
+            itemListDiv = document.createElement('div');
+            itemListDiv.id = 'itemList';
+            itemListDiv.style.marginTop = '20px';
+            container.appendChild(itemListDiv);
+        }
 
+        itemListDiv.innerHTML = '<h3>Items:</h3>';
+
+        if (items.length === 0) {
+            itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
+        } else {
+            items.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
+                itemDiv.style.padding = '10px';
+                itemDiv.style.marginBottom = '10px';
+                itemDiv.style.borderBottom = '1px solid #ddd';
+                itemListDiv.appendChild(itemDiv);
+            });
+
+            const totalDiv = document.createElement('div');
+            totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
+            totalDiv.style.marginTop = '20px';
+            totalDiv.style.fontWeight = 'bold';
+            totalDiv.style.fontSize = '18px';
+            itemListDiv.appendChild(totalDiv);
+        }
+    }
 
     // Function to finalize the invoice
     function finalizeInvoice(container) {
@@ -358,17 +366,25 @@ function updateItemList(container) {
 
     // Helper function to style buttons
     function styleButton(button) {
-        button.style.padding = '15px';
+        button.style.padding = '15px 25px';
         button.style.backgroundColor = '#4CAF50';
         button.style.color = 'white';
         button.style.border = 'none';
-        button.style.borderRadius = '5px';
+        button.style.borderRadius = '25px';
         button.style.cursor = 'pointer';
         button.style.fontSize = '16px';
         button.style.fontWeight = 'bold';
         button.style.margin = '10px 0';
-        button.style.display = 'block';
-        button.style.width = '100%';
+        button.style.display = 'inline-block';
+        button.style.transition = 'background-color 0.3s ease';
+
+        button.addEventListener('mouseenter', function() {
+            button.style.backgroundColor = '#45a049';
+        });
+
+        button.addEventListener('mouseleave', function() {
+            button.style.backgroundColor = '#4CAF50';
+        });
     }
 
     // Helper function to create image buttons
@@ -390,6 +406,18 @@ function updateItemList(container) {
         button.style.backgroundImage = `url(${imageUrl})`;
         button.style.backgroundSize = 'cover';
         button.style.backgroundPosition = 'center';
+        button.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.1)';
+        button.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+
+        button.addEventListener('mouseenter', function() {
+            button.style.transform = 'scale(1.05)';
+            button.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.2)';
+        });
+
+        button.addEventListener('mouseleave', function() {
+            button.style.transform = 'scale(1)';
+            button.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.1)';
+        });
 
         const overlay = document.createElement('div');
         overlay.style.position = 'absolute';
@@ -399,6 +427,8 @@ function updateItemList(container) {
         overlay.style.color = 'white';
         overlay.style.padding = '10px';
         overlay.style.textAlign = 'center';
+        overlay.style.fontSize = '16px';
+        overlay.style.fontWeight = 'bold';
         overlay.textContent = text;
         button.appendChild(overlay);
 
