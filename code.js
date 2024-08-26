@@ -287,6 +287,7 @@ function updateItemList(container) {
     itemListDiv.appendChild(totalDiv);
 }
 
+
     // Function to finalize the invoice
     function finalizeInvoice(container) {
         if (totalCost < MINIMUM_PRICE) {
