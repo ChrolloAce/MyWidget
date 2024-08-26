@@ -37,36 +37,38 @@
         });
     }
 
+    // Function to create the invoice page
     function createInvoicePage(container) {
-    container.innerHTML = '';
+        container.innerHTML = '';
 
-    // Add New Item Button
-    const addItemBtn = document.createElement('button');
-    addItemBtn.textContent = 'Add New Item';
-    styleButton(addItemBtn);
-    container.appendChild(addItemBtn);
+        // Add New Item Button
+        const addItemBtn = document.createElement('button');
+        addItemBtn.textContent = 'Add New Item';
+        styleButton(addItemBtn);
+        container.appendChild(addItemBtn);
 
-    // Item List
-    const itemListDiv = document.createElement('div');
-    itemListDiv.id = 'itemList';
-    itemListDiv.style.marginTop = '20px';
-    container.appendChild(itemListDiv); // Make sure this line is adding the itemListDiv to the container
+        // Item List
+        const itemListDiv = document.createElement('div');
+        itemListDiv.id = 'itemList';
+        itemListDiv.style.marginTop = '20px';
+        container.appendChild(itemListDiv); // Ensure this line runs without errors
+        console.log('ItemListDiv created:', itemListDiv); // Debugging log
 
-    addItemBtn.addEventListener('click', function() {
-        selectType(container);
-    });
+        addItemBtn.addEventListener('click', function() {
+            selectType(container);
+        });
 
-    // Finalize Invoice Button
-    const finalizeBtn = document.createElement('button');
-    finalizeBtn.textContent = 'Finalize Invoice';
-    styleButton(finalizeBtn);
-    finalizeBtn.style.marginTop = '20px';
-    container.appendChild(finalizeBtn);
+        // Finalize Invoice Button
+        const finalizeBtn = document.createElement('button');
+        finalizeBtn.textContent = 'Finalize Invoice';
+        styleButton(finalizeBtn);
+        finalizeBtn.style.marginTop = '20px';
+        container.appendChild(finalizeBtn);
 
-    finalizeBtn.addEventListener('click', function() {
-        finalizeInvoice(container);
-    });
-}
+        finalizeBtn.addEventListener('click', function() {
+            finalizeInvoice(container);
+        });
+    }
 
     // Function to handle type selection (Kitchen/Bathroom)
     function selectType(container) {
@@ -209,75 +211,72 @@
         styleButton(calculateBtn);
         formDiv.appendChild(calculateBtn);
 
-     calculateBtn.addEventListener('click', function() {
-    console.log('Calculate button clicked');
-    calculateAndAddItem(shape, finishSelect.value, container);
-});
+        calculateBtn.addEventListener('click', function() {
+            calculateAndAddItem(shape, finishSelect.value, container);
+        });
 
         container.appendChild(formDiv);
     }
 
-function calculateAndAddItem(shape, finishType, container) {
-    console.log('Add Item button clicked');
-    const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
-    
-    console.log('Measurements:', measurements);
-    
-    if (measurements.some(isNaN)) {
-        alert('Please enter valid measurements.');
-        return;
+    function calculateAndAddItem(shape, finishType, container) {
+        console.log('Add Item button clicked');
+        const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
+        
+        console.log('Measurements:', measurements);
+        
+        if (measurements.some(isNaN)) {
+            alert('Please enter valid measurements.');
+            return;
+        }
+
+        // Calculate square footage based on shape formula
+        const squareFootage = shape.formula(measurements);
+        console.log('Square Footage:', squareFootage);
+        
+        const pricePerSqFt = (finishType === 'regular') ? PRICE_REGULAR : PRICE_CRYSTAL;
+        const cost = squareFootage * pricePerSqFt;
+        console.log('Cost:', cost);
+
+        // Add to items list
+        items.push({
+            type: `${shape.name} - ${shape.type}`,
+            squareFootage: squareFootage.toFixed(2),
+            finish: finishType,
+            cost: cost.toFixed(2)
+        });
+
+        console.log('Items:', items);
+
+        // Update total cost
+        totalCost += cost;
+        console.log('Total Cost:', totalCost);
+
+        // Show updated item list
+        updateItemList(container);
     }
 
-    // Calculate square footage based on shape formula
-    const squareFootage = shape.formula(measurements);
-    console.log('Square Footage:', squareFootage);
-    
-    const pricePerSqFt = (finishType === 'regular') ? PRICE_REGULAR : PRICE_CRYSTAL;
-    const cost = squareFootage * pricePerSqFt;
-    console.log('Cost:', cost);
+    function updateItemList(container) {
+        const itemListDiv = document.getElementById('itemList');
+        
+        // Check if itemListDiv exists
+        if (!itemListDiv) {
+            console.error('itemListDiv not found. Ensure it is created in createInvoicePage.');
+            return;
+        }
 
-    // Add to items list
-    items.push({
-        type: `${shape.name} - ${shape.type}`,
-        squareFootage: squareFootage.toFixed(2),
-        finish: finishType,
-        cost: cost.toFixed(2)
-    });
+        itemListDiv.innerHTML = '<h3>Items:</h3>';
 
-    console.log('Items:', items);
+        items.forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
+            itemListDiv.appendChild(itemDiv);
+        });
 
-    // Update total cost
-    totalCost += cost;
-    console.log('Total Cost:', totalCost);
-
-    // Show updated item list
-    updateItemList(container);
-}
-
-function updateItemList(container) {
-    const itemListDiv = document.getElementById('itemList');
-    
-    // Check if itemListDiv exists
-    if (!itemListDiv) {
-        console.error('itemListDiv not found. Make sure the element exists in the DOM.');
-        return;
+        const totalDiv = document.createElement('div');
+        totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
+        totalDiv.style.marginTop = '20px';
+        itemListDiv.appendChild(totalDiv);
     }
-
-    itemListDiv.innerHTML = '<h3>Items:</h3>';
-
-    items.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
-        itemListDiv.appendChild(itemDiv);
-    });
-
-    const totalDiv = document.createElement('div');
-    totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-    totalDiv.style.marginTop = '20px';
-    itemListDiv.appendChild(totalDiv);
-}
-
-
 
     // Function to finalize the invoice
     function finalizeInvoice(container) {
