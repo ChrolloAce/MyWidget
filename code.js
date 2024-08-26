@@ -74,39 +74,42 @@ initInterface();
     }
 
     // Function to create the invoice page
-    function createInvoicePage(container) {
-        container.innerHTML = '';
+   // Function to create the invoice page
+function createInvoicePage(container) {
+    container.innerHTML = '';
 
-        // Add New Item Button
-        const addItemBtn = document.createElement('button');
-        addItemBtn.textContent = 'Add New Item';
-        styleButton(addItemBtn);
-        container.appendChild(addItemBtn);
+    // Add New Item Button
+    const addItemBtn = document.createElement('button');
+    addItemBtn.textContent = 'Add New Item';
+    styleButton(addItemBtn);
+    container.appendChild(addItemBtn);
 
-        // Item List
-        const itemListDiv = document.createElement('div');
-        itemListDiv.id = 'itemList';
-        itemListDiv.style.marginTop = '20px';
-        itemListDiv.innerHTML = '<h3>Items:</h3><p>No items added yet.</p>'; // Initialize with 0 items message
-        container.appendChild(itemListDiv);
+    // Item List
+    const itemListDiv = document.createElement('div');
+    itemListDiv.id = 'itemList';
+    itemListDiv.style.marginTop = '20px';
+    itemListDiv.innerHTML = '<h3>Items:</h3><p>No items added yet.</p>'; // Initialize with 0 items message
+    container.appendChild(itemListDiv);
 
-        console.log('ItemListDiv initialized and added to the container:', itemListDiv);
+    // Update the item list immediately upon creating the page
+    updateItemList(container);
 
-        addItemBtn.addEventListener('click', function() {
-            selectType(container);
-        });
+    addItemBtn.addEventListener('click', function() {
+        selectType(container);
+    });
 
-        // Finalize Invoice Button
-        const finalizeBtn = document.createElement('button');
-        finalizeBtn.textContent = 'Finalize Invoice';
-        styleButton(finalizeBtn);
-        finalizeBtn.style.marginTop = '20px';
-        container.appendChild(finalizeBtn);
+    // Finalize Invoice Button
+    const finalizeBtn = document.createElement('button');
+    finalizeBtn.textContent = 'Finalize Invoice';
+    styleButton(finalizeBtn);
+    finalizeBtn.style.marginTop = '20px';
+    container.appendChild(finalizeBtn);
 
-        finalizeBtn.addEventListener('click', function() {
-            finalizeInvoice(container);
-        });
-    }
+    finalizeBtn.addEventListener('click', function() {
+        finalizeInvoice(container);
+    });
+}
+
 
     // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
     function selectKitchenType(container) {
@@ -276,17 +279,22 @@ function updateItemList(container) {
 
     itemListDiv.innerHTML = '<h3>Items:</h3>';
 
-    items.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
-        itemListDiv.appendChild(itemDiv);
-    });
+    if (items.length === 0) {
+        itemListDiv.innerHTML += '<p>No items added yet.</p>';
+    } else {
+        items.forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
+            itemListDiv.appendChild(itemDiv);
+        });
 
-    const totalDiv = document.createElement('div');
-    totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-    totalDiv.style.marginTop = '20px';
-    itemListDiv.appendChild(totalDiv);
+        const totalDiv = document.createElement('div');
+        totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
+        totalDiv.style.marginTop = '20px';
+        itemListDiv.appendChild(totalDiv);
+    }
 }
+
 
 
     // Function to finalize the invoice
