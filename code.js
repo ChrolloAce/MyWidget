@@ -15,99 +15,101 @@
         document.body.style.flexDirection = 'column';
         document.body.style.alignItems = 'center';
         document.body.style.minHeight = '100vh';
-        document.body.style.backgroundColor = '#ffffff';
+        document.body.style.backgroundColor = '#f7f7f7';
         document.body.style.fontFamily = 'Arial, sans-serif';
 
-        addNavigationTabs(); // Add the navigation tabs
+        const container = document.createElement('div');
+        container.style.width = '100%';
+        container.style.maxWidth = '1200px';
+        container.style.backgroundColor = '#ffffff';
+        container.style.padding = '30px';
+        container.style.borderRadius = '15px';
+        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.1)';
+        container.style.margin = '30px auto';
+        container.style.flexGrow = '1';
+        document.body.appendChild(container);
+
+        addNavigationTabs(container); // Add navigation tabs
 
         const contentContainer = document.createElement('div');
         contentContainer.id = 'contentContainer';
-        contentContainer.style.width = '95%';
-        contentContainer.style.maxWidth = '1300px';
-        contentContainer.style.backgroundColor = '#ffffff';
-        contentContainer.style.padding = '40px';
-        contentContainer.style.borderRadius = '15px';
-        contentContainer.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
-        contentContainer.style.textAlign = 'center';
-        contentContainer.style.margin = '30px auto';
-        contentContainer.style.flexGrow = '1';
-        document.body.appendChild(contentContainer);
+        contentContainer.style.marginTop = '30px';
+        container.appendChild(contentContainer);
 
-        showHomePage(contentContainer); // Load the home page content by default
+        // Display the initial page
+        showHomePage(contentContainer);
     }
 
-    // Function to add the navigation tabs
-    function addNavigationTabs() {
-        const tabs = document.createElement('div');
-        tabs.style.width = '100%';
-        tabs.style.backgroundColor = '#FF3131';
-        tabs.style.color = '#ffffff';
-        tabs.style.display = 'flex';
-        tabs.style.justifyContent = 'space-around';
-        tabs.style.padding = '10px 0';
-        tabs.style.position = 'fixed';
-        tabs.style.top = '0';
-        tabs.style.left = '0';
-        tabs.style.zIndex = '1000';
+    // Function to add navigation tabs
+    function addNavigationTabs(container) {
+        const tabContainer = document.createElement('div');
+        tabContainer.style.display = 'flex';
+        tabContainer.style.justifyContent = 'center';
+        tabContainer.style.borderBottom = '2px solid #dddddd';
+        tabContainer.style.marginBottom = '20px';
 
-        const homeTab = createTab('Home', showHomePage);
-        const invoiceTab = createTab('Invoice', createInvoicePage);
-        const aboutTab = createTab('About', showAboutPage);
+        const homeTab = createTabButton('Home');
+        const invoiceTab = createTabButton('Invoice');
+        const aboutTab = createTabButton('About');
 
-        tabs.appendChild(homeTab);
-        tabs.appendChild(invoiceTab);
-        tabs.appendChild(aboutTab);
+        tabContainer.appendChild(homeTab);
+        tabContainer.appendChild(invoiceTab);
+        tabContainer.appendChild(aboutTab);
+        container.appendChild(tabContainer);
 
-        document.body.appendChild(tabs);
+        homeTab.addEventListener('click', function() {
+            showHomePage(document.getElementById('contentContainer'));
+        });
+
+        invoiceTab.addEventListener('click', function() {
+            createInvoicePage(document.getElementById('contentContainer'));
+        });
+
+        aboutTab.addEventListener('click', function() {
+            showAboutPage(document.getElementById('contentContainer'));
+        });
     }
 
-    // Helper function to create a tab
-    function createTab(text, onClick) {
-        const tab = document.createElement('button');
-        tab.textContent = text;
-        tab.style.backgroundColor = '#0264D9';
-        tab.style.color = '#ffffff';
-        tab.style.border = 'none';
-        tab.style.padding = '10px 20px';
-        tab.style.cursor = 'pointer';
-        tab.style.flexGrow = '1';
-        tab.style.textAlign = 'center';
-        tab.style.fontSize = '18px';
-        tab.style.fontWeight = 'bold';
-        tab.style.transition = 'background-color 0.3s';
-        tab.addEventListener('click', function() {
-            const contentContainer = document.getElementById('contentContainer');
-            contentContainer.innerHTML = ''; // Clear the content container
-            onClick(contentContainer); // Load the respective content
+    // Function to create a tab button
+    function createTabButton(text) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.style.padding = '15px 30px';
+        button.style.margin = '0 10px';
+        button.style.border = 'none';
+        button.style.backgroundColor = 'transparent';
+        button.style.color = '#0C1729';
+        button.style.fontSize = '18px';
+        button.style.cursor = 'pointer';
+        button.style.fontWeight = 'bold';
+        button.style.transition = 'border-bottom 0.3s ease';
+
+        button.addEventListener('mouseenter', function() {
+            button.style.borderBottom = '2px solid #FF3131';
         });
 
-        tab.addEventListener('mouseenter', function() {
-            tab.style.backgroundColor = '#FF6969';
+        button.addEventListener('mouseleave', function() {
+            button.style.borderBottom = '2px solid transparent';
         });
 
-        tab.addEventListener('mouseleave', function() {
-            tab.style.backgroundColor = '#0264D9';
-        });
-
-        return tab;
+        return button;
     }
 
-    // Function to show the home page content
+    // Function to show the home page
     function showHomePage(container) {
         container.innerHTML = '';
-
         const header = document.createElement('h1');
-        header.textContent = 'Welcome to the Countertop Invoice Calculator';
+        header.textContent = 'Welcome to the Countertop Calculator';
         header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '36px';
+        header.style.fontSize = '32px';
+        header.style.marginBottom = '20px';
         container.appendChild(header);
 
         const description = document.createElement('p');
-        description.textContent = 'This tool helps you calculate the cost of your countertop projects easily. Start by creating a new invoice or learn more about the app.';
-        description.style.color = '#0C1729';
+        description.textContent = 'Use this tool to calculate the cost of your countertop projects. Start by creating a new invoice.';
+        description.style.color = '#555555';
         description.style.fontSize = '18px';
-        description.style.marginBottom = '20px';
+        description.style.marginBottom = '30px';
         container.appendChild(description);
 
         const startInvoiceBtn = document.createElement('button');
@@ -116,14 +118,12 @@
         container.appendChild(startInvoiceBtn);
 
         startInvoiceBtn.addEventListener('click', function() {
-            previousPage = showHomePage;
             createInvoicePage(container);
         });
     }
 
     // Function to create the invoice page
     function createInvoicePage(container) {
-        previousPage = showHomePage;
         container.innerHTML = '';
 
         const header = document.createElement('h2');
@@ -399,10 +399,10 @@
             cost: cost.toFixed(2)
         });
 
-        console.log('Items:', items);
+        totalCost += cost; // Update the total cost
 
-        // Update total cost
-        totalCost += cost;
+        console.log('Items:', items);
+        console.log('Total Cost:', totalCost);
 
         // Redirect back to the invoice page and show the updated item list
         createInvoicePage(container);
@@ -455,6 +455,24 @@
         items = [];
         totalCost = 0;
         createInvoicePage(container);
+    }
+
+    // Function to show the about page
+    function showAboutPage(container) {
+        container.innerHTML = '';
+        const header = document.createElement('h2');
+        header.textContent = 'About This App';
+        header.style.color = '#0C1729';
+        header.style.fontSize = '28px';
+        header.style.marginBottom = '20px';
+        container.appendChild(header);
+
+        const description = document.createElement('p');
+        description.textContent = 'This is a simple invoice calculator for countertop projects, designed to help you easily calculate your costs based on measurements and material finishes.';
+        description.style.color = '#555555';
+        description.style.fontSize = '18px';
+        description.style.lineHeight = '1.6';
+        container.appendChild(description);
     }
 
     // Helper function to get shapes for a specific type
