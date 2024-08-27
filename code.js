@@ -18,7 +18,7 @@
         document.body.style.backgroundColor = '#ffffff';
         document.body.style.fontFamily = 'Arial, sans-serif';
 
-        addTabs(); // Add the top tabs
+        addTabs(); // Add the tabs at the top
 
         const container = document.createElement('div');
         container.style.width = '95%';
@@ -57,14 +57,14 @@
         });
     }
 
-    // Function to add the top tabs
+    // Function to add tabs at the top
     function addTabs() {
         const tabs = document.createElement('div');
         tabs.style.width = '100%';
         tabs.style.backgroundColor = '#FF3131';
         tabs.style.color = '#ffffff';
-        tabs.style.padding = '20px';
-        tabs.style.position = 'fixed';
+        tabs.style.padding = '10px 20px';
+        tabs.style.position = 'relative';
         tabs.style.top = '0';
         tabs.style.left = '0';
         tabs.style.zIndex = '1000';
@@ -73,15 +73,23 @@
         tabs.style.alignItems = 'center';
         tabs.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
 
-        const aboutTab = createTabButton('About Us');
-        aboutTab.addEventListener('click', showAboutUs);
-        tabs.appendChild(aboutTab);
+        const aboutUsTab = document.createElement('div');
+        aboutUsTab.textContent = 'About Us';
+        styleTab(aboutUsTab);
+        aboutUsTab.addEventListener('click', function() {
+            showAboutUs();
+        });
+        tabs.appendChild(aboutUsTab);
 
-        const invoiceTab = createTabButton('Invoice');
+        const invoiceTab = document.createElement('div');
+        invoiceTab.textContent = 'Invoice';
+        styleTab(invoiceTab);
         invoiceTab.addEventListener('click', initInterface);
         tabs.appendChild(invoiceTab);
 
-        const backTab = createTabButton('Back');
+        const backTab = document.createElement('div');
+        backTab.textContent = 'Back';
+        styleTab(backTab);
         backTab.addEventListener('click', function() {
             if (previousPage) {
                 previousPage();
@@ -92,47 +100,12 @@
         document.body.appendChild(tabs);
     }
 
-    // Function to create a tab button
-    function createTabButton(text) {
-        const button = document.createElement('div');
-        button.textContent = text;
-        button.style.padding = '10px 20px';
-        button.style.cursor = 'pointer';
-        button.style.fontSize = '16px';
-        button.style.fontWeight = 'bold';
-        button.style.flexGrow = '1';
-        button.style.textAlign = 'center';
-        return button;
-    }
-
-    // Function to show the "About Us" page
-    function showAboutUs() {
-        document.body.innerHTML = '';
-
-        const aboutContainer = document.createElement('div');
-        aboutContainer.style.width = '95%';
-        aboutContainer.style.maxWidth = '1300px';
-        aboutContainer.style.padding = '40px';
-        aboutContainer.style.margin = '30px auto';
-        aboutContainer.style.textAlign = 'center';
-        aboutContainer.style.fontFamily = 'Arial, sans-serif';
-
-        const aboutHeader = document.createElement('h1');
-        aboutHeader.textContent = 'About Us';
-        aboutHeader.style.color = '#0C1729';
-        aboutHeader.style.marginBottom = '40px';
-        aboutHeader.style.fontSize = '36px';
-        aboutContainer.appendChild(aboutHeader);
-
-        const aboutText = document.createElement('p');
-        aboutText.textContent = 'We are experts in countertop solutions, providing you with the best tools to estimate your project costs.';
-        aboutText.style.color = '#0C1729';
-        aboutText.style.fontSize = '18px';
-        aboutText.style.marginBottom = '30px';
-        aboutContainer.appendChild(aboutText);
-
-        document.body.appendChild(aboutContainer);
-        addTabs(); // Re-add the tabs
+    // Style for tabs
+    function styleTab(tab) {
+        tab.style.cursor = 'pointer';
+        tab.style.fontSize = '18px';
+        tab.style.fontWeight = 'bold';
+        tab.style.padding = '10px 20px';
     }
 
     // Function to create the invoice page
@@ -472,12 +445,48 @@
     function getShapesForType(type) {
         const shapes = [];
 
-        if (type === 'Regular Counter') {
+        if (type === 'Bar Top') {
+            shapes.push({
+                name: 'Bar Top Shape 1',
+                type: 'Bar Top',
+                measurements: ['1', '2'],
+                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da863bba73ecdd7c48_1.png'
+            });
+            shapes.push({
+                name: 'Bar Top Shape 2',
+                type: 'Bar Top',
+                measurements: ['1', '2', '3'],
+                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29dac853b0040a720e2f_2.png'
+            });
+            shapes.push({
+                name: 'Bar Top Shape 3',
+                type: 'Bar Top',
+                measurements: ['1', '2', '3', '4'],
+                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29daa8b359b5742e69e6_3.png'
+            });
+            shapes.push({
+                name: 'Bar Top Shape 4',
+                type: 'Bar Top',
+                measurements: ['1', '2', '3', '4', '5', '6', '7'],
+                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da78d4aad4898351b9_6.png'
+            });
+            shapes.push({
+                name: 'Bar Top Shape 5',
+                type: 'Bar Top',
+                measurements: ['1', '2', '3', '4', '5'],
+                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da26c4c2321fa2207c_4.png'
+            });
+        } else if (type === 'Regular Counter') {
             shapes.push({
                 name: 'Regular Counter Shape 1',
                 type: 'Regular Counter',
-                measurements: ['1', '2', '3'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+                measurements: ['1', '2'],
+                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce262e24b34ce34eeea96f_16.png'
             });
             shapes.push({
@@ -490,8 +499,8 @@
             shapes.push({
                 name: 'Regular Counter Shape 3',
                 type: 'Regular Counter',
-                measurements: ['1', '2', '3', '4', '5', '6'],
-                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+                measurements: ['1', '2', '3', '4'],
+                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26336c9e655d195ab278_14.png'
             });
             shapes.push({
@@ -516,7 +525,6 @@
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce2631feef900d977e6989_11.png'
             });
         }
-        // You can add more shapes and types here for Islands, Bar Tops, etc.
         return shapes;
     }
 
