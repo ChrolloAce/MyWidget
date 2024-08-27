@@ -205,47 +205,55 @@
             selectShapeAndCalculate('Bathroom', container);
         });
     }
+function createOptionButton(text) {
+    const button = document.createElement('button');
+    button.textContent = text;
+    styleButton(button);
+    button.style.width = '350px';  // Adjust width as needed
+    button.style.margin = '15px';
+    return button;
+}
 
-    // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
-    function selectKitchenType(container) {
-        previousPage = selectType.bind(null, container);
-        container.innerHTML = '';
+function selectKitchenType(container) {
+    previousPage = selectType.bind(null, container);
+    container.innerHTML = '';
 
-        const header = document.createElement('h2');
-        header.textContent = 'Choose a Kitchen Counter Type';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
+    const header = document.createElement('h2');
+    header.textContent = 'Choose a Kitchen Counter Type';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
 
-        const kitchenOptions = document.createElement('div');
-        kitchenOptions.style.display = 'flex';
-        kitchenOptions.style.flexWrap = 'wrap';
-        kitchenOptions.style.justifyContent = 'center';
-        kitchenOptions.style.gap = '30px';
+    const kitchenOptions = document.createElement('div');
+    kitchenOptions.style.display = 'flex';
+    kitchenOptions.style.flexWrap = 'wrap';
+    kitchenOptions.style.justifyContent = 'center';
+    kitchenOptions.style.gap = '30px';
 
-        const islandBtn = createOptionButton('Island');
-        const counterBtn = createOptionButton('Regular Counter');
-        const barTopBtn = createOptionButton('Bar Top');
+    const islandBtn = createOptionButton('Island');
+    const counterBtn = createOptionButton('Regular Counter');
+    const barTopBtn = createOptionButton('Bar Top');
 
-        kitchenOptions.appendChild(islandBtn);
-        kitchenOptions.appendChild(counterBtn);
-        kitchenOptions.appendChild(barTopBtn);
+    kitchenOptions.appendChild(islandBtn);
+    kitchenOptions.appendChild(counterBtn);
+    kitchenOptions.appendChild(barTopBtn);
 
-        container.appendChild(kitchenOptions);
+    container.appendChild(kitchenOptions);
 
-        islandBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Island', container);
-        });
+    islandBtn.addEventListener('click', function() {
+        selectShapeAndCalculate('Island', container);
+    });
 
-        counterBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Regular Counter', container);
-        });
+    counterBtn.addEventListener('click', function() {
+        selectShapeAndCalculate('Regular Counter', container);
+    });
 
-        barTopBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Bar Top', container);
-        });
-    }
+    barTopBtn.addEventListener('click', function() {
+        selectShapeAndCalculate('Bar Top', container);
+    });
+}
+
 
     // Function to handle shape selection and calculations
     function selectShapeAndCalculate(type, container) {
