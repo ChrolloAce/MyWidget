@@ -8,14 +8,17 @@
     let totalCost = 0;
     let previousPage = null;
 
+    // Function to initialize the interface
     function initInterface() {
         document.body.innerHTML = '';
         document.body.style.display = 'flex';
-        document.body.style.justifyContent = 'center';
+        document.body.style.flexDirection = 'column';
         document.body.style.alignItems = 'center';
         document.body.style.minHeight = '100vh';
         document.body.style.backgroundColor = '#ffffff';
         document.body.style.fontFamily = 'Arial, sans-serif';
+
+        addAppBar(); // Add the app bar
 
         const container = document.createElement('div');
         container.style.width = '95%';
@@ -26,9 +29,8 @@
         container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
         container.style.textAlign = 'center';
         container.style.margin = '30px auto';
+        container.style.flexGrow = '1';
         document.body.appendChild(container);
-
-        addBackButton();
 
         const header = document.createElement('h1');
         header.textContent = 'Invoice Calculator';
@@ -55,47 +57,49 @@
         });
     }
 
-    // Call the initInterface function to initialize the interface
-    initInterface();
+    // Function to add the app bar
+    function addAppBar() {
+        const appBar = document.createElement('div');
+        appBar.style.width = '100%';
+        appBar.style.backgroundColor = '#FF3131';
+        appBar.style.color = '#ffffff';
+        appBar.style.padding = '20px';
+        appBar.style.position = 'fixed';
+        appBar.style.top = '0';
+        appBar.style.left = '0';
+        appBar.style.zIndex = '1000';
+        appBar.style.display = 'flex';
+        appBar.style.justifyContent = 'space-between';
+        appBar.style.alignItems = 'center';
+        appBar.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
 
-    // Function to handle type selection (Kitchen/Bathroom)
-    function selectType(container) {
-        previousPage = createInvoicePage.bind(null, container);
-        container.innerHTML = '';
+        const title = document.createElement('h1');
+        title.textContent = 'Countertop App';
+        title.style.fontSize = '24px';
+        title.style.margin = '0';
+        title.style.flexGrow = '1';
+        appBar.appendChild(title);
 
-        const header = document.createElement('h2');
-        header.textContent = 'Choose a Room Type';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
+        const homeButton = document.createElement('button');
+        homeButton.textContent = 'Home';
+        styleAppBarButton(homeButton);
+        homeButton.addEventListener('click', initInterface);
+        appBar.appendChild(homeButton);
 
-        const choiceDiv = document.createElement('div');
-        choiceDiv.style.display = 'flex';
-        choiceDiv.style.justifyContent = 'space-around';
-        choiceDiv.style.gap = '40px';
-        choiceDiv.style.flexWrap = 'wrap';
+        document.body.appendChild(appBar);
+    }
 
-        const kitchenBtn = createImageButton(
-            'Kitchen',
-            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ccf4e697630121dd1ee09d_2.png'
-        );
-        const bathroomBtn = createImageButton(
-            'Bathroom',
-            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ccf4e642c5166829b52585_1.png'
-        );
-
-        choiceDiv.appendChild(kitchenBtn);
-        choiceDiv.appendChild(bathroomBtn);
-        container.appendChild(choiceDiv);
-        
-        kitchenBtn.addEventListener('click', function() {
-            selectKitchenType(container);
-        });
-
-        bathroomBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Bathroom', container);
-        });
+    // Style for buttons in the app bar
+    function styleAppBarButton(button) {
+        button.style.backgroundColor = '#0264D9';
+        button.style.color = '#ffffff';
+        button.style.padding = '10px 20px';
+        button.style.border = 'none';
+        button.style.borderRadius = '10px';
+        button.style.cursor = 'pointer';
+        button.style.fontSize = '16px';
+        button.style.fontWeight = 'bold';
+        button.style.marginLeft = '20px';
     }
 
     // Function to create the invoice page
@@ -143,6 +147,46 @@
         });
     }
 
+    // Function to handle type selection (Kitchen/Bathroom)
+    function selectType(container) {
+        previousPage = createInvoicePage.bind(null, container);
+        container.innerHTML = '';
+
+        const header = document.createElement('h2');
+        header.textContent = 'Choose a Room Type';
+        header.style.color = '#0C1729';
+        header.style.marginBottom = '30px';
+        header.style.fontSize = '28px';
+        container.appendChild(header);
+
+        const choiceDiv = document.createElement('div');
+        choiceDiv.style.display = 'flex';
+        choiceDiv.style.justifyContent = 'space-around';
+        choiceDiv.style.gap = '40px';
+        choiceDiv.style.flexWrap = 'wrap';
+
+        const kitchenBtn = createImageButton(
+            'Kitchen',
+            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ccf4e697630121dd1ee09d_2.png'
+        );
+        const bathroomBtn = createImageButton(
+            'Bathroom',
+            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ccf4e642c5166829b52585_1.png'
+        );
+
+        choiceDiv.appendChild(kitchenBtn);
+        choiceDiv.appendChild(bathroomBtn);
+        container.appendChild(choiceDiv);
+
+        kitchenBtn.addEventListener('click', function() {
+            selectKitchenType(container);
+        });
+
+        bathroomBtn.addEventListener('click', function() {
+            selectShapeAndCalculate('Bathroom', container);
+        });
+    }
+
     // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
     function selectKitchenType(container) {
         previousPage = selectType.bind(null, container);
@@ -184,23 +228,23 @@
         });
     }
 
-    // Function to handle shape selection and calculations for Bar Top
+    // Function to handle shape selection and calculations
     function selectShapeAndCalculate(type, container) {
         previousPage = selectKitchenType.bind(null, container);
         container.innerHTML = '';
 
         const header = document.createElement('h2');
-        header.textContent = `Select Shape for ${type}`;
+        header.textContent = `Select a Shape for ${type}`;
         header.style.color = '#0C1729';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
 
         const shapeDiv = document.createElement('div');
-        shapeDiv.style.display = 'grid';
-        shapeDiv.style.gridTemplateColumns = 'repeat(2, 1fr)';
-        shapeDiv.style.gap = '20px';
+        shapeDiv.style.display = 'flex';
+        shapeDiv.style.flexWrap = 'wrap';
         shapeDiv.style.justifyContent = 'center';
+        shapeDiv.style.gap = '30px';
 
         const shapes = getShapesForType(type);
         shapes.forEach(shape => {
@@ -213,11 +257,6 @@
         });
 
         container.appendChild(shapeDiv);
-
-        // Make layout responsive for smaller screens
-        if (window.innerWidth < 768) {
-            shapeDiv.style.gridTemplateColumns = '1fr';
-        }
     }
 
     // Function to prompt user for measurements and finish selection
@@ -234,10 +273,15 @@
 
         const imageDiv = document.createElement('div');
         imageDiv.style.textAlign = 'center';
-        const shapeImage = createImageButton('', shape.imageUrl);
-        shapeImage.style.width = '400px';
-        shapeImage.style.height = '400px';
+        imageDiv.style.marginBottom = '30px';
+
+        const shapeImage = document.createElement('img');
+        shapeImage.src = shape.imageUrl;
+        shapeImage.style.maxWidth = '100%';
+        shapeImage.style.height = 'auto';
         shapeImage.style.margin = '0 auto';
+        shapeImage.style.borderRadius = '15px';
+        shapeImage.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
         imageDiv.appendChild(shapeImage);
         container.appendChild(imageDiv);
 
@@ -421,41 +465,36 @@
                 name: 'Bar Top Shape 4',
                 type: 'Bar Top',
                 measurements: ['1', '2', '3', '4', '5', '6', '7'],
-                formula: (measurements, depth) => ((measurements.reduce((acc, curr) => acc + curr, 0)) * depth) / 144,
+                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da78d4aad4898351b9_6.png'
             });
             shapes.push({
                 name: 'Bar Top Shape 5',
                 type: 'Bar Top',
                 measurements: ['1', '2', '3', '4', '5'],
-                formula: (measurements, depth) => ((measurements.reduce((acc, curr) => acc + curr, 0)) * depth) / 144,
+                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da26c4c2321fa2207c_4.png'
             });
-        } else if (type === 'Island') {
-            // Add Island shapes similarly
-        } else if (type === 'Regular Counter') {
-            // Add Regular Counter shapes similarly
         }
-
+        // You can add more shapes and types here for Islands, Regular Countertops, etc.
         return shapes;
     }
 
     // Helper function to style buttons
     function styleButton(button) {
-        button.style.padding = '20px 30px';
+        button.style.padding = '15px';
         button.style.backgroundColor = '#FF3131';
-        button.style.color = 'white';
+        button.style.color = '#ffffff';
         button.style.border = 'none';
-        button.style.borderRadius = '25px';
+        button.style.borderRadius = '10px';
         button.style.cursor = 'pointer';
         button.style.fontSize = '18px';
         button.style.fontWeight = 'bold';
-        button.style.margin = '20px 0';
-        button.style.display = 'block';
-        button.style.width = '80%';
-        button.style.maxWidth = '400px';
+        button.style.margin = '10px 0';
+        button.style.width = '100%';
         button.style.transition = 'all 0.3s ease';
         button.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
+
         button.addEventListener('mouseenter', function() {
             button.style.backgroundColor = '#FF6969';
             button.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
