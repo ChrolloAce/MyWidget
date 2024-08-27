@@ -28,6 +28,8 @@
         container.style.margin = '30px auto';
         document.body.appendChild(container);
 
+        addBackButton();
+
         const header = document.createElement('h1');
         header.textContent = 'Invoice Calculator';
         header.style.color = '#0C1729';
@@ -68,8 +70,6 @@
         header.style.fontSize = '28px';
         container.appendChild(header);
 
-        addBackButton(container);
-
         const choiceDiv = document.createElement('div');
         choiceDiv.style.display = 'flex';
         choiceDiv.style.justifyContent = 'space-around';
@@ -88,7 +88,7 @@
         choiceDiv.appendChild(kitchenBtn);
         choiceDiv.appendChild(bathroomBtn);
         container.appendChild(choiceDiv);
-
+        
         kitchenBtn.addEventListener('click', function() {
             selectKitchenType(container);
         });
@@ -109,8 +109,6 @@
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
-
-        addBackButton(container);
 
         // Add New Item Button
         const addItemBtn = document.createElement('button');
@@ -157,8 +155,6 @@
         header.style.fontSize = '28px';
         container.appendChild(header);
 
-        addBackButton(container);
-
         const kitchenOptions = document.createElement('div');
         kitchenOptions.style.display = 'flex';
         kitchenOptions.style.flexWrap = 'wrap';
@@ -200,8 +196,6 @@
         header.style.fontSize = '28px';
         container.appendChild(header);
 
-        addBackButton(container);
-
         const shapeDiv = document.createElement('div');
         shapeDiv.style.display = 'grid';
         shapeDiv.style.gridTemplateColumns = 'repeat(2, 1fr)';
@@ -219,6 +213,11 @@
         });
 
         container.appendChild(shapeDiv);
+
+        // Make layout responsive for smaller screens
+        if (window.innerWidth < 768) {
+            shapeDiv.style.gridTemplateColumns = '1fr';
+        }
     }
 
     // Function to prompt user for measurements and finish selection
@@ -233,13 +232,12 @@
         header.style.fontSize = '28px';
         container.appendChild(header);
 
-        addBackButton(container);
-
         const imageDiv = document.createElement('div');
         imageDiv.style.textAlign = 'center';
         const shapeImage = createImageButton('', shape.imageUrl);
         shapeImage.style.width = '400px';
         shapeImage.style.height = '400px';
+        shapeImage.style.margin = '0 auto';
         imageDiv.appendChild(shapeImage);
         container.appendChild(imageDiv);
 
@@ -256,7 +254,7 @@
             label.textContent = `Measurement ${index + 1} (inches):`;
             label.style.color = '#0C1729';
             label.style.marginBottom = '5px';
-            label.style.fontSize = '18px';
+            label.style.fontSize = '20px';
             formDiv.appendChild(label);
 
             const input = document.createElement('input');
@@ -267,7 +265,7 @@
             input.style.marginBottom = '10px';
             input.style.border = '1px solid #ddd';
             input.style.borderRadius = '5px';
-            input.style.fontSize = '18px';
+            input.style.fontSize = '20px';
             formDiv.appendChild(input);
         });
 
@@ -276,7 +274,7 @@
         finishLabel.textContent = 'Select Finish:';
         finishLabel.style.color = '#0C1729';
         finishLabel.style.marginBottom = '5px';
-        finishLabel.style.fontSize = '18px';
+        finishLabel.style.fontSize = '20px';
         formDiv.appendChild(finishLabel);
 
         const finishSelect = document.createElement('select');
@@ -284,7 +282,7 @@
         finishSelect.style.padding = '10px';
         finishSelect.style.border = '1px solid #ddd';
         finishSelect.style.borderRadius = '5px';
-        finishSelect.style.fontSize = '18px';
+        finishSelect.style.fontSize = '20px';
         const regularOption = document.createElement('option');
         regularOption.value = 'regular';
         regularOption.textContent = 'Regular Pour - $26/sq ft';
@@ -453,15 +451,19 @@
         button.style.fontSize = '18px';
         button.style.fontWeight = 'bold';
         button.style.margin = '20px 0';
-        button.style.display = 'inline-block';
-        button.style.transition = 'background-color 0.3s ease';
-
+        button.style.display = 'block';
+        button.style.width = '80%';
+        button.style.maxWidth = '400px';
+        button.style.transition = 'all 0.3s ease';
+        button.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
         button.addEventListener('mouseenter', function() {
-            button.style.backgroundColor = '#e62e2e';
+            button.style.backgroundColor = '#FF6969';
+            button.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
         });
 
         button.addEventListener('mouseleave', function() {
             button.style.backgroundColor = '#FF3131';
+            button.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
         });
     }
 
@@ -512,13 +514,21 @@
     }
 
     // Helper function to add a back button
-    function addBackButton(container) {
+    function addBackButton() {
         const backButton = document.createElement('button');
         backButton.textContent = 'Back';
         styleButton(backButton);
-        backButton.style.backgroundColor = '#777';
-        backButton.style.float = 'left';
-        backButton.style.marginBottom = '20px';
+        backButton.style.backgroundColor = '#0C1729';
+        backButton.style.color = 'white';
+        backButton.style.position = 'absolute';
+        backButton.style.top = '10px';
+        backButton.style.left = '10px';
+        backButton.style.zIndex = '1000';
+        backButton.style.padding = '10px 20px';
+        backButton.style.fontSize = '16px';
+        backButton.style.fontWeight = 'bold';
+        backButton.style.borderRadius = '10px';
+        backButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
 
         backButton.addEventListener('click', function() {
             if (previousPage) {
@@ -526,7 +536,7 @@
             }
         });
 
-        container.appendChild(backButton);
+        document.body.appendChild(backButton);
     }
 
     // Initialize the interface
