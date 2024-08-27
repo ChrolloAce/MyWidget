@@ -15,99 +15,31 @@
         document.body.style.flexDirection = 'column';
         document.body.style.alignItems = 'center';
         document.body.style.minHeight = '100vh';
-        document.body.style.backgroundColor = '#f7f7f7';
+        document.body.style.backgroundColor = '#ffffff';
         document.body.style.fontFamily = 'Arial, sans-serif';
 
         const container = document.createElement('div');
-        container.style.width = '100%';
-        container.style.maxWidth = '1200px';
+        container.style.width = '95%';
+        container.style.maxWidth = '1300px';
         container.style.backgroundColor = '#ffffff';
-        container.style.padding = '30px';
+        container.style.padding = '40px';
         container.style.borderRadius = '15px';
-        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.1)';
+        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
+        container.style.textAlign = 'center';
         container.style.margin = '30px auto';
         container.style.flexGrow = '1';
         document.body.appendChild(container);
 
-        addNavigationTabs(container); // Add navigation tabs
-
-        const contentContainer = document.createElement('div');
-        contentContainer.id = 'contentContainer';
-        contentContainer.style.marginTop = '30px';
-        container.appendChild(contentContainer);
-
-        // Display the initial page
-        showHomePage(contentContainer);
-    }
-
-    // Function to add navigation tabs
-    function addNavigationTabs(container) {
-        const tabContainer = document.createElement('div');
-        tabContainer.style.display = 'flex';
-        tabContainer.style.justifyContent = 'center';
-        tabContainer.style.borderBottom = '2px solid #dddddd';
-        tabContainer.style.marginBottom = '20px';
-
-        const homeTab = createTabButton('Home');
-        const invoiceTab = createTabButton('Invoice');
-        const aboutTab = createTabButton('About');
-
-        tabContainer.appendChild(homeTab);
-        tabContainer.appendChild(invoiceTab);
-        tabContainer.appendChild(aboutTab);
-        container.appendChild(tabContainer);
-
-        homeTab.addEventListener('click', function() {
-            showHomePage(document.getElementById('contentContainer'));
-        });
-
-        invoiceTab.addEventListener('click', function() {
-            createInvoicePage(document.getElementById('contentContainer'));
-        });
-
-        aboutTab.addEventListener('click', function() {
-            showAboutPage(document.getElementById('contentContainer'));
-        });
-    }
-
-    // Function to create a tab button
-    function createTabButton(text) {
-        const button = document.createElement('button');
-        button.textContent = text;
-        button.style.padding = '15px 30px';
-        button.style.margin = '0 10px';
-        button.style.border = 'none';
-        button.style.backgroundColor = 'transparent';
-        button.style.color = '#0C1729';
-        button.style.fontSize = '18px';
-        button.style.cursor = 'pointer';
-        button.style.fontWeight = 'bold';
-        button.style.transition = 'border-bottom 0.3s ease';
-
-        button.addEventListener('mouseenter', function() {
-            button.style.borderBottom = '2px solid #FF3131';
-        });
-
-        button.addEventListener('mouseleave', function() {
-            button.style.borderBottom = '2px solid transparent';
-        });
-
-        return button;
-    }
-
-    // Function to show the home page
-    function showHomePage(container) {
-        container.innerHTML = '';
         const header = document.createElement('h1');
-        header.textContent = 'Welcome to the Countertop Calculator';
+        header.textContent = 'Invoice Calculator';
         header.style.color = '#0C1729';
-        header.style.fontSize = '32px';
-        header.style.marginBottom = '20px';
+        header.style.marginBottom = '40px';
+        header.style.fontSize = '36px';
         container.appendChild(header);
 
         const description = document.createElement('p');
-        description.textContent = 'Use this tool to calculate the cost of your countertop projects. Start by creating a new invoice.';
-        description.style.color = '#555555';
+        description.textContent = 'Calculate your countertop costs easily. Start by adding items to your invoice below.';
+        description.style.color = '#0C1729';
         description.style.fontSize = '18px';
         description.style.marginBottom = '30px';
         container.appendChild(description);
@@ -118,12 +50,14 @@
         container.appendChild(startInvoiceBtn);
 
         startInvoiceBtn.addEventListener('click', function() {
+            previousPage = initInterface;
             createInvoicePage(container);
         });
     }
 
     // Function to create the invoice page
     function createInvoicePage(container) {
+        previousPage = initInterface;
         container.innerHTML = '';
 
         const header = document.createElement('h2');
@@ -164,6 +98,8 @@
         finalizeBtn.addEventListener('click', function() {
             finalizeInvoice(container);
         });
+
+        addBackButton(); // Add the back button
     }
 
     // Function to handle type selection (Kitchen/Bathroom)
@@ -204,56 +140,52 @@
         bathroomBtn.addEventListener('click', function() {
             selectShapeAndCalculate('Bathroom', container);
         });
+
+        addBackButton(); // Add the back button
     }
-function createOptionButton(text) {
-    const button = document.createElement('button');
-    button.textContent = text;
-    styleButton(button);
-    button.style.width = '350px';  // Adjust width as needed
-    button.style.margin = '15px';
-    return button;
-}
 
-function selectKitchenType(container) {
-    previousPage = selectType.bind(null, container);
-    container.innerHTML = '';
+    // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
+    function selectKitchenType(container) {
+        previousPage = selectType.bind(null, container);
+        container.innerHTML = '';
 
-    const header = document.createElement('h2');
-    header.textContent = 'Choose a Kitchen Counter Type';
-    header.style.color = '#0C1729';
-    header.style.marginBottom = '30px';
-    header.style.fontSize = '28px';
-    container.appendChild(header);
+        const header = document.createElement('h2');
+        header.textContent = 'Choose a Kitchen Counter Type';
+        header.style.color = '#0C1729';
+        header.style.marginBottom = '30px';
+        header.style.fontSize = '28px';
+        container.appendChild(header);
 
-    const kitchenOptions = document.createElement('div');
-    kitchenOptions.style.display = 'flex';
-    kitchenOptions.style.flexWrap = 'wrap';
-    kitchenOptions.style.justifyContent = 'center';
-    kitchenOptions.style.gap = '30px';
+        const kitchenOptions = document.createElement('div');
+        kitchenOptions.style.display = 'flex';
+        kitchenOptions.style.flexWrap = 'wrap';
+        kitchenOptions.style.justifyContent = 'center';
+        kitchenOptions.style.gap = '30px';
 
-    const islandBtn = createOptionButton('Island');
-    const counterBtn = createOptionButton('Regular Counter');
-    const barTopBtn = createOptionButton('Bar Top');
+        const islandBtn = createOptionButton('Island');
+        const counterBtn = createOptionButton('Regular Counter');
+        const barTopBtn = createOptionButton('Bar Top');
 
-    kitchenOptions.appendChild(islandBtn);
-    kitchenOptions.appendChild(counterBtn);
-    kitchenOptions.appendChild(barTopBtn);
+        kitchenOptions.appendChild(islandBtn);
+        kitchenOptions.appendChild(counterBtn);
+        kitchenOptions.appendChild(barTopBtn);
 
-    container.appendChild(kitchenOptions);
+        container.appendChild(kitchenOptions);
 
-    islandBtn.addEventListener('click', function() {
-        selectShapeAndCalculate('Island', container);
-    });
+        islandBtn.addEventListener('click', function() {
+            selectShapeAndCalculate('Island', container);
+        });
 
-    counterBtn.addEventListener('click', function() {
-        selectShapeAndCalculate('Regular Counter', container);
-    });
+        counterBtn.addEventListener('click', function() {
+            selectShapeAndCalculate('Regular Counter', container);
+        });
 
-    barTopBtn.addEventListener('click', function() {
-        selectShapeAndCalculate('Bar Top', container);
-    });
-}
+        barTopBtn.addEventListener('click', function() {
+            selectShapeAndCalculate('Bar Top', container);
+        });
 
+        addBackButton(); // Add the back button
+    }
 
     // Function to handle shape selection and calculations
     function selectShapeAndCalculate(type, container) {
@@ -284,6 +216,8 @@ function selectKitchenType(container) {
         });
 
         container.appendChild(shapeDiv);
+
+        addBackButton(); // Add the back button
     }
 
     // Function to prompt user for measurements and finish selection
@@ -375,6 +309,8 @@ function selectKitchenType(container) {
         calculateBtn.addEventListener('click', function() {
             calculateAndAddItem(shape, finishSelect.value, container, type);
         });
+
+        addBackButton(); // Add the back button
     }
 
     function calculateAndAddItem(shape, finishType, container, type) {
@@ -407,10 +343,7 @@ function selectKitchenType(container) {
             cost: cost.toFixed(2)
         });
 
-        totalCost += cost; // Update the total cost
-
         console.log('Items:', items);
-        console.log('Total Cost:', totalCost);
 
         // Redirect back to the invoice page and show the updated item list
         createInvoicePage(container);
@@ -465,24 +398,6 @@ function selectKitchenType(container) {
         createInvoicePage(container);
     }
 
-    // Function to show the about page
-    function showAboutPage(container) {
-        container.innerHTML = '';
-        const header = document.createElement('h2');
-        header.textContent = 'About This App';
-        header.style.color = '#0C1729';
-        header.style.fontSize = '28px';
-        header.style.marginBottom = '20px';
-        container.appendChild(header);
-
-        const description = document.createElement('p');
-        description.textContent = 'This is a simple invoice calculator for countertop projects, designed to help you easily calculate your costs based on measurements and material finishes.';
-        description.style.color = '#555555';
-        description.style.fontSize = '18px';
-        description.style.lineHeight = '1.6';
-        container.appendChild(description);
-    }
-
     // Helper function to get shapes for a specific type
     function getShapesForType(type) {
         const shapes = [];
@@ -524,6 +439,52 @@ function selectKitchenType(container) {
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da26c4c2321fa2207c_4.png'
             });
         }
+        
+        if (type === 'Kitchen') {
+            shapes.push({
+                name: 'Kitchen Shape 1',
+                type: 'Kitchen',
+                measurements: ['1', '2', '3'],
+                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce262e24b34ce34eeea96f_16.png'
+            });
+            shapes.push({
+                name: 'Kitchen Shape 2',
+                type: 'Kitchen',
+                measurements: ['1', '2', '3'],
+                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce2631822e5ef6600d57b5_15.png'
+            });
+            shapes.push({
+                name: 'Kitchen Shape 3',
+                type: 'Kitchen',
+                measurements: ['1', '2', '3', '4', '5', '6'],
+                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26336c9e655d195ab278_14.png'
+            });
+            shapes.push({
+                name: 'Kitchen Shape 4',
+                type: 'Kitchen',
+                measurements: ['1', '2'],
+                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26346e73f1177f42d0a1_10.png'
+            });
+            shapes.push({
+                name: 'Kitchen Shape 5',
+                type: 'Kitchen',
+                measurements: ['1', '2', '3'],
+                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26313105b0a9d43fecba_13.png'
+            });
+            shapes.push({
+                name: 'Kitchen Shape 6',
+                type: 'Kitchen',
+                measurements: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
+                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce2631feef900d977e6989_11.png'
+            });
+        }
+        
         // You can add more shapes and types here for Islands, Regular Countertops, etc.
         return shapes;
     }
@@ -588,6 +549,42 @@ function selectKitchenType(container) {
         button.appendChild(overlay);
 
         return button;
+    }
+
+    // Helper function to create option buttons
+    function createOptionButton(text) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        styleButton(button);
+        button.style.width = '350px';  // Make these smaller than the image buttons
+        button.style.margin = '15px';
+        return button;
+    }
+
+    // Helper function to add a back button
+    function addBackButton() {
+        const backButton = document.createElement('button');
+        backButton.textContent = 'Back';
+        styleButton(backButton);
+        backButton.style.backgroundColor = '#0C1729';
+        backButton.style.color = 'white';
+        backButton.style.position = 'absolute';
+        backButton.style.top = '10px';
+        backButton.style.left = '10px';
+        backButton.style.zIndex = '1000';
+        backButton.style.padding = '10px 20px';
+        backButton.style.fontSize = '16px';
+        backButton.style.fontWeight = 'bold';
+        backButton.style.borderRadius = '10px';
+        backButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+
+        backButton.addEventListener('click', function() {
+            if (previousPage) {
+                previousPage();
+            }
+        });
+
+        document.body.appendChild(backButton);
     }
 
     // Initialize the interface
