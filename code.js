@@ -6,6 +6,7 @@
 
     let items = [];
     let totalCost = 0;
+    let previousPage = null;
 
     function initInterface() {
         document.body.innerHTML = '';
@@ -29,14 +30,14 @@
 
         const header = document.createElement('h1');
         header.textContent = 'Invoice Calculator';
-        header.style.color = '#000000';
+        header.style.color = '#0C1729';
         header.style.marginBottom = '40px';
         header.style.fontSize = '36px';
         container.appendChild(header);
 
         const description = document.createElement('p');
         description.textContent = 'Calculate your countertop costs easily. Start by adding items to your invoice below.';
-        description.style.color = '#000000';
+        description.style.color = '#0C1729';
         description.style.fontSize = '18px';
         description.style.marginBottom = '30px';
         container.appendChild(description);
@@ -47,6 +48,7 @@
         container.appendChild(startInvoiceBtn);
 
         startInvoiceBtn.addEventListener('click', function() {
+            previousPage = initInterface;
             createInvoicePage(container);
         });
     }
@@ -56,14 +58,17 @@
 
     // Function to handle type selection (Kitchen/Bathroom)
     function selectType(container) {
+        previousPage = createInvoicePage.bind(null, container);
         container.innerHTML = '';
 
         const header = document.createElement('h2');
         header.textContent = 'Choose a Room Type';
-        header.style.color = '#000000';
+        header.style.color = '#0C1729';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
+
+        addBackButton(container);
 
         const choiceDiv = document.createElement('div');
         choiceDiv.style.display = 'flex';
@@ -95,14 +100,17 @@
 
     // Function to create the invoice page
     function createInvoicePage(container) {
+        previousPage = initInterface;
         container.innerHTML = '';
 
         const header = document.createElement('h2');
         header.textContent = 'Current Invoice';
-        header.style.color = '#000000';
+        header.style.color = '#0C1729';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
+
+        addBackButton(container);
 
         // Add New Item Button
         const addItemBtn = document.createElement('button');
@@ -115,7 +123,7 @@
         itemListDiv.id = 'itemList';
         itemListDiv.style.marginTop = '30px';
         itemListDiv.style.textAlign = 'left';
-        itemListDiv.innerHTML = '<h3 style="color: #000000;">Items:</h3><p style="color: #777;">No items added yet.</p>';
+        itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3><p style="color: #777;">No items added yet.</p>';
         container.appendChild(itemListDiv);
 
         // Update the item list immediately upon creating the page
@@ -139,14 +147,17 @@
 
     // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
     function selectKitchenType(container) {
+        previousPage = selectType.bind(null, container);
         container.innerHTML = '';
 
         const header = document.createElement('h2');
         header.textContent = 'Choose a Kitchen Counter Type';
-        header.style.color = '#000000';
+        header.style.color = '#0C1729';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
+
+        addBackButton(container);
 
         const kitchenOptions = document.createElement('div');
         kitchenOptions.style.display = 'flex';
@@ -179,14 +190,17 @@
 
     // Function to handle shape selection and calculations for Bar Top
     function selectShapeAndCalculate(type, container) {
+        previousPage = selectKitchenType.bind(null, container);
         container.innerHTML = '';
 
         const header = document.createElement('h2');
         header.textContent = `Select Shape for ${type}`;
-        header.style.color = '#000000';
+        header.style.color = '#0C1729';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
+
+        addBackButton(container);
 
         const shapeDiv = document.createElement('div');
         shapeDiv.style.display = 'grid';
@@ -209,20 +223,23 @@
 
     // Function to prompt user for measurements and finish selection
     function promptMeasurements(shape, type, container) {
+        previousPage = selectShapeAndCalculate.bind(null, type, container);
         container.innerHTML = '';
 
         const header = document.createElement('h2');
         header.textContent = `${shape.name} - ${type}`;
-        header.style.color = '#000000';
+        header.style.color = '#0C1729';
         header.style.marginBottom = '30px';
         header.style.fontSize = '28px';
         container.appendChild(header);
 
+        addBackButton(container);
+
         const imageDiv = document.createElement('div');
         imageDiv.style.textAlign = 'center';
         const shapeImage = createImageButton('', shape.imageUrl);
-        shapeImage.style.width = '300px';
-        shapeImage.style.height = '300px';
+        shapeImage.style.width = '400px';
+        shapeImage.style.height = '400px';
         imageDiv.appendChild(shapeImage);
         container.appendChild(imageDiv);
 
@@ -231,11 +248,13 @@
         formDiv.style.flexDirection = 'column';
         formDiv.style.alignItems = 'center';
         formDiv.style.gap = '20px';
+        formDiv.style.marginTop = '30px';
+        container.appendChild(formDiv);
 
         shape.measurements.forEach((measurement, index) => {
             const label = document.createElement('label');
             label.textContent = `Measurement ${index + 1} (inches):`;
-            label.style.color = '#000000';
+            label.style.color = '#0C1729';
             label.style.marginBottom = '5px';
             label.style.fontSize = '18px';
             formDiv.appendChild(label);
@@ -255,7 +274,7 @@
         // Finish Selection
         const finishLabel = document.createElement('label');
         finishLabel.textContent = 'Select Finish:';
-        finishLabel.style.color = '#000000';
+        finishLabel.style.color = '#0C1729';
         finishLabel.style.marginBottom = '5px';
         finishLabel.style.fontSize = '18px';
         formDiv.appendChild(finishLabel);
@@ -287,8 +306,6 @@
         calculateBtn.addEventListener('click', function() {
             calculateAndAddItem(shape, finishSelect.value, container, type);
         });
-
-        container.appendChild(formDiv);
     }
 
     function calculateAndAddItem(shape, finishType, container, type) {
@@ -323,10 +340,6 @@
 
         console.log('Items:', items);
 
-        // Update total cost
-        totalCost += cost;
-        console.log('Total Cost:', totalCost);
-
         // Redirect back to the invoice page and show the updated item list
         createInvoicePage(container);
     }
@@ -343,7 +356,7 @@
             container.appendChild(itemListDiv);
         }
 
-        itemListDiv.innerHTML = '<h3 style="color: #000000;">Items:</h3>';
+        itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3>';
 
         if (items.length === 0) {
             itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
@@ -354,7 +367,7 @@
                 itemDiv.style.padding = '10px';
                 itemDiv.style.marginBottom = '15px';
                 itemDiv.style.borderBottom = '1px solid #ddd';
-                itemDiv.style.color = '#000000';
+                itemDiv.style.color = '#0C1729';
                 itemListDiv.appendChild(itemDiv);
             });
 
@@ -458,9 +471,8 @@
         button.style.position = 'relative';
         button.style.width = '500px';
         button.style.height = '500px';
-        button.style.maxWidth = '500px';
         button.style.border = '2px solid #FF3131';
-        button.style.borderRadius = '15px';
+        button.style.borderRadius = '25px';
         button.style.overflow = 'hidden';
         button.style.cursor = 'pointer';
         button.style.textAlign = 'center';
@@ -471,7 +483,7 @@
         button.style.backgroundImage = `url(${imageUrl})`;
         button.style.backgroundSize = 'cover';
         button.style.backgroundPosition = 'center';
-        button.style.marginBottom = '20px';
+        button.style.marginBottom = '30px';
 
         const overlay = document.createElement('div');
         overlay.style.position = 'absolute';
@@ -479,8 +491,8 @@
         overlay.style.width = '100%';
         overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
         overlay.style.color = 'white';
-        overlay.style.padding = '15px';
-        overlay.style.fontSize = '20px';
+        overlay.style.padding = '20px';
+        overlay.style.fontSize = '24px';
         overlay.style.fontWeight = 'bold';
         overlay.style.textAlign = 'center';
         overlay.textContent = text;
@@ -494,9 +506,27 @@
         const button = document.createElement('button');
         button.textContent = text;
         styleButton(button);
-        button.style.width = '300px';  // Make these smaller than the image buttons
-        button.style.margin = '10px';
+        button.style.width = '350px';  // Make these smaller than the image buttons
+        button.style.margin = '15px';
         return button;
+    }
+
+    // Helper function to add a back button
+    function addBackButton(container) {
+        const backButton = document.createElement('button');
+        backButton.textContent = 'Back';
+        styleButton(backButton);
+        backButton.style.backgroundColor = '#777';
+        backButton.style.float = 'left';
+        backButton.style.marginBottom = '20px';
+
+        backButton.addEventListener('click', function() {
+            if (previousPage) {
+                previousPage();
+            }
+        });
+
+        container.appendChild(backButton);
     }
 
     // Initialize the interface
