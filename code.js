@@ -550,68 +550,67 @@
     return shapes;
 }
 
+// Helper function to style buttons
+function styleButton(button) {
+    button.style.padding = '10px';  // Reduced padding
+    button.style.backgroundColor = '#000000';  // Black background
+    button.style.color = '#ffffff';  // White text
+    button.style.border = '2px solid #0264D9';  // Elegant blue border
+    button.style.borderRadius = '5px';  // Reduced border radius
+    button.style.cursor = 'pointer';
+    button.style.fontSize = '16px';  // Slightly smaller font size
+    button.style.fontWeight = 'bold';
+    button.style.margin = '5px 0';  // Reduced margin
+    button.style.width = 'auto';  // Adjust width to be automatic
+    button.style.transition = 'all 0.3s ease';
+    button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';  // Reduced shadow
 
-    // Helper function to style buttons
-    function styleButton(button) {
-        button.style.padding = '15px';
-        button.style.backgroundColor = '#FF3131';
+    button.addEventListener('mouseenter', function() {
+        button.style.backgroundColor = '#0264D9';  // Change background to blue on hover
         button.style.color = '#ffffff';
-        button.style.border = 'none';
-        button.style.borderRadius = '10px';
-        button.style.cursor = 'pointer';
-        button.style.fontSize = '18px';
-        button.style.fontWeight = 'bold';
-        button.style.margin = '10px 0';
-        button.style.width = '100%';
-        button.style.transition = 'all 0.3s ease';
-        button.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
+    });
 
-        button.addEventListener('mouseenter', function() {
-            button.style.backgroundColor = '#FF6969';
-            button.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
-        });
+    button.addEventListener('mouseleave', function() {
+        button.style.backgroundColor = '#000000';  // Return to black on mouse leave
+    });
+}
 
-        button.addEventListener('mouseleave', function() {
-            button.style.backgroundColor = '#FF3131';
-            button.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
-        });
-    }
+// Helper function to create image buttons
+function createImageButton(text, imageUrl) {
+    const button = document.createElement('div');
+    button.style.position = 'relative';
+    button.style.width = '250px';  // Reduced width
+    button.style.height = '250px';  // Reduced height
+    button.style.border = '2px solid #000000';  // Black border
+    button.style.borderRadius = '15px';  // Reduced border radius
+    button.style.overflow = 'hidden';
+    button.style.cursor = 'pointer';
+    button.style.textAlign = 'center';
+    button.style.display = 'flex';
+    button.style.flexDirection = 'column';
+    button.style.justifyContent = 'center';
+    button.style.alignItems = 'center';
+    button.style.backgroundImage = `url(${imageUrl})`;
+    button.style.backgroundSize = 'cover';
+    button.style.backgroundPosition = 'center';
+    button.style.marginBottom = '20px';  // Reduced margin
 
-    // Helper function to create image buttons
-    function createImageButton(text, imageUrl) {
-        const button = document.createElement('div');
-        button.style.position = 'relative';
-        button.style.width = '500px';
-        button.style.height = '500px';
-        button.style.border = '2px solid #FF3131';
-        button.style.borderRadius = '25px';
-        button.style.overflow = 'hidden';
-        button.style.cursor = 'pointer';
-        button.style.textAlign = 'center';
-        button.style.display = 'flex';
-        button.style.flexDirection = 'column';
-        button.style.justifyContent = 'center';
-        button.style.alignItems = 'center';
-        button.style.backgroundImage = `url(${imageUrl})`;
-        button.style.backgroundSize = 'cover';
-        button.style.backgroundPosition = 'center';
-        button.style.marginBottom = '30px';
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.bottom = '0';
+    overlay.style.width = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
+    overlay.style.color = 'white';
+    overlay.style.padding = '15px';  // Reduced padding
+    overlay.style.fontSize = '18px';  // Smaller font size
+    overlay.style.fontWeight = 'bold';
+    overlay.style.textAlign = 'center';
+    overlay.textContent = text;
+    button.appendChild(overlay);
 
-        const overlay = document.createElement('div');
-        overlay.style.position = 'absolute';
-        overlay.style.bottom = '0';
-        overlay.style.width = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-        overlay.style.color = 'white';
-        overlay.style.padding = '20px';
-        overlay.style.fontSize = '24px';
-        overlay.style.fontWeight = 'bold';
-        overlay.style.textAlign = 'center';
-        overlay.textContent = text;
-        button.appendChild(overlay);
+    return button;
+}
 
-        return button;
-    }
 
     // Helper function to create option buttons
     function createOptionButton(text) {
