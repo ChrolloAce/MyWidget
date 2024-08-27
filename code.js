@@ -495,6 +495,13 @@ function styleTab(tab) {
             formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
             imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da26c4c2321fa2207c_4.png'
         });
+        shapes.push({
+            name: 'Bar Top Shape 6',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4', '5', '6'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7df416f1b9ceda636b_3.png'
+        });
     } else if (type === 'Regular Counter') {
         shapes.push({
             name: 'Regular Counter Shape 1',
@@ -546,6 +553,13 @@ function styleTab(tab) {
             formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
             imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce476ab04bef486aefc05d_12.png'
         });
+        shapes.push({
+            name: 'Island Shape 3',
+            type: 'Island',
+            measurements: ['1', '2', '3'],
+            formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce476a2a1b510869802adb_11.png'
+        });
     } else if (type === 'Bathroom') {
         shapes.push({
             name: 'Bathroom Shape 1',
@@ -572,6 +586,7 @@ function styleTab(tab) {
 
     return shapes;
 }
+
 
 
 // Helper function to style buttons
