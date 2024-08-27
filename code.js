@@ -193,46 +193,56 @@
         });
     }
 
-    // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
-    function selectKitchenType(container) {
-        previousPage = selectType.bind(null, container);
-        container.innerHTML = '';
+   function selectKitchenType(container) {
+    previousPage = selectType.bind(null, container);
+    container.innerHTML = '';
 
-        const header = document.createElement('h2');
-        header.textContent = 'Choose a Kitchen Counter Type';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
+    const header = document.createElement('h2');
+    header.textContent = 'Choose a Kitchen Counter Type';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
 
-        const kitchenOptions = document.createElement('div');
-        kitchenOptions.style.display = 'flex';
-        kitchenOptions.style.flexWrap = 'wrap';
-        kitchenOptions.style.justifyContent = 'center';
-        kitchenOptions.style.gap = '30px';
+    const kitchenOptions = document.createElement('div');
+    kitchenOptions.style.display = 'flex';
+    kitchenOptions.style.flexWrap = 'wrap';
+    kitchenOptions.style.justifyContent = 'center';
+    kitchenOptions.style.gap = '30px';
 
-        const islandBtn = createOptionButton('Island');
-        const counterBtn = createOptionButton('Regular Counter');
-        const barTopBtn = createOptionButton('Bar Top');
+    // Adding the new cover images
+    const islandBtn = createImageButton(
+        'Island',
+        'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d6cb02e60f269ed30_2.png'
+    );
+    const counterBtn = createImageButton(
+        'Regular Counter',
+        'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d61151fe7d2e11e25_4.png'
+    );
+    const barTopBtn = createImageButton(
+        'Bar Top',
+        'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7df416f1b9ceda636b_3.png'
+    );
 
-        kitchenOptions.appendChild(islandBtn);
-        kitchenOptions.appendChild(counterBtn);
-        kitchenOptions.appendChild(barTopBtn);
+    kitchenOptions.appendChild(islandBtn);
+    kitchenOptions.appendChild(counterBtn);
+    kitchenOptions.appendChild(barTopBtn);
 
-        container.appendChild(kitchenOptions);
+    container.appendChild(kitchenOptions);
 
-        islandBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Island', container);
-        });
+    islandBtn.addEventListener('click', function() {
+        selectShapeAndCalculate('Island', container);
+    });
 
-        counterBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Regular Counter', container);
-        });
+    counterBtn.addEventListener('click', function() {
+        selectShapeAndCalculate('Regular Counter', container);
+    });
 
-        barTopBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Bar Top', container);
-        });
-    }
+    barTopBtn.addEventListener('click', function() {
+        selectShapeAndCalculate('Bar Top', container);
+    });
+}
+
 
     // Function to handle shape selection and calculations
     function selectShapeAndCalculate(type, container) {
@@ -357,40 +367,43 @@
     }
 
     function calculateAndAddItem(shape, finishType, container, type) {
-        console.log('Add Item button clicked');
-        const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
+    console.log('Add Item button clicked');
+    const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
 
-        console.log('Measurements:', measurements);
+    console.log('Measurements:', measurements);
 
-        if (measurements.some(isNaN)) {
-            alert('Please enter valid measurements.');
-            return;
-        }
-
-        // Determine depth automatically based on type
-        const depth = type === 'Kitchen' ? 25 : 22;
-
-        // Calculate square footage based on shape formula
-        const squareFootage = shape.formula(measurements, depth);
-        console.log('Square Footage:', squareFootage);
-
-        const pricePerSqFt = finishType === 'regular' ? PRICE_REGULAR : PRICE_CRYSTAL;
-        const cost = squareFootage * pricePerSqFt;
-        console.log('Cost:', cost);
-
-        // Add to items list
-        items.push({
-            type: `${shape.name} - ${shape.type}`,
-            squareFootage: squareFootage.toFixed(2),
-            finish: finishType,
-            cost: cost.toFixed(2)
-        });
-
-        console.log('Items:', items);
-
-        // Redirect back to the invoice page and show the updated item list
-        createInvoicePage(container);
+    if (measurements.some(isNaN)) {
+        alert('Please enter valid measurements.');
+        return;
     }
+
+    // Determine depth automatically based on type
+    const depth = type === 'Kitchen' ? 25 : 22;
+
+    // Calculate square footage based on shape formula
+    const squareFootage = shape.formula(measurements, depth);
+    console.log('Square Footage:', squareFootage);
+
+    const pricePerSqFt = finishType === 'regular' ? PRICE_REGULAR : PRICE_CRYSTAL;
+    const cost = squareFootage * pricePerSqFt;
+    console.log('Cost:', cost);
+
+    // Add to items list
+    items.push({
+        type: `${shape.name} - ${shape.type}`,
+        squareFootage: squareFootage.toFixed(2),
+        finish: finishType,
+        cost: cost.toFixed(2)
+    });
+
+    // Update the total cost
+    totalCost += cost;
+
+    console.log('Total Cost:', totalCost);
+
+    // Redirect back to the invoice page and show the updated item list
+    createInvoicePage(container);
+}
 
     function updateItemList(container) {
         let itemListDiv = document.getElementById('itemList');
