@@ -150,9 +150,9 @@
 
         const kitchenOptions = document.createElement('div');
         kitchenOptions.style.display = 'flex';
-        kitchenOptions.style.flexDirection = 'column';
-        kitchenOptions.style.alignItems = 'center';
-        kitchenOptions.style.gap = '20px';
+        kitchenOptions.style.flexWrap = 'wrap';
+        kitchenOptions.style.justifyContent = 'center';
+        kitchenOptions.style.gap = '30px';
 
         const islandBtn = createOptionButton('Island');
         const counterBtn = createOptionButton('Regular Counter');
@@ -177,7 +177,7 @@
         });
     }
 
-    // Function to handle shape selection and calculations
+    // Function to handle shape selection and calculations for Bar Top
     function selectShapeAndCalculate(type, container) {
         container.innerHTML = '';
 
@@ -189,14 +189,14 @@
         container.appendChild(header);
 
         const shapeDiv = document.createElement('div');
-        shapeDiv.style.display = 'flex';
-        shapeDiv.style.flexDirection = 'column';
-        shapeDiv.style.alignItems = 'center';
+        shapeDiv.style.display = 'grid';
+        shapeDiv.style.gridTemplateColumns = 'repeat(2, 1fr)';
         shapeDiv.style.gap = '20px';
+        shapeDiv.style.justifyContent = 'center';
 
         const shapes = getShapesForType(type);
         shapes.forEach(shape => {
-            const shapeBtn = createOptionButton(shape.name);
+            const shapeBtn = createImageButton(shape.name, shape.imageUrl);
             shapeDiv.appendChild(shapeBtn);
 
             shapeBtn.addEventListener('click', function() {
@@ -218,6 +218,14 @@
         header.style.fontSize = '28px';
         container.appendChild(header);
 
+        const imageDiv = document.createElement('div');
+        imageDiv.style.textAlign = 'center';
+        const shapeImage = createImageButton('', shape.imageUrl);
+        shapeImage.style.width = '300px';
+        shapeImage.style.height = '300px';
+        imageDiv.appendChild(shapeImage);
+        container.appendChild(imageDiv);
+
         const formDiv = document.createElement('div');
         formDiv.style.display = 'flex';
         formDiv.style.flexDirection = 'column';
@@ -236,13 +244,11 @@
             input.type = 'number';
             input.id = `measurement${index + 1}`;
             input.style.width = '80%';
-            input.style.padding = '15px';
-            input.style.marginBottom = '20px';
+            input.style.padding = '10px';
+            input.style.marginBottom = '10px';
             input.style.border = '1px solid #ddd';
             input.style.borderRadius = '5px';
             input.style.fontSize = '18px';
-            input.style.color = '#0264D9';
-            input.style.textAlign = 'center';
             formDiv.appendChild(input);
         });
 
@@ -250,12 +256,13 @@
         const finishLabel = document.createElement('label');
         finishLabel.textContent = 'Select Finish:';
         finishLabel.style.color = '#000000';
-        finishLabel.style.marginBottom = '10px';
+        finishLabel.style.marginBottom = '5px';
         finishLabel.style.fontSize = '18px';
         formDiv.appendChild(finishLabel);
 
         const finishSelect = document.createElement('select');
-        finishSelect.style.padding = '15px';
+        finishSelect.style.width = '80%';
+        finishSelect.style.padding = '10px';
         finishSelect.style.border = '1px solid #ddd';
         finishSelect.style.borderRadius = '5px';
         finishSelect.style.fontSize = '18px';
@@ -377,39 +384,46 @@
     function getShapesForType(type) {
         const shapes = [];
 
-        switch (type) {
-            case 'Island':
-                shapes.push({
-                    name: 'Island Shape 1',
-                    type: 'Island',
-                    measurements: ['1', '2'],
-                    formula: (measurements, depth) => ((measurements[0] * depth) / 144)
-                });
-                break;
-            case 'Regular Counter':
-                shapes.push({
-                    name: 'Regular Counter Shape 1',
-                    type: 'Regular Counter',
-                    measurements: ['1', '2', '3'],
-                    formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144
-                });
-                break;
-            case 'Bar Top':
-                shapes.push({
-                    name: 'Bar Top Shape 1',
-                    type: 'Bar Top',
-                    measurements: ['1', '2', '3', '4'],
-                    formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144
-                });
-                break;
-            case 'Bathroom':
-                shapes.push({
-                    name: 'Bathroom Shape 1',
-                    type: 'Bathroom',
-                    measurements: ['1', '2'],
-                    formula: (measurements, depth) => ((measurements[0] * depth) / 144)
-                });
-                break;
+        if (type === 'Bar Top') {
+            shapes.push({
+                name: 'Bar Top Shape 1',
+                type: 'Bar Top',
+                measurements: ['1', '2'],
+                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da863bba73ecdd7c48_1.png'
+            });
+            shapes.push({
+                name: 'Bar Top Shape 2',
+                type: 'Bar Top',
+                measurements: ['1', '2', '3'],
+                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29dac853b0040a720e2f_2.png'
+            });
+            shapes.push({
+                name: 'Bar Top Shape 3',
+                type: 'Bar Top',
+                measurements: ['1', '2', '3', '4'],
+                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29daa8b359b5742e69e6_3.png'
+            });
+            shapes.push({
+                name: 'Bar Top Shape 4',
+                type: 'Bar Top',
+                measurements: ['1', '2', '3', '4', '5', '6', '7'],
+                formula: (measurements, depth) => ((measurements.reduce((acc, curr) => acc + curr, 0)) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da78d4aad4898351b9_6.png'
+            });
+            shapes.push({
+                name: 'Bar Top Shape 5',
+                type: 'Bar Top',
+                measurements: ['1', '2', '3', '4', '5'],
+                formula: (measurements, depth) => ((measurements.reduce((acc, curr) => acc + curr, 0)) * depth) / 144,
+                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da26c4c2321fa2207c_4.png'
+            });
+        } else if (type === 'Island') {
+            // Add Island shapes similarly
+        } else if (type === 'Regular Counter') {
+            // Add Regular Counter shapes similarly
         }
 
         return shapes;
@@ -446,7 +460,7 @@
         button.style.height = '500px';
         button.style.maxWidth = '500px';
         button.style.border = '2px solid #FF3131';
-        button.style.borderRadius = '10px';
+        button.style.borderRadius = '15px';
         button.style.overflow = 'hidden';
         button.style.cursor = 'pointer';
         button.style.textAlign = 'center';
@@ -457,29 +471,18 @@
         button.style.backgroundImage = `url(${imageUrl})`;
         button.style.backgroundSize = 'cover';
         button.style.backgroundPosition = 'center';
-        button.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.15)';
-        button.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
-
-        button.addEventListener('mouseenter', function() {
-            button.style.transform = 'scale(1.05)';
-            button.style.boxShadow = '0 14px 28px rgba(0, 0, 0, 0.25)';
-        });
-
-        button.addEventListener('mouseleave', function() {
-            button.style.transform = 'scale(1)';
-            button.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.15)';
-        });
+        button.style.marginBottom = '20px';
 
         const overlay = document.createElement('div');
         overlay.style.position = 'absolute';
         overlay.style.bottom = '0';
         overlay.style.width = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
         overlay.style.color = 'white';
         overlay.style.padding = '15px';
-        overlay.style.textAlign = 'center';
         overlay.style.fontSize = '20px';
         overlay.style.fontWeight = 'bold';
+        overlay.style.textAlign = 'center';
         overlay.textContent = text;
         button.appendChild(overlay);
 
@@ -491,8 +494,8 @@
         const button = document.createElement('button');
         button.textContent = text;
         styleButton(button);
-        button.style.width = '300px';  // Make these larger
-        button.style.marginBottom = '15px';
+        button.style.width = '300px';  // Make these smaller than the image buttons
+        button.style.margin = '10px';
         return button;
     }
 
