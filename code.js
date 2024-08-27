@@ -57,56 +57,57 @@
         });
     }
 
-    // Function to add tabs at the top
-    function addTabs() {
-        const tabs = document.createElement('div');
-        tabs.style.width = '100%';
-        tabs.style.backgroundColor = '#FF3131';
-        tabs.style.color = '#ffffff';
-        tabs.style.padding = '10px 20px';
-        tabs.style.position = 'relative';
-        tabs.style.top = '0';
-        tabs.style.left = '0';
-        tabs.style.zIndex = '1000';
-        tabs.style.display = 'flex';
-        tabs.style.justifyContent = 'space-around';
-        tabs.style.alignItems = 'center';
-        tabs.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+   // Function to add tabs at the top
+function addTabs() {
+    const tabs = document.createElement('div');
+    tabs.style.width = '100%';
+    tabs.style.backgroundColor = '#000000';  // Black background
+    tabs.style.color = '#ffffff';  // White text color
+    tabs.style.padding = '15px 20px';  // Adjusted padding
+    tabs.style.position = 'relative';
+    tabs.style.top = '0';
+    tabs.style.left = '0';
+    tabs.style.zIndex = '1000';
+    tabs.style.display = 'flex';
+    tabs.style.justifyContent = 'space-around';
+    tabs.style.alignItems = 'center';
+    tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Enhanced shadow for a polished look
 
-        const aboutUsTab = document.createElement('div');
-        aboutUsTab.textContent = 'About Us';
-        styleTab(aboutUsTab);
-        aboutUsTab.addEventListener('click', function() {
-            showAboutUs();
-        });
-        tabs.appendChild(aboutUsTab);
+    const aboutUsTab = document.createElement('div');
+    aboutUsTab.textContent = 'About Us';
+    styleTab(aboutUsTab);
+    aboutUsTab.addEventListener('click', function() {
+        showAboutUs();
+    });
+    tabs.appendChild(aboutUsTab);
 
-        const invoiceTab = document.createElement('div');
-        invoiceTab.textContent = 'Invoice';
-        styleTab(invoiceTab);
-        invoiceTab.addEventListener('click', initInterface);
-        tabs.appendChild(invoiceTab);
+    const invoiceTab = document.createElement('div');
+    invoiceTab.textContent = 'Invoice';
+    styleTab(invoiceTab);
+    invoiceTab.addEventListener('click', initInterface);
+    tabs.appendChild(invoiceTab);
 
-        const backTab = document.createElement('div');
-        backTab.textContent = 'Back';
-        styleTab(backTab);
-        backTab.addEventListener('click', function() {
-            if (previousPage) {
-                previousPage();
-            }
-        });
-        tabs.appendChild(backTab);
+    const backTab = document.createElement('div');
+    backTab.textContent = 'Back';
+    styleTab(backTab);
+    backTab.addEventListener('click', function() {
+        if (previousPage) {
+            previousPage();
+        }
+    });
+    tabs.appendChild(backTab);
 
-        document.body.appendChild(tabs);
-    }
+    document.body.appendChild(tabs);
+}
 
-    // Style for tabs
-    function styleTab(tab) {
-        tab.style.cursor = 'pointer';
-        tab.style.fontSize = '18px';
-        tab.style.fontWeight = 'bold';
-        tab.style.padding = '10px 20px';
-    }
+// Style for tabs
+function styleTab(tab) {
+    tab.style.cursor = 'pointer';
+    tab.style.fontSize = '18px';
+    tab.style.fontWeight = 'bold';
+    tab.style.padding = '10px 20px';
+}
+
 
     // Function to create the invoice page
     function createInvoicePage(container) {
