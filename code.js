@@ -455,91 +455,101 @@
     }
 
     // Helper function to get shapes for a specific type
-    function getShapesForType(type) {
-        const shapes = [];
+   function getShapesForType(type) {
+    const shapes = [];
 
-        if (type === 'Bar Top') {
-            shapes.push({
-                name: 'Bar Top Shape 1',
-                type: 'Bar Top',
-                measurements: ['1', '2'],
-                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da863bba73ecdd7c48_1.png'
-            });
-            shapes.push({
-                name: 'Bar Top Shape 2',
-                type: 'Bar Top',
-                measurements: ['1', '2', '3'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29dac853b0040a720e2f_2.png'
-            });
-            shapes.push({
-                name: 'Bar Top Shape 3',
-                type: 'Bar Top',
-                measurements: ['1', '2', '3', '4'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29daa8b359b5742e69e6_3.png'
-            });
-            shapes.push({
-                name: 'Bar Top Shape 4',
-                type: 'Bar Top',
-                measurements: ['1', '2', '3', '4', '5', '6', '7'],
-                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da78d4aad4898351b9_6.png'
-            });
-            shapes.push({
-                name: 'Bar Top Shape 5',
-                type: 'Bar Top',
-                measurements: ['1', '2', '3', '4', '5'],
-                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da26c4c2321fa2207c_4.png'
-            });
-        } else if (type === 'Regular Counter') {
-            shapes.push({
-                name: 'Regular Counter Shape 1',
-                type: 'Regular Counter',
-                measurements: ['1', '2'],
-                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce262e24b34ce34eeea96f_16.png'
-            });
-            shapes.push({
-                name: 'Regular Counter Shape 2',
-                type: 'Regular Counter',
-                measurements: ['1', '2', '3'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce2631822e5ef6600d57b5_15.png'
-            });
-            shapes.push({
-                name: 'Regular Counter Shape 3',
-                type: 'Regular Counter',
-                measurements: ['1', '2', '3', '4'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26336c9e655d195ab278_14.png'
-            });
-            shapes.push({
-                name: 'Regular Counter Shape 4',
-                type: 'Regular Counter',
-                measurements: ['1', '2'],
-                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26346e73f1177f42d0a1_10.png'
-            });
-            shapes.push({
-                name: 'Regular Counter Shape 5',
-                type: 'Regular Counter',
-                measurements: ['1', '2', '3'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26313105b0a9d43fecba_13.png'
-            });
-            shapes.push({
-                name: 'Regular Counter Shape 6',
-                type: 'Regular Counter',
-                measurements: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
-                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce2631feef900d977e6989_11.png'
-            });
-        }
-        return shapes;
+    if (type === 'Bar Top') {
+        shapes.push({
+            name: 'Bar Top Shape 1',
+            type: 'Bar Top',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da863bba73ecdd7c48_1.png'
+        });
+        shapes.push({
+            name: 'Bar Top Shape 2',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3'],
+            formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29dac853b0040a720e2f_2.png'
+        });
+        shapes.push({
+            name: 'Bar Top Shape 3',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4'],
+            formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29daa8b359b5742e69e6_3.png'
+        });
+        shapes.push({
+            name: 'Bar Top Shape 4',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4', '5', '6', '7'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da78d4aad4898351b9_6.png'
+        });
+        shapes.push({
+            name: 'Bar Top Shape 5',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4', '5'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da26c4c2321fa2207c_4.png'
+        });
     }
+
+    if (type === 'Island') {
+        shapes.push({
+            name: 'Island Shape 1',
+            type: 'Island',
+            measurements: ['1', '2', '3', '4', '5'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce476a2a1b510869802adb_11.png'
+        });
+        shapes.push({
+            name: 'Island Shape 2',
+            type: 'Island',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce476ab04bef486aefc05d_12.png'
+        });
+    }
+
+    if (type === 'Regular Counter') {
+        shapes.push({
+            name: 'Regular Counter Shape 1',
+            type: 'Regular Counter',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d61151fe7d2e11e25_4.png'
+        });
+    }
+
+    if (type === 'Bathroom') {
+        shapes.push({
+            name: 'Bathroom Shape 1',
+            type: 'Bathroom',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce47006c1716fbc6bc27d0_16.png'
+        });
+        shapes.push({
+            name: 'Bathroom Shape 2',
+            type: 'Bathroom',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce4701a818f9798be73baf_10.png'
+        });
+        shapes.push({
+            name: 'Bathroom Shape 3',
+            type: 'Bathroom',
+            measurements: ['1', '2', '3', '4', '5', '6'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce4701502de95299763252_IN.png'
+        });
+    }
+
+    return shapes;
+}
+
 
     // Helper function to style buttons
     function styleButton(button) {
