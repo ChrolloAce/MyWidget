@@ -18,6 +18,8 @@
         document.body.style.backgroundColor = '#ffffff';
         document.body.style.fontFamily = 'Arial, sans-serif';
 
+        addTabs(); // Add the top tabs
+
         const container = document.createElement('div');
         container.style.width = '95%';
         container.style.maxWidth = '1300px';
@@ -53,6 +55,84 @@
             previousPage = initInterface;
             createInvoicePage(container);
         });
+    }
+
+    // Function to add the top tabs
+    function addTabs() {
+        const tabs = document.createElement('div');
+        tabs.style.width = '100%';
+        tabs.style.backgroundColor = '#FF3131';
+        tabs.style.color = '#ffffff';
+        tabs.style.padding = '20px';
+        tabs.style.position = 'fixed';
+        tabs.style.top = '0';
+        tabs.style.left = '0';
+        tabs.style.zIndex = '1000';
+        tabs.style.display = 'flex';
+        tabs.style.justifyContent = 'space-around';
+        tabs.style.alignItems = 'center';
+        tabs.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+
+        const aboutTab = createTabButton('About Us');
+        aboutTab.addEventListener('click', showAboutUs);
+        tabs.appendChild(aboutTab);
+
+        const invoiceTab = createTabButton('Invoice');
+        invoiceTab.addEventListener('click', initInterface);
+        tabs.appendChild(invoiceTab);
+
+        const backTab = createTabButton('Back');
+        backTab.addEventListener('click', function() {
+            if (previousPage) {
+                previousPage();
+            }
+        });
+        tabs.appendChild(backTab);
+
+        document.body.appendChild(tabs);
+    }
+
+    // Function to create a tab button
+    function createTabButton(text) {
+        const button = document.createElement('div');
+        button.textContent = text;
+        button.style.padding = '10px 20px';
+        button.style.cursor = 'pointer';
+        button.style.fontSize = '16px';
+        button.style.fontWeight = 'bold';
+        button.style.flexGrow = '1';
+        button.style.textAlign = 'center';
+        return button;
+    }
+
+    // Function to show the "About Us" page
+    function showAboutUs() {
+        document.body.innerHTML = '';
+
+        const aboutContainer = document.createElement('div');
+        aboutContainer.style.width = '95%';
+        aboutContainer.style.maxWidth = '1300px';
+        aboutContainer.style.padding = '40px';
+        aboutContainer.style.margin = '30px auto';
+        aboutContainer.style.textAlign = 'center';
+        aboutContainer.style.fontFamily = 'Arial, sans-serif';
+
+        const aboutHeader = document.createElement('h1');
+        aboutHeader.textContent = 'About Us';
+        aboutHeader.style.color = '#0C1729';
+        aboutHeader.style.marginBottom = '40px';
+        aboutHeader.style.fontSize = '36px';
+        aboutContainer.appendChild(aboutHeader);
+
+        const aboutText = document.createElement('p');
+        aboutText.textContent = 'We are experts in countertop solutions, providing you with the best tools to estimate your project costs.';
+        aboutText.style.color = '#0C1729';
+        aboutText.style.fontSize = '18px';
+        aboutText.style.marginBottom = '30px';
+        aboutContainer.appendChild(aboutText);
+
+        document.body.appendChild(aboutContainer);
+        addTabs(); // Re-add the tabs
     }
 
     // Function to create the invoice page
@@ -98,8 +178,6 @@
         finalizeBtn.addEventListener('click', function() {
             finalizeInvoice(container);
         });
-
-        addBackButton(); // Add the back button
     }
 
     // Function to handle type selection (Kitchen/Bathroom)
@@ -140,8 +218,6 @@
         bathroomBtn.addEventListener('click', function() {
             selectShapeAndCalculate('Bathroom', container);
         });
-
-        addBackButton(); // Add the back button
     }
 
     // Function to handle kitchen type selection (Island/Regular Counter/Bar Top)
@@ -183,8 +259,6 @@
         barTopBtn.addEventListener('click', function() {
             selectShapeAndCalculate('Bar Top', container);
         });
-
-        addBackButton(); // Add the back button
     }
 
     // Function to handle shape selection and calculations
@@ -216,8 +290,6 @@
         });
 
         container.appendChild(shapeDiv);
-
-        addBackButton(); // Add the back button
     }
 
     // Function to prompt user for measurements and finish selection
@@ -309,8 +381,6 @@
         calculateBtn.addEventListener('click', function() {
             calculateAndAddItem(shape, finishSelect.value, container, type);
         });
-
-        addBackButton(); // Add the back button
     }
 
     function calculateAndAddItem(shape, finishType, container, type) {
@@ -402,90 +472,51 @@
     function getShapesForType(type) {
         const shapes = [];
 
-        if (type === 'Bar Top') {
+        if (type === 'Regular Counter') {
             shapes.push({
-                name: 'Bar Top Shape 1',
-                type: 'Bar Top',
-                measurements: ['1', '2'],
-                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da863bba73ecdd7c48_1.png'
-            });
-            shapes.push({
-                name: 'Bar Top Shape 2',
-                type: 'Bar Top',
-                measurements: ['1', '2', '3'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29dac853b0040a720e2f_2.png'
-            });
-            shapes.push({
-                name: 'Bar Top Shape 3',
-                type: 'Bar Top',
-                measurements: ['1', '2', '3', '4'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29daa8b359b5742e69e6_3.png'
-            });
-            shapes.push({
-                name: 'Bar Top Shape 4',
-                type: 'Bar Top',
-                measurements: ['1', '2', '3', '4', '5', '6', '7'],
-                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da78d4aad4898351b9_6.png'
-            });
-            shapes.push({
-                name: 'Bar Top Shape 5',
-                type: 'Bar Top',
-                measurements: ['1', '2', '3', '4', '5'],
-                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da26c4c2321fa2207c_4.png'
-            });
-        }
-        
-        if (type === 'Kitchen') {
-            shapes.push({
-                name: 'Kitchen Shape 1',
-                type: 'Kitchen',
+                name: 'Regular Counter Shape 1',
+                type: 'Regular Counter',
                 measurements: ['1', '2', '3'],
                 formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce262e24b34ce34eeea96f_16.png'
             });
             shapes.push({
-                name: 'Kitchen Shape 2',
-                type: 'Kitchen',
+                name: 'Regular Counter Shape 2',
+                type: 'Regular Counter',
                 measurements: ['1', '2', '3'],
                 formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce2631822e5ef6600d57b5_15.png'
             });
             shapes.push({
-                name: 'Kitchen Shape 3',
-                type: 'Kitchen',
+                name: 'Regular Counter Shape 3',
+                type: 'Regular Counter',
                 measurements: ['1', '2', '3', '4', '5', '6'],
                 formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26336c9e655d195ab278_14.png'
             });
             shapes.push({
-                name: 'Kitchen Shape 4',
-                type: 'Kitchen',
+                name: 'Regular Counter Shape 4',
+                type: 'Regular Counter',
                 measurements: ['1', '2'],
                 formula: (measurements, depth) => ((measurements[0] * depth) / 144),
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26346e73f1177f42d0a1_10.png'
             });
             shapes.push({
-                name: 'Kitchen Shape 5',
-                type: 'Kitchen',
+                name: 'Regular Counter Shape 5',
+                type: 'Regular Counter',
                 measurements: ['1', '2', '3'],
                 formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26313105b0a9d43fecba_13.png'
             });
             shapes.push({
-                name: 'Kitchen Shape 6',
-                type: 'Kitchen',
+                name: 'Regular Counter Shape 6',
+                type: 'Regular Counter',
                 measurements: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
                 formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
                 imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce2631feef900d977e6989_11.png'
             });
         }
-        
-        // You can add more shapes and types here for Islands, Regular Countertops, etc.
+        // You can add more shapes and types here for Islands, Bar Tops, etc.
         return shapes;
     }
 
@@ -559,32 +590,6 @@
         button.style.width = '350px';  // Make these smaller than the image buttons
         button.style.margin = '15px';
         return button;
-    }
-
-    // Helper function to add a back button
-    function addBackButton() {
-        const backButton = document.createElement('button');
-        backButton.textContent = 'Back';
-        styleButton(backButton);
-        backButton.style.backgroundColor = '#0C1729';
-        backButton.style.color = 'white';
-        backButton.style.position = 'absolute';
-        backButton.style.top = '10px';
-        backButton.style.left = '10px';
-        backButton.style.zIndex = '1000';
-        backButton.style.padding = '10px 20px';
-        backButton.style.fontSize = '16px';
-        backButton.style.fontWeight = 'bold';
-        backButton.style.borderRadius = '10px';
-        backButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-
-        backButton.addEventListener('click', function() {
-            if (previousPage) {
-                previousPage();
-            }
-        });
-
-        document.body.appendChild(backButton);
     }
 
     // Initialize the interface
