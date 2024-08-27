@@ -15,33 +15,99 @@
         document.body.style.flexDirection = 'column';
         document.body.style.alignItems = 'center';
         document.body.style.minHeight = '100vh';
-        document.body.style.backgroundColor = '#ffffff';
+        document.body.style.backgroundColor = '#f7f7f7';
         document.body.style.fontFamily = 'Arial, sans-serif';
 
-        addAppBar(); // Add the app bar
-
         const container = document.createElement('div');
-        container.style.width = '95%';
-        container.style.maxWidth = '1300px';
+        container.style.width = '100%';
+        container.style.maxWidth = '1200px';
         container.style.backgroundColor = '#ffffff';
-        container.style.padding = '40px';
+        container.style.padding = '30px';
         container.style.borderRadius = '15px';
-        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
-        container.style.textAlign = 'center';
+        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.1)';
         container.style.margin = '30px auto';
         container.style.flexGrow = '1';
         document.body.appendChild(container);
 
+        addNavigationTabs(container); // Add navigation tabs
+
+        const contentContainer = document.createElement('div');
+        contentContainer.id = 'contentContainer';
+        contentContainer.style.marginTop = '30px';
+        container.appendChild(contentContainer);
+
+        // Display the initial page
+        showHomePage(contentContainer);
+    }
+
+    // Function to add navigation tabs
+    function addNavigationTabs(container) {
+        const tabContainer = document.createElement('div');
+        tabContainer.style.display = 'flex';
+        tabContainer.style.justifyContent = 'center';
+        tabContainer.style.borderBottom = '2px solid #dddddd';
+        tabContainer.style.marginBottom = '20px';
+
+        const homeTab = createTabButton('Home');
+        const invoiceTab = createTabButton('Invoice');
+        const aboutTab = createTabButton('About');
+
+        tabContainer.appendChild(homeTab);
+        tabContainer.appendChild(invoiceTab);
+        tabContainer.appendChild(aboutTab);
+        container.appendChild(tabContainer);
+
+        homeTab.addEventListener('click', function() {
+            showHomePage(document.getElementById('contentContainer'));
+        });
+
+        invoiceTab.addEventListener('click', function() {
+            createInvoicePage(document.getElementById('contentContainer'));
+        });
+
+        aboutTab.addEventListener('click', function() {
+            showAboutPage(document.getElementById('contentContainer'));
+        });
+    }
+
+    // Function to create a tab button
+    function createTabButton(text) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.style.padding = '15px 30px';
+        button.style.margin = '0 10px';
+        button.style.border = 'none';
+        button.style.backgroundColor = 'transparent';
+        button.style.color = '#0C1729';
+        button.style.fontSize = '18px';
+        button.style.cursor = 'pointer';
+        button.style.fontWeight = 'bold';
+        button.style.transition = 'border-bottom 0.3s ease';
+
+        button.addEventListener('mouseenter', function() {
+            button.style.borderBottom = '2px solid #FF3131';
+        });
+
+        button.addEventListener('mouseleave', function() {
+            button.style.borderBottom = '2px solid transparent';
+        });
+
+        return button;
+    }
+
+    // Function to show the home page
+    function showHomePage(container) {
+        container.innerHTML = '';
         const header = document.createElement('h1');
-        header.textContent = 'Invoice Calculator';
+        header.textContent = 'Welcome to the Countertop Calculator';
         header.style.color = '#0C1729';
-        header.style.marginBottom = '40px';
-        header.style.fontSize = '36px';
+        header.style.fontSize = '32px';
+        header.style.marginBottom = '20px';
         container.appendChild(header);
 
         const description = document.createElement('p');
-        description.textContent = 'Calculate your countertop costs easily. Start by adding items to your invoice below.';
-        description.style.color = '#0C1729';
+        description.textContent = 'Use this tool to calculate the cost of your countertop projects. Start by creating a new invoice.';
+        description.style.color = '#555555';
         description.style.fontSize = '18px';
         description.style.marginBottom = '30px';
         container.appendChild(description);
@@ -52,59 +118,12 @@
         container.appendChild(startInvoiceBtn);
 
         startInvoiceBtn.addEventListener('click', function() {
-            previousPage = initInterface;
             createInvoicePage(container);
         });
     }
 
-    // Function to add the app bar
-    function addAppBar() {
-        const appBar = document.createElement('div');
-        appBar.style.width = '100%';
-        appBar.style.backgroundColor = '#FF3131';
-        appBar.style.color = '#ffffff';
-        appBar.style.padding = '20px';
-        appBar.style.position = 'fixed';
-        appBar.style.top = '0';
-        appBar.style.left = '0';
-        appBar.style.zIndex = '1000';
-        appBar.style.display = 'flex';
-        appBar.style.justifyContent = 'space-between';
-        appBar.style.alignItems = 'center';
-        appBar.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-
-        const title = document.createElement('h1');
-        title.textContent = 'Countertop App';
-        title.style.fontSize = '24px';
-        title.style.margin = '0';
-        title.style.flexGrow = '1';
-        appBar.appendChild(title);
-
-        const homeButton = document.createElement('button');
-        homeButton.textContent = 'Home';
-        styleAppBarButton(homeButton);
-        homeButton.addEventListener('click', initInterface);
-        appBar.appendChild(homeButton);
-
-        document.body.appendChild(appBar);
-    }
-
-    // Style for buttons in the app bar
-    function styleAppBarButton(button) {
-        button.style.backgroundColor = '#0264D9';
-        button.style.color = '#ffffff';
-        button.style.padding = '10px 20px';
-        button.style.border = 'none';
-        button.style.borderRadius = '10px';
-        button.style.cursor = 'pointer';
-        button.style.fontSize = '16px';
-        button.style.fontWeight = 'bold';
-        button.style.marginLeft = '20px';
-    }
-
     // Function to create the invoice page
     function createInvoicePage(container) {
-        previousPage = initInterface;
         container.innerHTML = '';
 
         const header = document.createElement('h2');
@@ -380,7 +399,10 @@
             cost: cost.toFixed(2)
         });
 
+        totalCost += cost; // Update the total cost
+
         console.log('Items:', items);
+        console.log('Total Cost:', totalCost);
 
         // Redirect back to the invoice page and show the updated item list
         createInvoicePage(container);
@@ -433,6 +455,24 @@
         items = [];
         totalCost = 0;
         createInvoicePage(container);
+    }
+
+    // Function to show the about page
+    function showAboutPage(container) {
+        container.innerHTML = '';
+        const header = document.createElement('h2');
+        header.textContent = 'About This App';
+        header.style.color = '#0C1729';
+        header.style.fontSize = '28px';
+        header.style.marginBottom = '20px';
+        container.appendChild(header);
+
+        const description = document.createElement('p');
+        description.textContent = 'This is a simple invoice calculator for countertop projects, designed to help you easily calculate your costs based on measurements and material finishes.';
+        description.style.color = '#555555';
+        description.style.fontSize = '18px';
+        description.style.lineHeight = '1.6';
+        container.appendChild(description);
     }
 
     // Helper function to get shapes for a specific type
@@ -540,42 +580,6 @@
         button.appendChild(overlay);
 
         return button;
-    }
-
-    // Helper function to create option buttons
-    function createOptionButton(text) {
-        const button = document.createElement('button');
-        button.textContent = text;
-        styleButton(button);
-        button.style.width = '350px';  // Make these smaller than the image buttons
-        button.style.margin = '15px';
-        return button;
-    }
-
-    // Helper function to add a back button
-    function addBackButton() {
-        const backButton = document.createElement('button');
-        backButton.textContent = 'Back';
-        styleButton(backButton);
-        backButton.style.backgroundColor = '#0C1729';
-        backButton.style.color = 'white';
-        backButton.style.position = 'absolute';
-        backButton.style.top = '10px';
-        backButton.style.left = '10px';
-        backButton.style.zIndex = '1000';
-        backButton.style.padding = '10px 20px';
-        backButton.style.fontSize = '16px';
-        backButton.style.fontWeight = 'bold';
-        backButton.style.borderRadius = '10px';
-        backButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-
-        backButton.addEventListener('click', function() {
-            if (previousPage) {
-                previousPage();
-            }
-        });
-
-        document.body.appendChild(backButton);
     }
 
     // Initialize the interface
