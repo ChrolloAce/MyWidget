@@ -15,18 +15,18 @@
         document.body.style.flexDirection = 'column';
         document.body.style.alignItems = 'center';
         document.body.style.minHeight = '100vh';
-        document.body.style.backgroundColor = '#f5f5f5';
+        document.body.style.backgroundColor = '#ffffff';
         document.body.style.fontFamily = 'Arial, sans-serif';
 
         addTabs(); // Add the tabs at the top
 
         const container = document.createElement('div');
-        container.style.width = '90%';
-        container.style.maxWidth = '1200px';
+        container.style.width = '95%';
+        container.style.maxWidth = '1300px';
         container.style.backgroundColor = '#ffffff';
-        container.style.padding = '30px';
+        container.style.padding = '40px';
         container.style.borderRadius = '15px';
-        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.1)';
+        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
         container.style.textAlign = 'center';
         container.style.margin = '30px auto';
         container.style.flexGrow = '1';
@@ -35,15 +35,15 @@
         const header = document.createElement('h1');
         header.textContent = 'Invoice Calculator';
         header.style.color = '#0C1729';
-        header.style.marginBottom = '20px';
-        header.style.fontSize = '30px';
+        header.style.marginBottom = '40px';
+        header.style.fontSize = '36px';
         container.appendChild(header);
 
         const description = document.createElement('p');
         description.textContent = 'Calculate your countertop costs easily. Start by adding items to your invoice below.';
-        description.style.color = '#666';
+        description.style.color = '#0C1729';
         description.style.fontSize = '18px';
-        description.style.marginBottom = '20px';
+        description.style.marginBottom = '30px';
         container.appendChild(description);
 
         const startInvoiceBtn = document.createElement('button');
@@ -53,112 +53,61 @@
 
         startInvoiceBtn.addEventListener('click', function() {
             previousPage = initInterface;
-            createContactForm(container);
-        });
-    }
-
-    // Function to add tabs at the top
-    function addTabs() {
-        const tabs = document.createElement('div');
-        tabs.style.width = '100%';
-        tabs.style.backgroundColor = '#000000';
-        tabs.style.color = '#ffffff';
-        tabs.style.padding = '10px 0';
-        tabs.style.display = 'flex';
-        tabs.style.justifyContent = 'center';
-        tabs.style.position = 'relative';
-        tabs.style.top = '0';
-        tabs.style.left = '0';
-        tabs.style.zIndex = '1000';
-        tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)'; 
-
-        const aboutUsTab = document.createElement('div');
-        aboutUsTab.textContent = 'About Us';
-        styleTab(aboutUsTab);
-        aboutUsTab.addEventListener('click', function() {
-            showAboutUs();
-        });
-        tabs.appendChild(aboutUsTab);
-
-        const invoiceTab = document.createElement('div');
-        invoiceTab.textContent = 'Invoice';
-        styleTab(invoiceTab);
-        invoiceTab.addEventListener('click', initInterface);
-        tabs.appendChild(invoiceTab);
-
-        const backTab = document.createElement('div');
-        backTab.textContent = 'Back';
-        styleTab(backTab);
-        backTab.addEventListener('click', function() {
-            if (previousPage) {
-                previousPage();
-            }
-        });
-        tabs.appendChild(backTab);
-
-        document.body.appendChild(tabs);
-    }
-
-    // Style for tabs
-    function styleTab(tab) {
-        tab.style.cursor = 'pointer';
-        tab.style.fontSize = '16px';
-        tab.style.fontWeight = 'bold';
-        tab.style.padding = '10px 15px';
-        tab.style.color = '#ffffff';
-        tab.style.textTransform = 'uppercase';
-    }
-
-    // Function to create contact form
-    function createContactForm(container) {
-        container.innerHTML = '';
-
-        const header = document.createElement('h2');
-        header.textContent = 'Enter Your Contact Information';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '20px';
-        container.appendChild(header);
-
-        const form = document.createElement('div');
-        form.style.display = 'flex';
-        form.style.flexDirection = 'column';
-        form.style.alignItems = 'center';
-        form.style.gap = '15px';
-
-        const nameField = createInputField('Name');
-        const phoneField = createInputField('Phone Number');
-        const emailField = createInputField('Email');
-
-        form.appendChild(nameField);
-        form.appendChild(phoneField);
-        form.appendChild(emailField);
-
-        container.appendChild(form);
-
-        const nextButton = document.createElement('button');
-        nextButton.textContent = 'Next';
-        styleButton(nextButton);
-        nextButton.style.marginTop = '20px';
-        container.appendChild(nextButton);
-
-        nextButton.addEventListener('click', function() {
-            previousPage = initInterface;
             createInvoicePage(container);
         });
     }
 
-    // Helper function to create input fields
-    function createInputField(placeholder) {
-        const input = document.createElement('input');
-        input.placeholder = placeholder;
-        input.style.padding = '10px';
-        input.style.width = '80%';
-        input.style.maxWidth = '400px';
-        input.style.border = '1px solid #ddd';
-        input.style.borderRadius = '5px';
-        input.style.fontSize = '16px';
-        return input;
-    }
+   // Function to add tabs at the top
+function addTabs() {
+    const tabs = document.createElement('div');
+    tabs.style.width = '100%';
+    tabs.style.backgroundColor = '#000000';  // Black background
+    tabs.style.color = '#ffffff';  // White text color
+    tabs.style.padding = '15px 20px';  // Adjusted padding
+    tabs.style.position = 'relative';
+    tabs.style.top = '0';
+    tabs.style.left = '0';
+    tabs.style.zIndex = '1000';
+    tabs.style.display = 'flex';
+    tabs.style.justifyContent = 'space-around';
+    tabs.style.alignItems = 'center';
+    tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Enhanced shadow for a polished look
+
+    const aboutUsTab = document.createElement('div');
+    aboutUsTab.textContent = 'About Us';
+    styleTab(aboutUsTab);
+    aboutUsTab.addEventListener('click', function() {
+        showAboutUs();
+    });
+    tabs.appendChild(aboutUsTab);
+
+    const invoiceTab = document.createElement('div');
+    invoiceTab.textContent = 'Invoice';
+    styleTab(invoiceTab);
+    invoiceTab.addEventListener('click', initInterface);
+    tabs.appendChild(invoiceTab);
+
+    const backTab = document.createElement('div');
+    backTab.textContent = 'Back';
+    styleTab(backTab);
+    backTab.addEventListener('click', function() {
+        if (previousPage) {
+            previousPage();
+        }
+    });
+    tabs.appendChild(backTab);
+
+    document.body.appendChild(tabs);
+}
+
+// Style for tabs
+function styleTab(tab) {
+    tab.style.cursor = 'pointer';
+    tab.style.fontSize = '18px';
+    tab.style.fontWeight = 'bold';
+    tab.style.padding = '10px 20px';
+}
+
 
     // Function to create the invoice page
     function createInvoicePage(container) {
@@ -245,54 +194,56 @@
         });
     }
 
-    function selectKitchenType(container) {
-        previousPage = selectType.bind(null, container);
-        container.innerHTML = '';
+   function selectKitchenType(container) {
+    previousPage = selectType.bind(null, container);
+    container.innerHTML = '';
 
-        const header = document.createElement('h2');
-        header.textContent = 'Choose a Kitchen Counter Type';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
+    const header = document.createElement('h2');
+    header.textContent = 'Choose a Kitchen Counter Type';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
 
-        const kitchenOptions = document.createElement('div');
-        kitchenOptions.style.display = 'flex';
-        kitchenOptions.style.flexWrap = 'wrap';
-        kitchenOptions.style.justifyContent = 'center';
-        kitchenOptions.style.gap = '30px';
+    const kitchenOptions = document.createElement('div');
+    kitchenOptions.style.display = 'flex';
+    kitchenOptions.style.flexWrap = 'wrap';
+    kitchenOptions.style.justifyContent = 'center';
+    kitchenOptions.style.gap = '30px';
 
-        const islandBtn = createImageButton(
-            'Island',
-            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d6cb02e60f269ed30_2.png'
-        );
-        const counterBtn = createImageButton(
-            'Regular Counter',
-            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d61151fe7d2e11e25_4.png'
-        );
-        const barTopBtn = createImageButton(
-            'Bar Top',
-            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7df416f1b9ceda636b_3.png'
-        );
+    // Adding the new cover images
+    const islandBtn = createImageButton(
+        'Island',
+        'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d6cb02e60f269ed30_2.png'
+    );
+    const counterBtn = createImageButton(
+        'Regular Counter',
+        'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d61151fe7d2e11e25_4.png'
+    );
+    const barTopBtn = createImageButton(
+        'Bar Top',
+        'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7df416f1b9ceda636b_3.png'
+    );
 
-        kitchenOptions.appendChild(islandBtn);
-        kitchenOptions.appendChild(counterBtn);
-        kitchenOptions.appendChild(barTopBtn);
+    kitchenOptions.appendChild(islandBtn);
+    kitchenOptions.appendChild(counterBtn);
+    kitchenOptions.appendChild(barTopBtn);
 
-        container.appendChild(kitchenOptions);
+    container.appendChild(kitchenOptions);
 
-        islandBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Island', container);
-        });
+    islandBtn.addEventListener('click', function() {
+        selectShapeAndCalculate('Island', container);
+    });
 
-        counterBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Regular Counter', container);
-        });
+    counterBtn.addEventListener('click', function() {
+        selectShapeAndCalculate('Regular Counter', container);
+    });
 
-        barTopBtn.addEventListener('click', function() {
-            selectShapeAndCalculate('Bar Top', container);
-        });
-    }
+    barTopBtn.addEventListener('click', function() {
+        selectShapeAndCalculate('Bar Top', container);
+    });
+}
+
 
     // Function to handle shape selection and calculations
     function selectShapeAndCalculate(type, container) {
@@ -417,36 +368,50 @@
     }
 
     function calculateAndAddItem(shape, finishType, container, type) {
-        const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
+    console.log('Add Item button clicked');
+    const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
 
-        if (measurements.some(isNaN)) {
-            alert('Please enter valid measurements.');
-            return;
-        }
+    console.log('Measurements:', measurements);
 
-        const depth = type === 'Kitchen' ? 25 : 22;
-
-        const squareFootage = shape.formula(measurements, depth);
-
-        const pricePerSqFt = finishType === 'regular' ? PRICE_REGULAR : PRICE_CRYSTAL;
-        const cost = squareFootage * pricePerSqFt;
-
-        items.push({
-            type: `${shape.name} - ${shape.type}`,
-            squareFootage: squareFootage.toFixed(2),
-            finish: finishType,
-            cost: cost.toFixed(2)
-        });
-
-        totalCost += cost;
-        createInvoicePage(container);
+    if (measurements.some(isNaN)) {
+        alert('Please enter valid measurements.');
+        return;
     }
+
+    // Determine depth automatically based on type
+    const depth = type === 'Kitchen' ? 25 : 22;
+
+    // Calculate square footage based on shape formula
+    const squareFootage = shape.formula(measurements, depth);
+    console.log('Square Footage:', squareFootage);
+
+    const pricePerSqFt = finishType === 'regular' ? PRICE_REGULAR : PRICE_CRYSTAL;
+    const cost = squareFootage * pricePerSqFt;
+    console.log('Cost:', cost);
+
+    // Add to items list
+    items.push({
+        type: `${shape.name} - ${shape.type}`,
+        squareFootage: squareFootage.toFixed(2),
+        finish: finishType,
+        cost: cost.toFixed(2)
+    });
+
+    // Update the total cost
+    totalCost += cost;
+
+    console.log('Total Cost:', totalCost);
+
+    // Redirect back to the invoice page and show the updated item list
+    createInvoicePage(container);
+}
 
     function updateItemList(container) {
         let itemListDiv = document.getElementById('itemList');
 
         // Recreate itemListDiv if it doesn't exist
         if (!itemListDiv) {
+            console.error('itemListDiv not found. Recreating the element.');
             itemListDiv = document.createElement('div');
             itemListDiv.id = 'itemList';
             itemListDiv.style.marginTop = '30px';
@@ -491,152 +456,208 @@
     }
 
     // Helper function to get shapes for a specific type
-    function getShapesForType(type) {
-        const shapes = [];
+   function getShapesForType(type) {
+    const shapes = [];
 
-        if (type === 'Bar Top') {
-            shapes.push({
-                name: 'Bar Top Shape 1',
-                type: 'Bar Top',
-                measurements: ['1', '2'],
-                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da863bba73ecdd7c48_1.png'
-            });
-            shapes.push({
-                name: 'Bar Top Shape 2',
-                type: 'Bar Top',
-                measurements: ['1', '2', '3'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29dac853b0040a720e2f_2.png'
-            });
-            shapes.push({
-                name: 'Bar Top Shape 3',
-                type: 'Bar Top',
-                measurements: ['1', '2', '3', '4'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29daa8b359b5742e69e6_3.png'
-            });
-        } else if (type === 'Regular Counter') {
-            shapes.push({
-                name: 'Regular Counter Shape 1',
-                type: 'Regular Counter',
-                measurements: ['1', '2'],
-                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d61151fe7d2e11e25_4.png'
-            });
-            shapes.push({
-                name: 'Regular Counter Shape 2',
-                type: 'Regular Counter',
-                measurements: ['1', '2', '3'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce262e24b34ce34eeea96f_16.png'
-            });
-            shapes.push({
-                name: 'Regular Counter Shape 3',
-                type: 'Regular Counter',
-                measurements: ['1', '2', '3', '4'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce2631822e5ef6600d57b5_15.png'
-            });
-        } else if (type === 'Island') {
-            shapes.push({
-                name: 'Island Shape 1',
-                type: 'Island',
-                measurements: ['1', '2'],
-                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d6cb02e60f269ed30_2.png'
-            });
-            shapes.push({
-                name: 'Island Shape 2',
-                type: 'Island',
-                measurements: ['1', '2', '3'],
-                formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce476ab04bef486aefc05d_12.png'
-            });
-        } else if (type === 'Bathroom') {
-            shapes.push({
-                name: 'Bathroom Shape 1',
-                type: 'Bathroom',
-                measurements: ['1', '2'],
-                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce47006c1716fbc6bc27d0_16.png'
-            });
-            shapes.push({
-                name: 'Bathroom Shape 2',
-                type: 'Bathroom',
-                measurements: ['1', '2'],
-                formula: (measurements, depth) => ((measurements[0] * depth) / 144),
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce4701a818f9798be73baf_10.png'
-            });
-            shapes.push({
-                name: 'Bathroom Shape 3',
-                type: 'Bathroom',
-                measurements: ['1', '2', '3', '4', '5', '6'],
-                formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
-                imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce4701502de95299763252_IN.png'
-            });
-        }
-
-        return shapes;
+    if (type === 'Bar Top') {
+        shapes.push({
+            name: 'Bar Top Shape 1',
+            type: 'Bar Top',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da863bba73ecdd7c48_1.png'
+        });
+        shapes.push({
+            name: 'Bar Top Shape 2',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3'],
+            formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29dac853b0040a720e2f_2.png'
+        });
+        shapes.push({
+            name: 'Bar Top Shape 3',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4'],
+            formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29daa8b359b5742e69e6_3.png'
+        });
+        shapes.push({
+            name: 'Bar Top Shape 4',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4', '5', '6', '7'],
+            formula: (measurements.reduce((acc, cur) => acc + cur, 0)) * depth / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da78d4aad4898351b9_6.png'
+        });
+        shapes.push({
+            name: 'Bar Top Shape 5',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4', '5'],
+            formula: (measurements.reduce((acc, cur) => acc + cur, 0)) * depth / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da26c4c2321fa2207c_4.png'
+        });
+        shapes.push({
+            name: 'Bar Top Shape 6',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4', '5', '6'],
+            formula: (measurements.reduce((acc, cur) => acc + cur, 0)) * depth / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7df416f1b9ceda636b_3.png'
+        });
+    } else if (type === 'Regular Counter') {
+        shapes.push({
+            name: 'Regular Counter Shape 1',
+            type: 'Regular Counter',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d61151fe7d2e11e25_4.png'
+        });
+        shapes.push({
+            name: 'Regular Counter Shape 2',
+            type: 'Regular Counter',
+            measurements: ['1', '2', '3'],
+            formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce262e24b34ce34eeea96f_16.png'
+        });
+        shapes.push({
+            name: 'Regular Counter Shape 3',
+            type: 'Regular Counter',
+            measurements: ['1', '2', '3', '4'],
+            formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2] + measurements[3]) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce2631822e5ef6600d57b5_15.png'
+        });
+        shapes.push({
+            name: 'Regular Counter Shape 4',
+            type: 'Regular Counter',
+            measurements: ['1', '2', '3', '4', '5', '6'],
+            formula: (measurements.reduce((acc, cur) => acc + cur, 0)) * depth / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26336c9e655d195ab278_14.png'
+        });
+        shapes.push({
+            name: 'Regular Counter Shape 5',
+            type: 'Regular Counter',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26346e73f1177f42d0a1_10.png'
+        });
+    } else if (type === 'Island') {
+        shapes.push({
+            name: 'Island Shape 1',
+            type: 'Island',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d6cb02e60f269ed30_2.png'
+        });
+        shapes.push({
+            name: 'Island Shape 2',
+            type: 'Island',
+            measurements: ['1', '2', '3', '4', '5'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce476ab04bef486aefc05d_12.png'
+        });
+        shapes.push({
+            name: 'Island Shape 3',
+            type: 'Island',
+            measurements: ['1', '2', '3'],
+            formula: (measurements, depth) => ((measurements[0] + measurements[1] + measurements[2]) * depth) / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce476a2a1b510869802adb_11.png'
+        });
+    } else if (type === 'Bathroom') {
+        shapes.push({
+            name: 'Bathroom Shape 1',
+            type: 'Bathroom',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce47006c1716fbc6bc27d0_16.png'
+        });
+        shapes.push({
+            name: 'Bathroom Shape 2',
+            type: 'Bathroom',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce4701a818f9798be73baf_10.png'
+        });
+        shapes.push({
+            name: 'Bathroom Shape 3',
+            type: 'Bathroom',
+            measurements: ['1', '2', '3', '4', '5', '6'],
+            formula: (measurements.reduce((acc, cur) => acc + cur, 0)) * depth / 144,
+            imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce4701502de95299763252_IN.png'
+        });
     }
 
-    // Helper function to style buttons
-    function styleButton(button) {
-        button.style.padding = '12px';
-        button.style.backgroundColor = '#000000'; 
-        button.style.color = '#ffffff'; 
-        button.style.border = '2px solid #0264D9'; 
-        button.style.borderRadius = '5px';
-        button.style.cursor = 'pointer';
-        button.style.fontSize = '16px';
-        button.style.fontWeight = 'bold';
-        button.style.margin = '5px 0';
-        button.style.transition = 'all 0.3s ease';
-        button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+    return shapes;
+}
 
-        button.addEventListener('mouseenter', function() {
-            button.style.backgroundColor = '#0264D9';
-            button.style.color = '#ffffff';
-        });
 
-        button.addEventListener('mouseleave', function() {
-            button.style.backgroundColor = '#000000'; 
-        });
-    }
 
-    // Helper function to create image buttons
-    function createImageButton(text, imageUrl) {
-        const button = document.createElement('div');
-        button.style.position = 'relative';
-        button.style.width = '220px';
-        button.style.height = '220px';
-        button.style.border = '2px solid #000000';
-        button.style.borderRadius = '15px';
-        button.style.overflow = 'hidden';
-        button.style.cursor = 'pointer';
-        button.style.textAlign = 'center';
-        button.style.display = 'flex';
-        button.style.flexDirection = 'column';
-        button.style.justifyContent = 'center';
-        button.style.alignItems = 'center';
-        button.style.backgroundImage = `url(${imageUrl})`;
-        button.style.backgroundSize = 'cover';
-        button.style.backgroundPosition = 'center';
-        button.style.marginBottom = '20px';
+// Helper function to style buttons
+function styleButton(button) {
+    button.style.padding = '10px';  // Reduced padding
+    button.style.backgroundColor = '#000000';  // Black background
+    button.style.color = '#ffffff';  // White text
+    button.style.border = '2px solid #0264D9';  // Elegant blue border
+    button.style.borderRadius = '5px';  // Reduced border radius
+    button.style.cursor = 'pointer';
+    button.style.fontSize = '16px';  // Slightly smaller font size
+    button.style.fontWeight = 'bold';
+    button.style.margin = '5px 0';  // Reduced margin
+    button.style.width = 'auto';  // Adjust width to be automatic
+    button.style.transition = 'all 0.3s ease';
+    button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';  // Reduced shadow
 
-        const overlay = document.createElement('div');
-        overlay.style.position = 'absolute';
-        overlay.style.bottom = '0';
-        overlay.style.width = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-        overlay.style.color = 'white';
-        overlay.style.padding = '15px';
-        overlay.style.fontSize = '16px';
-        overlay.style.fontWeight = 'bold';
-        overlay.style.textAlign = 'center';
-        overlay.textContent = text;
-        button.appendChild(overlay);
+    button.addEventListener('mouseenter', function() {
+        button.style.backgroundColor = '#0264D9';  // Change background to blue on hover
+        button.style.color = '#ffffff';
+    });
 
+    button.addEventListener('mouseleave', function() {
+        button.style.backgroundColor = '#000000';  // Return to black on mouse leave
+    });
+}
+
+// Helper function to create image buttons
+function createImageButton(text, imageUrl) {
+    const button = document.createElement('div');
+    button.style.position = 'relative';
+    button.style.width = '250px';  // Reduced width
+    button.style.height = '250px';  // Reduced height
+    button.style.border = '2px solid #000000';  // Black border
+    button.style.borderRadius = '15px';  // Reduced border radius
+    button.style.overflow = 'hidden';
+    button.style.cursor = 'pointer';
+    button.style.textAlign = 'center';
+    button.style.display = 'flex';
+    button.style.flexDirection = 'column';
+    button.style.justifyContent = 'center';
+    button.style.alignItems = 'center';
+    button.style.backgroundImage = `url(${imageUrl})`;
+    button.style.backgroundSize = 'cover';
+    button.style.backgroundPosition = 'center';
+    button.style.marginBottom = '20px';  // Reduced margin
+
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.bottom = '0';
+    overlay.style.width = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
+    overlay.style.color = 'white';
+    overlay.style.padding = '15px';  // Reduced padding
+    overlay.style.fontSize = '18px';  // Smaller font size
+    overlay.style.fontWeight = 'bold';
+    overlay.style.textAlign = 'center';
+    overlay.textContent = text;
+    button.appendChild(overlay);
+
+    return button;
+}
+
+
+    // Helper function to create option buttons
+    function createOptionButton(text) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        styleButton(button);
+        button.style.width = '350px';  // Make these smaller than the image buttons
+        button.style.margin = '15px';
         return button;
     }
 
