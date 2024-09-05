@@ -1,5 +1,4 @@
 (function() {
-    // Initial variables and configuration
     const PRICE_REGULAR = 26;
     const PRICE_CRYSTAL = 39;
     const MINIMUM_PRICE = 400;
@@ -57,57 +56,133 @@
         });
     }
 
-   // Function to add tabs at the top
-function addTabs() {
-    const tabs = document.createElement('div');
-    tabs.style.width = '100%';
-    tabs.style.backgroundColor = '#000000';  // Black background
-    tabs.style.color = '#ffffff';  // White text color
-    tabs.style.padding = '15px 20px';  // Adjusted padding
-    tabs.style.position = 'relative';
-    tabs.style.top = '0';
-    tabs.style.left = '0';
-    tabs.style.zIndex = '1000';
-    tabs.style.display = 'flex';
-    tabs.style.justifyContent = 'space-around';
-    tabs.style.alignItems = 'center';
-    tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Enhanced shadow for a polished look
+    // Add contact form before entering invoice
+    function initContactForm() {
+        document.body.innerHTML = '';
+        const container = document.createElement('div');
+        container.style.width = '95%';
+        container.style.maxWidth = '1300px';
+        container.style.backgroundColor = '#ffffff';
+        container.style.padding = '40px';
+        container.style.borderRadius = '15px';
+        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
+        container.style.textAlign = 'center';
+        container.style.margin = '30px auto';
+        container.style.flexGrow = '1';
+        document.body.appendChild(container);
 
-    const aboutUsTab = document.createElement('div');
-    aboutUsTab.textContent = 'About Us';
-    styleTab(aboutUsTab);
-    aboutUsTab.addEventListener('click', function() {
-        showAboutUs();
-    });
-    tabs.appendChild(aboutUsTab);
+        const header = document.createElement('h1');
+        header.textContent = 'Contact Information';
+        header.style.color = '#0C1729';
+        header.style.marginBottom = '40px';
+        header.style.fontSize = '36px';
+        container.appendChild(header);
 
-    const invoiceTab = document.createElement('div');
-    invoiceTab.textContent = 'Invoice';
-    styleTab(invoiceTab);
-    invoiceTab.addEventListener('click', initInterface);
-    tabs.appendChild(invoiceTab);
+        const nameField = createInputField('Name');
+        const phoneField = createInputField('Phone Number');
+        const emailField = createInputField('Email');
 
-    const backTab = document.createElement('div');
-    backTab.textContent = 'Back';
-    styleTab(backTab);
-    backTab.addEventListener('click', function() {
-        if (previousPage) {
-            previousPage();
-        }
-    });
-    tabs.appendChild(backTab);
+        container.appendChild(nameField.label);
+        container.appendChild(nameField.input);
+        container.appendChild(phoneField.label);
+        container.appendChild(phoneField.input);
+        container.appendChild(emailField.label);
+        container.appendChild(emailField.input);
 
-    document.body.appendChild(tabs);
-}
+        const submitBtn = document.createElement('button');
+        submitBtn.textContent = 'Submit';
+        styleButton(submitBtn);
+        container.appendChild(submitBtn);
 
-// Style for tabs
-function styleTab(tab) {
-    tab.style.cursor = 'pointer';
-    tab.style.fontSize = '18px';
-    tab.style.fontWeight = 'bold';
-    tab.style.padding = '10px 20px';
-}
+        submitBtn.addEventListener('click', function() {
+            if (validateFields(nameField.input, phoneField.input, emailField.input)) {
+                initInterface(); // Go to the main page after the form
+            } else {
+                alert('Please fill out all fields');
+            }
+        });
+    }
 
+    // Create input fields with labels
+    function createInputField(placeholder) {
+        const label = document.createElement('label');
+        label.textContent = placeholder;
+        label.style.color = '#0C1729';
+        label.style.fontSize = '20px';
+        label.style.marginBottom = '10px';
+        label.style.display = 'block';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = placeholder;
+        input.style.width = '80%';
+        input.style.padding = '10px';
+        input.style.marginBottom = '20px';
+        input.style.border = '1px solid #ddd';
+        input.style.borderRadius = '5px';
+        input.style.fontSize = '20px';
+
+        return { label, input };
+    }
+
+    // Validate input fields
+    function validateFields(...fields) {
+        return fields.every(field => field.value.trim() !== '');
+    }
+
+    // Tabs
+    function addTabs() {
+        const tabs = document.createElement('div');
+        tabs.style.width = '100%';
+        tabs.style.backgroundColor = '#000000';
+        tabs.style.color = '#ffffff';
+        tabs.style.padding = '15px 20px';
+        tabs.style.position = 'relative';
+        tabs.style.display = 'flex';
+        tabs.style.justifyContent = 'center';
+        tabs.style.zIndex = '1000';
+        tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+        tabs.style.borderRadius = '8px 8px 0 0'; // Sleek tab design
+
+        const tabList = [
+            { text: 'About Us', action: showAboutUs },
+            { text: 'Invoice', action: initInterface },
+            { text: 'Back', action: function() { if (previousPage) previousPage(); } }
+        ];
+
+        tabList.forEach(tab => {
+            const tabBtn = document.createElement('div');
+            tabBtn.textContent = tab.text;
+            styleTab(tabBtn);
+            tabBtn.addEventListener('click', tab.action);
+            tabs.appendChild(tabBtn);
+        });
+
+        document.body.appendChild(tabs);
+    }
+
+    // Style Tabs
+    function styleTab(tab) {
+        tab.style.cursor = 'pointer';
+        tab.style.fontSize = '18px';
+        tab.style.fontWeight = 'bold';
+        tab.style.padding = '10px 20px';
+        tab.style.margin = '0 10px';
+        tab.style.borderRadius = '8px';
+        tab.style.backgroundColor = '#0264D9';
+        tab.style.color = '#ffffff';
+        tab.style.transition = 'background-color 0.3s ease';
+        
+        tab.addEventListener('mouseenter', function() {
+            tab.style.backgroundColor = '#ffffff';
+            tab.style.color = '#0264D9';
+        });
+        
+        tab.addEventListener('mouseleave', function() {
+            tab.style.backgroundColor = '#0264D9';
+            tab.style.color = '#ffffff';
+        });
+    }
 
     // Function to create the invoice page
     function createInvoicePage(container) {
@@ -243,7 +318,6 @@ function styleTab(tab) {
         selectShapeAndCalculate('Bar Top', container);
     });
 }
-
 
     // Function to handle shape selection and calculations
     function selectShapeAndCalculate(type, container) {
@@ -485,21 +559,21 @@ function styleTab(tab) {
             name: 'Bar Top Shape 4',
             type: 'Bar Top',
             measurements: ['1', '2', '3', '4', '5', '6', '7'],
-            formula: (measurements.reduce((acc, cur) => acc + cur, 0)) * depth / 144,
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
             imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da78d4aad4898351b9_6.png'
         });
         shapes.push({
             name: 'Bar Top Shape 5',
             type: 'Bar Top',
             measurements: ['1', '2', '3', '4', '5'],
-            formula: (measurements.reduce((acc, cur) => acc + cur, 0)) * depth / 144,
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
             imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66cd29da26c4c2321fa2207c_4.png'
         });
         shapes.push({
             name: 'Bar Top Shape 6',
             type: 'Bar Top',
             measurements: ['1', '2', '3', '4', '5', '6'],
-            formula: (measurements.reduce((acc, cur) => acc + cur, 0)) * depth / 144,
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
             imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7df416f1b9ceda636b_3.png'
         });
     } else if (type === 'Regular Counter') {
@@ -528,7 +602,7 @@ function styleTab(tab) {
             name: 'Regular Counter Shape 4',
             type: 'Regular Counter',
             measurements: ['1', '2', '3', '4', '5', '6'],
-            formula: (measurements.reduce((acc, cur) => acc + cur, 0)) * depth / 144,
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
             imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce26336c9e655d195ab278_14.png'
         });
         shapes.push({
@@ -579,7 +653,7 @@ function styleTab(tab) {
             name: 'Bathroom Shape 3',
             type: 'Bathroom',
             measurements: ['1', '2', '3', '4', '5', '6'],
-            formula: (measurements.reduce((acc, cur) => acc + cur, 0)) * depth / 144,
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
             imageUrl: 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce4701502de95299763252_IN.png'
         });
     }
@@ -662,5 +736,5 @@ function createImageButton(text, imageUrl) {
     }
 
     // Initialize the interface
-    initInterface();
+    initContactForm();
 })();
