@@ -566,6 +566,7 @@ function updateItemList(container) {
             itemDiv.style.color = '#0C1729';
 
             const itemText = document.createElement('span');
+            // Don't display square footage, only the item type and finish
             itemText.textContent = `${index + 1}. ${item.type} - ${item.finish} Finish - $${item.cost}`;
             itemDiv.appendChild(itemText);
 
@@ -595,7 +596,6 @@ function updateItemList(container) {
         itemListDiv.appendChild(totalDiv);
     }
 }
-
 // Function to remove an item
 function removeItem(index) {
     totalCost -= parseFloat(items[index].cost);  // Deduct cost from total
