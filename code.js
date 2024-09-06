@@ -178,9 +178,7 @@
         });
     }
 
-    // Initialize the interface
-    initInterface();
-})();
+
 
     // Function to create the invoice page
     function createInvoicePage(container) {
