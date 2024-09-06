@@ -10,41 +10,42 @@
     let userInfo = {};
 
     function initInterface() {
-        addTabs();  // Ensure the tabs are added to the top of the page
+    // First, ensure the tabs are added to the top of the page
+    addTabs();
 
-        document.body.innerHTML = '';  // Clear existing content
-        document.body.style.display = 'flex';
-        document.body.style.flexDirection = 'column';
-        document.body.style.alignItems = 'center';
-        document.body.style.minHeight = '100vh';
-        document.body.style.backgroundColor = '#ffffff';
-        document.body.style.fontFamily = 'Arial, sans-serif';
+    document.body.innerHTML = '';  // Clear existing content
+    document.body.style.display = 'flex';
+    document.body.style.flexDirection = 'column';
+    document.body.style.alignItems = 'center';
+    document.body.style.minHeight = '100vh';
+    document.body.style.backgroundColor = '#ffffff';
+    document.body.style.fontFamily = 'Arial, sans-serif';
 
-        const container = document.createElement('div');
-        container.style.width = '95%';
-        container.style.maxWidth = '800px';
-        container.style.backgroundColor = '#ffffff';
-        container.style.padding = '40px';
-        container.style.borderRadius = '15px';
-        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
-        container.style.textAlign = 'center';
-        container.style.margin = '80px auto 30px auto';  // Adjust margin to prevent overlap with tabs
-        container.style.flexGrow = '1';
-        document.body.appendChild(container);
+    const container = document.createElement('div');
+    container.style.width = '95%';
+    container.style.maxWidth = '800px';
+    container.style.backgroundColor = '#ffffff';
+    container.style.padding = '40px';
+    container.style.borderRadius = '15px';
+    container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
+    container.style.textAlign = 'center';
+    container.style.margin = '80px auto 30px auto';  // Adjust margin to prevent overlap with tabs
+    container.style.flexGrow = '1';
+    document.body.appendChild(container);
 
-        const header = document.createElement('h1');
-        header.textContent = 'Start New Quote';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '20px';
-        header.style.fontSize = '36px';
-        container.appendChild(header);
+    const header = document.createElement('h1');
+    header.textContent = 'Start New Invoice';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '36px';
+    container.appendChild(header);
 
-        const description = document.createElement('p');
-        description.textContent = 'Please enter your contact information to proceed.';
-        description.style.color = '#0C1729';
-        description.style.fontSize = '18px';
-        description.style.marginBottom = '30px';
-        container.appendChild(description);
+    const description = document.createElement('p');
+    description.textContent = 'Please enter your contact information to proceed.';
+    description.style.color = '#0C1729';
+    description.style.fontSize = '18px';
+    description.style.marginBottom = '30px';
+    container.appendChild(description);
 
         // Form to collect contact information
         const form = document.createElement('div');
@@ -111,72 +112,69 @@
         return fieldDiv;
     }
 
-    // Function to add tabs at the top
-    function addTabs() {
-        const tabs = document.createElement('div');
-        tabs.id = 'tabs-container';  // Assign an ID for easier styling/debugging
-        tabs.style.width = '100%';
-        tabs.style.backgroundColor = '#000000';  // Black background for a sleek look
-        tabs.style.color = '#ffffff';  // White text
-        tabs.style.padding = '15px 20px';  // Adjusted padding
-        tabs.style.position = 'fixed';  // Fixed position to always stay on top
-        tabs.style.top = '0';
-        tabs.style.left = '0';
-        tabs.style.zIndex = '1000';
-        tabs.style.display = 'flex';
-        tabs.style.justifyContent = 'space-around';
-        tabs.style.alignItems = 'center';
-        tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Nice shadow for depth
-        tabs.style.fontFamily = 'Arial, sans-serif';
-        tabs.style.fontSize = '18px';
-        tabs.style.fontWeight = 'bold';  // Make text bold
+ // Function to add tabs at the top
+// Function to add tabs at the top
+function addTabs() {
+    const tabs = document.createElement('div');
+    tabs.style.width = '100%';
+    tabs.style.backgroundColor = '#000000';  // Black background for a sleek look
+    tabs.style.color = '#ffffff';  // White text
+    tabs.style.padding = '15px 20px';  // Adjusted padding
+    tabs.style.position = 'fixed';  // Fixed position to always stay on top
+    tabs.style.top = '0';
+    tabs.style.left = '0';
+    tabs.style.zIndex = '1000';
+    tabs.style.display = 'flex';
+    tabs.style.justifyContent = 'space-around';
+    tabs.style.alignItems = 'center';
+    tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Nice shadow for depth
 
-        // About Us Tab
-        const aboutUsTab = document.createElement('div');
-        aboutUsTab.textContent = 'About Us';
-        styleTab(aboutUsTab);
-        aboutUsTab.addEventListener('click', function () {
-            showAboutUs();
-        });
-        tabs.appendChild(aboutUsTab);
+    // About Us Tab
+    const aboutUsTab = document.createElement('div');
+    aboutUsTab.textContent = 'About Us';
+    styleTab(aboutUsTab);
+    aboutUsTab.addEventListener('click', function () {
+        showAboutUs();
+    });
+    tabs.appendChild(aboutUsTab);
 
-        // Quote Tab (changing Invoice to Quote)
-        const quoteTab = document.createElement('div');
-        quoteTab.textContent = 'Quote';
-        styleTab(quoteTab);
-        quoteTab.addEventListener('click', initInterface);
-        tabs.appendChild(quoteTab);
+    // Invoice Tab
+    const invoiceTab = document.createElement('div');
+    invoiceTab.textContent = 'Invoice';
+    styleTab(invoiceTab);
+    invoiceTab.addEventListener('click', initInterface);
+    tabs.appendChild(invoiceTab);
 
-        // Back Tab
-        const backTab = document.createElement('div');
-        backTab.textContent = 'Back';
-        styleTab(backTab);
-        backTab.addEventListener('click', function () {
-            if (previousPage) {
-                previousPage();
-            }
-        });
-        tabs.appendChild(backTab);
+    // Back Tab
+    const backTab = document.createElement('div');
+    backTab.textContent = 'Back';
+    styleTab(backTab);
+    backTab.addEventListener('click', function () {
+        if (previousPage) {
+            previousPage();
+        }
+    });
+    tabs.appendChild(backTab);
 
-        // Append the tabs to the body at the very top
-        document.body.prepend(tabs);
-    }
+    // Append the tabs to the body
+    document.body.prepend(tabs);
+}
 
-    // Style for tabs
-    function styleTab(tab) {
-        tab.style.cursor = 'pointer';
-        tab.style.fontSize = '18px';
-        tab.style.fontWeight = 'bold';
-        tab.style.padding = '10px 20px';
-        tab.style.borderRadius = '5px';  // Slightly rounded for a modern look
-        tab.style.transition = 'all 0.3s ease';
-        tab.addEventListener('mouseenter', function () {
-            tab.style.backgroundColor = '#0264D9';  // Add hover effect
-        });
-        tab.addEventListener('mouseleave', function () {
-            tab.style.backgroundColor = 'transparent';  // Return to default on mouse leave
-        });
-    }
+// Style for tabs
+function styleTab(tab) {
+    tab.style.cursor = 'pointer';
+    tab.style.fontSize = '18px';
+    tab.style.fontWeight = 'bold';
+    tab.style.padding = '10px 20px';
+    tab.style.borderRadius = '5px';  // Slightly rounded for a modern look
+    tab.style.transition = 'all 0.3s ease';
+    tab.addEventListener('mouseenter', function () {
+        tab.style.backgroundColor = '#0264D9';  // Add hover effect
+    });
+    tab.addEventListener('mouseleave', function () {
+        tab.style.backgroundColor = 'transparent';  // Return to default on mouse leave
+    });
+}
 
 
 
@@ -348,7 +346,6 @@
 
     // Function to prompt user for measurements and finish selection
   // Function to prompt user for measurements and backsplash option
-// Function to prompt user for measurements and finish selection
 function promptMeasurements(shape, type, container) {
     previousPage = selectShapeAndCalculate.bind(null, type, container);
     container.innerHTML = '';
@@ -357,7 +354,7 @@ function promptMeasurements(shape, type, container) {
     header.textContent = `${shape.name} - ${type}`;
     header.style.color = '#0C1729';
     header.style.marginBottom = '30px';
-    header.style.fontSize = '28px';
+    header.style.fontSize = '32px'; // Bigger header
     container.appendChild(header);
 
     const imageDiv = document.createElement('div');
@@ -374,118 +371,125 @@ function promptMeasurements(shape, type, container) {
     imageDiv.appendChild(shapeImage);
     container.appendChild(imageDiv);
 
-    // Explanation text under the image
-    const explanation = document.createElement('p');
-    explanation.textContent = 'Measure out each side of the countertop and input them below in inches.';
-    explanation.style.color = '#0C1729';
-    explanation.style.fontSize = '16px';
-    explanation.style.marginBottom = '30px';
-    container.appendChild(explanation);
+    const formDiv = document.createElement('div');
+    formDiv.style.display = 'flex';
+    formDiv.style.flexDirection = 'column';
+    formDiv.style.alignItems = 'center';
+    formDiv.style.gap = '20px';
+    formDiv.style.marginTop = '30px';
+    container.appendChild(formDiv);
 
-   const formDiv = document.createElement('div');
-formDiv.style.display = 'flex';
-formDiv.style.flexDirection = 'column';  // Stack elements vertically for clarity
-formDiv.style.alignItems = 'center';
-formDiv.style.gap = '20px';  // Adds spacing between fields
-container.appendChild(formDiv);
+    // Add input fields for shape measurements
+    shape.measurements.forEach((measurement, index) => {
+        const label = document.createElement('label');
+        label.textContent = `Measurement ${index + 1} (inches):`;
+        label.style.color = '#0C1729';
+        label.style.marginBottom = '5px';
+        label.style.fontSize = '20px';
+        formDiv.appendChild(label);
 
-// Explanation for measurement input
-const measurementInstruction = document.createElement('p');
-measurementInstruction.textContent = 'Measure out each side of the countertop and input them below in inches.';
-measurementInstruction.style.color = '#0C1729';
-measurementInstruction.style.fontSize = '16px';
-measurementInstruction.style.textAlign = 'center';
-formDiv.appendChild(measurementInstruction);
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.id = `measurement${index + 1}`;
+        input.style.width = '80%';
+        input.style.padding = '10px';
+        input.style.marginBottom = '10px';
+        input.style.border = '1px solid #ddd';
+        input.style.borderRadius = '5px';
+        input.style.fontSize = '20px';
+        formDiv.appendChild(input);
+    });
 
-// Create a container for measurement inputs (horizontal layout)
-const measurementsContainer = document.createElement('div');
-measurementsContainer.style.display = 'flex';
-measurementsContainer.style.justifyContent = 'center';  // Center the measurement inputs
-measurementsContainer.style.flexWrap = 'wrap';  // Allow multiple inputs on one row
-measurementsContainer.style.gap = '10px';  // Gap between inputs
-formDiv.appendChild(measurementsContainer);
+    // Visual representation of the backsplash option
+    const backsplashLabel = document.createElement('label');
+    backsplashLabel.textContent = 'Do you have a backsplash?';
+    backsplashLabel.style.color = '#0C1729';
+    backsplashLabel.style.fontSize = '22px'; // Bigger font for backsplash label
+    backsplashLabel.style.marginBottom = '10px';
+    formDiv.appendChild(backsplashLabel);
 
-shape.measurements.forEach((measurement, index) => {
-    const measurementGroup = document.createElement('div');
-    measurementGroup.style.display = 'flex';
-    measurementGroup.style.flexDirection = 'column';  // Vertical label and input
-    measurementGroup.style.alignItems = 'center';
-    measurementGroup.style.gap = '5px';
+    const backsplashImage = document.createElement('img');
+    backsplashImage.src = 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66da50fe3525014ab3c7deb3_Backsplash%20(1).png';
+    backsplashImage.style.width = '150px';
+    backsplashImage.style.height = 'auto';
+    backsplashImage.style.cursor = 'pointer';
+    backsplashImage.style.border = '2px solid #ddd';
+    backsplashImage.style.borderRadius = '5px';
+    backsplashImage.style.marginBottom = '10px';
+    backsplashImage.style.transition = 'all 0.3s ease';
+    formDiv.appendChild(backsplashImage);
 
-    const label = document.createElement('label');
-    label.textContent = `Side ${index + 1}:`;  // More compact labeling
-    label.style.color = '#0C1729';
-    label.style.fontSize = '16px';
-    label.style.marginBottom = '5px';
-    measurementGroup.appendChild(label);
+    const backsplashHeightLabel = document.createElement('label');
+    backsplashHeightLabel.textContent = 'Backsplash Height (inches):';
+    backsplashHeightLabel.style.display = 'none';
+    backsplashHeightLabel.style.color = '#0C1729';
+    backsplashHeightLabel.style.fontSize = '20px';
+    formDiv.appendChild(backsplashHeightLabel);
 
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.id = `measurement${index + 1}`;
-    input.style.width = '80px';  // Compact input size
-    input.style.padding = '10px';
-    input.style.border = '1px solid #ddd';
-    input.style.borderRadius = '5px';
-    input.style.fontSize = '16px';
-    measurementGroup.appendChild(input);
+    const backsplashHeightInput = document.createElement('input');
+    backsplashHeightInput.type = 'number';
+    backsplashHeightInput.id = 'backsplashHeight';
+    backsplashHeightInput.style.width = '80%';
+    backsplashHeightInput.style.padding = '10px';
+    backsplashHeightInput.style.marginBottom = '10px';
+    backsplashHeightInput.style.border = '1px solid #ddd';
+    backsplashHeightInput.style.borderRadius = '5px';
+    backsplashHeightInput.style.fontSize = '20px';
+    backsplashHeightInput.style.display = 'none';
+    formDiv.appendChild(backsplashHeightInput);
 
-    measurementsContainer.appendChild(measurementGroup);  // Add each group to the main container
-});
+    let hasBacksplash = false; // Backsplash toggle state
 
-// Finish Selection section
-const finishSelectionGroup = document.createElement('div');
-finishSelectionGroup.style.display = 'flex';
-finishSelectionGroup.style.flexDirection = 'column';
-finishSelectionGroup.style.alignItems = 'center';
-finishSelectionGroup.style.gap = '10px';
-formDiv.appendChild(finishSelectionGroup);
+    // Toggle backsplash height input when image is clicked
+    backsplashImage.addEventListener('click', function () {
+        hasBacksplash = !hasBacksplash;
+        if (hasBacksplash) {
+            backsplashHeightLabel.style.display = 'block';
+            backsplashHeightInput.style.display = 'block';
+            backsplashImage.style.border = '2px solid #0264D9'; // Highlight the image when selected
+        } else {
+            backsplashHeightLabel.style.display = 'none';
+            backsplashHeightInput.style.display = 'none';
+            backsplashImage.style.border = '2px solid #ddd'; // Unhighlight the image
+        }
+    });
 
-const finishLabel = document.createElement('label');
-finishLabel.textContent = 'Select Finish:';
-finishLabel.style.color = '#0C1729';
-finishLabel.style.marginBottom = '5px';
-finishLabel.style.fontSize = '20px';
-formDiv.appendChild(finishLabel);
+    // Finish Selection
+    const finishLabel = document.createElement('label');
+    finishLabel.textContent = 'Select Finish:';
+    finishLabel.style.color = '#0C1729';
+    finishLabel.style.marginBottom = '5px';
+    finishLabel.style.fontSize = '20px';
+    formDiv.appendChild(finishLabel);
 
-const finishSelect = document.createElement('select');
-finishSelect.style.width = '80%';
-finishSelect.style.padding = '10px';
-finishSelect.style.border = '1px solid #ddd';
-finishSelect.style.borderRadius = '5px';
-finishSelect.style.fontSize = '20px';
+    const finishSelect = document.createElement('select');
+    finishSelect.style.width = '80%';
+    finishSelect.style.padding = '10px';
+    finishSelect.style.border = '1px solid #ddd';
+    finishSelect.style.borderRadius = '5px';
+    finishSelect.style.fontSize = '20px';
+    const regularOption = document.createElement('option');
+    regularOption.value = 'regular';
+    regularOption.textContent = 'Regular Pour - $26/sq ft';
+    finishSelect.appendChild(regularOption);
 
-const regularOption = document.createElement('option');
-regularOption.value = 'regular';
-regularOption.textContent = 'Regular Pour - $26/sq ft';
-finishSelect.appendChild(regularOption);
+    const crystalOption = document.createElement('option');
+    crystalOption.value = 'crystal';
+    crystalOption.textContent = 'Crystal Top Finish - $39/sq ft';
+    finishSelect.appendChild(crystalOption);
 
-const crystalOption = document.createElement('option');
-crystalOption.value = 'crystal';
-crystalOption.textContent = 'Crystal Top Finish - $39/sq ft';
-finishSelect.appendChild(crystalOption);
+    formDiv.appendChild(finishSelect);
 
-formDiv.appendChild(finishSelect);
+    // Calculate Button
+    const calculateBtn = document.createElement('button');
+    calculateBtn.textContent = 'Add Item';
+    styleButton(calculateBtn);
+    formDiv.appendChild(calculateBtn);
 
-// Calculate Button
-const calculateBtn = document.createElement('button');
-calculateBtn.textContent = 'Add Item';
-styleButton(calculateBtn);
-formDiv.appendChild(calculateBtn);
-
-const backsplashHeightInput = document.createElement('input');
-backsplashHeightInput.type = 'number';
-backsplashHeightInput.style.width = '80px';
-backsplashHeightInput.style.padding = '10px';
-backsplashHeightInput.style.border = '1px solid #ddd';
-backsplashHeightInput.style.borderRadius = '5px';
-backsplashHeightInput.style.fontSize = '16px';
-formDiv.appendChild(backsplashHeightInput);
-
-
-calculateBtn.addEventListener('click', function () {
-    calculateAndAddItem(shape, finishSelect.value, container, type, hasBacksplash, backsplashHeightInput.value);
-});
-
+    calculateBtn.addEventListener('click', function () {
+        calculateAndAddItem(shape, finishSelect.value, container, type, hasBacksplash, backsplashHeightInput.value);
+    });
+}
 
     function calculateAndAddItem(shape, finishType, container, type, hasBacksplash, backsplashHeight) {
     console.log('Add Item button clicked');
