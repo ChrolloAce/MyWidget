@@ -10,42 +10,41 @@
     let userInfo = {};
 
     function initInterface() {
-    // First, ensure the tabs are added to the top of the page
-    addTabs();
+        addTabs();  // Ensure the tabs are added to the top of the page
 
-    document.body.innerHTML = '';  // Clear existing content
-    document.body.style.display = 'flex';
-    document.body.style.flexDirection = 'column';
-    document.body.style.alignItems = 'center';
-    document.body.style.minHeight = '100vh';
-    document.body.style.backgroundColor = '#ffffff';
-    document.body.style.fontFamily = 'Arial, sans-serif';
+        document.body.innerHTML = '';  // Clear existing content
+        document.body.style.display = 'flex';
+        document.body.style.flexDirection = 'column';
+        document.body.style.alignItems = 'center';
+        document.body.style.minHeight = '100vh';
+        document.body.style.backgroundColor = '#ffffff';
+        document.body.style.fontFamily = 'Arial, sans-serif';
 
-    const container = document.createElement('div');
-    container.style.width = '95%';
-    container.style.maxWidth = '800px';
-    container.style.backgroundColor = '#ffffff';
-    container.style.padding = '40px';
-    container.style.borderRadius = '15px';
-    container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
-    container.style.textAlign = 'center';
-    container.style.margin = '80px auto 30px auto';  // Adjust margin to prevent overlap with tabs
-    container.style.flexGrow = '1';
-    document.body.appendChild(container);
+        const container = document.createElement('div');
+        container.style.width = '95%';
+        container.style.maxWidth = '800px';
+        container.style.backgroundColor = '#ffffff';
+        container.style.padding = '40px';
+        container.style.borderRadius = '15px';
+        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
+        container.style.textAlign = 'center';
+        container.style.margin = '80px auto 30px auto';  // Adjust margin to prevent overlap with tabs
+        container.style.flexGrow = '1';
+        document.body.appendChild(container);
 
-    const header = document.createElement('h1');
-    header.textContent = 'Start New Invoice';
-    header.style.color = '#0C1729';
-    header.style.marginBottom = '20px';
-    header.style.fontSize = '36px';
-    container.appendChild(header);
+        const header = document.createElement('h1');
+        header.textContent = 'Start New Quote';
+        header.style.color = '#0C1729';
+        header.style.marginBottom = '20px';
+        header.style.fontSize = '36px';
+        container.appendChild(header);
 
-    const description = document.createElement('p');
-    description.textContent = 'Please enter your contact information to proceed.';
-    description.style.color = '#0C1729';
-    description.style.fontSize = '18px';
-    description.style.marginBottom = '30px';
-    container.appendChild(description);
+        const description = document.createElement('p');
+        description.textContent = 'Please enter your contact information to proceed.';
+        description.style.color = '#0C1729';
+        description.style.fontSize = '18px';
+        description.style.marginBottom = '30px';
+        container.appendChild(description);
 
         // Form to collect contact information
         const form = document.createElement('div');
@@ -112,74 +111,76 @@
         return fieldDiv;
     }
 
- // Function to add tabs at the top
-// Function to add tabs at the top
-// Function to add tabs at the top
-function addTabs() {
-    const tabs = document.createElement('div');
-    tabs.id = 'tabs-container';  // Assign an ID for easier styling/debugging
-    tabs.style.width = '100%';
-    tabs.style.backgroundColor = '#000000';  // Black background for a sleek look
-    tabs.style.color = '#ffffff';  // White text
-    tabs.style.padding = '15px 20px';  // Adjusted padding
-    tabs.style.position = 'fixed';  // Fixed position to always stay on top
-    tabs.style.top = '0';
-    tabs.style.left = '0';
-    tabs.style.zIndex = '1000';
-    tabs.style.display = 'flex';
-    tabs.style.justifyContent = 'space-around';
-    tabs.style.alignItems = 'center';
-    tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Nice shadow for depth
-    tabs.style.fontFamily = 'Arial, sans-serif';
-    tabs.style.fontSize = '18px';
-    tabs.style.fontWeight = 'bold';  // Make text bold
+    // Function to add tabs at the top
+    function addTabs() {
+        const tabs = document.createElement('div');
+        tabs.id = 'tabs-container';  // Assign an ID for easier styling/debugging
+        tabs.style.width = '100%';
+        tabs.style.backgroundColor = '#000000';  // Black background for a sleek look
+        tabs.style.color = '#ffffff';  // White text
+        tabs.style.padding = '15px 20px';  // Adjusted padding
+        tabs.style.position = 'fixed';  // Fixed position to always stay on top
+        tabs.style.top = '0';
+        tabs.style.left = '0';
+        tabs.style.zIndex = '1000';
+        tabs.style.display = 'flex';
+        tabs.style.justifyContent = 'space-around';
+        tabs.style.alignItems = 'center';
+        tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Nice shadow for depth
+        tabs.style.fontFamily = 'Arial, sans-serif';
+        tabs.style.fontSize = '18px';
+        tabs.style.fontWeight = 'bold';  // Make text bold
 
-    // About Us Tab
-    const aboutUsTab = document.createElement('div');
-    aboutUsTab.textContent = 'About Us';
-    styleTab(aboutUsTab);
-    aboutUsTab.addEventListener('click', function () {
-        showAboutUs();
-    });
-    tabs.appendChild(aboutUsTab);
+        // About Us Tab
+        const aboutUsTab = document.createElement('div');
+        aboutUsTab.textContent = 'About Us';
+        styleTab(aboutUsTab);
+        aboutUsTab.addEventListener('click', function () {
+            showAboutUs();
+        });
+        tabs.appendChild(aboutUsTab);
 
-    // Quote Tab (changing Invoice to Quote)
-    const quoteTab = document.createElement('div');
-    quoteTab.textContent = 'Quote';
-    styleTab(quoteTab);
-    quoteTab.addEventListener('click', initInterface);
-    tabs.appendChild(quoteTab);
+        // Quote Tab (changing Invoice to Quote)
+        const quoteTab = document.createElement('div');
+        quoteTab.textContent = 'Quote';
+        styleTab(quoteTab);
+        quoteTab.addEventListener('click', initInterface);
+        tabs.appendChild(quoteTab);
 
-    // Back Tab
-    const backTab = document.createElement('div');
-    backTab.textContent = 'Back';
-    styleTab(backTab);
-    backTab.addEventListener('click', function () {
-        if (previousPage) {
-            previousPage();
-        }
-    });
-    tabs.appendChild(backTab);
+        // Back Tab
+        const backTab = document.createElement('div');
+        backTab.textContent = 'Back';
+        styleTab(backTab);
+        backTab.addEventListener('click', function () {
+            if (previousPage) {
+                previousPage();
+            }
+        });
+        tabs.appendChild(backTab);
 
-    // Append the tabs to the body at the very top
-    document.body.prepend(tabs);
-}
+        // Append the tabs to the body at the very top
+        document.body.prepend(tabs);
+    }
 
-// Style for tabs
-function styleTab(tab) {
-    tab.style.cursor = 'pointer';
-    tab.style.fontSize = '18px';
-    tab.style.fontWeight = 'bold';
-    tab.style.padding = '10px 20px';
-    tab.style.borderRadius = '5px';  // Slightly rounded for a modern look
-    tab.style.transition = 'all 0.3s ease';
-    tab.addEventListener('mouseenter', function () {
-        tab.style.backgroundColor = '#0264D9';  // Add hover effect
-    });
-    tab.addEventListener('mouseleave', function () {
-        tab.style.backgroundColor = 'transparent';  // Return to default on mouse leave
-    });
-}
+    // Style for tabs
+    function styleTab(tab) {
+        tab.style.cursor = 'pointer';
+        tab.style.fontSize = '18px';
+        tab.style.fontWeight = 'bold';
+        tab.style.padding = '10px 20px';
+        tab.style.borderRadius = '5px';  // Slightly rounded for a modern look
+        tab.style.transition = 'all 0.3s ease';
+        tab.addEventListener('mouseenter', function () {
+            tab.style.backgroundColor = '#0264D9';  // Add hover effect
+        });
+        tab.addEventListener('mouseleave', function () {
+            tab.style.backgroundColor = 'transparent';  // Return to default on mouse leave
+        });
+    }
+
+    // Initialize the interface
+    initInterface();
+})();
 
     // Function to create the invoice page
     function createInvoicePage(container) {
