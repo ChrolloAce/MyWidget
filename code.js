@@ -328,7 +328,8 @@
     }
 
     // Function to prompt user for measurements and finish selection
-   function promptMeasurements(shape, type, container) {
+  // Function to prompt user for measurements and backsplash option
+function promptMeasurements(shape, type, container) {
     previousPage = selectShapeAndCalculate.bind(null, type, container);
     container.innerHTML = '';
 
@@ -336,7 +337,7 @@
     header.textContent = `${shape.name} - ${type}`;
     header.style.color = '#0C1729';
     header.style.marginBottom = '30px';
-    header.style.fontSize = '28px';
+    header.style.fontSize = '32px'; // Bigger header
     container.appendChild(header);
 
     const imageDiv = document.createElement('div');
@@ -382,16 +383,24 @@
         formDiv.appendChild(input);
     });
 
-    // Add a checkbox for backsplash
+    // Visual representation of the backsplash option
     const backsplashLabel = document.createElement('label');
     backsplashLabel.textContent = 'Do you have a backsplash?';
     backsplashLabel.style.color = '#0C1729';
-    backsplashLabel.style.fontSize = '20px';
+    backsplashLabel.style.fontSize = '22px'; // Bigger font for backsplash label
+    backsplashLabel.style.marginBottom = '10px';
     formDiv.appendChild(backsplashLabel);
 
-    const backsplashCheckbox = document.createElement('input');
-    backsplashCheckbox.type = 'checkbox';
-    formDiv.appendChild(backsplashCheckbox);
+    const backsplashImage = document.createElement('img');
+    backsplashImage.src = 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66da50fe3525014ab3c7deb3_Backsplash%20(1).png';
+    backsplashImage.style.width = '150px';
+    backsplashImage.style.height = 'auto';
+    backsplashImage.style.cursor = 'pointer';
+    backsplashImage.style.border = '2px solid #ddd';
+    backsplashImage.style.borderRadius = '5px';
+    backsplashImage.style.marginBottom = '10px';
+    backsplashImage.style.transition = 'all 0.3s ease';
+    formDiv.appendChild(backsplashImage);
 
     const backsplashHeightLabel = document.createElement('label');
     backsplashHeightLabel.textContent = 'Backsplash Height (inches):';
@@ -412,14 +421,19 @@
     backsplashHeightInput.style.display = 'none';
     formDiv.appendChild(backsplashHeightInput);
 
-    // Toggle backsplash height input based on checkbox
-    backsplashCheckbox.addEventListener('change', function () {
-        if (backsplashCheckbox.checked) {
+    let hasBacksplash = false; // Backsplash toggle state
+
+    // Toggle backsplash height input when image is clicked
+    backsplashImage.addEventListener('click', function () {
+        hasBacksplash = !hasBacksplash;
+        if (hasBacksplash) {
             backsplashHeightLabel.style.display = 'block';
             backsplashHeightInput.style.display = 'block';
+            backsplashImage.style.border = '2px solid #0264D9'; // Highlight the image when selected
         } else {
             backsplashHeightLabel.style.display = 'none';
             backsplashHeightInput.style.display = 'none';
+            backsplashImage.style.border = '2px solid #ddd'; // Unhighlight the image
         }
     });
 
@@ -456,7 +470,7 @@
     formDiv.appendChild(calculateBtn);
 
     calculateBtn.addEventListener('click', function () {
-        calculateAndAddItem(shape, finishSelect.value, container, type, backsplashCheckbox.checked, backsplashHeightInput.value);
+        calculateAndAddItem(shape, finishSelect.value, container, type, hasBacksplash, backsplashHeightInput.value);
     });
 }
 
@@ -689,26 +703,27 @@
 
     // Helper function to style buttons
   // Adjust the button style
+// Helper function to style buttons
 function styleButton(button) {
-    button.style.padding = '12px';  // Reduced padding
-    button.style.backgroundColor = '#4CAF50';  // Elegant green background
+    button.style.padding = '14px';  // Slightly increased padding
+    button.style.backgroundColor = '#0264D9';  // Blue background
     button.style.color = '#ffffff';  // White text
-    button.style.border = '2px solid #0264D9';  // Elegant blue border
-    button.style.borderRadius = '5px';  // Reduced border radius
+    button.style.border = '2px solid #000000';  // Black border for contrast
+    button.style.borderRadius = '10px';  // More rounded border
     button.style.cursor = 'pointer';
-    button.style.fontSize = '16px';  // Slightly smaller font size
+    button.style.fontSize = '18px';  // Slightly larger font size
     button.style.fontWeight = 'bold';
-    button.style.margin = '5px 0';  // Reduced margin
-    button.style.width = 'auto';  // Adjust width to be automatic
+    button.style.margin = '10px 0';  // Adjusted margin
+    button.style.width = '80%';  // Full width for larger buttons
     button.style.transition = 'all 0.3s ease';
-    button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';  // Reduced shadow
+    button.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.1)';  // Increased shadow for depth
 
     button.addEventListener('mouseenter', function () {
-        button.style.backgroundColor = '#0264D9';  // Change background to blue on hover
+        button.style.backgroundColor = '#004C99';  // Darker blue on hover
     });
 
     button.addEventListener('mouseleave', function () {
-        button.style.backgroundColor = '#4CAF50';  // Return to green on mouse leave
+        button.style.backgroundColor = '#0264D9';  // Return to original color
     });
 }
 
