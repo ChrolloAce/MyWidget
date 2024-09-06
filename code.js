@@ -116,6 +116,7 @@
 // Function to add tabs at the top
 function addTabs() {
     const tabs = document.createElement('div');
+    tabs.id = 'tabs-container';  // Assign an ID for easier styling/debugging
     tabs.style.width = '100%';
     tabs.style.backgroundColor = '#000000';  // Black background for a sleek look
     tabs.style.color = '#ffffff';  // White text
@@ -128,6 +129,8 @@ function addTabs() {
     tabs.style.justifyContent = 'space-around';
     tabs.style.alignItems = 'center';
     tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Nice shadow for depth
+    tabs.style.fontFamily = 'Arial, sans-serif';
+    tabs.style.fontSize = '18px';
 
     // About Us Tab
     const aboutUsTab = document.createElement('div');
@@ -175,8 +178,6 @@ function styleTab(tab) {
         tab.style.backgroundColor = 'transparent';  // Return to default on mouse leave
     });
 }
-
-
 
     // Function to create the invoice page
     function createInvoicePage(container) {
