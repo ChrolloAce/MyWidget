@@ -110,56 +110,69 @@
         return fieldDiv;
     }
 
-    // Function to add tabs at the top
-    function addTabs() {
-        const tabs = document.createElement('div');
-        tabs.style.width = '100%';
-        tabs.style.backgroundColor = '#000000';  // Black background
-        tabs.style.color = '#ffffff';  // White text color
-        tabs.style.padding = '15px 20px';  // Adjusted padding
-        tabs.style.position = 'relative';
-        tabs.style.top = '0';
-        tabs.style.left = '0';
-        tabs.style.zIndex = '1000';
-        tabs.style.display = 'flex';
-        tabs.style.justifyContent = 'space-around';
-        tabs.style.alignItems = 'center';
-        tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Enhanced shadow for a polished look
+ // Function to add tabs at the top
+function addTabs() {
+    const tabs = document.createElement('div');
+    tabs.style.width = '100%';
+    tabs.style.backgroundColor = '#000000';  // Black background for a sleek look
+    tabs.style.color = '#ffffff';  // White text
+    tabs.style.padding = '15px 20px';  // Adjusted padding
+    tabs.style.position = 'absolute';  // Keep it above the container
+    tabs.style.top = '0';
+    tabs.style.left = '0';
+    tabs.style.zIndex = '1000';
+    tabs.style.display = 'flex';
+    tabs.style.justifyContent = 'space-around';
+    tabs.style.alignItems = 'center';
+    tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Nice shadow for depth
 
-        const aboutUsTab = document.createElement('div');
-        aboutUsTab.textContent = 'About Us';
-        styleTab(aboutUsTab);
-        aboutUsTab.addEventListener('click', function () {
-            showAboutUs();
-        });
-        tabs.appendChild(aboutUsTab);
+    // About Us Tab
+    const aboutUsTab = document.createElement('div');
+    aboutUsTab.textContent = 'About Us';
+    styleTab(aboutUsTab);
+    aboutUsTab.addEventListener('click', function () {
+        showAboutUs();
+    });
+    tabs.appendChild(aboutUsTab);
 
-        const invoiceTab = document.createElement('div');
-        invoiceTab.textContent = 'Invoice';
-        styleTab(invoiceTab);
-        invoiceTab.addEventListener('click', initInterface);
-        tabs.appendChild(invoiceTab);
+    // Invoice Tab
+    const invoiceTab = document.createElement('div');
+    invoiceTab.textContent = 'Invoice';
+    styleTab(invoiceTab);
+    invoiceTab.addEventListener('click', initInterface);
+    tabs.appendChild(invoiceTab);
 
-        const backTab = document.createElement('div');
-        backTab.textContent = 'Back';
-        styleTab(backTab);
-        backTab.addEventListener('click', function () {
-            if (previousPage) {
-                previousPage();
-            }
-        });
-        tabs.appendChild(backTab);
+    // Back Tab
+    const backTab = document.createElement('div');
+    backTab.textContent = 'Back';
+    styleTab(backTab);
+    backTab.addEventListener('click', function () {
+        if (previousPage) {
+            previousPage();
+        }
+    });
+    tabs.appendChild(backTab);
 
-        document.body.appendChild(tabs);
-    }
+    // Add tabs above the container
+    document.body.prepend(tabs);  // Ensure tabs appear above the rest of the content
+}
 
-    // Style for tabs
-    function styleTab(tab) {
-        tab.style.cursor = 'pointer';
-        tab.style.fontSize = '18px';
-        tab.style.fontWeight = 'bold';
-        tab.style.padding = '10px 20px';
-    }
+// Style for tabs
+function styleTab(tab) {
+    tab.style.cursor = 'pointer';
+    tab.style.fontSize = '18px';
+    tab.style.fontWeight = 'bold';
+    tab.style.padding = '10px 20px';
+    tab.style.borderRadius = '5px';  // Slightly rounded for a modern look
+    tab.style.transition = 'all 0.3s ease';
+    tab.addEventListener('mouseenter', function () {
+        tab.style.backgroundColor = '#0264D9';  // Add hover effect
+    });
+    tab.addEventListener('mouseleave', function () {
+        tab.style.backgroundColor = 'transparent';  // Return to default on mouse leave
+    });
+}
+
 
     // Function to create the invoice page
     function createInvoicePage(container) {
