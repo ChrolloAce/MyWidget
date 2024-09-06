@@ -328,134 +328,183 @@
     }
 
     // Function to prompt user for measurements and finish selection
-    function promptMeasurements(shape, type, container) {
-        previousPage = selectShapeAndCalculate.bind(null, type, container);
-        container.innerHTML = '';
+   function promptMeasurements(shape, type, container) {
+    previousPage = selectShapeAndCalculate.bind(null, type, container);
+    container.innerHTML = '';
 
-        const header = document.createElement('h2');
-        header.textContent = `${shape.name} - ${type}`;
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
+    const header = document.createElement('h2');
+    header.textContent = `${shape.name} - ${type}`;
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
 
-        const imageDiv = document.createElement('div');
-        imageDiv.style.textAlign = 'center';
-        imageDiv.style.marginBottom = '30px';
+    const imageDiv = document.createElement('div');
+    imageDiv.style.textAlign = 'center';
+    imageDiv.style.marginBottom = '30px';
 
-        const shapeImage = document.createElement('img');
-        shapeImage.src = shape.imageUrl;
-        shapeImage.style.maxWidth = '100%';
-        shapeImage.style.height = 'auto';
-        shapeImage.style.margin = '0 auto';
-        shapeImage.style.borderRadius = '15px';
-        shapeImage.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
-        imageDiv.appendChild(shapeImage);
-        container.appendChild(imageDiv);
+    const shapeImage = document.createElement('img');
+    shapeImage.src = shape.imageUrl;
+    shapeImage.style.maxWidth = '100%';
+    shapeImage.style.height = 'auto';
+    shapeImage.style.margin = '0 auto';
+    shapeImage.style.borderRadius = '15px';
+    shapeImage.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+    imageDiv.appendChild(shapeImage);
+    container.appendChild(imageDiv);
 
-        const formDiv = document.createElement('div');
-        formDiv.style.display = 'flex';
-        formDiv.style.flexDirection = 'column';
-        formDiv.style.alignItems = 'center';
-        formDiv.style.gap = '20px';
-        formDiv.style.marginTop = '30px';
-        container.appendChild(formDiv);
+    const formDiv = document.createElement('div');
+    formDiv.style.display = 'flex';
+    formDiv.style.flexDirection = 'column';
+    formDiv.style.alignItems = 'center';
+    formDiv.style.gap = '20px';
+    formDiv.style.marginTop = '30px';
+    container.appendChild(formDiv);
 
-        shape.measurements.forEach((measurement, index) => {
-            const label = document.createElement('label');
-            label.textContent = `Measurement ${index + 1} (inches):`;
-            label.style.color = '#0C1729';
-            label.style.marginBottom = '5px';
-            label.style.fontSize = '20px';
-            formDiv.appendChild(label);
+    // Add input fields for shape measurements
+    shape.measurements.forEach((measurement, index) => {
+        const label = document.createElement('label');
+        label.textContent = `Measurement ${index + 1} (inches):`;
+        label.style.color = '#0C1729';
+        label.style.marginBottom = '5px';
+        label.style.fontSize = '20px';
+        formDiv.appendChild(label);
 
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.id = `measurement${index + 1}`;
-            input.style.width = '80%';
-            input.style.padding = '10px';
-            input.style.marginBottom = '10px';
-            input.style.border = '1px solid #ddd';
-            input.style.borderRadius = '5px';
-            input.style.fontSize = '20px';
-            formDiv.appendChild(input);
-        });
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.id = `measurement${index + 1}`;
+        input.style.width = '80%';
+        input.style.padding = '10px';
+        input.style.marginBottom = '10px';
+        input.style.border = '1px solid #ddd';
+        input.style.borderRadius = '5px';
+        input.style.fontSize = '20px';
+        formDiv.appendChild(input);
+    });
 
-        // Finish Selection
-        const finishLabel = document.createElement('label');
-        finishLabel.textContent = 'Select Finish:';
-        finishLabel.style.color = '#0C1729';
-        finishLabel.style.marginBottom = '5px';
-        finishLabel.style.fontSize = '20px';
-        formDiv.appendChild(finishLabel);
+    // Add a checkbox for backsplash
+    const backsplashLabel = document.createElement('label');
+    backsplashLabel.textContent = 'Do you have a backsplash?';
+    backsplashLabel.style.color = '#0C1729';
+    backsplashLabel.style.fontSize = '20px';
+    formDiv.appendChild(backsplashLabel);
 
-        const finishSelect = document.createElement('select');
-        finishSelect.style.width = '80%';
-        finishSelect.style.padding = '10px';
-        finishSelect.style.border = '1px solid #ddd';
-        finishSelect.style.borderRadius = '5px';
-        finishSelect.style.fontSize = '20px';
-        const regularOption = document.createElement('option');
-        regularOption.value = 'regular';
-        regularOption.textContent = 'Regular Pour - $26/sq ft';
-        finishSelect.appendChild(regularOption);
+    const backsplashCheckbox = document.createElement('input');
+    backsplashCheckbox.type = 'checkbox';
+    formDiv.appendChild(backsplashCheckbox);
 
-        const crystalOption = document.createElement('option');
-        crystalOption.value = 'crystal';
-        crystalOption.textContent = 'Crystal Top Finish - $39/sq ft';
-        finishSelect.appendChild(crystalOption);
+    const backsplashHeightLabel = document.createElement('label');
+    backsplashHeightLabel.textContent = 'Backsplash Height (inches):';
+    backsplashHeightLabel.style.display = 'none';
+    backsplashHeightLabel.style.color = '#0C1729';
+    backsplashHeightLabel.style.fontSize = '20px';
+    formDiv.appendChild(backsplashHeightLabel);
 
-        formDiv.appendChild(finishSelect);
+    const backsplashHeightInput = document.createElement('input');
+    backsplashHeightInput.type = 'number';
+    backsplashHeightInput.id = 'backsplashHeight';
+    backsplashHeightInput.style.width = '80%';
+    backsplashHeightInput.style.padding = '10px';
+    backsplashHeightInput.style.marginBottom = '10px';
+    backsplashHeightInput.style.border = '1px solid #ddd';
+    backsplashHeightInput.style.borderRadius = '5px';
+    backsplashHeightInput.style.fontSize = '20px';
+    backsplashHeightInput.style.display = 'none';
+    formDiv.appendChild(backsplashHeightInput);
 
-        // Calculate Button
-        const calculateBtn = document.createElement('button');
-        calculateBtn.textContent = 'Add Item';
-        styleButton(calculateBtn);
-        formDiv.appendChild(calculateBtn);
-
-        calculateBtn.addEventListener('click', function () {
-            calculateAndAddItem(shape, finishSelect.value, container, type);
-        });
-    }
-
-    function calculateAndAddItem(shape, finishType, container, type) {
-        console.log('Add Item button clicked');
-        const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
-
-        console.log('Measurements:', measurements);
-
-        if (measurements.some(isNaN)) {
-            alert('Please enter valid measurements.');
-            return;
+    // Toggle backsplash height input based on checkbox
+    backsplashCheckbox.addEventListener('change', function () {
+        if (backsplashCheckbox.checked) {
+            backsplashHeightLabel.style.display = 'block';
+            backsplashHeightInput.style.display = 'block';
+        } else {
+            backsplashHeightLabel.style.display = 'none';
+            backsplashHeightInput.style.display = 'none';
         }
+    });
 
-        // Determine depth automatically based on type
-        const depth = type === 'Kitchen' ? 25 : 22;
+    // Finish Selection
+    const finishLabel = document.createElement('label');
+    finishLabel.textContent = 'Select Finish:';
+    finishLabel.style.color = '#0C1729';
+    finishLabel.style.marginBottom = '5px';
+    finishLabel.style.fontSize = '20px';
+    formDiv.appendChild(finishLabel);
 
-        // Calculate square footage based on shape formula
-        const squareFootage = shape.formula(measurements, depth);
-        console.log('Square Footage:', squareFootage);
+    const finishSelect = document.createElement('select');
+    finishSelect.style.width = '80%';
+    finishSelect.style.padding = '10px';
+    finishSelect.style.border = '1px solid #ddd';
+    finishSelect.style.borderRadius = '5px';
+    finishSelect.style.fontSize = '20px';
+    const regularOption = document.createElement('option');
+    regularOption.value = 'regular';
+    regularOption.textContent = 'Regular Pour - $26/sq ft';
+    finishSelect.appendChild(regularOption);
 
-        const pricePerSqFt = finishType === 'regular' ? PRICE_REGULAR : PRICE_CRYSTAL;
-        const cost = squareFootage * pricePerSqFt;
-        console.log('Cost:', cost);
+    const crystalOption = document.createElement('option');
+    crystalOption.value = 'crystal';
+    crystalOption.textContent = 'Crystal Top Finish - $39/sq ft';
+    finishSelect.appendChild(crystalOption);
 
-        // Add to items list
-        items.push({
-            type: `${shape.name} - ${shape.type}`,
-            squareFootage: squareFootage.toFixed(2),
-            finish: finishType,
-            cost: cost.toFixed(2)
-        });
+    formDiv.appendChild(finishSelect);
 
-        // Update the total cost
-        totalCost += cost;
+    // Calculate Button
+    const calculateBtn = document.createElement('button');
+    calculateBtn.textContent = 'Add Item';
+    styleButton(calculateBtn);
+    formDiv.appendChild(calculateBtn);
 
-        console.log('Total Cost:', totalCost);
+    calculateBtn.addEventListener('click', function () {
+        calculateAndAddItem(shape, finishSelect.value, container, type, backsplashCheckbox.checked, backsplashHeightInput.value);
+    });
+}
 
-        // Redirect back to the invoice page and show the updated item list
-        createInvoicePage(container);
+    function calculateAndAddItem(shape, finishType, container, type, hasBacksplash, backsplashHeight) {
+    console.log('Add Item button clicked');
+    const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
+
+    console.log('Measurements:', measurements);
+
+    if (measurements.some(isNaN)) {
+        alert('Please enter valid measurements.');
+        return;
     }
+
+    // Determine depth automatically based on type
+    const depth = type === 'Kitchen' ? 25 : 22;
+
+    // Calculate square footage based on shape formula
+    let squareFootage = shape.formula(measurements, depth);
+    
+    // Add backsplash square footage if applicable
+    if (hasBacksplash && backsplashHeight) {
+        const backsplashArea = measurements[0] * (parseFloat(backsplashHeight) / 12); // Assuming backsplash is only along the first measurement
+        squareFootage += backsplashArea;
+    }
+    
+    console.log('Square Footage:', squareFootage);
+
+    const pricePerSqFt = finishType === 'regular' ? PRICE_REGULAR : PRICE_CRYSTAL;
+    const cost = squareFootage * pricePerSqFt;
+    console.log('Cost:', cost);
+
+    // Add to items list
+    items.push({
+        type: `${shape.name} - ${shape.type}`,
+        squareFootage: squareFootage.toFixed(2),
+        finish: finishType,
+        cost: cost.toFixed(2)
+    });
+
+    // Update the total cost
+    totalCost += cost;
+
+    console.log('Total Cost:', totalCost);
+
+    // Redirect back to the invoice page and show the updated item list
+    createInvoicePage(container);
+}
 
     function updateItemList(container) {
         let itemListDiv = document.getElementById('itemList');
@@ -639,29 +688,29 @@
     }
 
     // Helper function to style buttons
-    function styleButton(button) {
-        button.style.padding = '10px';  // Reduced padding
-        button.style.backgroundColor = '#000000';  // Black background
-        button.style.color = '#ffffff';  // White text
-        button.style.border = '2px solid #0264D9';  // Elegant blue border
-        button.style.borderRadius = '5px';  // Reduced border radius
-        button.style.cursor = 'pointer';
-        button.style.fontSize = '16px';  // Slightly smaller font size
-        button.style.fontWeight = 'bold';
-        button.style.margin = '5px 0';  // Reduced margin
-        button.style.width = 'auto';  // Adjust width to be automatic
-        button.style.transition = 'all 0.3s ease';
-        button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';  // Reduced shadow
+  // Adjust the button style
+function styleButton(button) {
+    button.style.padding = '12px';  // Reduced padding
+    button.style.backgroundColor = '#4CAF50';  // Elegant green background
+    button.style.color = '#ffffff';  // White text
+    button.style.border = '2px solid #0264D9';  // Elegant blue border
+    button.style.borderRadius = '5px';  // Reduced border radius
+    button.style.cursor = 'pointer';
+    button.style.fontSize = '16px';  // Slightly smaller font size
+    button.style.fontWeight = 'bold';
+    button.style.margin = '5px 0';  // Reduced margin
+    button.style.width = 'auto';  // Adjust width to be automatic
+    button.style.transition = 'all 0.3s ease';
+    button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';  // Reduced shadow
 
-        button.addEventListener('mouseenter', function () {
-            button.style.backgroundColor = '#0264D9';  // Change background to blue on hover
-            button.style.color = '#ffffff';
-        });
+    button.addEventListener('mouseenter', function () {
+        button.style.backgroundColor = '#0264D9';  // Change background to blue on hover
+    });
 
-        button.addEventListener('mouseleave', function () {
-            button.style.backgroundColor = '#000000';  // Return to black on mouse leave
-        });
-    }
+    button.addEventListener('mouseleave', function () {
+        button.style.backgroundColor = '#4CAF50';  // Return to green on mouse leave
+    });
+}
 
     // Helper function to create image buttons
     function createImageButton(text, imageUrl) {
