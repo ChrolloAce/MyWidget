@@ -443,15 +443,16 @@ formDiv.appendChild(finishSelectionGroup);
 const finishLabel = document.createElement('label');
 finishLabel.textContent = 'Select Finish:';
 finishLabel.style.color = '#0C1729';
+finishLabel.style.marginBottom = '5px';
 finishLabel.style.fontSize = '20px';
-finishSelectionGroup.appendChild(finishLabel);
+formDiv.appendChild(finishLabel);
 
 const finishSelect = document.createElement('select');
 finishSelect.style.width = '80%';
 finishSelect.style.padding = '10px';
 finishSelect.style.border = '1px solid #ddd';
 finishSelect.style.borderRadius = '5px';
-finishSelect.style.fontSize = '18px';
+finishSelect.style.fontSize = '20px';
 
 const regularOption = document.createElement('option');
 regularOption.value = 'regular';
@@ -463,20 +464,17 @@ crystalOption.value = 'crystal';
 crystalOption.textContent = 'Crystal Top Finish - $39/sq ft';
 finishSelect.appendChild(crystalOption);
 
-finishSelectionGroup.appendChild(finishSelect);
+formDiv.appendChild(finishSelect);
 
-// Add the 'Add Item' button
+// Calculate Button
 const calculateBtn = document.createElement('button');
 calculateBtn.textContent = 'Add Item';
-styleButton(calculateBtn);  // Assume this is the existing button styling function
+styleButton(calculateBtn);
 formDiv.appendChild(calculateBtn);
 
-// Event listener for the calculate button
 calculateBtn.addEventListener('click', function () {
-    calculateAndAddItem(shape, finishSelect.value, container, type);
+    calculateAndAddItem(shape, finishSelect.value, container, type, hasBacksplash, backsplashHeightInput.value);
 });
-
-}
 
 
     // Finish Selection
