@@ -9,41 +9,43 @@
     let previousPage = null;
     let userInfo = {};
 
-    // Function to initialize the interface and collect contact information
     function initInterface() {
-        document.body.innerHTML = '';
-        document.body.style.display = 'flex';
-        document.body.style.flexDirection = 'column';
-        document.body.style.alignItems = 'center';
-        document.body.style.minHeight = '100vh';
-        document.body.style.backgroundColor = '#ffffff';
-        document.body.style.fontFamily = 'Arial, sans-serif';
+    // First, ensure the tabs are added to the top of the page
+    addTabs();
 
-        const container = document.createElement('div');
-        container.style.width = '95%';
-        container.style.maxWidth = '800px';
-        container.style.backgroundColor = '#ffffff';
-        container.style.padding = '40px';
-        container.style.borderRadius = '15px';
-        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
-        container.style.textAlign = 'center';
-        container.style.margin = '30px auto';
-        container.style.flexGrow = '1';
-        document.body.appendChild(container);
+    document.body.innerHTML = '';  // Clear existing content
+    document.body.style.display = 'flex';
+    document.body.style.flexDirection = 'column';
+    document.body.style.alignItems = 'center';
+    document.body.style.minHeight = '100vh';
+    document.body.style.backgroundColor = '#ffffff';
+    document.body.style.fontFamily = 'Arial, sans-serif';
 
-        const header = document.createElement('h1');
-        header.textContent = 'Start New Invoice';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '20px';
-        header.style.fontSize = '36px';
-        container.appendChild(header);
+    const container = document.createElement('div');
+    container.style.width = '95%';
+    container.style.maxWidth = '800px';
+    container.style.backgroundColor = '#ffffff';
+    container.style.padding = '40px';
+    container.style.borderRadius = '15px';
+    container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
+    container.style.textAlign = 'center';
+    container.style.margin = '80px auto 30px auto';  // Adjust margin to prevent overlap with tabs
+    container.style.flexGrow = '1';
+    document.body.appendChild(container);
 
-        const description = document.createElement('p');
-        description.textContent = 'Please enter your contact information to proceed.';
-        description.style.color = '#0C1729';
-        description.style.fontSize = '18px';
-        description.style.marginBottom = '30px';
-        container.appendChild(description);
+    const header = document.createElement('h1');
+    header.textContent = 'Start New Invoice';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '36px';
+    container.appendChild(header);
+
+    const description = document.createElement('p');
+    description.textContent = 'Please enter your contact information to proceed.';
+    description.style.color = '#0C1729';
+    description.style.fontSize = '18px';
+    description.style.marginBottom = '30px';
+    container.appendChild(description);
 
         // Form to collect contact information
         const form = document.createElement('div');
