@@ -472,9 +472,20 @@ calculateBtn.textContent = 'Add Item';
 styleButton(calculateBtn);
 formDiv.appendChild(calculateBtn);
 
+const backsplashHeightInput = document.createElement('input');
+backsplashHeightInput.type = 'number';
+backsplashHeightInput.style.width = '80px';
+backsplashHeightInput.style.padding = '10px';
+backsplashHeightInput.style.border = '1px solid #ddd';
+backsplashHeightInput.style.borderRadius = '5px';
+backsplashHeightInput.style.fontSize = '16px';
+formDiv.appendChild(backsplashHeightInput);
+
+
 calculateBtn.addEventListener('click', function () {
     calculateAndAddItem(shape, finishSelect.value, container, type, hasBacksplash, backsplashHeightInput.value);
 });
+
 
     function calculateAndAddItem(shape, finishType, container, type, hasBacksplash, backsplashHeight) {
     console.log('Add Item button clicked');
