@@ -476,44 +476,6 @@ calculateBtn.addEventListener('click', function () {
     calculateAndAddItem(shape, finishSelect.value, container, type, hasBacksplash, backsplashHeightInput.value);
 });
 
-
-    // Finish Selection
-    const finishLabel = document.createElement('label');
-    finishLabel.textContent = 'Select Finish:';
-    finishLabel.style.color = '#0C1729';
-    finishLabel.style.marginBottom = '5px';
-    finishLabel.style.fontSize = '20px';
-    formDiv.appendChild(finishLabel);
-
-    const finishSelect = document.createElement('select');
-    finishSelect.style.width = '80%';
-    finishSelect.style.padding = '10px';
-    finishSelect.style.border = '1px solid #ddd';
-    finishSelect.style.borderRadius = '5px';
-    finishSelect.style.fontSize = '20px';
-    const regularOption = document.createElement('option');
-    regularOption.value = 'regular';
-    regularOption.textContent = 'Regular Pour - $26/sq ft';
-    finishSelect.appendChild(regularOption);
-
-    const crystalOption = document.createElement('option');
-    crystalOption.value = 'crystal';
-    crystalOption.textContent = 'Crystal Top Finish - $39/sq ft';
-    finishSelect.appendChild(crystalOption);
-
-    formDiv.appendChild(finishSelect);
-
-    // Calculate Button
-    const calculateBtn = document.createElement('button');
-    calculateBtn.textContent = 'Add Item';
-    styleButton(calculateBtn);
-    formDiv.appendChild(calculateBtn);
-
-    calculateBtn.addEventListener('click', function () {
-        calculateAndAddItem(shape, finishSelect.value, container, type, hasBacksplash, backsplashHeightInput.value);
-    });
-}
-
     function calculateAndAddItem(shape, finishType, container, type, hasBacksplash, backsplashHeight) {
     console.log('Add Item button clicked');
     const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
