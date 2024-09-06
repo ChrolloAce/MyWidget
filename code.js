@@ -533,42 +533,43 @@ function promptMeasurements(shape, type, container) {
     createInvoicePage(container);
 }
 
-    function updateItemList(container) {
-        let itemListDiv = document.getElementById('itemList');
+  // Function to update the item list without showing square footage to the client
+function updateItemList(container) {
+    let itemListDiv = document.getElementById('itemList');
 
-        // Recreate itemListDiv if it doesn't exist
-        if (!itemListDiv) {
-            console.error('itemListDiv not found. Recreating the element.');
-            itemListDiv = document.createElement('div');
-            itemListDiv.id = 'itemList';
-            itemListDiv.style.marginTop = '30px';
-            container.appendChild(itemListDiv);
-        }
-
-        itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3>';
-
-        if (items.length === 0) {
-            itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
-        } else {
-            items.forEach((item, index) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.textContent = `${index + 1}. ${item.type} - ${item.squareFootage} sq ft - ${item.finish} Finish - $${item.cost}`;
-                itemDiv.style.padding = '10px';
-                itemDiv.style.marginBottom = '15px';
-                itemDiv.style.borderBottom = '1px solid #ddd';
-                itemDiv.style.color = '#0C1729';
-                itemListDiv.appendChild(itemDiv);
-            });
-
-            const totalDiv = document.createElement('div');
-            totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-            totalDiv.style.marginTop = '20px';
-            totalDiv.style.fontWeight = 'bold';
-            totalDiv.style.fontSize = '22px';
-            totalDiv.style.color = '#0264D9';
-            itemListDiv.appendChild(totalDiv);
-        }
+    // Recreate itemListDiv if it doesn't exist
+    if (!itemListDiv) {
+        itemListDiv = document.createElement('div');
+        itemListDiv.id = 'itemList';
+        itemListDiv.style.marginTop = '30px';
+        container.appendChild(itemListDiv);
     }
+
+    itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3>';
+
+    if (items.length === 0) {
+        itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
+    } else {
+        items.forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.textContent = `${index + 1}. ${item.type} - ${item.finish} Finish - $${item.cost}`;  // Square footage hidden
+            itemDiv.style.padding = '10px';
+            itemDiv.style.marginBottom = '15px';
+            itemDiv.style.borderBottom = '1px solid #ddd';
+            itemDiv.style.color = '#0C1729';
+            itemListDiv.appendChild(itemDiv);
+        });
+
+        const totalDiv = document.createElement('div');
+        totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
+        totalDiv.style.marginTop = '20px';
+        totalDiv.style.fontWeight = 'bold';
+        totalDiv.style.fontSize = '22px';
+        totalDiv.style.color = '#0264D9';
+        itemListDiv.appendChild(totalDiv);
+    }
+}
+
 
     // Function to finalize the invoice
     function finalizeInvoice(container) {
