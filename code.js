@@ -111,13 +111,14 @@
     }
 
  // Function to add tabs at the top
+// Function to add tabs at the top
 function addTabs() {
     const tabs = document.createElement('div');
     tabs.style.width = '100%';
     tabs.style.backgroundColor = '#000000';  // Black background for a sleek look
     tabs.style.color = '#ffffff';  // White text
     tabs.style.padding = '15px 20px';  // Adjusted padding
-    tabs.style.position = 'absolute';  // Keep it above the container
+    tabs.style.position = 'fixed';  // Fixed position to always stay on top
     tabs.style.top = '0';
     tabs.style.left = '0';
     tabs.style.zIndex = '1000';
@@ -153,8 +154,8 @@ function addTabs() {
     });
     tabs.appendChild(backTab);
 
-    // Add tabs above the container
-    document.body.prepend(tabs);  // Ensure tabs appear above the rest of the content
+    // Append the tabs to the body
+    document.body.prepend(tabs);
 }
 
 // Style for tabs
@@ -172,6 +173,7 @@ function styleTab(tab) {
         tab.style.backgroundColor = 'transparent';  // Return to default on mouse leave
     });
 }
+
 
 
     // Function to create the invoice page
@@ -534,6 +536,7 @@ function promptMeasurements(shape, type, container) {
 }
 
   // Function to update the item list without showing square footage to the client
+// Function to update the item list with the option to remove items
 function updateItemList(container) {
     let itemListDiv = document.getElementById('itemList');
 
@@ -552,11 +555,32 @@ function updateItemList(container) {
     } else {
         items.forEach((item, index) => {
             const itemDiv = document.createElement('div');
-            itemDiv.textContent = `${index + 1}. ${item.type} - ${item.finish} Finish - $${item.cost}`;  // Square footage hidden
+            itemDiv.style.display = 'flex';
+            itemDiv.style.justifyContent = 'space-between';
+            itemDiv.style.alignItems = 'center';
             itemDiv.style.padding = '10px';
             itemDiv.style.marginBottom = '15px';
             itemDiv.style.borderBottom = '1px solid #ddd';
             itemDiv.style.color = '#0C1729';
+
+            const itemText = document.createElement('span');
+            itemText.textContent = `${index + 1}. ${item.type} - ${item.finish} Finish - $${item.cost}`;
+            itemDiv.appendChild(itemText);
+
+            // 'X' button to remove item
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'X';
+            removeBtn.style.color = '#ffffff';
+            removeBtn.style.backgroundColor = '#ff0000';  // Red color for the remove button
+            removeBtn.style.border = 'none';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.padding = '5px 10px';
+            removeBtn.style.borderRadius = '5px';
+            removeBtn.addEventListener('click', function () {
+                removeItem(index);
+            });
+            itemDiv.appendChild(removeBtn);
+
             itemListDiv.appendChild(itemDiv);
         });
 
@@ -569,6 +593,14 @@ function updateItemList(container) {
         itemListDiv.appendChild(totalDiv);
     }
 }
+
+// Function to remove an item
+function removeItem(index) {
+    totalCost -= parseFloat(items[index].cost);  // Deduct cost from total
+    items.splice(index, 1);  // Remove item from array
+    updateItemList(document.querySelector('#itemList').parentElement);  // Refresh item list
+}
+
 
 
     // Function to finalize the invoice
