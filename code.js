@@ -114,6 +114,7 @@
 
  // Function to add tabs at the top
 // Function to add tabs at the top
+// Function to add tabs at the top
 function addTabs() {
     const tabs = document.createElement('div');
     tabs.id = 'tabs-container';  // Assign an ID for easier styling/debugging
@@ -131,6 +132,7 @@ function addTabs() {
     tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Nice shadow for depth
     tabs.style.fontFamily = 'Arial, sans-serif';
     tabs.style.fontSize = '18px';
+    tabs.style.fontWeight = 'bold';  // Make text bold
 
     // About Us Tab
     const aboutUsTab = document.createElement('div');
@@ -141,12 +143,12 @@ function addTabs() {
     });
     tabs.appendChild(aboutUsTab);
 
-    // Invoice Tab
-    const invoiceTab = document.createElement('div');
-    invoiceTab.textContent = 'Invoice';
-    styleTab(invoiceTab);
-    invoiceTab.addEventListener('click', initInterface);
-    tabs.appendChild(invoiceTab);
+    // Quote Tab (changing Invoice to Quote)
+    const quoteTab = document.createElement('div');
+    quoteTab.textContent = 'Quote';
+    styleTab(quoteTab);
+    quoteTab.addEventListener('click', initInterface);
+    tabs.appendChild(quoteTab);
 
     // Back Tab
     const backTab = document.createElement('div');
@@ -159,7 +161,7 @@ function addTabs() {
     });
     tabs.appendChild(backTab);
 
-    // Append the tabs to the body
+    // Append the tabs to the body at the very top
     document.body.prepend(tabs);
 }
 
@@ -347,6 +349,7 @@ function styleTab(tab) {
 
     // Function to prompt user for measurements and finish selection
   // Function to prompt user for measurements and backsplash option
+// Function to prompt user for measurements and finish selection
 function promptMeasurements(shape, type, container) {
     previousPage = selectShapeAndCalculate.bind(null, type, container);
     container.innerHTML = '';
@@ -355,7 +358,7 @@ function promptMeasurements(shape, type, container) {
     header.textContent = `${shape.name} - ${type}`;
     header.style.color = '#0C1729';
     header.style.marginBottom = '30px';
-    header.style.fontSize = '32px'; // Bigger header
+    header.style.fontSize = '28px';
     container.appendChild(header);
 
     const imageDiv = document.createElement('div');
@@ -372,88 +375,110 @@ function promptMeasurements(shape, type, container) {
     imageDiv.appendChild(shapeImage);
     container.appendChild(imageDiv);
 
-    const formDiv = document.createElement('div');
-    formDiv.style.display = 'flex';
-    formDiv.style.flexDirection = 'column';
-    formDiv.style.alignItems = 'center';
-    formDiv.style.gap = '20px';
-    formDiv.style.marginTop = '30px';
-    container.appendChild(formDiv);
+    // Explanation text under the image
+    const explanation = document.createElement('p');
+    explanation.textContent = 'Measure out each side of the countertop and input them below in inches.';
+    explanation.style.color = '#0C1729';
+    explanation.style.fontSize = '16px';
+    explanation.style.marginBottom = '30px';
+    container.appendChild(explanation);
 
-    // Add input fields for shape measurements
-    shape.measurements.forEach((measurement, index) => {
-        const label = document.createElement('label');
-        label.textContent = `Measurement ${index + 1} (inches):`;
-        label.style.color = '#0C1729';
-        label.style.marginBottom = '5px';
-        label.style.fontSize = '20px';
-        formDiv.appendChild(label);
+   const formDiv = document.createElement('div');
+formDiv.style.display = 'flex';
+formDiv.style.flexDirection = 'column';  // Stack elements vertically for clarity
+formDiv.style.alignItems = 'center';
+formDiv.style.gap = '20px';  // Adds spacing between fields
+container.appendChild(formDiv);
 
-        const input = document.createElement('input');
-        input.type = 'number';
-        input.id = `measurement${index + 1}`;
-        input.style.width = '80%';
-        input.style.padding = '10px';
-        input.style.marginBottom = '10px';
-        input.style.border = '1px solid #ddd';
-        input.style.borderRadius = '5px';
-        input.style.fontSize = '20px';
-        formDiv.appendChild(input);
-    });
+// Explanation for measurement input
+const measurementInstruction = document.createElement('p');
+measurementInstruction.textContent = 'Measure out each side of the countertop and input them below in inches.';
+measurementInstruction.style.color = '#0C1729';
+measurementInstruction.style.fontSize = '16px';
+measurementInstruction.style.textAlign = 'center';
+formDiv.appendChild(measurementInstruction);
 
-    // Visual representation of the backsplash option
-    const backsplashLabel = document.createElement('label');
-    backsplashLabel.textContent = 'Do you have a backsplash?';
-    backsplashLabel.style.color = '#0C1729';
-    backsplashLabel.style.fontSize = '22px'; // Bigger font for backsplash label
-    backsplashLabel.style.marginBottom = '10px';
-    formDiv.appendChild(backsplashLabel);
+// Create a container for measurement inputs (horizontal layout)
+const measurementsContainer = document.createElement('div');
+measurementsContainer.style.display = 'flex';
+measurementsContainer.style.justifyContent = 'center';  // Center the measurement inputs
+measurementsContainer.style.flexWrap = 'wrap';  // Allow multiple inputs on one row
+measurementsContainer.style.gap = '10px';  // Gap between inputs
+formDiv.appendChild(measurementsContainer);
 
-    const backsplashImage = document.createElement('img');
-    backsplashImage.src = 'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66da50fe3525014ab3c7deb3_Backsplash%20(1).png';
-    backsplashImage.style.width = '150px';
-    backsplashImage.style.height = 'auto';
-    backsplashImage.style.cursor = 'pointer';
-    backsplashImage.style.border = '2px solid #ddd';
-    backsplashImage.style.borderRadius = '5px';
-    backsplashImage.style.marginBottom = '10px';
-    backsplashImage.style.transition = 'all 0.3s ease';
-    formDiv.appendChild(backsplashImage);
+shape.measurements.forEach((measurement, index) => {
+    const measurementGroup = document.createElement('div');
+    measurementGroup.style.display = 'flex';
+    measurementGroup.style.flexDirection = 'column';  // Vertical label and input
+    measurementGroup.style.alignItems = 'center';
+    measurementGroup.style.gap = '5px';
 
-    const backsplashHeightLabel = document.createElement('label');
-    backsplashHeightLabel.textContent = 'Backsplash Height (inches):';
-    backsplashHeightLabel.style.display = 'none';
-    backsplashHeightLabel.style.color = '#0C1729';
-    backsplashHeightLabel.style.fontSize = '20px';
-    formDiv.appendChild(backsplashHeightLabel);
+    const label = document.createElement('label');
+    label.textContent = `Side ${index + 1}:`;  // More compact labeling
+    label.style.color = '#0C1729';
+    label.style.fontSize = '16px';
+    label.style.marginBottom = '5px';
+    measurementGroup.appendChild(label);
 
-    const backsplashHeightInput = document.createElement('input');
-    backsplashHeightInput.type = 'number';
-    backsplashHeightInput.id = 'backsplashHeight';
-    backsplashHeightInput.style.width = '80%';
-    backsplashHeightInput.style.padding = '10px';
-    backsplashHeightInput.style.marginBottom = '10px';
-    backsplashHeightInput.style.border = '1px solid #ddd';
-    backsplashHeightInput.style.borderRadius = '5px';
-    backsplashHeightInput.style.fontSize = '20px';
-    backsplashHeightInput.style.display = 'none';
-    formDiv.appendChild(backsplashHeightInput);
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.id = `measurement${index + 1}`;
+    input.style.width = '80px';  // Compact input size
+    input.style.padding = '10px';
+    input.style.border = '1px solid #ddd';
+    input.style.borderRadius = '5px';
+    input.style.fontSize = '16px';
+    measurementGroup.appendChild(input);
 
-    let hasBacksplash = false; // Backsplash toggle state
+    measurementsContainer.appendChild(measurementGroup);  // Add each group to the main container
+});
 
-    // Toggle backsplash height input when image is clicked
-    backsplashImage.addEventListener('click', function () {
-        hasBacksplash = !hasBacksplash;
-        if (hasBacksplash) {
-            backsplashHeightLabel.style.display = 'block';
-            backsplashHeightInput.style.display = 'block';
-            backsplashImage.style.border = '2px solid #0264D9'; // Highlight the image when selected
-        } else {
-            backsplashHeightLabel.style.display = 'none';
-            backsplashHeightInput.style.display = 'none';
-            backsplashImage.style.border = '2px solid #ddd'; // Unhighlight the image
-        }
-    });
+// Finish Selection section
+const finishSelectionGroup = document.createElement('div');
+finishSelectionGroup.style.display = 'flex';
+finishSelectionGroup.style.flexDirection = 'column';
+finishSelectionGroup.style.alignItems = 'center';
+finishSelectionGroup.style.gap = '10px';
+formDiv.appendChild(finishSelectionGroup);
+
+const finishLabel = document.createElement('label');
+finishLabel.textContent = 'Select Finish:';
+finishLabel.style.color = '#0C1729';
+finishLabel.style.fontSize = '20px';
+finishSelectionGroup.appendChild(finishLabel);
+
+const finishSelect = document.createElement('select');
+finishSelect.style.width = '80%';
+finishSelect.style.padding = '10px';
+finishSelect.style.border = '1px solid #ddd';
+finishSelect.style.borderRadius = '5px';
+finishSelect.style.fontSize = '18px';
+
+const regularOption = document.createElement('option');
+regularOption.value = 'regular';
+regularOption.textContent = 'Regular Pour - $26/sq ft';
+finishSelect.appendChild(regularOption);
+
+const crystalOption = document.createElement('option');
+crystalOption.value = 'crystal';
+crystalOption.textContent = 'Crystal Top Finish - $39/sq ft';
+finishSelect.appendChild(crystalOption);
+
+finishSelectionGroup.appendChild(finishSelect);
+
+// Add the 'Add Item' button
+const calculateBtn = document.createElement('button');
+calculateBtn.textContent = 'Add Item';
+styleButton(calculateBtn);  // Assume this is the existing button styling function
+formDiv.appendChild(calculateBtn);
+
+// Event listener for the calculate button
+calculateBtn.addEventListener('click', function () {
+    calculateAndAddItem(shape, finishSelect.value, container, type);
+});
+
+}
+
 
     // Finish Selection
     const finishLabel = document.createElement('label');
