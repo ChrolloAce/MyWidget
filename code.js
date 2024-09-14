@@ -263,55 +263,59 @@ function styleTab(tab) {
         });
     }
 
-    function selectKitchenType(container) {
-        previousPage = selectType.bind(null, container);
-        container.innerHTML = '';
+   function selectKitchenType(container) {
+    previousPage = selectType.bind(null, container);
+    container.innerHTML = '';
 
-        const header = document.createElement('h2');
-        header.textContent = 'Choose a Kitchen Counter Type';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
+    const header = document.createElement('h2');
+    header.textContent = 'Choose a Kitchen Counter Type';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
 
-        const kitchenOptions = document.createElement('div');
-        kitchenOptions.style.display = 'flex';
-        kitchenOptions.style.flexWrap = 'wrap';
-        kitchenOptions.style.justifyContent = 'center';
-        kitchenOptions.style.gap = '30px';
+    const kitchenOptions = document.createElement('div');
+    kitchenOptions.style.display = 'flex';
+    kitchenOptions.style.flexWrap = 'wrap';
+    kitchenOptions.style.justifyContent = 'center';
+    kitchenOptions.style.gap = '30px';
 
-        // Adding the new cover images
-        const islandBtn = createImageButton(
-            'Island',
-            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d6cb02e60f269ed30_2.png'
-        );
-        const counterBtn = createImageButton(
-            'Regular Counter',
-            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7d61151fe7d2e11e25_4.png'
-        );
-        const barTopBtn = createImageButton(
-            'Bar Top',
-            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ce3a7df416f1b9ceda636b_3.png'
-        );
+    // Updated Island Image
+    const islandBtn = createImageButton(
+        'Island',
+        'https://i.ibb.co/FwZTXVc/Island.png'
+    );
+    
+    // Updated Counter Image
+    const counterBtn = createImageButton(
+        'Regular Counter',
+        'https://i.ibb.co/gw8Bxw2/counter.png'
+    );
+    
+    // Updated Bar Top Image
+    const barTopBtn = createImageButton(
+        'Bar Top',
+        'https://i.ibb.co/yS5gzGd/Marble-2.png'
+    );
 
-        kitchenOptions.appendChild(islandBtn);
-        kitchenOptions.appendChild(counterBtn);
-        kitchenOptions.appendChild(barTopBtn);
+    kitchenOptions.appendChild(islandBtn);
+    kitchenOptions.appendChild(counterBtn);
+    kitchenOptions.appendChild(barTopBtn);
 
-        container.appendChild(kitchenOptions);
+    container.appendChild(kitchenOptions);
 
-        islandBtn.addEventListener('click', function () {
-            selectShapeAndCalculate('Island', container);
-        });
+    islandBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Island', container);
+    });
 
-        counterBtn.addEventListener('click', function () {
-            selectShapeAndCalculate('Regular Counter', container);
-        });
+    counterBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Regular Counter', container);
+    });
 
-        barTopBtn.addEventListener('click', function () {
-            selectShapeAndCalculate('Bar Top', container);
-        });
-    }
+    barTopBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Bar Top', container);
+    });
+}
 
     // Function to handle shape selection and calculations
     function selectShapeAndCalculate(type, container) {
