@@ -280,20 +280,56 @@ function styleTab(tab) {
     kitchenOptions.style.justifyContent = 'center';
     kitchenOptions.style.gap = '30px';
 
+    // Helper function to create image buttons with a rectangular aspect ratio
+    function createRectangularImageButton(text, imageUrl) {
+        const button = document.createElement('div');
+        button.style.position = 'relative';
+        button.style.width = '400px';  // Adjust width for rectangular shape
+        button.style.height = '300px';  // Adjust height for rectangular shape
+        button.style.border = '2px solid #000000';  // Black border
+        button.style.borderRadius = '15px';  // Slightly rounded corners
+        button.style.overflow = 'hidden';
+        button.style.cursor = 'pointer';
+        button.style.textAlign = 'center';
+        button.style.display = 'flex';
+        button.style.flexDirection = 'column';
+        button.style.justifyContent = 'center';
+        button.style.alignItems = 'center';
+        button.style.backgroundImage = `url(${imageUrl})`;
+        button.style.backgroundSize = 'cover';
+        button.style.backgroundPosition = 'center';
+        button.style.marginBottom = '20px';  // Adjusted margin
+
+        const overlay = document.createElement('div');
+        overlay.style.position = 'absolute';
+        overlay.style.bottom = '0';
+        overlay.style.width = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
+        overlay.style.color = 'white';
+        overlay.style.padding = '15px';  // Reduced padding
+        overlay.style.fontSize = '18px';  // Smaller font size
+        overlay.style.fontWeight = 'bold';
+        overlay.style.textAlign = 'center';
+        overlay.textContent = text;
+        button.appendChild(overlay);
+
+        return button;
+    }
+
     // Updated Island Image
-    const islandBtn = createImageButton(
+    const islandBtn = createRectangularImageButton(
         'Island',
         'https://i.ibb.co/FwZTXVc/Island.png'
     );
     
     // Updated Counter Image
-    const counterBtn = createImageButton(
+    const counterBtn = createRectangularImageButton(
         'Regular Counter',
         'https://i.ibb.co/gw8Bxw2/counter.png'
     );
     
     // Updated Bar Top Image
-    const barTopBtn = createImageButton(
+    const barTopBtn = createRectangularImageButton(
         'Bar Top',
         'https://i.ibb.co/yS5gzGd/Marble-2.png'
     );
@@ -316,6 +352,7 @@ function styleTab(tab) {
         selectShapeAndCalculate('Bar Top', container);
     });
 }
+
 
     // Function to handle shape selection and calculations
     function selectShapeAndCalculate(type, container) {
