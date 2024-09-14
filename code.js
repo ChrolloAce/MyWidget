@@ -22,9 +22,12 @@
     document.body.style.fontFamily = 'Arial, sans-serif';
 
     const container = document.createElement('div');
-    container.style.width = '95%';
-    container.style.maxWidth = '800px';
-    container.style.backgroundColor = '#ffffff';
+container.id = 'container';  // Give it an ID so you can reference it in other functions
+container.style.width = '95%';
+container.style.maxWidth = '800px';
+container.style.backgroundColor = '#ffffff';
+// (Other container styles here)
+
     container.style.padding = '40px';
     container.style.borderRadius = '15px';
     container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
@@ -224,43 +227,44 @@ function styleTab(tab) {
     }
 
     // Function to handle type selection (Kitchen/Bathroom)
-    function selectType(container) {
-        previousPage = createInvoicePage.bind(null, container);
-        container.innerHTML = '';
+    // Existing shape selection function
+function selectType(container) {
+    // After user selects 'Kitchen' or 'Bathroom', call the new sequence function
+    const kitchenBtn = createImageButton('Kitchen', 'kitchen-img.jpg');
+    const bathroomBtn = createImageButton('Bathroom', 'bathroom-img.jpg');
 
-        const header = document.createElement('h2');
-        header.textContent = 'Choose a Room Type';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
+    // Replace old selection event with new sequence function
+    kitchenBtn.addEventListener('click', function() {
+        selectShapeAndStartSequence({
+            name: 'Kitchen',
+            measurements: [1, 2, 3],  // Update this with the appropriate measurement count
+            measurementImages: ['kitchen-img1.jpg', 'kitchen-img2.jpg', 'kitchen-img3.jpg']
+        }, container);
+    });
 
-        const choiceDiv = document.createElement('div');
-        choiceDiv.style.display = 'flex';
-        choiceDiv.style.justifyContent = 'space-around';
-        choiceDiv.style.gap = '40px';
-        choiceDiv.style.flexWrap = 'wrap';
+    bathroomBtn.addEventListener('click', function() {
+        selectShapeAndStartSequence({
+            name: 'Bathroom',
+            measurements: [1, 2],  // Adjust for your bathroom shapes
+            measurementImages: ['bathroom-img1.jpg', 'bathroom-img2.jpg']
+        }, container);
+    });
+}
 
-        const kitchenBtn = createImageButton(
-            'Kitchen',
-            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ccf4e697630121dd1ee09d_2.png'
-        );
-        const bathroomBtn = createImageButton(
-            'Bathroom',
-            'https://cdn.prod.website-files.com/65d57147d18f3253f94e1a63/66ccf4e642c5166829b52585_1.png'
-        );
 
         choiceDiv.appendChild(kitchenBtn);
         choiceDiv.appendChild(bathroomBtn);
         container.appendChild(choiceDiv);
 
-        kitchenBtn.addEventListener('click', function () {
-            selectKitchenType(container);
-        });
+// Existing shape selection event (replace this in your selectType function)
+kitchenBtn.addEventListener('click', function () {
+    selectShapeAndStartSequence({name: 'Kitchen', measurements: [1, 2, 3], measurementImages: ['img1.jpg', 'img2.jpg', 'img3.jpg']}, container);
+});
 
-        bathroomBtn.addEventListener('click', function () {
-            selectShapeAndCalculate('Bathroom', container);
-        });
+bathroomBtn.addEventListener('click', function () {
+    selectShapeAndStartSequence({name: 'Bathroom', measurements: [1, 2], measurementImages: ['img1.jpg', 'img2.jpg']}, container);
+});
+
     }
 
    function selectKitchenType(container) {
@@ -637,6 +641,8 @@ function updateItemList(container) {
         itemListDiv.appendChild(totalDiv);
     }
 }
+
+    
 // Function to remove an item
 function removeItem(index) {
     totalCost -= parseFloat(items[index].cost);  // Deduct cost from total
@@ -852,6 +858,168 @@ function styleButton(button) {
         return button;
     }
 
+
+// Add this new code at the end of your script
+
+// Function to start the sequence of steps (backsplash, measurements, finish)
+function selectShapeAndStartSequence(shape, container) {
+    // Clear the container
+    container.innerHTML = '';
+
+    // Step 1: Ask if it has a backsplash
+    promptBacksplashMeasurements(function(hasBacksplash) {
+        // Step 2: Prompt for measurements (one by one)
+        promptShapeMeasurements(shape, container, hasBacksplash, function(measurements) {
+            // Step 3: Prompt for finish selection
+            promptFinishSelection(function(finishType) {
+                // Handle completion of the flow
+                console.log('Backsplash:', hasBacksplash);
+                console.log('Measurements:', measurements);
+                console.log('Finish Type:', finishType);
+
+                // You can now process or calculate based on user input
+                alert('Shape sequence completed!');
+            });
+        });
+    });
+}
+
+// Function to prompt the user for backsplash measurement
+function promptBacksplashMeasurements(callback) {
+    const container = document.querySelector('#container');  // Assuming you have a main container
+
+    // Clear the container for new content
+    container.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = 'Does this countertop have a backsplash?';
+    container.appendChild(header);
+
+    const yesButton = document.createElement('button');
+    yesButton.textContent = 'Yes';
+    yesButton.style.margin = '10px';
+    container.appendChild(yesButton);
+
+    const noButton = document.createElement('button');
+    noButton.textContent = 'No';
+    noButton.style.margin = '10px';
+    container.appendChild(noButton);
+
+    // Handle clicks
+    yesButton.addEventListener('click', function() {
+        const heightInput = document.createElement('input');
+        heightInput.type = 'number';
+        heightInput.placeholder = 'Enter backsplash height (in inches)';
+        container.appendChild(heightInput);
+
+        const submitButton = document.createElement('button');
+        submitButton.textContent = 'Submit';
+        submitButton.style.margin = '10px';
+        container.appendChild(submitButton);
+
+        submitButton.addEventListener('click', function() {
+            const height = parseFloat(heightInput.value);
+            if (isNaN(height)) {
+                alert('Please enter a valid number for backsplash height.');
+            } else {
+                callback({ hasBacksplash: true, height: height });
+            }
+        });
+    });
+
+    noButton.addEventListener('click', function() {
+        callback({ hasBacksplash: false });
+    });
+}
+
+// Function to ask for measurements, one by one with different slides
+function promptShapeMeasurements(shape, container, hasBacksplash, callback) {
+    let currentMeasurement = 0;
+    const measurements = [];
+
+    // Clear the container for new content
+    container.innerHTML = '';
+
+    function showNextMeasurement() {
+        if (currentMeasurement >= shape.measurements.length) {
+            // All measurements are done, proceed to the next step
+            callback(measurements);
+            return;
+        }
+
+        // Clear the container for the new slide
+        container.innerHTML = '';
+
+        const header = document.createElement('h2');
+        header.textContent = `Enter measurement for Side ${currentMeasurement + 1}`;
+        container.appendChild(header);
+
+        const img = document.createElement('img');
+        img.src = shape.measurementImages[currentMeasurement];  // Assuming each shape has an image per measurement
+        img.style.width = '100%';
+        img.style.border = '2px solid red';  // Red outline to highlight
+        container.appendChild(img);
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.placeholder = `Measurement for Side ${currentMeasurement + 1} (in inches)`;
+        container.appendChild(input);
+
+        const nextButton = document.createElement('button');
+        nextButton.textContent = 'Next';
+        nextButton.style.marginTop = '10px';
+        container.appendChild(nextButton);
+
+       nextButton.addEventListener('click', function() {
+    const value = parseFloat(input.value);
+    if (isNaN(value) || value <= 0) {  // Validate input
+        alert('Please enter a valid number greater than 0.');
+    } else {
+        measurements.push(value);
+        currentMeasurement++;
+        showNextMeasurement();
+    }
+});
+
+    }
+
+    // Start the measurement flow
+    showNextMeasurement();
+}
+
+// Function to ask for finish (Regular or Crystal)
+function promptFinishSelection(callback) {
+    const container = document.querySelector('#container');  // Assuming you have a main container
+
+    // Clear the container for new content
+    container.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = 'Which finish would you like?';
+    container.appendChild(header);
+
+    const regularButton = document.createElement('button');
+    regularButton.textContent = 'Regular Finish - $26/sq ft';
+    regularButton.style.margin = '10px';
+    container.appendChild(regularButton);
+
+    const crystalButton = document.createElement('button');
+    crystalButton.textContent = 'Crystal Top Finish - $39/sq ft';
+    crystalButton.style.margin = '10px';
+    container.appendChild(crystalButton);
+
+    regularButton.addEventListener('click', function() {
+        callback('regular');
+    });
+
+    crystalButton.addEventListener('click', function() {
+        callback('crystal');
+    });
+}
+
     // Initialize the interface
     initInterface();
+
+
+
 })();
