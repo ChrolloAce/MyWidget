@@ -933,12 +933,13 @@ function promptBacksplash(shape, type, container, shapeData) {
     backsplashImage.style.height = 'auto';
     imageDiv.appendChild(backsplashImage);
 
-   const description = document.createElement('p');
-description.textContent = 'A backsplash is the vertical extension out of your countertop that connects everything. It is usually 4 inches in height.';
-description.style.color = '#0C1729';
-description.style.fontSize = '16px';
-description.style.marginTop = '10px';
-imageDiv.appendChild(description);
+    // Add explanatory text under the image
+    const description = document.createElement('p');
+    description.textContent = 'A backsplash is the vertical extension of your countertop that connects everything. It is usually 4 inches in height.';
+    description.style.color = '#0C1729';
+    description.style.fontSize = '16px';
+    description.style.marginTop = '10px';
+    imageDiv.appendChild(description);
 
     container.appendChild(imageDiv);
 
@@ -968,6 +969,7 @@ imageDiv.appendChild(description);
         promptMeasurements(shape, type, container, shapeData);
     });
 }
+
 
 function promptMeasurements(shape, type, container, shapeData) {
     container.innerHTML = '';
