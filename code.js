@@ -179,8 +179,50 @@ function styleTab(tab) {
     });
 }
 
+/ Function to navigate to the kitchen/bathroom selection page
+function navigateToSelectionPage(container) {
+    container.innerHTML = '';  // Clear the container
+
+    const header = document.createElement('h2');
+    header.textContent = 'Choose Type';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
+
+    const typeContainer = document.createElement('div');
+    typeContainer.style.display = 'flex';
+    typeContainer.style.justifyContent = 'center';
+    typeContainer.style.gap = '20px';
+    container.appendChild(typeContainer);
+
+    // Add kitchen and bathroom buttons with images
+    const kitchenBtn = createImageButton('Kitchen', 'kitchen-img.jpg');
+    const bathroomBtn = createImageButton('Bathroom', 'bathroom-img.jpg');
+    typeContainer.appendChild(kitchenBtn);
+    typeContainer.appendChild(bathroomBtn);
+
+    kitchenBtn.addEventListener('click', function () {
+        selectKitchenType(container);
+    });
+
+    bathroomBtn.addEventListener('click', function () {
+        selectBathroomType(container);
+    });
+}
+
+function transitionToPage(callback) {
+    const container = document.querySelector('#container');
+    container.style.opacity = '0';
+    setTimeout(() => {
+        callback();
+        container.style.opacity = '1';
+    }, 300);
+}
 
 
+
+    
     // Function to create the invoice page
     function createInvoicePage(container) {
         previousPage = initInterface;
@@ -210,9 +252,10 @@ function styleTab(tab) {
         // Update the item list immediately upon creating the page
         updateItemList(container);
 
-        addItemBtn.addEventListener('click', function () {
-            selectType(container);
-        });
+      addItemBtn.addEventListener('click', function () {
+    previousPage = createInvoicePage.bind(null, container);
+    navigateToSelectionPage(container);
+});
 
         // Finalize Invoice Button
         const finalizeBtn = document.createElement('button');
@@ -265,22 +308,47 @@ function selectType(container) {
     container.appendChild(choiceDiv);
 }
 
-   function selectKitchenType(container) {
-    previousPage = selectType.bind(null, container);
+  // Function to display image options for shape selection
+function selectKitchenType(container) {
     container.innerHTML = '';
 
     const header = document.createElement('h2');
-    header.textContent = 'Choose a Kitchen Counter Type';
+    header.textContent = 'Choose Kitchen Counter Shape';
     header.style.color = '#0C1729';
     header.style.marginBottom = '30px';
     header.style.fontSize = '28px';
     container.appendChild(header);
 
-    const kitchenOptions = document.createElement('div');
-    kitchenOptions.style.display = 'flex';
-    kitchenOptions.style.flexWrap = 'wrap';
-    kitchenOptions.style.justifyContent = 'center';
-    kitchenOptions.style.gap = '30px';
+
+    
+    const shapeContainer = document.createElement('div');
+    shapeContainer.style.display = 'flex';
+    shapeContainer.style.flexWrap = 'wrap';
+    shapeContainer.style.justifyContent = 'center';
+    shapeContainer.style.gap = '20px';
+    container.appendChild(shapeContainer);
+
+    const islandBtn = createImageButton('Island', 'island-img.jpg');
+    const counterBtn = createImageButton('Counter', 'counter-img.jpg');
+    const barTopBtn = createImageButton('Bar Top', 'bar-top-img.jpg');
+
+    shapeContainer.appendChild(islandBtn);
+    shapeContainer.appendChild(counterBtn);
+    shapeContainer.appendChild(barTopBtn);
+
+    islandBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Island', container);
+    });
+
+    counterBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Counter', container);
+    });
+
+    barTopBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Bar Top', container);
+    });
+}
+
 
     // Helper function to create image buttons with a rectangular aspect ratio
     function createRectangularImageButton(text, imageUrl) {
@@ -798,18 +866,17 @@ function removeItem(index) {
   // Adjust the button style
 // Helper function to style buttons
 function styleButton(button) {
-    button.style.padding = '14px';  // Slightly increased padding
-    button.style.backgroundColor = '#0264D9';  // Blue background
+    button.style.padding = '14px';
+    button.style.backgroundColor = '#0264D9';  // Blue color for contrast
     button.style.color = '#ffffff';  // White text
-    button.style.border = '2px solid #000000';  // Black border for contrast
-    button.style.borderRadius = '10px';  // More rounded border
+    button.style.border = 'none';  // Remove borders
+    button.style.borderRadius = '10px';  // Rounded corners for modern look
     button.style.cursor = 'pointer';
-    button.style.fontSize = '18px';  // Slightly larger font size
+    button.style.fontSize = '18px';
     button.style.fontWeight = 'bold';
-    button.style.margin = '10px 0';  // Adjusted margin
-    button.style.width = '80%';  // Full width for larger buttons
+    button.style.width = '80%';
     button.style.transition = 'all 0.3s ease';
-    button.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.1)';  // Increased shadow for depth
+    button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';  // Slight shadow
 
     button.addEventListener('mouseenter', function () {
         button.style.backgroundColor = '#004C99';  // Darker blue on hover
@@ -818,6 +885,18 @@ function styleButton(button) {
     button.addEventListener('mouseleave', function () {
         button.style.backgroundColor = '#0264D9';  // Return to original color
     });
+}
+
+// Styling the container to look cleaner and more centered
+function styleContainer(container) {
+    container.style.width = '90%';
+    container.style.maxWidth = '800px';
+    container.style.backgroundColor = '#ffffff';
+    container.style.padding = '40px';
+    container.style.borderRadius = '10px';  // Rounded corners
+    container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.1)';  // Soft shadow
+    container.style.margin = '20px auto';
+    container.style.textAlign = 'center';
 }
 
     // Helper function to create image buttons
