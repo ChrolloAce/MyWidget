@@ -377,6 +377,12 @@ function promptMeasurements(shape, type, container) {
     previousPage = selectShapeAndCalculate.bind(null, type, container);
     container.innerHTML = '';
 
+    // Add the shape image at the top
+    const imageDiv = document.createElement('div');
+    imageDiv.style.textAlign = 'center';
+    imageDiv.style.marginBottom = '20px';
+    
+
     const header = document.createElement('h2');
     header.textContent = `${shape.name} - ${type}`;
     header.style.color = '#0C1729';
