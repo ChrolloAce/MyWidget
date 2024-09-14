@@ -265,8 +265,6 @@ bathroomBtn.addEventListener('click', function () {
     selectShapeAndStartSequence({name: 'Bathroom', measurements: [1, 2], measurementImages: ['img1.jpg', 'img2.jpg']}, container);
 });
 
-    }
-
    function selectKitchenType(container) {
     previousPage = selectType.bind(null, container);
     container.innerHTML = '';
