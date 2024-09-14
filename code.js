@@ -105,6 +105,33 @@
         });
     }
 
+function createInputField(labelText, type) {
+    const fieldDiv = document.createElement('div');
+    fieldDiv.style.display = 'flex';
+    fieldDiv.style.flexDirection = 'column';
+    fieldDiv.style.alignItems = 'flex-start';
+    
+    const label = document.createElement('label');
+    label.textContent = labelText;
+    label.style.color = '#0C1729';
+    label.style.marginBottom = '5px';
+    label.style.fontSize = '18px';
+    fieldDiv.appendChild(label);
+    
+    const input = document.createElement('input');
+    input.type = type;
+    input.style.width = '100%';
+    input.style.padding = '10px';
+    input.style.marginBottom = '10px';
+    input.style.border = '1px solid #ddd';
+    input.style.borderRadius = '5px';
+    input.style.fontSize = '18px';
+    fieldDiv.appendChild(input);
+    
+    return fieldDiv;
+}
+
+    
 function navigateToSelectionPage(container) {
     container.innerHTML = '';  // Clear the container
 
