@@ -1,109 +1,105 @@
-
 (function () {
 
 // Initial variables and configuration
-    const PRICE_REGULAR = 26;
-    const PRICE_CRYSTAL = 39;
-    const MINIMUM_PRICE = 400;
+const PRICE_REGULAR = 26;
+const PRICE_CRYSTAL = 39;
+const MINIMUM_PRICE = 400;
 
-    let items = [];
-    let totalCost = 0;
-    let previousPage = null;
-    let userInfo = {};
+let items = [];
+let totalCost = 0;
+let previousPage = null;
+let userInfo = {};
 
-    function initInterface() {
-        // Add navigation tabs at the top of the page
-        addTabs();
+function initInterface() {
+    // Clear the existing content and apply styles to the body
+    document.body.innerHTML = '';
+    Object.assign(document.body.style, {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#ffffff',
+        fontFamily: 'Arial, sans-serif',
+    });
 
-        // Clear the existing content and apply styles to the body
-        document.body.innerHTML = '';
-        Object.assign(document.body.style, {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            minHeight: '100vh',
-            backgroundColor: '#ffffff',
-            fontFamily: 'Arial, sans-serif',
-        });
+    // Create the container element for the form
+    const container = document.createElement('div');
+    Object.assign(container.style, {
+        width: '95%',
+        maxWidth: '800px',
+        backgroundColor: '#f1f1f1',
+        padding: '40px',
+        borderRadius: '15px',
+        boxShadow: '0 12px 24px rgba(0, 0, 0, 0.2)',
+        textAlign: 'center',
+        margin: '80px auto 30px auto',
+    });
+    container.id = 'container';
+    document.body.appendChild(container);
 
-        // Create the container element for the form
-        const container = document.createElement('div');
-        Object.assign(container.style, {
-            width: '95%',
-            maxWidth: '800px',
-            backgroundColor: '#f1f1f1',
-            padding: '40px',
-            borderRadius: '15px',
-            boxShadow: '0 12px 24px rgba(0, 0, 0, 0.2)',
-            textAlign: 'center',
-            margin: '80px auto 30px auto',
-        });
-        container.id = 'container';
-        document.body.appendChild(container);
+    // Create and style the header
+    const header = document.createElement('h1');
+    header.textContent = 'Start New Invoice';
+    Object.assign(header.style, {
+        color: '#0C1729',
+        fontSize: '36px',
+    });
+    container.appendChild(header);
 
-        // Create and style the header
-        const header = document.createElement('h1');
-        header.textContent = 'Start New Invoice';
-        Object.assign(header.style, {
-            color: '#0C1729',
-            fontSize: '36px',
-        });
-        container.appendChild(header);
+    // Create and style the description paragraph
+    const description = document.createElement('p');
+    description.textContent = 'Please enter your contact information to proceed.';
+    Object.assign(description.style, {
+        color: '#0C1729',
+        fontSize: '18px',
+        marginBottom: '30px',
+    });
+    container.appendChild(description);
 
-        // Create and style the description paragraph
-        const description = document.createElement('p');
-        description.textContent = 'Please enter your contact information to proceed.';
-        Object.assign(description.style, {
-            color: '#0C1729',
-            fontSize: '18px',
-            marginBottom: '30px',
-        });
-        container.appendChild(description);
+    // Create the form container
+    const form = document.createElement('div');
+    Object.assign(form.style, {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '20px',
+    });
+    container.appendChild(form);
 
-        // Create the form container
-        const form = document.createElement('div');
-        Object.assign(form.style, {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '20px',
-        });
-        container.appendChild(form);
+    // Name input field
+    const nameInput = createInputField('Name', 'text');
+    form.appendChild(nameInput);
 
-        // Name input field
-        const nameInput = createInputField('Name', 'text');
-        form.appendChild(nameInput);
+    // Phone input field
+    const phoneInput = createInputField('Phone Number', 'tel');
+    form.appendChild(phoneInput);
 
-        // Phone input field
-        const phoneInput = createInputField('Phone Number', 'tel');
-        form.appendChild(phoneInput);
+    // Email input field
+    const emailInput = createInputField('Email', 'email');
+    form.appendChild(emailInput);
 
-        // Email input field
-        const emailInput = createInputField('Email', 'email');
-        form.appendChild(emailInput);
+    // Continue button
+    const continueBtn = document.createElement('button');
+    continueBtn.textContent = 'Continue';
+    styleButton(continueBtn);
+    form.appendChild(continueBtn);
 
-        // Continue button
-        const continueBtn = document.createElement('button');
-        continueBtn.textContent = 'Continue';
-        styleButton(continueBtn);
-        form.appendChild(continueBtn);
+    // Event listener for the Continue button to validate input and navigate to the next page
+    continueBtn.addEventListener('click', function () {
+        // Retrieve user input values
+        userInfo.name = nameInput.querySelector('input').value;
+        userInfo.phone = phoneInput.querySelector('input').value;
+        userInfo.email = emailInput.querySelector('input').value;
 
-        // Event listener for the Continue button to validate input and navigate to the next page
-        continueBtn.addEventListener('click', function () {
-            // Retrieve user input values
-            userInfo.name = nameInput.querySelector('input').value;
-            userInfo.phone = phoneInput.querySelector('input').value;
-            userInfo.email = emailInput.querySelector('input').value;
-
-            // Validate the inputs
-            if (userInfo.name && userInfo.phone && userInfo.email) {
-                previousPage = initInterface; // Store the current page function for "Back" navigation
-                createInvoicePage(container); // Proceed to invoice creation
-            } else {
-                alert('Please fill in all fields.'); // Prompt the user to complete all fields
-            }
-        });
-    }
+        // Validate the inputs
+        if (userInfo.name && userInfo.phone && userInfo.email) {
+            previousPage = initInterface; // Store the current page function for "Back" navigation
+            createInvoicePage(container); // Proceed to invoice creation
+        } else {
+            alert('Please fill in all fields.'); // Prompt the user to complete all fields
+        }
+    });
+}
 
 function createInputField(labelText, type) {
     const fieldDiv = document.createElement('div');
@@ -131,7 +127,6 @@ function createInputField(labelText, type) {
     return fieldDiv;
 }
 
-    
 function navigateToSelectionPage(container) {
     container.innerHTML = '';  // Clear the container
 
@@ -163,104 +158,125 @@ function navigateToSelectionPage(container) {
     });
 }
 
-function transitionToPage(callback) {
-    const container = document.querySelector('#container');
-    container.style.opacity = '0';
-    setTimeout(() => {
-        callback();
-        container.style.opacity = '1';
-    }, 300);
-}
+// Function to create the invoice page
+function createInvoicePage(container) {
+    previousPage = initInterface;
+    container.innerHTML = '';
 
+    const header = document.createElement('h2');
+    header.textContent = 'Current Invoice';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
 
+    // Add New Item Button
+    const addItemBtn = document.createElement('button');
+    addItemBtn.textContent = 'Add New Item';
+    styleButton(addItemBtn);
+    container.appendChild(addItemBtn);
 
-    
-    // Function to create the invoice page
-    function createInvoicePage(container) {
-        previousPage = initInterface;
-        container.innerHTML = '';
+    // Item List
+    const itemListDiv = document.createElement('div');
+    itemListDiv.id = 'itemList';
+    itemListDiv.style.marginTop = '30px';
+    itemListDiv.style.textAlign = 'left';
+    itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3><p style="color: #777;">No items added yet.</p>';
+    container.appendChild(itemListDiv);
 
-        const header = document.createElement('h2');
-        header.textContent = 'Current Invoice';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
+    // Update the item list immediately upon creating the page
+    updateItemList(container);
 
-        // Add New Item Button
-        const addItemBtn = document.createElement('button');
-        addItemBtn.textContent = 'Add New Item';
-        styleButton(addItemBtn);
-        container.appendChild(addItemBtn);
-
-        // Item List
-        const itemListDiv = document.createElement('div');
-        itemListDiv.id = 'itemList';
-        itemListDiv.style.marginTop = '30px';
-        itemListDiv.style.textAlign = 'left';
-        itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3><p style="color: #777;">No items added yet.</p>';
-        container.appendChild(itemListDiv);
-
-        // Update the item list immediately upon creating the page
-        updateItemList(container);
-
-      addItemBtn.addEventListener('click', function () {
-    previousPage = createInvoicePage.bind(null, container);
-    navigateToSelectionPage(container);
-});
-
-        // Finalize Invoice Button
-        const finalizeBtn = document.createElement('button');
-        finalizeBtn.textContent = 'Finalize Invoice';
-        styleButton(finalizeBtn);
-        finalizeBtn.style.marginTop = '30px';
-        container.appendChild(finalizeBtn);
-
-        finalizeBtn.addEventListener('click', function () {
-            finalizeInvoice(container);
-        });
-    }
-
-    // Function to handle type selection (Kitchen/Bathroom)
-    // Existing shape selection function
-function selectType(container) {
-    // Create the choiceDiv element
-    const choiceDiv = document.createElement('div');
-    choiceDiv.style.display = 'flex';
-    choiceDiv.style.justifyContent = 'center';
-    choiceDiv.style.gap = '20px';
-    choiceDiv.style.marginTop = '20px';
-
-    // After user selects 'Kitchen' or 'Bathroom', call the new sequence function
-    const kitchenBtn = createImageButton('Kitchen', 'kitchen-img.jpg');
-    const bathroomBtn = createImageButton('Bathroom', 'bathroom-img.jpg');
-
-    // Replace old selection event with new sequence function
-    kitchenBtn.addEventListener('click', function () {
-        selectShapeAndStartSequence({
-            name: 'Kitchen',
-            measurements: [1, 2, 3],  // Update this with the appropriate measurement count
-            measurementImages: ['kitchen-img1.jpg', 'kitchen-img2.jpg', 'kitchen-img3.jpg']
-        }, container);
+    addItemBtn.addEventListener('click', function () {
+        previousPage = createInvoicePage.bind(null, container);
+        navigateToSelectionPage(container);
     });
 
-    bathroomBtn.addEventListener('click', function () {
-        selectShapeAndStartSequence({
-            name: 'Bathroom',
-            measurements: [1, 2],  // Adjust for your bathroom shapes
-            measurementImages: ['bathroom-img1.jpg', 'bathroom-img2.jpg']
-        }, container);
-    });
+    // Finalize Invoice Button
+    const finalizeBtn = document.createElement('button');
+    finalizeBtn.textContent = 'Finalize Invoice';
+    styleButton(finalizeBtn);
+    finalizeBtn.style.marginTop = '30px';
+    container.appendChild(finalizeBtn);
 
-    // Append the buttons to the choiceDiv
-    choiceDiv.appendChild(kitchenBtn);
-    choiceDiv.appendChild(bathroomBtn);
-    
-    // Append choiceDiv to the container
-    container.appendChild(choiceDiv);
+    finalizeBtn.addEventListener('click', function () {
+        finalizeInvoice(container);
+    });
 }
 
-  // Function to display image options for shape selection
+// Helper function to create image buttons
+function createImageButton(text, imageUrl) {
+    const button = document.createElement('div');
+    button.style.position = 'relative';
+    button.style.width = '250px';  // Reduced width
+    button.style.height = '250px';  // Reduced height
+    button.style.border = '2px solid #000000';  // Black border
+    button.style.borderRadius = '15px';  // Reduced border radius
+    button.style.overflow = 'hidden';
+    button.style.cursor = 'pointer';
+    button.style.textAlign = 'center';
+    button.style.display = 'flex';
+    button.style.flexDirection = 'column';
+    button.style.justifyContent = 'center';
+    button.style.alignItems = 'center';
+    button.style.backgroundImage = `url(${imageUrl})`;
+    button.style.backgroundSize = 'cover';
+    button.style.backgroundPosition = 'center';
+    button.style.marginBottom = '20px';  // Reduced margin
+
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.bottom = '0';
+    overlay.style.width = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
+    overlay.style.color = 'white';
+    overlay.style.padding = '15px';  // Reduced padding
+    overlay.style.fontSize = '18px';  // Smaller font size
+    overlay.style.fontWeight = 'bold';
+    overlay.style.textAlign = 'center';
+    overlay.textContent = text;
+    button.appendChild(overlay);
+
+    return button;
+}
+
+// Helper function to create image buttons with a rectangular aspect ratio
+function createRectangularImageButton(text, imageUrl) {
+    const button = document.createElement('div');
+    button.style.position = 'relative';
+    button.style.width = '400px';  // Adjust width for rectangular shape
+    button.style.height = '300px';  // Adjust height for rectangular shape
+    button.style.border = '2px solid #000000';  // Black border
+    button.style.borderRadius = '15px';  // Slightly rounded corners
+    button.style.overflow = 'hidden';
+    button.style.cursor = 'pointer';
+    button.style.textAlign = 'center';
+    button.style.display = 'flex';
+    button.style.flexDirection = 'column';
+    button.style.justifyContent = 'center';
+    button.style.alignItems = 'center';
+    button.style.backgroundImage = `url(${imageUrl})`;
+    button.style.backgroundSize = 'cover';
+    button.style.backgroundPosition = 'center';
+    button.style.marginBottom = '20px';  // Adjusted margin
+
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.bottom = '0';
+    overlay.style.width = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
+    overlay.style.color = 'white';
+    overlay.style.padding = '15px';  // Reduced padding
+    overlay.style.fontSize = '18px';  // Smaller font size
+    overlay.style.fontWeight = 'bold';
+    overlay.style.textAlign = 'center';
+    overlay.textContent = text;
+    button.appendChild(overlay);
+
+    return button;
+}
+
+// Function to display image options for shape selection
 function selectKitchenType(container) {
     container.innerHTML = '';
 
@@ -277,42 +293,40 @@ function selectKitchenType(container) {
     kitchenOptions.style.justifyContent = 'center';
     kitchenOptions.style.gap = '20px';
     container.appendChild(kitchenOptions);
-}
 
-// Helper function to create image buttons with a rectangular aspect ratio
-function createRectangularImageButton(text, imageUrl) {
-    const button = document.createElement('div');
-    button.style.position = 'relative';
-    button.style.width = '400px';
-    button.style.height = '300px';
-    button.style.border = '2px solid #000000';
-    button.style.borderRadius = '15px';
-    button.style.overflow = 'hidden';
-    button.style.cursor = 'pointer';
-    button.style.textAlign = 'center';
-    button.style.display = 'flex';
-    button.style.flexDirection = 'column';
-    button.style.justifyContent = 'center';
-    button.style.alignItems = 'center';
-    button.style.backgroundImage = `url(${imageUrl})`;
-    button.style.backgroundSize = 'cover';
-    button.style.backgroundPosition = 'center';
-    button.style.marginBottom = '20px';
+    // Updated Island Image
+    const islandBtn = createRectangularImageButton(
+        'Island',
+        'https://i.ibb.co/Hrr8ztS/Pour-Directional.png'
+    );
 
-    const overlay = document.createElement('div');
-    overlay.style.position = 'absolute';
-    overlay.style.bottom = '0';
-    overlay.style.width = '100%';
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-    overlay.style.color = 'white';
-    overlay.style.padding = '15px';
-    overlay.style.fontSize = '18px';
-    overlay.style.fontWeight = 'bold';
-    overlay.style.textAlign = 'center';
-    overlay.textContent = text;
-    button.appendChild(overlay);
+    // Updated Counter Image
+    const counterBtn = createRectangularImageButton(
+        'Regular Counter',
+        'https://i.ibb.co/gw8Bxw2/counter.png'
+    );
 
-    return button;
+    // Updated Bar Top Image
+    const barTopBtn = createRectangularImageButton(
+        'Bar Top',
+        'https://i.ibb.co/yS5gzGd/Marble-2.png'
+    );
+
+    kitchenOptions.appendChild(islandBtn);
+    kitchenOptions.appendChild(counterBtn);
+    kitchenOptions.appendChild(barTopBtn);
+
+    islandBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Island', container);
+    });
+
+    counterBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Regular Counter', container);
+    });
+
+    barTopBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Bar Top', container);
+    });
 }
 
 
