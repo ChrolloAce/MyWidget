@@ -9,86 +9,100 @@
     let previousPage = null;
     let userInfo = {};
 
-    function initInterface() {
-    // First, ensure the tabs are added to the top of the page
+   function initInterface() {
+    // Add navigation tabs at the top of the page
     addTabs();
 
-    document.body.innerHTML = '';  // Clear existing content
-    document.body.style.display = 'flex';
-    document.body.style.flexDirection = 'column';
-    document.body.style.alignItems = 'center';
-    document.body.style.minHeight = '100vh';
-    document.body.style.backgroundColor = '#ffffff';
-    document.body.style.fontFamily = 'Arial, sans-serif';
+    // Clear the existing content and apply styles to the body
+    document.body.innerHTML = '';
+    Object.assign(document.body.style, {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#ffffff',
+        fontFamily: 'Arial, sans-serif',
+    });
 
+    // Create the container element for the form
     const container = document.createElement('div');
-container.id = 'container';  // Give it an ID so you can reference it in other functions
-container.style.width = '95%';
-container.style.maxWidth = '800px';
-container.style.backgroundColor = '#ffffff';
-// (Other container styles here)
-
-    container.style.padding = '40px';
-    container.style.borderRadius = '15px';
-    container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
-    container.style.textAlign = 'center';
-    container.style.margin = '80px auto 30px auto';  // Adjust margin to prevent overlap with tabs
-    container.style.flexGrow = '1';
+    Object.assign(container.style, {
+        width: '95%',
+        maxWidth: '800px',
+        backgroundColor: '#f1f1f1',
+        padding: '40px',
+        borderRadius: '15px',
+        boxShadow: '0 12px 24px rgba(0, 0, 0, 0.2)',
+        textAlign: 'center',
+        margin: '80px auto 30px auto',
+    });
+    container.id = 'container';
     document.body.appendChild(container);
 
+    // Create and style the header
     const header = document.createElement('h1');
     header.textContent = 'Start New Invoice';
-    header.style.color = '#0C1729';
-    header.style.marginBottom = '20px';
-    header.style.fontSize = '36px';
+    Object.assign(header.style, {
+        color: '#0C1729',
+        fontSize: '36px',
+    });
     container.appendChild(header);
 
+    // Create and style the description paragraph
     const description = document.createElement('p');
     description.textContent = 'Please enter your contact information to proceed.';
-    description.style.color = '#0C1729';
-    description.style.fontSize = '18px';
-    description.style.marginBottom = '30px';
+    Object.assign(description.style, {
+        color: '#0C1729',
+        fontSize: '18px',
+        marginBottom: '30px',
+    });
     container.appendChild(description);
 
-        // Form to collect contact information
-        const form = document.createElement('div');
-        form.style.display = 'flex';
-        form.style.flexDirection = 'column';
-        form.style.alignItems = 'center';
-        form.style.gap = '20px';
-        container.appendChild(form);
+    // Create the form container
+    const form = document.createElement('div');
+    Object.assign(form.style, {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '20px',
+    });
+    container.appendChild(form);
 
-        // Name input field
-        const nameInput = createInputField('Name', 'text');
-        form.appendChild(nameInput);
+    // Name input field
+    const nameInput = createInputField('Name', 'text');
+    form.appendChild(nameInput);
 
-        // Phone input field
-        const phoneInput = createInputField('Phone Number', 'tel');
-        form.appendChild(phoneInput);
+    // Phone input field
+    const phoneInput = createInputField('Phone Number', 'tel');
+    form.appendChild(phoneInput);
 
-        // Email input field
-        const emailInput = createInputField('Email', 'email');
-        form.appendChild(emailInput);
+    // Email input field
+    const emailInput = createInputField('Email', 'email');
+    form.appendChild(emailInput);
 
-        // Continue button
-        const continueBtn = document.createElement('button');
-        continueBtn.textContent = 'Continue';
-        styleButton(continueBtn);
-        form.appendChild(continueBtn);
+    // Continue button
+    const continueBtn = document.createElement('button');
+    continueBtn.textContent = 'Continue';
+    styleButton(continueBtn);
+    form.appendChild(continueBtn);
 
-        continueBtn.addEventListener('click', function () {
-            userInfo.name = nameInput.querySelector('input').value;
-            userInfo.phone = phoneInput.querySelector('input').value;
-            userInfo.email = emailInput.querySelector('input').value;
+    // Event listener for the Continue button to validate input and navigate to the next page
+    continueBtn.addEventListener('click', function () {
+        // Retrieve user input values
+        userInfo.name = nameInput.querySelector('input').value;
+        userInfo.phone = phoneInput.querySelector('input').value;
+        userInfo.email = emailInput.querySelector('input').value;
 
-            if (userInfo.name && userInfo.phone && userInfo.email) {
-                previousPage = initInterface;
-                createInvoicePage(container);
-            } else {
-                alert('Please fill in all fields.');
-            }
-        });
-    }
+        // Validate the inputs
+        if (userInfo.name && userInfo.phone && userInfo.email) {
+            previousPage = initInterface; // Store the current page function for "Back" navigation
+            createInvoicePage(container); // Proceed to invoice creation
+        } else {
+            alert('Please fill in all fields.'); // Prompt the user to complete all fields
+        }
+    });
+}
+
 
     // Helper function to create input fields
     function createInputField(labelText, inputType) {
