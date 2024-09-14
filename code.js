@@ -229,46 +229,42 @@ function styleTab(tab) {
     // Function to handle type selection (Kitchen/Bathroom)
     // Existing shape selection function
 function selectType(container) {
-    // Define choiceDiv before using it
+    // Create the choiceDiv element
     const choiceDiv = document.createElement('div');
     choiceDiv.style.display = 'flex';
     choiceDiv.style.justifyContent = 'center';
-    choiceDiv.style.gap = '20px'; // Adds space between buttons
+    choiceDiv.style.gap = '20px';
+    choiceDiv.style.marginTop = '20px';
 
-    // Your existing code to create buttons
+    // After user selects 'Kitchen' or 'Bathroom', call the new sequence function
     const kitchenBtn = createImageButton('Kitchen', 'kitchen-img.jpg');
     const bathroomBtn = createImageButton('Bathroom', 'bathroom-img.jpg');
 
-    // Append buttons to choiceDiv
-    choiceDiv.appendChild(kitchenBtn);
-    choiceDiv.appendChild(bathroomBtn);
-    
-    // Now, append choiceDiv to the container
-    container.appendChild(choiceDiv);
-
-    // Add event listeners for buttons
-    kitchenBtn.addEventListener('click', function() {
+    // Replace old selection event with new sequence function
+    kitchenBtn.addEventListener('click', function () {
         selectShapeAndStartSequence({
             name: 'Kitchen',
-            measurements: [1, 2, 3], 
+            measurements: [1, 2, 3],  // Update this with the appropriate measurement count
             measurementImages: ['kitchen-img1.jpg', 'kitchen-img2.jpg', 'kitchen-img3.jpg']
         }, container);
     });
 
-    bathroomBtn.addEventListener('click', function() {
+    bathroomBtn.addEventListener('click', function () {
         selectShapeAndStartSequence({
             name: 'Bathroom',
-            measurements: [1, 2], 
+            measurements: [1, 2],  // Adjust for your bathroom shapes
             measurementImages: ['bathroom-img1.jpg', 'bathroom-img2.jpg']
         }, container);
     });
+
+    // Append the buttons to the choiceDiv
+    choiceDiv.appendChild(kitchenBtn);
+    choiceDiv.appendChild(bathroomBtn);
+    
+    // Append choiceDiv to the container
+    container.appendChild(choiceDiv);
 }
 
-
-
-        choiceDiv.appendChild(kitchenBtn);
-        choiceDiv.appendChild(bathroomBtn);
-        container.appendChild(choiceDiv);
 
 // Existing shape selection event (replace this in your selectType function)
 kitchenBtn.addEventListener('click', function () {
