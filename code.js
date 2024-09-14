@@ -926,6 +926,33 @@ function promptBacksplashMeasurements(callback) {
 }
 
 
+function styleColoredButton(button, backgroundColor) {
+    button.style.padding = '14px';
+    button.style.backgroundColor = backgroundColor;  // Use provided color
+    button.style.color = '#ffffff';  // White text
+    button.style.border = 'none';  // Remove borders
+    button.style.borderRadius = '10px';  // Rounded corners for modern look
+    button.style.cursor = 'pointer';
+    button.style.fontSize = '18px';
+    button.style.fontWeight = 'bold';
+    button.style.margin = '10px';  // Add margin for spacing
+    button.style.width = '150px';  // Set fixed width
+    button.style.transition = 'all 0.3s ease';
+    button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';  // Slight shadow
+
+    // Hover effect
+    button.addEventListener('mouseenter', function () {
+        button.style.opacity = '0.8';  // Slightly reduce opacity on hover
+    });
+
+    button.addEventListener('mouseleave', function () {
+        button.style.opacity = '1';  // Return to original opacity
+    });
+}
+
+
+
+    
 function promptBacksplash(shape, type, container, shapeData) {
     container.innerHTML = '';
 
@@ -936,15 +963,43 @@ function promptBacksplash(shape, type, container, shapeData) {
     header.style.fontSize = '24px';
     container.appendChild(header);
 
+    // Add the image
+    const imageDiv = document.createElement('div');
+    imageDiv.style.textAlign = 'center';
+    imageDiv.style.marginBottom = '20px';
+
+    const backsplashImage = document.createElement('img');
+    backsplashImage.src = 'https://i.ibb.co/XjdF26x/Backsplash.png';
+    backsplashImage.alt = 'Backsplash';
+    backsplashImage.style.maxWidth = '100%';
+    backsplashImage.style.height = 'auto';
+    imageDiv.appendChild(backsplashImage);
+
+    // Add explanatory text under the image
+    const description = document.createElement('p');
+    description.textContent = 'A backsplash is the vertical extension out of your countertop that connects everything. It is usually 4 inches in height.';
+    description.style.color = '#0C1729';
+    description.style.fontSize = '16px';
+    description.style.marginTop = '10px';
+    imageDiv.appendChild(description);
+
+    container.appendChild(imageDiv);
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'center';
+    buttonContainer.style.gap = '20px'; // Increase margin between buttons
+    container.appendChild(buttonContainer);
+
     const yesBtn = document.createElement('button');
     yesBtn.textContent = 'Yes';
-    styleButton(yesBtn);
-    container.appendChild(yesBtn);
+    styleColoredButton(yesBtn, '#28a745'); // Green color for 'Yes'
+    buttonContainer.appendChild(yesBtn);
 
     const noBtn = document.createElement('button');
     noBtn.textContent = 'No';
-    styleButton(noBtn);
-    container.appendChild(noBtn);
+    styleColoredButton(noBtn, '#dc3545'); // Red color for 'No'
+    buttonContainer.appendChild(noBtn);
 
     yesBtn.addEventListener('click', function () {
         shapeData.hasBacksplash = true;
@@ -956,39 +1011,63 @@ function promptBacksplash(shape, type, container, shapeData) {
         promptMeasurements(shape, type, container, shapeData);
     });
 }
-function promptBacksplashHeight(shape, type, container, shapeData) {
+
+function promptBacksplash(shape, type, container, shapeData) {
     container.innerHTML = '';
 
     const header = document.createElement('h2');
-    header.textContent = 'Enter Backsplash Height (in inches)';
+    header.textContent = 'Does this shape have a backsplash?';
     header.style.color = '#0C1729';
     header.style.marginBottom = '20px';
     header.style.fontSize = '24px';
     container.appendChild(header);
 
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.style.width = '80%';
-    input.style.padding = '10px';
-    input.style.marginBottom = '20px';
-    input.style.border = '1px solid #ddd';
-    input.style.borderRadius = '5px';
-    input.style.fontSize = '18px';
-    container.appendChild(input);
+    // Add the image
+    const imageDiv = document.createElement('div');
+    imageDiv.style.textAlign = 'center';
+    imageDiv.style.marginBottom = '20px';
 
-    const nextBtn = document.createElement('button');
-    nextBtn.textContent = 'Next';
-    styleButton(nextBtn);
-    container.appendChild(nextBtn);
+    const backsplashImage = document.createElement('img');
+    backsplashImage.src = 'https://i.ibb.co/XjdF26x/Backsplash.png';
+    backsplashImage.alt = 'Backsplash';
+    backsplashImage.style.maxWidth = '100%';
+    backsplashImage.style.height = 'auto';
+    imageDiv.appendChild(backsplashImage);
 
-    nextBtn.addEventListener('click', function () {
-        const height = parseFloat(input.value);
-        if (isNaN(height) || height <= 0) {
-            alert('Please enter a valid backsplash height.');
-        } else {
-            shapeData.backsplashHeight = height;
-            promptMeasurements(shape, type, container, shapeData);
-        }
+    // Add explanatory text under the image
+    const description = document.createElement('p');
+    description.textContent = 'A backsplash is the vertical extension out of your countertop that connects everything. It is usually 4 inches in height.';
+    description.style.color = '#0C1729';
+    description.style.fontSize = '16px';
+    description.style.marginTop = '10px';
+    imageDiv.appendChild(description);
+
+    container.appendChild(imageDiv);
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'center';
+    buttonContainer.style.gap = '20px'; // Increase margin between buttons
+    container.appendChild(buttonContainer);
+
+    const yesBtn = document.createElement('button');
+    yesBtn.textContent = 'Yes';
+    styleColoredButton(yesBtn, '#28a745'); // Green color for 'Yes'
+    buttonContainer.appendChild(yesBtn);
+
+    const noBtn = document.createElement('button');
+    noBtn.textContent = 'No';
+    styleColoredButton(noBtn, '#dc3545'); // Red color for 'No'
+    buttonContainer.appendChild(noBtn);
+
+    yesBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = true;
+        promptBacksplashHeight(shape, type, container, shapeData);
+    });
+
+    noBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = false;
+        promptMeasurements(shape, type, container, shapeData);
     });
 }
 
