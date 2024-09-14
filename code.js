@@ -265,16 +265,6 @@ function selectType(container) {
     container.appendChild(choiceDiv);
 }
 
-
-// Existing shape selection event (replace this in your selectType function)
-kitchenBtn.addEventListener('click', function () {
-    selectShapeAndStartSequence({name: 'Kitchen', measurements: [1, 2, 3], measurementImages: ['img1.jpg', 'img2.jpg', 'img3.jpg']}, container);
-});
-
-bathroomBtn.addEventListener('click', function () {
-    selectShapeAndStartSequence({name: 'Bathroom', measurements: [1, 2], measurementImages: ['img1.jpg', 'img2.jpg']}, container);
-});
-
    function selectKitchenType(container) {
     previousPage = selectType.bind(null, container);
     container.innerHTML = '';
