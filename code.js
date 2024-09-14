@@ -626,6 +626,7 @@ function updateItemList(container) {
 }
 
 
+
     
 // Function to remove an item
 function removeItem(index) {
@@ -1555,10 +1556,6 @@ function calculateAndAddItem(shape, shapeData, type, container) {
     // Redirect back to the invoice page and show the updated item list
     createInvoicePage(container);
 }
-
-
-    
-    
     
 // Function to ask for measurements, one by one with different slides
 function promptShapeMeasurements(shape, container, hasBacksplash, callback) {
@@ -1614,14 +1611,6 @@ function promptShapeMeasurements(shape, container, hasBacksplash, callback) {
     // Start the measurement flow
     showNextMeasurement();
 }
-
-
-
-
-
-
-
-
     
 // Function to ask for finish (Regular or Crystal)
 function promptFinishSelection(callback) {
