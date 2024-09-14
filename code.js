@@ -319,7 +319,7 @@ function styleTab(tab) {
     // Updated Island Image
     const islandBtn = createRectangularImageButton(
         'Island',
-        'https://i.ibb.co/FwZTXVc/Island.png'
+        'https://i.ibb.co/Hrr8ztS/Pour-Directional.png'
     );
     
     // Updated Counter Image
