@@ -1052,13 +1052,12 @@ function promptBacksplash(shape, type, container, shapeData) {
     backsplashImage.style.height = 'auto';
     imageDiv.appendChild(backsplashImage);
 
-    // Add explanatory text under the image
-    const description = document.createElement('p');
-    description.textContent = 'A backsplash is the vertical extension out of your countertop that connects everything. It is usually 4 inches in height.';
-    description.style.color = '#0C1729';
-    description.style.fontSize = '16px';
-    description.style.marginTop = '10px';
-    imageDiv.appendChild(description);
+   const description = document.createElement('p');
+description.textContent = 'A backsplash is the vertical extension out of your countertop that connects everything. It is usually 4 inches in height.';
+description.style.color = '#0C1729';
+description.style.fontSize = '16px';
+description.style.marginTop = '10px';
+imageDiv.appendChild(description);
 
     container.appendChild(imageDiv);
 
@@ -1107,14 +1106,6 @@ function promptMeasurements(shape, type, container, shapeData) {
     imageDiv.appendChild(shapeImage);
 
     container.appendChild(imageDiv);
-
-    // Existing header and form code
-    const header = document.createElement('h2');
-    header.textContent = 'Enter Measurements (in inches)';
-    header.style.color = '#0C1729';
-    header.style.marginBottom = '20px';
-    header.style.fontSize = '24px';
-    container.appendChild(header);
     
     const header = document.createElement('h2');
     header.textContent = 'Enter Measurements (in inches)';
