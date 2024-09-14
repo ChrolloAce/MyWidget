@@ -179,7 +179,6 @@ function styleTab(tab) {
     });
 }
 
-/ Function to navigate to the kitchen/bathroom selection page
 function navigateToSelectionPage(container) {
     container.innerHTML = '';  // Clear the container
 
