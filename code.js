@@ -276,7 +276,6 @@ function createRectangularImageButton(text, imageUrl) {
     return button;
 }
 
-// Function to display image options for shape selection
 function selectKitchenType(container) {
     container.innerHTML = '';
 
@@ -315,79 +314,6 @@ function selectKitchenType(container) {
     kitchenOptions.appendChild(islandBtn);
     kitchenOptions.appendChild(counterBtn);
     kitchenOptions.appendChild(barTopBtn);
-
-    islandBtn.addEventListener('click', function () {
-        selectShapeAndCalculate('Island', container);
-    });
-
-    counterBtn.addEventListener('click', function () {
-        selectShapeAndCalculate('Regular Counter', container);
-    });
-
-    barTopBtn.addEventListener('click', function () {
-        selectShapeAndCalculate('Bar Top', container);
-    });
-}
-
-
-    // Updated Island Image
-    const islandBtn = createRectangularImageButton(
-        'Island',
-        'https://i.ibb.co/Hrr8ztS/Pour-Directional.png'
-    );
-
-    // Updated Counter Image
-    const counterBtn = createRectangularImageButton(
-        'Regular Counter',
-        'https://i.ibb.co/gw8Bxw2/counter.png'
-    );
-
-    // Updated Bar Top Image
-    const barTopBtn = createRectangularImageButton(
-        'Bar Top',
-        'https://i.ibb.co/yS5gzGd/Marble-2.png'
-    );
-
-    kitchenOptions.appendChild(islandBtn);
-    kitchenOptions.appendChild(counterBtn);
-    kitchenOptions.appendChild(barTopBtn);
-
-    islandBtn.addEventListener('click', function () {
-        selectShapeAndCalculate('Island', container);
-    });
-
-    counterBtn.addEventListener('click', function () {
-        selectShapeAndCalculate('Regular Counter', container);
-    });
-
-    barTopBtn.addEventListener('click', function () {
-        selectShapeAndCalculate('Bar Top', container);
-    });
-}
-
-    // Updated Island Image
-    const islandBtn = createRectangularImageButton(
-        'Island',
-        'https://i.ibb.co/Hrr8ztS/Pour-Directional.png'
-    );
-    
-    // Updated Counter Image
-    const counterBtn = createRectangularImageButton(
-        'Regular Counter',
-        'https://i.ibb.co/gw8Bxw2/counter.png'
-    );
-    
-    // Updated Bar Top Image
-    const barTopBtn = createRectangularImageButton(
-        'Bar Top',
-        'https://i.ibb.co/yS5gzGd/Marble-2.png'
-    );
-
-    kitchenOptions.appendChild(islandBtn);
-    kitchenOptions.appendChild(counterBtn);
-    kitchenOptions.appendChild(barTopBtn);
-
-    container.appendChild(kitchenOptions);
 
     islandBtn.addEventListener('click', function () {
         selectShapeAndCalculate('Island', container);
