@@ -277,42 +277,44 @@ function selectKitchenType(container) {
     kitchenOptions.style.justifyContent = 'center';
     kitchenOptions.style.gap = '20px';
     container.appendChild(kitchenOptions);
+}
 
-    // Helper function to create image buttons with a rectangular aspect ratio
-    function createRectangularImageButton(text, imageUrl) {
-        const button = document.createElement('div');
-        button.style.position = 'relative';
-        button.style.width = '400px';  // Adjust width for rectangular shape
-        button.style.height = '300px';  // Adjust height for rectangular shape
-        button.style.border = '2px solid #000000';  // Black border
-        button.style.borderRadius = '15px';  // Slightly rounded corners
-        button.style.overflow = 'hidden';
-        button.style.cursor = 'pointer';
-        button.style.textAlign = 'center';
-        button.style.display = 'flex';
-        button.style.flexDirection = 'column';
-        button.style.justifyContent = 'center';
-        button.style.alignItems = 'center';
-        button.style.backgroundImage = `url(${imageUrl})`;
-        button.style.backgroundSize = 'cover';
-        button.style.backgroundPosition = 'center';
-        button.style.marginBottom = '20px';  // Adjusted margin
+// Helper function to create image buttons with a rectangular aspect ratio
+function createRectangularImageButton(text, imageUrl) {
+    const button = document.createElement('div');
+    button.style.position = 'relative';
+    button.style.width = '400px';
+    button.style.height = '300px';
+    button.style.border = '2px solid #000000';
+    button.style.borderRadius = '15px';
+    button.style.overflow = 'hidden';
+    button.style.cursor = 'pointer';
+    button.style.textAlign = 'center';
+    button.style.display = 'flex';
+    button.style.flexDirection = 'column';
+    button.style.justifyContent = 'center';
+    button.style.alignItems = 'center';
+    button.style.backgroundImage = `url(${imageUrl})`;
+    button.style.backgroundSize = 'cover';
+    button.style.backgroundPosition = 'center';
+    button.style.marginBottom = '20px';
 
-        const overlay = document.createElement('div');
-        overlay.style.position = 'absolute';
-        overlay.style.bottom = '0';
-        overlay.style.width = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
-        overlay.style.color = 'white';
-        overlay.style.padding = '15px';  // Reduced padding
-        overlay.style.fontSize = '18px';  // Smaller font size
-        overlay.style.fontWeight = 'bold';
-        overlay.style.textAlign = 'center';
-        overlay.textContent = text;
-        button.appendChild(overlay);
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.bottom = '0';
+    overlay.style.width = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    overlay.style.color = 'white';
+    overlay.style.padding = '15px';
+    overlay.style.fontSize = '18px';
+    overlay.style.fontWeight = 'bold';
+    overlay.style.textAlign = 'center';
+    overlay.textContent = text;
+    button.appendChild(overlay);
 
-        return button;
-    }
+    return button;
+}
+
 
     // Updated Island Image
     const islandBtn = createRectangularImageButton(
@@ -348,44 +350,6 @@ function selectKitchenType(container) {
         selectShapeAndCalculate('Bar Top', container);
     });
 }
-
-
-
-    // Helper function to create image buttons with a rectangular aspect ratio
-    function createRectangularImageButton(text, imageUrl) {
-        const button = document.createElement('div');
-        button.style.position = 'relative';
-        button.style.width = '400px';  // Adjust width for rectangular shape
-        button.style.height = '300px';  // Adjust height for rectangular shape
-        button.style.border = '2px solid #000000';  // Black border
-        button.style.borderRadius = '15px';  // Slightly rounded corners
-        button.style.overflow = 'hidden';
-        button.style.cursor = 'pointer';
-        button.style.textAlign = 'center';
-        button.style.display = 'flex';
-        button.style.flexDirection = 'column';
-        button.style.justifyContent = 'center';
-        button.style.alignItems = 'center';
-        button.style.backgroundImage = `url(${imageUrl})`;
-        button.style.backgroundSize = 'cover';
-        button.style.backgroundPosition = 'center';
-        button.style.marginBottom = '20px';  // Adjusted margin
-
-        const overlay = document.createElement('div');
-        overlay.style.position = 'absolute';
-        overlay.style.bottom = '0';
-        overlay.style.width = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
-        overlay.style.color = 'white';
-        overlay.style.padding = '15px';  // Reduced padding
-        overlay.style.fontSize = '18px';  // Smaller font size
-        overlay.style.fontWeight = 'bold';
-        overlay.style.textAlign = 'center';
-        overlay.textContent = text;
-        button.appendChild(overlay);
-
-        return button;
-    }
 
     // Updated Island Image
     const islandBtn = createRectangularImageButton(
