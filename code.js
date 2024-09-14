@@ -271,35 +271,84 @@ function selectKitchenType(container) {
     header.style.fontSize = '28px';
     container.appendChild(header);
 
+    const kitchenOptions = document.createElement('div');
+    kitchenOptions.style.display = 'flex';
+    kitchenOptions.style.flexWrap = 'wrap';
+    kitchenOptions.style.justifyContent = 'center';
+    kitchenOptions.style.gap = '20px';
+    container.appendChild(kitchenOptions);
 
-    
-    const shapeContainer = document.createElement('div');
-    shapeContainer.style.display = 'flex';
-    shapeContainer.style.flexWrap = 'wrap';
-    shapeContainer.style.justifyContent = 'center';
-    shapeContainer.style.gap = '20px';
-    container.appendChild(shapeContainer);
+    // Helper function to create image buttons with a rectangular aspect ratio
+    function createRectangularImageButton(text, imageUrl) {
+        const button = document.createElement('div');
+        button.style.position = 'relative';
+        button.style.width = '400px';  // Adjust width for rectangular shape
+        button.style.height = '300px';  // Adjust height for rectangular shape
+        button.style.border = '2px solid #000000';  // Black border
+        button.style.borderRadius = '15px';  // Slightly rounded corners
+        button.style.overflow = 'hidden';
+        button.style.cursor = 'pointer';
+        button.style.textAlign = 'center';
+        button.style.display = 'flex';
+        button.style.flexDirection = 'column';
+        button.style.justifyContent = 'center';
+        button.style.alignItems = 'center';
+        button.style.backgroundImage = `url(${imageUrl})`;
+        button.style.backgroundSize = 'cover';
+        button.style.backgroundPosition = 'center';
+        button.style.marginBottom = '20px';  // Adjusted margin
 
-    const islandBtn = createImageButton('Island', 'island-img.jpg');
-    const counterBtn = createImageButton('Counter', 'counter-img.jpg');
-    const barTopBtn = createImageButton('Bar Top', 'bar-top-img.jpg');
+        const overlay = document.createElement('div');
+        overlay.style.position = 'absolute';
+        overlay.style.bottom = '0';
+        overlay.style.width = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
+        overlay.style.color = 'white';
+        overlay.style.padding = '15px';  // Reduced padding
+        overlay.style.fontSize = '18px';  // Smaller font size
+        overlay.style.fontWeight = 'bold';
+        overlay.style.textAlign = 'center';
+        overlay.textContent = text;
+        button.appendChild(overlay);
 
-    shapeContainer.appendChild(islandBtn);
-    shapeContainer.appendChild(counterBtn);
-    shapeContainer.appendChild(barTopBtn);
+        return button;
+    }
+
+    // Updated Island Image
+    const islandBtn = createRectangularImageButton(
+        'Island',
+        'https://i.ibb.co/Hrr8ztS/Pour-Directional.png'
+    );
+
+    // Updated Counter Image
+    const counterBtn = createRectangularImageButton(
+        'Regular Counter',
+        'https://i.ibb.co/gw8Bxw2/counter.png'
+    );
+
+    // Updated Bar Top Image
+    const barTopBtn = createRectangularImageButton(
+        'Bar Top',
+        'https://i.ibb.co/yS5gzGd/Marble-2.png'
+    );
+
+    kitchenOptions.appendChild(islandBtn);
+    kitchenOptions.appendChild(counterBtn);
+    kitchenOptions.appendChild(barTopBtn);
 
     islandBtn.addEventListener('click', function () {
         selectShapeAndCalculate('Island', container);
     });
 
     counterBtn.addEventListener('click', function () {
-        selectShapeAndCalculate('Counter', container);
+        selectShapeAndCalculate('Regular Counter', container);
     });
 
     barTopBtn.addEventListener('click', function () {
         selectShapeAndCalculate('Bar Top', container);
     });
 }
+
 
 
     // Helper function to create image buttons with a rectangular aspect ratio
