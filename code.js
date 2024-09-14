@@ -229,15 +229,28 @@ function styleTab(tab) {
     // Function to handle type selection (Kitchen/Bathroom)
     // Existing shape selection function
 function selectType(container) {
-    // After user selects 'Kitchen' or 'Bathroom', call the new sequence function
+    // Define choiceDiv before using it
+    const choiceDiv = document.createElement('div');
+    choiceDiv.style.display = 'flex';
+    choiceDiv.style.justifyContent = 'center';
+    choiceDiv.style.gap = '20px'; // Adds space between buttons
+
+    // Your existing code to create buttons
     const kitchenBtn = createImageButton('Kitchen', 'kitchen-img.jpg');
     const bathroomBtn = createImageButton('Bathroom', 'bathroom-img.jpg');
 
-    // Replace old selection event with new sequence function
+    // Append buttons to choiceDiv
+    choiceDiv.appendChild(kitchenBtn);
+    choiceDiv.appendChild(bathroomBtn);
+    
+    // Now, append choiceDiv to the container
+    container.appendChild(choiceDiv);
+
+    // Add event listeners for buttons
     kitchenBtn.addEventListener('click', function() {
         selectShapeAndStartSequence({
             name: 'Kitchen',
-            measurements: [1, 2, 3],  // Update this with the appropriate measurement count
+            measurements: [1, 2, 3], 
             measurementImages: ['kitchen-img1.jpg', 'kitchen-img2.jpg', 'kitchen-img3.jpg']
         }, container);
     });
@@ -245,11 +258,12 @@ function selectType(container) {
     bathroomBtn.addEventListener('click', function() {
         selectShapeAndStartSequence({
             name: 'Bathroom',
-            measurements: [1, 2],  // Adjust for your bathroom shapes
+            measurements: [1, 2], 
             measurementImages: ['bathroom-img1.jpg', 'bathroom-img2.jpg']
         }, container);
     });
 }
+
 
 
         choiceDiv.appendChild(kitchenBtn);
