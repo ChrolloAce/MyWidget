@@ -878,50 +878,62 @@ function selectShapeAndStartSequence(shape, container) {
 }
 
 // Function to prompt the user for backsplash measurement
-function promptBacksplashMeasurements(callback) {
-    const container = document.querySelector('#container');  // Assuming you have a main container
-
-    // Clear the container for new content
+function promptBacksplash(shape, type, container, shapeData) {
     container.innerHTML = '';
 
     const header = document.createElement('h2');
-    header.textContent = 'Does this countertop have a backsplash?';
+    header.textContent = 'Does this shape have a backsplash?';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
     container.appendChild(header);
 
-    const yesButton = document.createElement('button');
-    yesButton.textContent = 'Yes';
-    yesButton.style.margin = '10px';
-    container.appendChild(yesButton);
+    // Add the image
+    const imageDiv = document.createElement('div');
+    imageDiv.style.textAlign = 'center';
+    imageDiv.style.marginBottom = '20px';
 
-    const noButton = document.createElement('button');
-    noButton.textContent = 'No';
-    noButton.style.margin = '10px';
-    container.appendChild(noButton);
+    const backsplashImage = document.createElement('img');
+    backsplashImage.src = 'https://i.ibb.co/XjdF26x/Backsplash.png';
+    backsplashImage.alt = 'Backsplash';
+    backsplashImage.style.maxWidth = '100%';
+    backsplashImage.style.height = 'auto';
+    imageDiv.appendChild(backsplashImage);
 
-    // Handle clicks
-    yesButton.addEventListener('click', function() {
-        const heightInput = document.createElement('input');
-        heightInput.type = 'number';
-        heightInput.placeholder = 'Enter backsplash height (in inches)';
-        container.appendChild(heightInput);
+    // Add professional explanatory text under the image
+    const description = document.createElement('p');
+    description.textContent = 'A backsplash is a vertical extension of your countertop that protects the wall behind it from spills and splashes. Typically, it stands at 4 inches in height and adds both functionality and aesthetic appeal to your kitchen.';
+    description.style.color = '#0C1729';
+    description.style.fontSize = '16px';
+    description.style.marginTop = '10px';
+    imageDiv.appendChild(description);
 
-        const submitButton = document.createElement('button');
-        submitButton.textContent = 'Submit';
-        submitButton.style.margin = '10px';
-        container.appendChild(submitButton);
+    container.appendChild(imageDiv);
 
-        submitButton.addEventListener('click', function() {
-            const height = parseFloat(heightInput.value);
-            if (isNaN(height)) {
-                alert('Please enter a valid number for backsplash height.');
-            } else {
-                callback({ hasBacksplash: true, height: height });
-            }
-        });
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'center';
+    buttonContainer.style.gap = '20px'; // Increase margin between buttons
+    container.appendChild(buttonContainer);
+
+    const yesBtn = document.createElement('button');
+    yesBtn.textContent = 'Yes';
+    styleColoredButton(yesBtn, '#28a745'); // Green color for 'Yes'
+    buttonContainer.appendChild(yesBtn);
+
+    const noBtn = document.createElement('button');
+    noBtn.textContent = 'No';
+    styleColoredButton(noBtn, '#dc3545'); // Red color for 'No'
+    buttonContainer.appendChild(noBtn);
+
+    yesBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = true;
+        promptBacksplashHeight(shape, type, container, shapeData);
     });
 
-    noButton.addEventListener('click', function() {
-        callback({ hasBacksplash: false });
+    noBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = false;
+        promptMeasurements(shape, type, container, shapeData);
     });
 }
 
@@ -1074,6 +1086,30 @@ function promptBacksplash(shape, type, container, shapeData) {
 function promptMeasurements(shape, type, container, shapeData) {
     container.innerHTML = '';
 
+    // Add the shape image at the top
+    const imageDiv = document.createElement('div');
+    imageDiv.style.textAlign = 'center';
+    imageDiv.style.marginBottom = '20px';
+
+    const shapeImage = document.createElement('img');
+    shapeImage.src = shape.imageUrl;
+    shapeImage.alt = shape.name;
+    shapeImage.style.maxWidth = '100%';
+    shapeImage.style.height = 'auto';
+    shapeImage.style.borderRadius = '15px';
+    shapeImage.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+    imageDiv.appendChild(shapeImage);
+
+    container.appendChild(imageDiv);
+
+    // Existing header and form code
+    const header = document.createElement('h2');
+    header.textContent = 'Enter Measurements (in inches)';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+    
     const header = document.createElement('h2');
     header.textContent = 'Enter Measurements (in inches)';
     header.style.color = '#0C1729';
