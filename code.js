@@ -595,8 +595,7 @@ function updateItemList(container) {
             itemDiv.style.color = '#0C1729';
 
             const itemText = document.createElement('span');
-            // Don't display square footage, only the item type and finish
-            itemText.textContent = `${index + 1}. ${item.type} - ${item.finish} Finish - $${item.cost}`;
+            itemText.textContent = `${index + 1}. ${item.description} - $${item.cost}`;
             itemDiv.appendChild(itemText);
 
             // 'X' button to remove item
@@ -625,6 +624,7 @@ function updateItemList(container) {
         itemListDiv.appendChild(totalDiv);
     }
 }
+
 
     
 // Function to remove an item
