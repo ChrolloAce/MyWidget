@@ -1,5 +1,4 @@
-(function () {
-    // Initial variables and configuration
+   // Initial variables and configuration
     const PRICE_REGULAR = 26;
     const PRICE_CRYSTAL = 39;
     const MINIMUM_PRICE = 400;
@@ -9,189 +8,99 @@
     let previousPage = null;
     let userInfo = {};
 
-   function initInterface() {
-    // Add navigation tabs at the top of the page
-    addTabs();
+    function initInterface() {
+        // Add navigation tabs at the top of the page
+        addTabs();
 
-    // Clear the existing content and apply styles to the body
-    document.body.innerHTML = '';
-    Object.assign(document.body.style, {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        minHeight: '100vh',
-        backgroundColor: '#ffffff',
-        fontFamily: 'Arial, sans-serif',
-    });
+        // Clear the existing content and apply styles to the body
+        document.body.innerHTML = '';
+        Object.assign(document.body.style, {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            minHeight: '100vh',
+            backgroundColor: '#ffffff',
+            fontFamily: 'Arial, sans-serif',
+        });
 
-    // Create the container element for the form
-    const container = document.createElement('div');
-    Object.assign(container.style, {
-        width: '95%',
-        maxWidth: '800px',
-        backgroundColor: '#f1f1f1',
-        padding: '40px',
-        borderRadius: '15px',
-        boxShadow: '0 12px 24px rgba(0, 0, 0, 0.2)',
-        textAlign: 'center',
-        margin: '80px auto 30px auto',
-    });
-    container.id = 'container';
-    document.body.appendChild(container);
+        // Create the container element for the form
+        const container = document.createElement('div');
+        Object.assign(container.style, {
+            width: '95%',
+            maxWidth: '800px',
+            backgroundColor: '#f1f1f1',
+            padding: '40px',
+            borderRadius: '15px',
+            boxShadow: '0 12px 24px rgba(0, 0, 0, 0.2)',
+            textAlign: 'center',
+            margin: '80px auto 30px auto',
+        });
+        container.id = 'container';
+        document.body.appendChild(container);
 
-    // Create and style the header
-    const header = document.createElement('h1');
-    header.textContent = 'Start New Invoice';
-    Object.assign(header.style, {
-        color: '#0C1729',
-        fontSize: '36px',
-    });
-    container.appendChild(header);
+        // Create and style the header
+        const header = document.createElement('h1');
+        header.textContent = 'Start New Invoice';
+        Object.assign(header.style, {
+            color: '#0C1729',
+            fontSize: '36px',
+        });
+        container.appendChild(header);
 
-    // Create and style the description paragraph
-    const description = document.createElement('p');
-    description.textContent = 'Please enter your contact information to proceed.';
-    Object.assign(description.style, {
-        color: '#0C1729',
-        fontSize: '18px',
-        marginBottom: '30px',
-    });
-    container.appendChild(description);
+        // Create and style the description paragraph
+        const description = document.createElement('p');
+        description.textContent = 'Please enter your contact information to proceed.';
+        Object.assign(description.style, {
+            color: '#0C1729',
+            fontSize: '18px',
+            marginBottom: '30px',
+        });
+        container.appendChild(description);
 
-    // Create the form container
-    const form = document.createElement('div');
-    Object.assign(form.style, {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '20px',
-    });
-    container.appendChild(form);
+        // Create the form container
+        const form = document.createElement('div');
+        Object.assign(form.style, {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '20px',
+        });
+        container.appendChild(form);
 
-    // Name input field
-    const nameInput = createInputField('Name', 'text');
-    form.appendChild(nameInput);
+        // Name input field
+        const nameInput = createInputField('Name', 'text');
+        form.appendChild(nameInput);
 
-    // Phone input field
-    const phoneInput = createInputField('Phone Number', 'tel');
-    form.appendChild(phoneInput);
+        // Phone input field
+        const phoneInput = createInputField('Phone Number', 'tel');
+        form.appendChild(phoneInput);
 
-    // Email input field
-    const emailInput = createInputField('Email', 'email');
-    form.appendChild(emailInput);
+        // Email input field
+        const emailInput = createInputField('Email', 'email');
+        form.appendChild(emailInput);
 
-    // Continue button
-    const continueBtn = document.createElement('button');
-    continueBtn.textContent = 'Continue';
-    styleButton(continueBtn);
-    form.appendChild(continueBtn);
+        // Continue button
+        const continueBtn = document.createElement('button');
+        continueBtn.textContent = 'Continue';
+        styleButton(continueBtn);
+        form.appendChild(continueBtn);
 
-    // Event listener for the Continue button to validate input and navigate to the next page
-    continueBtn.addEventListener('click', function () {
-        // Retrieve user input values
-        userInfo.name = nameInput.querySelector('input').value;
-        userInfo.phone = phoneInput.querySelector('input').value;
-        userInfo.email = emailInput.querySelector('input').value;
+        // Event listener for the Continue button to validate input and navigate to the next page
+        continueBtn.addEventListener('click', function () {
+            // Retrieve user input values
+            userInfo.name = nameInput.querySelector('input').value;
+            userInfo.phone = phoneInput.querySelector('input').value;
+            userInfo.email = emailInput.querySelector('input').value;
 
-        // Validate the inputs
-        if (userInfo.name && userInfo.phone && userInfo.email) {
-            previousPage = initInterface; // Store the current page function for "Back" navigation
-            createInvoicePage(container); // Proceed to invoice creation
-        } else {
-            alert('Please fill in all fields.'); // Prompt the user to complete all fields
-        }
-    });
-}
-
-
-    // Helper function to create input fields
-    function createInputField(labelText, inputType) {
-        const fieldDiv = document.createElement('div');
-        fieldDiv.style.width = '80%';
-
-        const label = document.createElement('label');
-        label.textContent = labelText;
-        label.style.color = '#0C1729';
-        label.style.fontSize = '18px';
-        label.style.marginBottom = '10px';
-        fieldDiv.appendChild(label);
-
-        const input = document.createElement('input');
-        input.type = inputType;
-        input.style.width = '100%';
-        input.style.padding = '10px';
-        input.style.marginTop = '5px';
-        input.style.border = '1px solid #ddd';
-        input.style.borderRadius = '5px';
-        input.style.fontSize = '18px';
-        fieldDiv.appendChild(input);
-
-        return fieldDiv;
+            // Validate the inputs
+            if (userInfo.name && userInfo.phone && userInfo.email) {
+                previousPage = initInterface; // Store the current page function for "Back" navigation
+                createInvoicePage(container); // Proceed to invoice creation
+            } else {
+                alert('Please fill in all fields.'); // Prompt the user to complete all fields
+            }
+        });
     }
-
- // Function to add tabs at the top
-// Function to add tabs at the top
-function addTabs() {
-    const tabs = document.createElement('div');
-    tabs.style.width = '100%';
-    tabs.style.backgroundColor = '#000000';  // Black background for a sleek look
-    tabs.style.color = '#ffffff';  // White text
-    tabs.style.padding = '15px 20px';  // Adjusted padding
-    tabs.style.position = 'fixed';  // Fixed position to always stay on top
-    tabs.style.top = '0';
-    tabs.style.left = '0';
-    tabs.style.zIndex = '1000';
-    tabs.style.display = 'flex';
-    tabs.style.justifyContent = 'space-around';
-    tabs.style.alignItems = 'center';
-    tabs.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';  // Nice shadow for depth
-
-    // About Us Tab
-    const aboutUsTab = document.createElement('div');
-    aboutUsTab.textContent = 'About Us';
-    styleTab(aboutUsTab);
-    aboutUsTab.addEventListener('click', function () {
-        showAboutUs();
-    });
-    tabs.appendChild(aboutUsTab);
-
-    // Invoice Tab
-    const invoiceTab = document.createElement('div');
-    invoiceTab.textContent = 'Invoice';
-    styleTab(invoiceTab);
-    invoiceTab.addEventListener('click', initInterface);
-    tabs.appendChild(invoiceTab);
-
-    // Back Tab
-    const backTab = document.createElement('div');
-    backTab.textContent = 'Back';
-    styleTab(backTab);
-    backTab.addEventListener('click', function () {
-        if (previousPage) {
-            previousPage();
-        }
-    });
-    tabs.appendChild(backTab);
-
-    // Append the tabs to the body
-    document.body.prepend(tabs);
-}
-
-// Style for tabs
-function styleTab(tab) {
-    tab.style.cursor = 'pointer';
-    tab.style.fontSize = '18px';
-    tab.style.fontWeight = 'bold';
-    tab.style.padding = '10px 20px';
-    tab.style.borderRadius = '5px';  // Slightly rounded for a modern look
-    tab.style.transition = 'all 0.3s ease';
-    tab.addEventListener('mouseenter', function () {
-        tab.style.backgroundColor = '#0264D9';  // Add hover effect
-    });
-    tab.addEventListener('mouseleave', function () {
-        tab.style.backgroundColor = 'transparent';  // Return to default on mouse leave
-    });
-}
 
 function navigateToSelectionPage(container) {
     container.innerHTML = '';  // Clear the container
