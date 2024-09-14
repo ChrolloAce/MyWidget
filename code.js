@@ -390,10 +390,6 @@ function promptMeasurements(shape, type, container) {
     header.style.fontSize = '32px'; // Bigger header
     container.appendChild(header);
 
-    const imageDiv = document.createElement('div');
-    imageDiv.style.textAlign = 'center';
-    imageDiv.style.marginBottom = '30px';
-
     const shapeImage = document.createElement('img');
     shapeImage.src = shape.imageUrl;
     shapeImage.style.maxWidth = '100%';
