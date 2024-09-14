@@ -1,4 +1,7 @@
-   // Initial variables and configuration
+
+(function () {
+
+// Initial variables and configuration
     const PRICE_REGULAR = 26;
     const PRICE_CRYSTAL = 39;
     const MINIMUM_PRICE = 400;
