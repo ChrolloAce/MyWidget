@@ -328,37 +328,48 @@ function selectKitchenType(container) {
     });
 }
 
+function startShapeConfiguration(shape, type, container) {
+    let shapeData = {
+        hasBacksplash: false,
+        backsplashHeight: 0,
+        measurements: [],
+        finishType: ''
+    };
 
-    // Function to handle shape selection and calculations
-    function selectShapeAndCalculate(type, container) {
-        previousPage = selectKitchenType.bind(null, container);
-        container.innerHTML = '';
+    // Start the first step
+    promptBacksplash(shape, type, container, shapeData);
+}
 
-        const header = document.createElement('h2');
-        header.textContent = `Select a Shape for ${type}`;
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
+ function selectShapeAndCalculate(type, container) {
+    previousPage = selectKitchenType.bind(null, container);
+    container.innerHTML = '';
 
-        const shapeDiv = document.createElement('div');
-        shapeDiv.style.display = 'flex';
-        shapeDiv.style.flexWrap = 'wrap';
-        shapeDiv.style.justifyContent = 'center';
-        shapeDiv.style.gap = '30px';
+    const header = document.createElement('h2');
+    header.textContent = `Select a Shape for ${type}`;
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
 
-        const shapes = getShapesForType(type);
-        shapes.forEach(shape => {
-            const shapeBtn = createImageButton(shape.name, shape.imageUrl);
-            shapeDiv.appendChild(shapeBtn);
+    const shapeDiv = document.createElement('div');
+    shapeDiv.style.display = 'flex';
+    shapeDiv.style.flexWrap = 'wrap';
+    shapeDiv.style.justifyContent = 'center';
+    shapeDiv.style.gap = '30px';
 
-            shapeBtn.addEventListener('click', function () {
-                promptMeasurements(shape, type, container);
-            });
+    const shapes = getShapesForType(type);
+    shapes.forEach(shape => {
+        const shapeBtn = createImageButton(shape.name, shape.imageUrl);
+        shapeDiv.appendChild(shapeBtn);
+
+        shapeBtn.addEventListener('click', function () {
+            startShapeConfiguration(shape, type, container); // Updated to call the new function
         });
+    });
 
-        container.appendChild(shapeDiv);
-    }
+    container.appendChild(shapeDiv);
+}
+
 
     // Function to prompt user for measurements and finish selection
   // Function to prompt user for measurements and backsplash option
@@ -914,6 +925,215 @@ function promptBacksplashMeasurements(callback) {
     });
 }
 
+
+function promptBacksplash(shape, type, container, shapeData) {
+    container.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = 'Does this shape have a backsplash?';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    const yesBtn = document.createElement('button');
+    yesBtn.textContent = 'Yes';
+    styleButton(yesBtn);
+    container.appendChild(yesBtn);
+
+    const noBtn = document.createElement('button');
+    noBtn.textContent = 'No';
+    styleButton(noBtn);
+    container.appendChild(noBtn);
+
+    yesBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = true;
+        promptBacksplashHeight(shape, type, container, shapeData);
+    });
+
+    noBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = false;
+        promptMeasurements(shape, type, container, shapeData);
+    });
+}
+function promptBacksplashHeight(shape, type, container, shapeData) {
+    container.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = 'Enter Backsplash Height (in inches)';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.style.width = '80%';
+    input.style.padding = '10px';
+    input.style.marginBottom = '20px';
+    input.style.border = '1px solid #ddd';
+    input.style.borderRadius = '5px';
+    input.style.fontSize = '18px';
+    container.appendChild(input);
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    styleButton(nextBtn);
+    container.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', function () {
+        const height = parseFloat(input.value);
+        if (isNaN(height) || height <= 0) {
+            alert('Please enter a valid backsplash height.');
+        } else {
+            shapeData.backsplashHeight = height;
+            promptMeasurements(shape, type, container, shapeData);
+        }
+    });
+}
+
+function promptMeasurements(shape, type, container, shapeData) {
+    container.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = 'Enter Measurements (in inches)';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    const formDiv = document.createElement('div');
+    formDiv.style.display = 'flex';
+    formDiv.style.flexDirection = 'column';
+    formDiv.style.alignItems = 'center';
+    formDiv.style.gap = '10px';
+    container.appendChild(formDiv);
+
+    const measurementInputs = [];
+
+    shape.measurements.forEach((measurement, index) => {
+        const label = document.createElement('label');
+        label.textContent = `Measurement ${index + 1}:`;
+        label.style.color = '#0C1729';
+        label.style.marginBottom = '5px';
+        label.style.fontSize = '18px';
+        formDiv.appendChild(label);
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.style.width = '80%';
+        input.style.padding = '10px';
+        input.style.marginBottom = '10px';
+        input.style.border = '1px solid #ddd';
+        input.style.borderRadius = '5px';
+        input.style.fontSize = '18px';
+        formDiv.appendChild(input);
+
+        measurementInputs.push(input);
+    });
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    styleButton(nextBtn);
+    formDiv.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', function () {
+        const measurements = measurementInputs.map(input => parseFloat(input.value));
+        if (measurements.some(value => isNaN(value) || value <= 0)) {
+            alert('Please enter valid measurements.');
+        } else {
+            shapeData.measurements = measurements;
+            promptFinishType(shape, type, container, shapeData);
+        }
+    });
+}
+
+function promptFinishType(shape, type, container, shapeData) {
+    container.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = 'Select Finish Type';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    const finishSelect = document.createElement('select');
+    finishSelect.style.width = '80%';
+    finishSelect.style.padding = '10px';
+    finishSelect.style.border = '1px solid #ddd';
+    finishSelect.style.borderRadius = '5px';
+    finishSelect.style.fontSize = '18px';
+    finishSelect.style.marginBottom = '20px';
+
+    const crystalOption = document.createElement('option');
+    crystalOption.value = 'crystal';
+    crystalOption.textContent = 'Crystal Top Finish - $39/sq ft';
+    finishSelect.appendChild(crystalOption);
+
+    const graniteOption = document.createElement('option');
+    graniteOption.value = 'granite';
+    graniteOption.textContent = 'Granite Finish - $29/sq ft';
+    finishSelect.appendChild(graniteOption);
+
+    container.appendChild(finishSelect);
+
+    const finishBtn = document.createElement('button');
+    finishBtn.textContent = 'Calculate and Add Item';
+    styleButton(finishBtn);
+    container.appendChild(finishBtn);
+
+    finishBtn.addEventListener('click', function () {
+        shapeData.finishType = finishSelect.value;
+        calculateAndAddItem(shape, shapeData, type, container);
+    });
+}
+
+function calculateAndAddItem(shape, shapeData, type, container) {
+    const measurements = shapeData.measurements;
+
+    // Determine depth automatically based on type
+    const depth = type === 'Kitchen' ? 25 : 22;
+
+    // Calculate square footage based on shape formula
+    let squareFootage = shape.formula(measurements, depth);
+
+    // Add backsplash square footage if applicable
+    if (shapeData.hasBacksplash && shapeData.backsplashHeight > 0) {
+        const backsplashArea = measurements[0] * (shapeData.backsplashHeight / 12); // Assuming backsplash is only along the first measurement
+        squareFootage += backsplashArea;
+    }
+
+    // Update pricing based on finish type
+    let pricePerSqFt;
+    if (shapeData.finishType === 'granite') {
+        pricePerSqFt = 29;
+    } else if (shapeData.finishType === 'crystal') {
+        pricePerSqFt = 39;
+    } else {
+        pricePerSqFt = PRICE_REGULAR; // Default price if not specified
+    }
+
+    const cost = squareFootage * pricePerSqFt;
+
+    // Add to items list
+    items.push({
+        type: `${shape.name} - ${shape.type}`,
+        squareFootage: squareFootage.toFixed(2),
+        finish: shapeData.finishType,
+        cost: cost.toFixed(2)
+    });
+
+    // Update the total cost
+    totalCost += cost;
+
+    // Redirect back to the invoice page and show the updated item list
+    createInvoicePage(container);
+}
+
+    
+    
+    
 // Function to ask for measurements, one by one with different slides
 function promptShapeMeasurements(shape, container, hasBacksplash, callback) {
     let currentMeasurement = 0;
