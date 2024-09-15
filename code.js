@@ -328,17 +328,23 @@
         });
     }
     
-    function startShapeConfiguration(shape, type, container) {
-        let shapeData = {
-            hasBacksplash: false,
-            backsplashHeight: 0,
-            measurements: [],
-            finishType: ''
-        };
-    
+  function startShapeConfiguration(shape, type, container) {
+    let shapeData = {
+        hasBacksplash: false,
+        backsplashHeight: 0,
+        measurements: [],
+        finishType: ''
+    };
+
+    // Skip backsplash for Island
+    if (type === 'Island') {
+        promptMeasurements(shape, type, container, shapeData);  // Skip directly to measurements
+    } else {
         // Start the first step
-        promptBacksplash(shape, type, container, shapeData);
+        promptBacksplash(shape, type, container, shapeData);  // Ask for backsplash if not Island
     }
+}
+
     
      function selectShapeAndCalculate(type, container) {
         previousPage = selectKitchenType.bind(null, container);
@@ -758,6 +764,38 @@
     }
     
     
+
+function promptBacksplashHeight(shape, type, container, shapeData) {
+    container.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = 'Enter Backsplash Height (in inches)';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.placeholder = 'Backsplash Height (in inches)';
+    container.appendChild(input);
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    styleButton(nextBtn);
+    container.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', function () {
+        const height = parseFloat(input.value);
+        if (isNaN(height) || height <= 0) {
+            alert('Please enter a valid height.');
+        } else {
+            shapeData.backsplashHeight = height;
+            promptMeasurements(shape, type, container, shapeData); // Proceed to next step
+        }
+    });
+}
+
     
     
     
@@ -809,10 +847,10 @@
         styleColoredButton(noBtn, '#dc3545'); // Red color for 'No'
         buttonContainer.appendChild(noBtn);
     
-        yesBtn.addEventListener('click', function () {
-            shapeData.hasBacksplash = true;
-            promptBacksplashHeight(shape, type, container, shapeData);
-        });
+       yesBtn.addEventListener('click', function () {
+    shapeData.hasBacksplash = true;
+    promptBacksplashHeight(shape, type, container, shapeData); // Ensure this function is correctly defined
+});
     
         noBtn.addEventListener('click', function () {
             shapeData.hasBacksplash = false;
@@ -935,325 +973,350 @@
     }
     
     
-    function promptFinishOptions(shape, type, container, shapeData) {
-        container.innerHTML = '';
-    
-        if (shapeData.finishType === 'crystal') {
-            // CrystalTop Pour Options
-            const header = document.createElement('h2');
-            header.textContent = 'CrystalTop Pour Options';
-            header.style.color = '#0C1729';
-            header.style.marginBottom = '20px';
-            header.style.fontSize = '24px';
-            container.appendChild(header);
-    
-            // Description
-            const description = document.createElement('p');
-            description.textContent = 'Our CrystalTop Pour gives a soft, flowing marble look. This process allows the colors to meld together, giving nuances to the various colors chosen and detailed subtleties. You can choose the general amount of the colors but cannot choose exactly how it flows out. This is always a two-day process due to drying times and labor. On average, this process is about one and a half times the amount of the standard process.';
-            description.style.color = '#0C1729';
-            description.style.fontSize = '16px';
-            description.style.marginBottom = '20px';
-            container.appendChild(description);
-    
-            // Pattern Selection using images
-            const patternLabel = document.createElement('label');
-            patternLabel.textContent = 'Select Pattern:';
-            patternLabel.style.color = '#0C1729';
-            patternLabel.style.fontSize = '18px';
-            patternLabel.style.marginBottom = '10px';
-            container.appendChild(patternLabel);
-    
-            const patternContainer = document.createElement('div');
-            patternContainer.style.display = 'flex';
-            patternContainer.style.justifyContent = 'center';
-            patternContainer.style.gap = '20px';
-            patternContainer.style.marginBottom = '20px';
-            container.appendChild(patternContainer);
-    
-            // Pattern Images
-            const patterns = [
-                {
-                    name: 'Soft Directional',
-                    imageUrl: 'https://i.ibb.co/H4TC5sj/Pour-Directional-min.jpg'
-                },
-                {
-                    name: 'Soft Swirl',
-                    imageUrl: 'https://i.ibb.co/6wK2zct/Pour-Swirl-1-min.jpg'
-                }
-            ];
-    
-            let selectedPattern = null;
-    
-            patterns.forEach(pattern => {
-                const patternDiv = document.createElement('div');
-                patternDiv.style.border = '2px solid #ddd';
-                patternDiv.style.borderRadius = '10px';
-                patternDiv.style.overflow = 'hidden';
-                patternDiv.style.cursor = 'pointer';
-                patternDiv.style.width = '200px';
-                patternDiv.style.height = '200px';
-                patternDiv.style.position = 'relative';
-    
-                const img = document.createElement('img');
-                img.src = pattern.imageUrl;
-                img.alt = pattern.name;
-                img.style.width = '100%';
-                img.style.height = '100%';
-                img.style.objectFit = 'cover';
-                patternDiv.appendChild(img);
-    
-                const overlay = document.createElement('div');
-                overlay.textContent = pattern.name;
-                overlay.style.position = 'absolute';
-                overlay.style.bottom = '0';
-                overlay.style.width = '100%';
-                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
-                overlay.style.color = 'white';
-                overlay.style.padding = '10px';
-                overlay.style.textAlign = 'center';
-                overlay.style.fontSize = '16px';
-                patternDiv.appendChild(overlay);
-    
-                patternDiv.addEventListener('click', function () {
-                    selectedPattern = pattern.name;
-                    // Visual feedback for selection
-                    Array.from(patternContainer.children).forEach(child => {
-                        child.style.border = '2px solid #ddd';
-                    });
-                    patternDiv.style.border = '4px solid #0264D9';
-                });
-    
-                patternContainer.appendChild(patternDiv);
-            });
-    
-            // Color Selection
-            const colorsLabel = document.createElement('label');
-            colorsLabel.textContent = 'Choose up to 4 Colors:';
-            colorsLabel.style.color = '#0C1729';
-            colorsLabel.style.fontSize = '18px';
-            colorsLabel.style.marginBottom = '10px';
-            container.appendChild(colorsLabel);
-    
-            const colorsContainer = document.createElement('div');
-            colorsContainer.style.display = 'flex';
-            colorsContainer.style.flexWrap = 'wrap';
-            colorsContainer.style.justifyContent = 'center';
-            colorsContainer.style.gap = '10px';
-            colorsContainer.style.marginBottom = '20px';
-            container.appendChild(colorsContainer);
-    
-            const colors = [
-                'White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate',
-                'Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper'
-            ];
-    
-            const colorDivs = [];
-    
-            colors.forEach(color => {
-                const colorDiv = createColorSquare(color);
-                colorsContainer.appendChild(colorDiv.element);
-                colorDivs.push(colorDiv);
-            });
-    
-            // Next Button
-            const nextBtn = document.createElement('button');
-            nextBtn.textContent = 'Add Item';
-            styleButton(nextBtn);
-            container.appendChild(nextBtn);
-    
-            nextBtn.addEventListener('click', function () {
-                // Validate pattern selection
-                if (!selectedPattern) {
-                    alert('Please select a pattern.');
-                    return;
-                }
-    
-                shapeData.pattern = selectedPattern;
-    
-                // Get selected colors
-                const selectedColors = colorDivs.filter(div => div.selected).map(div => div.colorName);
-    
-                if (selectedColors.length === 0 || selectedColors.length > 4) {
-                    alert('Please select up to 4 colors.');
-                    return;
-                }
-    
-                shapeData.colors = selectedColors;
-    
-                // Proceed to calculation and adding the item
-                calculateAndAddItem(shape, shapeData, type, container);
-            });
-    
-        } else if (shapeData.finishType === 'standard') {
-            // Standard Finish Options
-            const header = document.createElement('h2');
-            header.textContent = 'Standard Finish Options';
-            header.style.color = '#0C1729';
-            header.style.marginBottom = '20px';
-            header.style.fontSize = '24px';
-            container.appendChild(header);
-    
-            // Description
-            const description = document.createElement('p');
-            description.textContent = 'With our Standard process, you can pick the colors and choose the pattern. Once all colors are complete, we will "tweak" the pattern to your liking.';
-            description.style.color = '#0C1729';
-            description.style.fontSize = '16px';
-            description.style.marginBottom = '20px';
-            container.appendChild(description);
-    
-            // Pattern Selection
-            const patternLabel = document.createElement('label');
-            patternLabel.textContent = 'Select Pattern:';
-            patternLabel.style.color = '#0C1729';
-            patternLabel.style.fontSize = '18px';
-            patternLabel.style.marginBottom = '10px';
-            container.appendChild(patternLabel);
-    
-            const patternSelect = document.createElement('select');
-            patternSelect.style.width = '80%';
-            patternSelect.style.padding = '10px';
-            patternSelect.style.border = '1px solid #ddd';
-            patternSelect.style.borderRadius = '5px';
-            patternSelect.style.fontSize = '16px';
-            patternSelect.style.marginBottom = '20px';
-    
-            const marbleOption = document.createElement('option');
-            marbleOption.value = 'Marble';
-            marbleOption.textContent = 'Marble';
-            patternSelect.appendChild(marbleOption);
-    
-            const graniteOption = document.createElement('option');
-            graniteOption.value = 'Flowing Granite';
-            graniteOption.textContent = 'Flowing Granite';
-            patternSelect.appendChild(graniteOption);
-    
-            const quartzOption = document.createElement('option');
-            quartzOption.value = 'Quartz';
-            quartzOption.textContent = 'Quartz';
-            patternSelect.appendChild(quartzOption);
-    
-            container.appendChild(patternSelect);
-    
-            // Base Color Selection using color squares
-            const baseColorLabel = document.createElement('label');
-            baseColorLabel.textContent = 'Choose a Base Color:';
-            baseColorLabel.style.color = '#0C1729';
-            baseColorLabel.style.fontSize = '18px';
-            baseColorLabel.style.marginBottom = '10px';
-            container.appendChild(baseColorLabel);
-    
-            const baseColorsContainer = document.createElement('div');
-            baseColorsContainer.style.display = 'flex';
-            baseColorsContainer.style.flexWrap = 'wrap';
-            baseColorsContainer.style.justifyContent = 'center';
-            baseColorsContainer.style.gap = '10px';
-            baseColorsContainer.style.marginBottom = '20px';
-            container.appendChild(baseColorsContainer);
-    
-            const baseColors = [
-                'White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate'
-            ];
-    
-            let selectedBaseColor = null;
-            const baseColorDivs = [];
-    
-            baseColors.forEach(color => {
-                const colorDiv = createColorSquare(color);
-                baseColorsContainer.appendChild(colorDiv.element);
-                baseColorDivs.push(colorDiv);
-    
-                colorDiv.element.addEventListener('click', function () {
-                    // Deselect all other base colors
-                    baseColorDivs.forEach(div => {
-                        div.selected = false;
-                        div.element.style.border = '2px solid #ddd';
-                    });
-                    // Select this base color
-                    colorDiv.selected = true;
-                    colorDiv.element.style.border = '4px solid #0264D9';
-                    selectedBaseColor = colorDiv.colorName;
-                });
-            });
-    
-            // Accent Colors Selection
-            const accentColorsLabel = document.createElement('label');
-            accentColorsLabel.textContent = 'Choose Accent Colors:';
-            accentColorsLabel.style.color = '#0C1729';
-            accentColorsLabel.style.fontSize = '18px';
-            accentColorsLabel.style.marginBottom = '10px';
-            container.appendChild(accentColorsLabel);
-    
-            const accentColorsContainer = document.createElement('div');
-            accentColorsContainer.style.display = 'flex';
-            accentColorsContainer.style.flexWrap = 'wrap';
-            accentColorsContainer.style.justifyContent = 'center';
-            accentColorsContainer.style.gap = '10px';
-            accentColorsContainer.style.marginBottom = '20px';
-            container.appendChild(accentColorsContainer);
-    
-            const accentColors = [
-                'Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper'
-            ];
-    
-            // Include base colors as accent options
-            const allAccentColors = baseColors.concat(accentColors);
-    
-            const accentColorDivs = [];
-    
-            allAccentColors.forEach(color => {
-                const colorDiv = createColorSquare(color);
-                accentColorsContainer.appendChild(colorDiv.element);
-                accentColorDivs.push(colorDiv);
-            });
-    
-            // Next Button
-            const nextBtn = document.createElement('button');
-            nextBtn.textContent = 'Add Item';
-            styleButton(nextBtn);
-            container.appendChild(nextBtn);
-    
-            // Update accent colors selection based on pattern
-            function updateAccentColorsSelection() {
-                accentColorDivs.forEach(div => div.selected = false); // Reset selections
-                if (patternSelect.value === 'Quartz') {
-                    accentColorsLabel.textContent = 'Choose up to 2 Accent Colors:';
-                } else {
-                    accentColorsLabel.textContent = 'Choose up to 3 Additional Colors:';
-                }
+   function promptFinishOptions(shape, type, container, shapeData) {
+    container.innerHTML = '';
+
+    if (shapeData.finishType === 'crystal') {
+        // CrystalTop Pour Options
+        const header = document.createElement('h2');
+        header.textContent = 'CrystalTop Pour Options';
+        header.style.color = '#0C1729';
+        header.style.marginBottom = '20px';
+        header.style.fontSize = '24px';
+        container.appendChild(header);
+
+        // Description
+        const description = document.createElement('p');
+        description.textContent = 'Our CrystalTop Pour gives a soft, flowing marble look. This process allows the colors to meld together, giving nuances to the various colors chosen and detailed subtleties. You can choose the general amount of the colors but cannot choose exactly how it flows out. This is always a two-day process due to drying times and labor. On average, this process is about one and a half times the amount of the standard process.';
+        description.style.color = '#0C1729';
+        description.style.fontSize = '16px';
+        description.style.marginBottom = '20px';
+        container.appendChild(description);
+
+        // Pattern Selection using images
+        const patternLabel = document.createElement('label');
+        patternLabel.textContent = 'Select Pattern:';
+        patternLabel.style.color = '#0C1729';
+        patternLabel.style.fontSize = '18px';
+        patternLabel.style.marginBottom = '10px';
+        container.appendChild(patternLabel);
+
+        const patternContainer = document.createElement('div');
+        patternContainer.style.display = 'flex';
+        patternContainer.style.justifyContent = 'center';
+        patternContainer.style.gap = '20px';
+        patternContainer.style.marginBottom = '20px';
+        container.appendChild(patternContainer);
+
+        // Pattern Images
+        const patterns = [
+            {
+                name: 'Soft Directional',
+                imageUrl: 'https://i.ibb.co/H4TC5sj/Pour-Directional-min.jpg'
+            },
+            {
+                name: 'Soft Swirl',
+                imageUrl: 'https://i.ibb.co/6wK2zct/Pour-Swirl-1-min.jpg'
             }
-    
-            patternSelect.addEventListener('change', updateAccentColorsSelection);
-    
-            nextBtn.addEventListener('click', function () {
-                // Validate base color selection
-                if (!selectedBaseColor) {
-                    alert('Please select a base color.');
-                    return;
-                }
-    
-                // Get selected pattern
-                shapeData.pattern = patternSelect.value;
-    
-                // Get base color
-                shapeData.baseColor = selectedBaseColor;
-    
-                // Get selected accent colors
-                const selectedAccentColors = accentColorDivs.filter(div => div.selected).map(div => div.colorName);
-    
-                let maxColors = patternSelect.value === 'Quartz' ? 2 : 3;
-                if (selectedAccentColors.length > maxColors) {
-                    alert(`Please select up to ${maxColors} accent colors.`);
-                    return;
-                }
-    
-                shapeData.accentColors = selectedAccentColors;
-    
-                // Proceed to calculation and adding the item
-                calculateAndAddItem(shape, shapeData, type, container);
+        ];
+
+        let selectedPattern = null;
+
+        patterns.forEach(pattern => {
+            const patternDiv = document.createElement('div');
+            patternDiv.style.border = '2px solid #ddd';
+            patternDiv.style.borderRadius = '10px';
+            patternDiv.style.overflow = 'hidden';
+            patternDiv.style.cursor = 'pointer';
+            patternDiv.style.width = '200px';
+            patternDiv.style.height = '200px';
+            patternDiv.style.position = 'relative';
+
+            const img = document.createElement('img');
+            img.src = pattern.imageUrl;
+            img.alt = pattern.name;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            patternDiv.appendChild(img);
+
+            const overlay = document.createElement('div');
+            overlay.textContent = pattern.name;
+            overlay.style.position = 'absolute';
+            overlay.style.bottom = '0';
+            overlay.style.width = '100%';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+            overlay.style.color = 'white';
+            overlay.style.padding = '10px';
+            overlay.style.textAlign = 'center';
+            overlay.style.fontSize = '16px';
+            patternDiv.appendChild(overlay);
+
+            patternDiv.addEventListener('click', function () {
+                selectedPattern = pattern.name;
+                // Visual feedback for selection
+                Array.from(patternContainer.children).forEach(child => {
+                    child.style.border = '2px solid #ddd';
+                });
+                patternDiv.style.border = '4px solid #0264D9';
             });
-        }
+
+            patternContainer.appendChild(patternDiv);
+        });
+
+        // Color Selection
+        const colorsLabel = document.createElement('label');
+        colorsLabel.textContent = 'Choose up to 4 Colors:';
+        colorsLabel.style.color = '#0C1729';
+        colorsLabel.style.fontSize = '18px';
+        colorsLabel.style.marginBottom = '10px';
+        container.appendChild(colorsLabel);
+
+        const colorsContainer = document.createElement('div');
+        colorsContainer.style.display = 'flex';
+        colorsContainer.style.flexWrap = 'wrap';
+        colorsContainer.style.justifyContent = 'center';
+        colorsContainer.style.gap = '10px';
+        colorsContainer.style.marginBottom = '20px';
+        container.appendChild(colorsContainer);
+
+        const colors = [
+            'White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate',
+            'Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper'
+        ];
+
+        const colorDivs = [];
+
+        colors.forEach(color => {
+            const colorDiv = createColorSquare(color);
+            colorsContainer.appendChild(colorDiv.element);
+            colorDivs.push(colorDiv);
+        });
+
+        // Next Button
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Add Item';
+        styleButton(nextBtn);
+        container.appendChild(nextBtn);
+
+        nextBtn.addEventListener('click', function () {
+            // Validate pattern selection
+            if (!selectedPattern) {
+                alert('Please select a pattern.');
+                return;
+            }
+
+            shapeData.pattern = selectedPattern;
+
+            // Get selected colors
+            const selectedColors = colorDivs.filter(div => div.selected).map(div => div.colorName);
+
+            if (selectedColors.length === 0 || selectedColors.length > 4) {
+                alert('Please select up to 4 colors.');
+                return;
+            }
+
+            shapeData.colors = selectedColors;
+
+            // Proceed to calculation and adding the item
+            calculateAndAddItem(shape, shapeData, type, container);
+        });
+
+    } else if (shapeData.finishType === 'standard') {
+        // Standard Finish Options
+        const header = document.createElement('h2');
+        header.textContent = 'Standard Finish Options';
+        header.style.color = '#0C1729';
+        header.style.marginBottom = '20px';
+        header.style.fontSize = '24px';
+        container.appendChild(header);
+
+        // Description
+        const description = document.createElement('p');
+        description.textContent = 'With our Standard process, you can pick the colors and choose the pattern. Once all colors are complete, we will "tweak" the pattern to your liking.';
+        description.style.color = '#0C1729';
+        description.style.fontSize = '16px';
+        description.style.marginBottom = '20px';
+        container.appendChild(description);
+
+        // Pattern Selection
+        const patternLabel = document.createElement('label');
+        patternLabel.textContent = 'Select Pattern:';
+        patternLabel.style.color = '#0C1729';
+        patternLabel.style.fontSize = '18px';
+        patternLabel.style.marginBottom = '10px';
+        container.appendChild(patternLabel);
+
+        const patternContainer = document.createElement('div');
+        patternContainer.style.display = 'flex';
+        patternContainer.style.justifyContent = 'center';
+        patternContainer.style.gap = '20px';
+        container.appendChild(patternContainer);
+
+        // Add the new images here for each option (Quartz, Granite, Marble)
+        const patterns = [
+            {
+                name: 'Quartz',
+                imageUrl: 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg'
+            },
+            {
+                name: 'Marble',
+                imageUrl: 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg'
+            },
+            {
+                name: 'Flowing Granite',
+                imageUrl: 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg'
+            }
+        ];
+
+        let selectedPattern = null;
+
+        patterns.forEach(pattern => {
+            const patternDiv = document.createElement('div');
+            patternDiv.style.border = '2px solid #ddd';
+            patternDiv.style.borderRadius = '10px';
+            patternDiv.style.overflow = 'hidden';
+            patternDiv.style.cursor = 'pointer';
+            patternDiv.style.width = '200px';
+            patternDiv.style.height = '200px';
+            patternDiv.style.position = 'relative';
+
+            const img = document.createElement('img');
+            img.src = pattern.imageUrl;
+            img.alt = pattern.name;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            patternDiv.appendChild(img);
+
+            const overlay = document.createElement('div');
+            overlay.textContent = pattern.name;
+            overlay.style.position = 'absolute';
+            overlay.style.bottom = '0';
+            overlay.style.width = '100%';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+            overlay.style.color = 'white';
+            overlay.style.padding = '10px';
+            overlay.style.textAlign = 'center';
+            overlay.style.fontSize = '16px';
+            patternDiv.appendChild(overlay);
+
+            patternDiv.addEventListener('click', function () {
+                selectedPattern = pattern.name;
+                // Visual feedback for selection
+                Array.from(patternContainer.children).forEach(child => {
+                    child.style.border = '2px solid #ddd';
+                });
+                patternDiv.style.border = '4px solid #0264D9';
+            });
+
+            patternContainer.appendChild(patternDiv);
+        });
+
+        // Base Color Selection using color squares
+        const baseColorLabel = document.createElement('label');
+        baseColorLabel.textContent = 'Choose a Base Color:';
+        baseColorLabel.style.color = '#0C1729';
+        baseColorLabel.style.fontSize = '18px';
+        baseColorLabel.style.marginBottom = '10px';
+        container.appendChild(baseColorLabel);
+
+        const baseColorsContainer = document.createElement('div');
+        baseColorsContainer.style.display = 'flex';
+        baseColorsContainer.style.flexWrap = 'wrap';
+        baseColorsContainer.style.justifyContent = 'center';
+        baseColorsContainer.style.gap = '10px';
+        baseColorsContainer.style.marginBottom = '20px';
+        container.appendChild(baseColorsContainer);
+
+        const baseColors = [
+            'White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate'
+        ];
+
+        let selectedBaseColor = null;
+        const baseColorDivs = [];
+
+        baseColors.forEach(color => {
+            const colorDiv = createColorSquare(color);
+            baseColorsContainer.appendChild(colorDiv.element);
+            baseColorDivs.push(colorDiv);
+
+            colorDiv.element.addEventListener('click', function () {
+                // Deselect all other base colors
+                baseColorDivs.forEach(div => {
+                    div.selected = false;
+                    div.element.style.border = '2px solid #ddd';
+                });
+                // Select this base color
+                colorDiv.selected = true;
+                colorDiv.element.style.border = '4px solid #0264D9';
+                selectedBaseColor = colorDiv.colorName;
+            });
+        });
+
+        // Accent Colors Selection
+        const accentColorsLabel = document.createElement('label');
+        accentColorsLabel.textContent = 'Choose Accent Colors:';
+        accentColorsLabel.style.color = '#0C1729';
+        accentColorsLabel.style.fontSize = '18px';
+        accentColorsLabel.style.marginBottom = '10px';
+        container.appendChild(accentColorsLabel);
+
+        const accentColorsContainer = document.createElement('div');
+        accentColorsContainer.style.display = 'flex';
+        accentColorsContainer.style.flexWrap = 'wrap';
+        accentColorsContainer.style.justifyContent = 'center';
+        accentColorsContainer.style.gap = '10px';
+        accentColorsContainer.style.marginBottom = '20px';
+        container.appendChild(accentColorsContainer);
+
+        const accentColors = [
+            'Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper'
+        ];
+
+        const accentColorDivs = [];
+
+        accentColors.forEach(color => {
+            const colorDiv = createColorSquare(color);
+            accentColorsContainer.appendChild(colorDiv.element);
+            accentColorDivs.push(colorDiv);
+        });
+
+        // Next Button
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Add Item';
+        styleButton(nextBtn);
+        container.appendChild(nextBtn);
+
+        nextBtn.addEventListener('click', function () {
+            // Validate base color selection
+            if (!selectedBaseColor) {
+                alert('Please select a base color.');
+                return;
+            }
+
+            // Get selected pattern
+            shapeData.pattern = selectedPattern;
+
+            // Get base color
+            shapeData.baseColor = selectedBaseColor;
+
+            // Get selected accent colors
+            const selectedAccentColors = accentColorDivs.filter(div => div.selected).map(div => div.colorName);
+
+            if (selectedAccentColors.length > 3) {
+                alert('Please select up to 3 accent colors.');
+                return;
+            }
+
+            shapeData.accentColors = selectedAccentColors;
+
+            // Proceed to calculation and adding the item
+            calculateAndAddItem(shape, shapeData, type, container);
+        });
     }
-    
+}
+
     
      
     
