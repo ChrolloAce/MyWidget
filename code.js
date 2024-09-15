@@ -1198,29 +1198,82 @@ function promptFinishOptions(shape, type, container, shapeData) {
             patternContainer.appendChild(patternDiv);
         });
 
-        const colorLabel = document.createElement('label');
-        colorLabel.textContent = 'Choose up to 4 Colors:';
-        colorLabel.style.color = '#0C1729';
-        colorLabel.style.fontSize = '18px';
-        colorLabel.style.marginBottom = '10px';
-        container.appendChild(colorLabel);
+        // Base Color Selection
+        const baseColorLabel = document.createElement('label');
+        baseColorLabel.textContent = 'Choose a Base Color:';
+        baseColorLabel.style.color = '#0C1729';
+        baseColorLabel.style.fontSize = '18px';
+        baseColorLabel.style.marginBottom = '10px';
+        container.appendChild(baseColorLabel);
 
-        const colorContainer = document.createElement('div');
-        colorContainer.style.display = 'flex';
-        colorContainer.style.flexWrap = 'wrap';
-        colorContainer.style.justifyContent = 'center';
-        colorContainer.style.gap = '10px';
-        colorContainer.style.marginBottom = '20px';
-        container.appendChild(colorContainer);
+        const baseColorContainer = document.createElement('div');
+        baseColorContainer.style.display = 'flex';
+        baseColorContainer.style.justifyContent = 'center';
+        baseColorContainer.style.gap = '10px';
+        baseColorContainer.style.marginBottom = '20px';
+        container.appendChild(baseColorContainer);
 
-        const colors = [
-            'White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate',
+        const baseColors = [
+            'White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate'
+        ];
+
+        let selectedBaseColor = null;
+
+        baseColors.forEach(color => {
+            const colorDiv = document.createElement('div');
+            colorDiv.style.width = '100px';
+            colorDiv.style.height = '100px';
+            colorDiv.style.backgroundColor = color.toLowerCase().replace(' ', '-');
+            colorDiv.style.border = '2px solid #ddd';
+            colorDiv.style.borderRadius = '10px';
+            colorDiv.style.cursor = 'pointer';
+            colorDiv.style.display = 'flex';
+            colorDiv.style.alignItems = 'center';
+            colorDiv.style.justifyContent = 'center';
+
+            const label = document.createElement('span');
+            label.textContent = color;
+            label.style.color = '#0C1729';
+            label.style.fontSize = '14px';
+            label.style.fontWeight = 'bold';
+            colorDiv.appendChild(label);
+
+            let selected = false;
+
+            colorDiv.addEventListener('click', function () {
+                if (selectedBaseColor) {
+                    selectedBaseColor.style.border = '2px solid #ddd';  // Reset previous base color
+                }
+                selectedBaseColor = colorDiv;
+                colorDiv.style.border = '4px solid #0264D9';  // Highlight the selected base color
+            });
+
+            baseColorContainer.appendChild(colorDiv);
+        });
+
+        // Add-on Color Selection
+        const addonColorLabel = document.createElement('label');
+        addonColorLabel.textContent = 'Choose up to 3 Add-on Colors:';
+        addonColorLabel.style.color = '#0C1729';
+        addonColorLabel.style.fontSize = '18px';
+        addonColorLabel.style.marginBottom = '10px';
+        container.appendChild(addonColorLabel);
+
+        const addonColorContainer = document.createElement('div');
+        addonColorContainer.style.display = 'flex';
+        addonColorContainer.style.flexWrap = 'wrap';
+        addonColorContainer.style.justifyContent = 'center';
+        addonColorContainer.style.gap = '10px';
+        addonColorContainer.style.marginBottom = '20px';
+        container.appendChild(addonColorContainer);
+
+        const addonColors = [
             'Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper'
         ];
 
-        const selectedColors = [];
+        const selectedAddonColors = [];
 
-        colors.forEach(color => {
+        addonColors.forEach(color => {
             const colorDiv = document.createElement('div');
             colorDiv.style.width = '100px';
             colorDiv.style.height = '100px';
@@ -1245,16 +1298,16 @@ function promptFinishOptions(shape, type, container, shapeData) {
                 if (selected) {
                     selected = false;
                     colorDiv.style.border = '2px solid #ddd';
-                    const index = selectedColors.indexOf(color);
-                    if (index > -1) selectedColors.splice(index, 1);
-                } else if (selectedColors.length < 4) {
+                    const index = selectedAddonColors.indexOf(color);
+                    if (index > -1) selectedAddonColors.splice(index, 1);
+                } else if (selectedAddonColors.length < 3) {
                     selected = true;
                     colorDiv.style.border = '4px solid #0264D9';
-                    selectedColors.push(color);
+                    selectedAddonColors.push(color);
                 }
             });
 
-            colorContainer.appendChild(colorDiv);
+            addonColorContainer.appendChild(colorDiv);
         });
 
         const nextBtn = document.createElement('button');
@@ -1263,23 +1316,24 @@ function promptFinishOptions(shape, type, container, shapeData) {
         container.appendChild(nextBtn);
 
         nextBtn.addEventListener('click', function () {
-            if (!selectedPattern) {
-                alert('Please select a pattern.');
+            if (!selectedBaseColor) {
+                alert('Please select a base color.');
                 return;
             }
 
-            if (selectedColors.length === 0 || selectedColors.length > 4) {
-                alert('Please select up to 4 colors.');
+            if (selectedAddonColors.length > 3) {
+                alert('Please select up to 3 add-on colors.');
                 return;
             }
 
-            shapeData.pattern = selectedPattern;
-            shapeData.colors = selectedColors;
+            shapeData.baseColor = selectedBaseColor.querySelector('span').textContent;
+            shapeData.addonColors = selectedAddonColors;
 
             calculateAndAddItem(shape, shapeData, type, container);
         });
     }
 }
+
 
          
     function calculateAndAddItem(shape, shapeData, type, container) {
