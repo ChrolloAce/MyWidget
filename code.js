@@ -424,62 +424,71 @@
     
       // Function to update the item list without showing square footage to the client
     // Function to update the item list with the option to remove items
-    function updateItemList(container) {
-        let itemListDiv = document.getElementById('itemList');
-    
-        // Recreate itemListDiv if it doesn't exist
-        if (!itemListDiv) {
-            itemListDiv = document.createElement('div');
-            itemListDiv.id = 'itemList';
-            itemListDiv.style.marginTop = '30px';
-            container.appendChild(itemListDiv);
-        }
-    
-        itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3>';
-    
-        if (items.length === 0) {
-            itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
-        } else {
-            items.forEach((item, index) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.style.display = 'flex';
-                itemDiv.style.justifyContent = 'space-between';
-                itemDiv.style.alignItems = 'center';
-                itemDiv.style.padding = '10px';
-                itemDiv.style.marginBottom = '15px';
-                itemDiv.style.borderBottom = '1px solid #ddd';
-                itemDiv.style.color = '#0C1729';
-    
-                const itemText = document.createElement('span');
-                itemText.textContent = `${index + 1}. ${item.description} - $${item.cost}`;
-                itemDiv.appendChild(itemText);
-    
-                // 'X' button to remove item
-                const removeBtn = document.createElement('button');
-                removeBtn.textContent = 'X';
-                removeBtn.style.color = '#ffffff';
-                removeBtn.style.backgroundColor = '#ff0000';  // Red color for the remove button
-                removeBtn.style.border = 'none';
-                removeBtn.style.cursor = 'pointer';
-                removeBtn.style.padding = '5px 10px';
-                removeBtn.style.borderRadius = '5px';
-                removeBtn.addEventListener('click', function () {
-                    removeItem(index);
-                });
-                itemDiv.appendChild(removeBtn);
-    
-                itemListDiv.appendChild(itemDiv);
-            });
-    
-            const totalDiv = document.createElement('div');
-            totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-            totalDiv.style.marginTop = '20px';
-            totalDiv.style.fontWeight = 'bold';
-            totalDiv.style.fontSize = '22px';
-            totalDiv.style.color = '#0264D9';
-            itemListDiv.appendChild(totalDiv);
-        }
+   function updateItemList(container) {
+    let itemListDiv = document.getElementById('itemList');
+
+    // Recreate itemListDiv if it doesn't exist
+    if (!itemListDiv) {
+        itemListDiv = document.createElement('div');
+        itemListDiv.id = 'itemList';
+        itemListDiv.style.marginTop = '30px';
+        container.appendChild(itemListDiv);
     }
+
+    itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3>';
+
+    if (items.length === 0) {
+        itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
+    } else {
+        items.forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.style.display = 'flex';
+            itemDiv.style.alignItems = 'center'; // Align image and text
+            itemDiv.style.padding = '10px';
+            itemDiv.style.marginBottom = '15px';
+            itemDiv.style.borderBottom = '1px solid #ddd';
+            itemDiv.style.color = '#0C1729';
+
+            // Item image
+            const itemImage = document.createElement('img');
+            itemImage.src = item.imageUrl; // Assuming the shape object has an imageUrl
+            itemImage.style.width = '60px'; // Smaller thumbnail
+            itemImage.style.height = '60px';
+            itemImage.style.borderRadius = '8px';
+            itemImage.style.marginRight = '15px'; // Space between image and text
+            itemDiv.appendChild(itemImage);
+
+            const itemText = document.createElement('span');
+            itemText.textContent = `${index + 1}. ${item.description} - $${item.cost}`;
+            itemDiv.appendChild(itemText);
+
+            // 'X' button to remove item
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'X';
+            removeBtn.style.color = '#ffffff';
+            removeBtn.style.backgroundColor = '#ff0000'; // Red color for the remove button
+            removeBtn.style.border = 'none';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.padding = '5px 10px';
+            removeBtn.style.borderRadius = '5px';
+            removeBtn.addEventListener('click', function () {
+                removeItem(index);
+            });
+            itemDiv.appendChild(removeBtn);
+
+            itemListDiv.appendChild(itemDiv);
+        });
+
+        const totalDiv = document.createElement('div');
+        totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
+        totalDiv.style.marginTop = '20px';
+        totalDiv.style.fontWeight = 'bold';
+        totalDiv.style.fontSize = '22px';
+        totalDiv.style.color = '#0264D9';
+        itemListDiv.appendChild(totalDiv);
+    }
+}
+
     
     
     
@@ -640,39 +649,51 @@
         // Helper function to style buttons
       // Adjust the button style
     // Helper function to style buttons
-    function styleButton(button) {
-        button.style.padding = '14px';
-        button.style.backgroundColor = '#0264D9';  // Blue color for contrast
-        button.style.color = '#ffffff';  // White text
-        button.style.border = 'none';  // Remove borders
-        button.style.borderRadius = '10px';  // Rounded corners for modern look
-        button.style.cursor = 'pointer';
-        button.style.fontSize = '18px';
-        button.style.fontWeight = 'bold';
-        button.style.width = '80%';
-        button.style.transition = 'all 0.3s ease';
-        button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';  // Slight shadow
-    
-        button.addEventListener('mouseenter', function () {
-            button.style.backgroundColor = '#004C99';  // Darker blue on hover
-        });
-    
-        button.addEventListener('mouseleave', function () {
-            button.style.backgroundColor = '#0264D9';  // Return to original color
-        });
-    }
+   function styleButton(button) {
+    button.style.padding = '14px';
+    button.style.backgroundColor = '#0264D9'; // Blue color for contrast
+    button.style.color = '#ffffff'; // White text
+    button.style.border = 'none'; // Remove borders
+    button.style.borderRadius = '10px'; // Rounded corners for a modern look
+    button.style.cursor = 'pointer';
+    button.style.fontSize = '18px';
+    button.style.fontWeight = 'bold';
+    button.style.margin = '20px 0'; // More spacing around buttons
+    button.style.transition = 'all 0.3s ease';
+    button.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.2)'; // Slight shadow for depth
+
+    button.addEventListener('mouseenter', function () {
+        button.style.backgroundColor = '#004C99'; // Darker blue on hover
+    });
+
+    button.addEventListener('mouseleave', function () {
+        button.style.backgroundColor = '#0264D9'; // Return to original color
+    });
+}
+
+function styleInputField(input) {
+    input.style.width = '100%';
+    input.style.padding = '15px';
+    input.style.marginBottom = '20px'; // Increase margin for better spacing
+    input.style.border = '2px solid #ddd'; // Thicker border
+    input.style.borderRadius = '8px'; // More rounded corners
+    input.style.fontSize = '18px';
+    input.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)'; // Add shadow for depth
+}
+
     
     // Styling the container to look cleaner and more centered
-    function styleContainer(container) {
-        container.style.width = '90%';
-        container.style.maxWidth = '800px';
-        container.style.backgroundColor = '#ffffff';
-        container.style.padding = '40px';
-        container.style.borderRadius = '10px';  // Rounded corners
-        container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.1)';  // Soft shadow
-        container.style.margin = '20px auto';
-        container.style.textAlign = 'center';
-    }
+  function styleContainer(container) {
+    container.style.width = '90%';
+    container.style.maxWidth = '900px'; // Increase max-width for larger screens
+    container.style.backgroundColor = '#ffffff';
+    container.style.padding = '50px'; // Increase padding for a cleaner layout
+    container.style.borderRadius = '15px'; // Softer corners
+    container.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.15)'; // Soft shadow
+    container.style.margin = '30px auto'; // Adjust margin for better alignment
+    container.style.textAlign = 'center';
+}
+
     
         // Helper function to create image buttons
         function createImageButton(text, imageUrl) {
@@ -799,64 +820,68 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
     
     
     
-    function promptBacksplash(shape, type, container, shapeData) {
-        container.innerHTML = '';
-    
-        const header = document.createElement('h2');
-        header.textContent = 'Does this shape have a backsplash?';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '20px';
-        header.style.fontSize = '24px';
-        container.appendChild(header);
-    
-        // Add the image
-        const imageDiv = document.createElement('div');
-        imageDiv.style.textAlign = 'center';
-        imageDiv.style.marginBottom = '20px';
-    
-        const backsplashImage = document.createElement('img');
-        backsplashImage.src = 'https://i.ibb.co/XjdF26x/Backsplash.png';
-        backsplashImage.alt = 'Backsplash';
-        backsplashImage.style.maxWidth = '100%';
-        backsplashImage.style.height = 'auto';
-        imageDiv.appendChild(backsplashImage);
-    
-        // Add explanatory text under the image
-        const description = document.createElement('p');
-        description.textContent = 'A backsplash is the vertical extension of your countertop that connects everything. It is usually 4 inches in height.';
-        description.style.color = '#0C1729';
-        description.style.fontSize = '16px';
-        description.style.marginTop = '10px';
-        imageDiv.appendChild(description);
-    
-        container.appendChild(imageDiv);
-    
-        const buttonContainer = document.createElement('div');
-        buttonContainer.style.display = 'flex';
-        buttonContainer.style.justifyContent = 'center';
-        buttonContainer.style.gap = '20px'; // Increase margin between buttons
-        container.appendChild(buttonContainer);
-    
-        const yesBtn = document.createElement('button');
-        yesBtn.textContent = 'Yes';
-        styleColoredButton(yesBtn, '#28a745'); // Green color for 'Yes'
-        buttonContainer.appendChild(yesBtn);
-    
-        const noBtn = document.createElement('button');
-        noBtn.textContent = 'No';
-        styleColoredButton(noBtn, '#dc3545'); // Red color for 'No'
-        buttonContainer.appendChild(noBtn);
-    
-       yesBtn.addEventListener('click', function () {
-    shapeData.hasBacksplash = true;
-    promptBacksplashHeight(shape, type, container, shapeData); // Ensure this function is correctly defined
-});
-    
-        noBtn.addEventListener('click', function () {
-            shapeData.hasBacksplash = false;
-            promptMeasurements(shape, type, container, shapeData);
-        });
-    }
+  function promptBacksplash(shape, type, container, shapeData) {
+    container.innerHTML = '';
+
+    // Dynamic question based on type
+    const question = type === 'Bar Top' ? 'Does this bar top have a backsplash?' : 'Does this countertop have a backsplash?';
+
+    const header = document.createElement('h2');
+    header.textContent = question;
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    // Add the image
+    const imageDiv = document.createElement('div');
+    imageDiv.style.textAlign = 'center';
+    imageDiv.style.marginBottom = '20px';
+
+    const backsplashImage = document.createElement('img');
+    backsplashImage.src = 'https://i.ibb.co/XjdF26x/Backsplash.png';
+    backsplashImage.alt = 'Backsplash';
+    backsplashImage.style.maxWidth = '100%';
+    backsplashImage.style.height = 'auto';
+    imageDiv.appendChild(backsplashImage);
+
+    // Add explanatory text under the image
+    const description = document.createElement('p');
+    description.textContent = 'A backsplash is the vertical extension of your countertop that connects everything. It is usually 4 inches in height.';
+    description.style.color = '#0C1729';
+    description.style.fontSize = '16px';
+    description.style.marginTop = '10px';
+    imageDiv.appendChild(description);
+
+    container.appendChild(imageDiv);
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'center';
+    buttonContainer.style.gap = '20px'; // Increase margin between buttons
+    container.appendChild(buttonContainer);
+
+    const yesBtn = document.createElement('button');
+    yesBtn.textContent = 'Yes';
+    styleColoredButton(yesBtn, '#28a745'); // Green color for 'Yes'
+    buttonContainer.appendChild(yesBtn);
+
+    const noBtn = document.createElement('button');
+    noBtn.textContent = 'No';
+    styleColoredButton(noBtn, '#dc3545'); // Red color for 'No'
+    buttonContainer.appendChild(noBtn);
+
+    yesBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = true;
+        promptBacksplashHeight(shape, type, container, shapeData);
+    });
+
+    noBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = false;
+        promptMeasurements(shape, type, container, shapeData);
+    });
+}
+
     
     
     function promptMeasurements(shape, type, container, shapeData) {
