@@ -153,7 +153,7 @@ continueBtn.addEventListener('click', function () {
     container.innerHTML = '';  // Clear the container
 
     const header = document.createElement('h2');
-    header.textContent = 'Choose Type';
+    header.textContent = 'Choose Type of Countertop';
     header.style.color = '#0C1729';
     header.style.marginBottom = '30px';
     header.style.fontSize = '28px';
@@ -161,9 +161,9 @@ continueBtn.addEventListener('click', function () {
 
     const typeContainer = document.createElement('div');
     typeContainer.style.display = 'flex';
-    typeContainer.style.justifyContent = 'center';
+    typeContainer.style.flexDirection = 'column'; // Stack on top of each other for mobile
+    typeContainer.style.alignItems = 'center'; // Center align the items
     typeContainer.style.gap = '20px';
-    typeContainer.style.flexWrap = 'wrap'; // To ensure responsiveness on smaller screens
     container.appendChild(typeContainer);
 
     // Add kitchen and bathroom buttons with new images
@@ -179,7 +179,19 @@ continueBtn.addEventListener('click', function () {
     bathroomBtn.addEventListener('click', function () {
         selectBathroomType(container);
     });
+
+    // Add a back button to go back to the previous page (if exists)
+    if (previousPage) {
+        const backButton = document.createElement('button');
+        backButton.textContent = 'Back';
+        styleButton(backButton);
+        backButton.addEventListener('click', function () {
+            previousPage(container);
+        });
+        container.appendChild(backButton);
+    }
 }
+
 
     
     // Function to create the invoice page
@@ -264,93 +276,89 @@ continueBtn.addEventListener('click', function () {
         return button;
     }
     
-    // Helper function to create image buttons with a rectangular aspect ratio
-    function createRectangularImageButton(text, imageUrl) {
-        const button = document.createElement('div');
-        button.style.position = 'relative';
-        button.style.width = '400px';  // Adjust width for rectangular shape
-        button.style.height = '300px';  // Adjust height for rectangular shape
-        button.style.border = '2px solid #000000';  // Black border
-        button.style.borderRadius = '15px';  // Slightly rounded corners
-        button.style.overflow = 'hidden';
-        button.style.cursor = 'pointer';
-        button.style.textAlign = 'center';
-        button.style.display = 'flex';
-        button.style.flexDirection = 'column';
-        button.style.justifyContent = 'center';
-        button.style.alignItems = 'center';
-        button.style.backgroundImage = `url(${imageUrl})`;
-        button.style.backgroundSize = 'cover';
-        button.style.backgroundPosition = 'center';
-        button.style.marginBottom = '20px';  // Adjusted margin
+  function createRectangularImageButton(text, imageUrl) {
+    const button = document.createElement('div');
+    button.style.position = 'relative';
+    button.style.width = '350px';  // Increased width
+    button.style.height = '350px';  // Increased height
+    button.style.border = '2px solid #000000';  // Black border
+    button.style.borderRadius = '15px';  // Rounded corners
+    button.style.overflow = 'hidden';
+    button.style.cursor = 'pointer';
+    button.style.textAlign = 'center';
+    button.style.display = 'flex';
+    button.style.flexDirection = 'column';
+    button.style.justifyContent = 'center';
+    button.style.alignItems = 'center';
+    button.style.backgroundImage = `url(${imageUrl})`;
+    button.style.backgroundSize = 'cover';
+    button.style.backgroundPosition = 'center';
+    button.style.marginBottom = '20px';  // Adjusted margin
+
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.bottom = '0';
+    overlay.style.width = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
+    overlay.style.color = 'white';
+    overlay.style.padding = '15px';  // Padding for text
+    overlay.style.fontSize = '20px';  // Larger font size for better readability
+    overlay.style.fontWeight = 'bold';
+    overlay.style.textAlign = 'center';
+    overlay.textContent = text;
+    button.appendChild(overlay);
+
+    return button;
+}
+
     
-        const overlay = document.createElement('div');
-        overlay.style.position = 'absolute';
-        overlay.style.bottom = '0';
-        overlay.style.width = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
-        overlay.style.color = 'white';
-        overlay.style.padding = '15px';  // Reduced padding
-        overlay.style.fontSize = '18px';  // Smaller font size
-        overlay.style.fontWeight = 'bold';
-        overlay.style.textAlign = 'center';
-        overlay.textContent = text;
-        button.appendChild(overlay);
-    
-        return button;
-    }
-    
-    function selectKitchenType(container) {
-        container.innerHTML = '';
-    
-        const header = document.createElement('h2');
-        header.textContent = 'Choose Kitchen Counter Shape';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
-    
-        const kitchenOptions = document.createElement('div');
-        kitchenOptions.style.display = 'flex';
-        kitchenOptions.style.flexWrap = 'wrap';
-        kitchenOptions.style.justifyContent = 'center';
-        kitchenOptions.style.gap = '20px';
-        container.appendChild(kitchenOptions);
-    
-        // Updated Island Image
-        const islandBtn = createRectangularImageButton(
-            'Island',
-            'https://i.ibb.co/Hrr8ztS/Pour-Directional.png'
-        );
-    
-        // Updated Counter Image
-        const counterBtn = createRectangularImageButton(
-            'Regular Counter',
-            'https://i.ibb.co/gw8Bxw2/counter.png'
-        );
-    
-        // Updated Bar Top Image
-        const barTopBtn = createRectangularImageButton(
-            'Bar Top',
-            'https://i.ibb.co/yS5gzGd/Marble-2.png'
-        );
-    
-        kitchenOptions.appendChild(islandBtn);
-        kitchenOptions.appendChild(counterBtn);
-        kitchenOptions.appendChild(barTopBtn);
-    
-        islandBtn.addEventListener('click', function () {
-            selectShapeAndCalculate('Island', container);
-        });
-    
-        counterBtn.addEventListener('click', function () {
-            selectShapeAndCalculate('Regular Counter', container);
-        });
-    
-        barTopBtn.addEventListener('click', function () {
-            selectShapeAndCalculate('Bar Top', container);
-        });
-    }
+   function selectKitchenType(container) {
+    container.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = 'Choose Kitchen Counter Shape';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
+
+    const kitchenOptions = document.createElement('div');
+    kitchenOptions.style.display = 'flex';
+    kitchenOptions.style.flexWrap = 'wrap';
+    kitchenOptions.style.justifyContent = 'center';
+    kitchenOptions.style.gap = '30px';
+    container.appendChild(kitchenOptions);
+
+    const islandBtn = createRectangularImageButton('Island', 'https://i.ibb.co/Hrr8ztS/Pour-Directional.png');
+    const counterBtn = createRectangularImageButton('Regular Counter', 'https://i.ibb.co/gw8Bxw2/counter.png');
+    const barTopBtn = createRectangularImageButton('Bar Top', 'https://i.ibb.co/yS5gzGd/Marble-2.png');
+
+    kitchenOptions.appendChild(islandBtn);
+    kitchenOptions.appendChild(counterBtn);
+    kitchenOptions.appendChild(barTopBtn);
+
+    islandBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Island', container);
+    });
+
+    counterBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Regular Counter', container);
+    });
+
+    barTopBtn.addEventListener('click', function () {
+        selectShapeAndCalculate('Bar Top', container);
+    });
+
+    // Add a back button to go back to the previous page
+    const backButton = document.createElement('button');
+    backButton.textContent = 'Back';
+    styleButton(backButton);
+    backButton.addEventListener('click', function () {
+        navigateToSelectionPage(container);
+    });
+    container.appendChild(backButton);
+}
+
     
   function startShapeConfiguration(shape, type, container) {
     let shapeData = {
