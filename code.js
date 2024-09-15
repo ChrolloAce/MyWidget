@@ -1019,7 +1019,120 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
         });
     }
     
-    
+
+// Base Color Selection
+function promptBaseAndAddonColors(container, shapeData) {
+    const baseColorLabel = document.createElement('label');
+    baseColorLabel.textContent = 'Choose a Base Color:';
+    baseColorLabel.style.color = '#0C1729';
+    baseColorLabel.style.fontSize = '18px';
+    baseColorLabel.style.marginBottom = '10px';
+    container.appendChild(baseColorLabel);
+
+    const baseColorContainer = document.createElement('div');
+    baseColorContainer.style.display = 'flex';
+    baseColorContainer.style.justifyContent = 'center';
+    baseColorContainer.style.gap = '10px';
+    baseColorContainer.style.marginBottom = '20px';
+    container.appendChild(baseColorContainer);
+
+    const baseColors = ['White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate'];
+    let selectedBaseColor = null;
+
+    baseColors.forEach(color => {
+        const colorDiv = document.createElement('div');
+        colorDiv.style.width = '100px';
+        colorDiv.style.height = '100px';
+        colorDiv.style.backgroundColor = color.toLowerCase().replace(' ', '-');
+        colorDiv.style.border = '2px solid #ddd';
+        colorDiv.style.borderRadius = '10px';
+        colorDiv.style.cursor = 'pointer';
+        colorDiv.style.display = 'flex';
+        colorDiv.style.alignItems = 'center';
+        colorDiv.style.justifyContent = 'center';
+
+        const label = document.createElement('span');
+        label.textContent = color;
+        label.style.color = '#0C1729';
+        label.style.fontSize = '14px';
+        label.style.fontWeight = 'bold';
+        colorDiv.appendChild(label);
+
+        colorDiv.addEventListener('click', function () {
+            if (selectedBaseColor) {
+                selectedBaseColor.style.border = '2px solid #ddd';
+            }
+            selectedBaseColor = colorDiv;
+            colorDiv.style.border = '4px solid #0264D9';
+        });
+
+        baseColorContainer.appendChild(colorDiv);
+    });
+
+    // Add-on Color Selection
+    const addonColorLabel = document.createElement('label');
+    addonColorLabel.textContent = 'Choose up to 3 Add-on Colors:';
+    addonColorLabel.style.color = '#0C1729';
+    addonColorLabel.style.fontSize = '18px';
+    addonColorLabel.style.marginBottom = '10px';
+    container.appendChild(addonColorLabel);
+
+    const addonColorContainer = document.createElement('div');
+    addonColorContainer.style.display = 'flex';
+    addonColorContainer.style.flexWrap = 'wrap';
+    addonColorContainer.style.justifyContent = 'center';
+    addonColorContainer.style.gap = '10px';
+    addonColorContainer.style.marginBottom = '20px';
+    container.appendChild(addonColorContainer);
+
+    const addonColors = ['Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper'];
+    const selectedAddonColors = [];
+
+    addonColors.forEach(color => {
+        const colorDiv = document.createElement('div');
+        colorDiv.style.width = '100px';
+        colorDiv.style.height = '100px';
+        colorDiv.style.backgroundColor = color.toLowerCase().replace(' ', '-');
+        colorDiv.style.border = '2px solid #ddd';
+        colorDiv.style.borderRadius = '10px';
+        colorDiv.style.cursor = 'pointer';
+        colorDiv.style.display = 'flex';
+        colorDiv.style.alignItems = 'center';
+        colorDiv.style.justifyContent = 'center';
+
+        const label = document.createElement('span');
+        label.textContent = color;
+        label.style.color = '#0C1729';
+        label.style.fontSize = '14px';
+        label.style.fontWeight = 'bold';
+        colorDiv.appendChild(label);
+
+        let selected = false;
+
+        colorDiv.addEventListener('click', function () {
+            if (selected) {
+                selected = false;
+                colorDiv.style.border = '2px solid #ddd';
+                const index = selectedAddonColors.indexOf(color);
+                if (index > -1) selectedAddonColors.splice(index, 1);
+            } else if (selectedAddonColors.length < 3) {
+                selected = true;
+                colorDiv.style.border = '4px solid #0264D9';
+                selectedAddonColors.push(color);
+            }
+        });
+
+        addonColorContainer.appendChild(colorDiv);
+    });
+
+    return { selectedBaseColor, selectedAddonColors };
+}
+
+
+
+
+
+
 function promptFinishOptions(shape, type, container, shapeData) {
     container.innerHTML = '';
 
@@ -1038,7 +1151,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
         patternContainer.style.gap = '20px';  // Space between images
         container.appendChild(patternContainer);
 
-        const patterns = [
+        const crystalPatterns = [
             {
                 name: 'Pour Swirl',
                 imageUrl: 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg',
@@ -1049,9 +1162,9 @@ function promptFinishOptions(shape, type, container, shapeData) {
             }
         ];
 
-        let selectedPattern = null;
+        let selectedCrystalPattern = null;
 
-        patterns.forEach(pattern => {
+        crystalPatterns.forEach(pattern => {
             const patternDiv = document.createElement('div');
             patternDiv.style.border = '2px solid #ddd';
             patternDiv.style.borderRadius = '10px';
@@ -1082,7 +1195,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
             patternDiv.appendChild(overlay);
 
             patternDiv.addEventListener('click', function () {
-                selectedPattern = pattern.name;
+                selectedCrystalPattern = pattern.name;
                 // Visual feedback for selection
                 Array.from(patternContainer.children).forEach(child => {
                     child.style.border = '2px solid #ddd';
@@ -1099,11 +1212,11 @@ function promptFinishOptions(shape, type, container, shapeData) {
         container.appendChild(nextBtn);
 
         nextBtn.addEventListener('click', function () {
-            if (!selectedPattern) {
+            if (!selectedCrystalPattern) {
                 alert('Please select a finish pattern.');
                 return;
             }
-            shapeData.pattern = selectedPattern;
+            shapeData.pattern = selectedCrystalPattern;
             calculateAndAddItem(shape, shapeData, type, container);
         });
 
@@ -1333,6 +1446,8 @@ function promptFinishOptions(shape, type, container, shapeData) {
         });
     }
 }
+
+
 
 
          
