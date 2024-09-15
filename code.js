@@ -84,21 +84,38 @@
         styleButton(continueBtn);
         form.appendChild(continueBtn);
     
-        // Event listener for the Continue button to validate input and navigate to the next page
-        continueBtn.addEventListener('click', function () {
-            // Retrieve user input values
-            userInfo.name = nameInput.querySelector('input').value;
-            userInfo.phone = phoneInput.querySelector('input').value;
-            userInfo.email = emailInput.querySelector('input').value;
-    
-            // Validate the inputs
-            if (userInfo.name && userInfo.phone && userInfo.email) {
-                previousPage = initInterface; // Store the current page function for "Back" navigation
-                createInvoicePage(container); // Proceed to invoice creation
-            } else {
-                alert('Please fill in all fields.'); // Prompt the user to complete all fields
-            }
-        });
+continueBtn.addEventListener('click', function () {
+    // Retrieve user input values
+    userInfo.name = nameInput.querySelector('input').value;
+    userInfo.phone = phoneInput.querySelector('input').value;
+    userInfo.email = emailInput.querySelector('input').value;
+    userInfo.zipCode = zipCodeInput.querySelector('input').value;
+
+    // Validate the inputs
+    const emailRegex = /^[^\s@]@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]+$/;
+    const zipCodeRegex = /^[0-9]{5}$/;
+
+    if (!userInfo.name || !emailRegex.test(userInfo.email)) {
+        alert('Please enter a valid name and email address.');
+        return;
+    }
+
+    if (!phoneRegex.test(userInfo.phone)) {
+        alert('Please enter a valid phone number.');
+        return;
+    }
+
+    if (!zipCodeRegex.test(userInfo.zipCode)) {
+        alert('Please enter a valid 5-digit zip code.');
+        return;
+    }
+
+    // Proceed if validation passes
+    previousPage = initInterface;  // Store the current page function for "Back" navigation
+    createInvoicePage(container);  // Proceed to invoice creation
+});
+
     }
     
     function createInputField(labelText, type) {
@@ -376,51 +393,38 @@
         container.appendChild(shapeDiv);
     }
     
-        function calculateAndAddItem(shape, finishType, container, type, hasBacksplash, backsplashHeight) {
-        console.log('Add Item button clicked');
-        const measurements = shape.measurements.map((_, index) => parseFloat(document.getElementById(`measurement${index + 1}`).value));
-    
-        console.log('Measurements:', measurements);
-    
-        if (measurements.some(isNaN)) {
-            alert('Please enter valid measurements.');
-            return;
-        }
-    
-        // Determine depth automatically based on type
-        const depth = type === 'Kitchen' ? 25 : 22;
-    
-        // Calculate square footage based on shape formula
-        let squareFootage = shape.formula(measurements, depth);
-        
-        // Add backsplash square footage if applicable
-        if (hasBacksplash && backsplashHeight) {
-            const backsplashArea = measurements[0] * (parseFloat(backsplashHeight) / 12); // Assuming backsplash is only along the first measurement
-            squareFootage += backsplashArea;
-        }
-        
-        console.log('Square Footage:', squareFootage);
-    
-        const pricePerSqFt = finishType === 'regular' ? PRICE_REGULAR : PRICE_CRYSTAL;
-        const cost = squareFootage * pricePerSqFt;
-        console.log('Cost:', cost);
-    
-        // Add to items list
-        items.push({
-            type: `${shape.name} - ${shape.type}`,
-            squareFootage: squareFootage.toFixed(2),
-            finish: finishType,
-            cost: cost.toFixed(2)
-        });
-    
-        // Update the total cost
-        totalCost += cost;
-    
-        console.log('Total Cost:', totalCost);
-    
-        // Redirect back to the invoice page and show the updated item list
-        createInvoicePage(container);
+    function calculateAndAddItem(shape, shapeData, type, container) {
+    const measurements = shapeData.measurements;
+
+    // Determine depth and calculate square footage
+    let depth = (type === 'Kitchen' || type === 'Island' || type === 'Bar Top' || type === 'Regular Counter') ? 25 : 22;
+    let squareFootage = shape.formula(measurements, depth);
+
+    // Add backsplash square footage if applicable
+    if (shapeData.hasBacksplash && shapeData.backsplashHeight > 0) {
+        const backsplashArea = measurements[0] * (shapeData.backsplashHeight / 12);
+        squareFootage += backsplashArea / 12;
     }
+
+    // Update pricing based on finish type
+    let pricePerSqFt = shapeData.finishType === 'crystal' ? 39 : 26;
+    if (shapeData.finishType === 'crystal') pricePerSqFt *= 1.5;
+
+    // Calculate cost
+    const cost = squareFootage * pricePerSqFt;
+
+    // Add to items with imageUrl
+    items.push({
+        description: `${shape.name} - ${shape.type} - ${shapeData.finishType}`,
+        imageUrl: shape.imageUrl,  // Include image URL here
+        squareFootage: squareFootage.toFixed(2),
+        cost: cost.toFixed(2)
+    });
+
+    // Redirect back to the invoice page and show the updated item list
+    createInvoicePage(container);
+}
+
     
       // Function to update the item list without showing square footage to the client
     // Function to update the item list with the option to remove items
@@ -673,13 +677,26 @@
 
 function styleInputField(input) {
     input.style.width = '100%';
-    input.style.padding = '15px';
-    input.style.marginBottom = '20px'; // Increase margin for better spacing
-    input.style.border = '2px solid #ddd'; // Thicker border
-    input.style.borderRadius = '8px'; // More rounded corners
-    input.style.fontSize = '18px';
-    input.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)'; // Add shadow for depth
+    input.style.padding = '18px';  // Increase padding for bigger input fields
+    input.style.marginBottom = '20px';  // Add more space between fields
+    input.style.border = '2px solid #ddd';  // Thicker border for visibility
+    input.style.borderRadius = '12px';  // More rounded corners
+    input.style.fontSize = '18px';  // Increase font size for better readability
+    input.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';  // Add a nice shadow effect
+    input.style.transition = 'all 0.3s ease';  // Smooth transition for hover effects
+    input.style.outline = 'none';  // Remove outline
+
+    // Add hover and focus styles for better interaction
+    input.addEventListener('focus', function () {
+        input.style.border = '2px solid #0264D9';  // Blue border on focus
+    });
+
+    input.addEventListener('blur', function () {
+        input.style.border = '2px solid #ddd';  // Return to original border
+    });
 }
+
+
 
     
     // Styling the container to look cleaner and more centered
@@ -1002,46 +1019,28 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
     container.innerHTML = '';
 
     if (shapeData.finishType === 'crystal') {
-        // CrystalTop Pour Options
+        // CrystalTop Pour Options with images
         const header = document.createElement('h2');
-        header.textContent = 'CrystalTop Pour Options';
+        header.textContent = 'Choose Your Crystal Top Finish';
         header.style.color = '#0C1729';
         header.style.marginBottom = '20px';
         header.style.fontSize = '24px';
         container.appendChild(header);
 
-        // Description
-        const description = document.createElement('p');
-        description.textContent = 'Our CrystalTop Pour gives a soft, flowing marble look. This process allows the colors to meld together, giving nuances to the various colors chosen and detailed subtleties. You can choose the general amount of the colors but cannot choose exactly how it flows out. This is always a two-day process due to drying times and labor. On average, this process is about one and a half times the amount of the standard process.';
-        description.style.color = '#0C1729';
-        description.style.fontSize = '16px';
-        description.style.marginBottom = '20px';
-        container.appendChild(description);
-
-        // Pattern Selection using images
-        const patternLabel = document.createElement('label');
-        patternLabel.textContent = 'Select Pattern:';
-        patternLabel.style.color = '#0C1729';
-        patternLabel.style.fontSize = '18px';
-        patternLabel.style.marginBottom = '10px';
-        container.appendChild(patternLabel);
-
         const patternContainer = document.createElement('div');
         patternContainer.style.display = 'flex';
         patternContainer.style.justifyContent = 'center';
-        patternContainer.style.gap = '20px';
-        patternContainer.style.marginBottom = '20px';
+        patternContainer.style.gap = '20px';  // Space between images
         container.appendChild(patternContainer);
 
-        // Pattern Images
         const patterns = [
             {
-                name: 'Soft Directional',
-                imageUrl: 'https://i.ibb.co/H4TC5sj/Pour-Directional-min.jpg'
+                name: 'Pour Swirl',
+                imageUrl: 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg',
             },
             {
-                name: 'Soft Swirl',
-                imageUrl: 'https://i.ibb.co/6wK2zct/Pour-Swirl-1-min.jpg'
+                name: 'Marble',
+                imageUrl: 'https://i.ibb.co/TcYP1FN/Marble-1-min.jpg',
             }
         ];
 
@@ -1053,8 +1052,8 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
             patternDiv.style.borderRadius = '10px';
             patternDiv.style.overflow = 'hidden';
             patternDiv.style.cursor = 'pointer';
-            patternDiv.style.width = '200px';
-            patternDiv.style.height = '200px';
+            patternDiv.style.width = '250px';  // Image width
+            patternDiv.style.height = '250px';  // Image height
             patternDiv.style.position = 'relative';
 
             const img = document.createElement('img');
@@ -1089,61 +1088,17 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
             patternContainer.appendChild(patternDiv);
         });
 
-        // Color Selection
-        const colorsLabel = document.createElement('label');
-        colorsLabel.textContent = 'Choose up to 4 Colors:';
-        colorsLabel.style.color = '#0C1729';
-        colorsLabel.style.fontSize = '18px';
-        colorsLabel.style.marginBottom = '10px';
-        container.appendChild(colorsLabel);
-
-        const colorsContainer = document.createElement('div');
-        colorsContainer.style.display = 'flex';
-        colorsContainer.style.flexWrap = 'wrap';
-        colorsContainer.style.justifyContent = 'center';
-        colorsContainer.style.gap = '10px';
-        colorsContainer.style.marginBottom = '20px';
-        container.appendChild(colorsContainer);
-
-        const colors = [
-            'White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate',
-            'Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper'
-        ];
-
-        const colorDivs = [];
-
-        colors.forEach(color => {
-            const colorDiv = createColorSquare(color);
-            colorsContainer.appendChild(colorDiv.element);
-            colorDivs.push(colorDiv);
-        });
-
-        // Next Button
         const nextBtn = document.createElement('button');
         nextBtn.textContent = 'Add Item';
         styleButton(nextBtn);
         container.appendChild(nextBtn);
 
         nextBtn.addEventListener('click', function () {
-            // Validate pattern selection
             if (!selectedPattern) {
-                alert('Please select a pattern.');
+                alert('Please select a finish pattern.');
                 return;
             }
-
             shapeData.pattern = selectedPattern;
-
-            // Get selected colors
-            const selectedColors = colorDivs.filter(div => div.selected).map(div => div.colorName);
-
-            if (selectedColors.length === 0 || selectedColors.length > 4) {
-                alert('Please select up to 4 colors.');
-                return;
-            }
-
-            shapeData.colors = selectedColors;
-
-            // Proceed to calculation and adding the item
             calculateAndAddItem(shape, shapeData, type, container);
         });
 
@@ -1178,7 +1133,7 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
         patternContainer.style.gap = '20px';
         container.appendChild(patternContainer);
 
-        // Add the new images here for each option (Quartz, Granite, Marble)
+        // Add the images here for each option (Quartz, Granite, Marble)
         const patterns = [
             {
                 name: 'Quartz',
@@ -1202,8 +1157,8 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
             patternDiv.style.borderRadius = '10px';
             patternDiv.style.overflow = 'hidden';
             patternDiv.style.cursor = 'pointer';
-            patternDiv.style.width = '200px';
-            patternDiv.style.height = '200px';
+            patternDiv.style.width = '250px';  // Image width
+            patternDiv.style.height = '250px';  // Image height
             patternDiv.style.position = 'relative';
 
             const img = document.createElement('img');
@@ -1238,109 +1193,22 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
             patternContainer.appendChild(patternDiv);
         });
 
-        // Base Color Selection using color squares
-        const baseColorLabel = document.createElement('label');
-        baseColorLabel.textContent = 'Choose a Base Color:';
-        baseColorLabel.style.color = '#0C1729';
-        baseColorLabel.style.fontSize = '18px';
-        baseColorLabel.style.marginBottom = '10px';
-        container.appendChild(baseColorLabel);
-
-        const baseColorsContainer = document.createElement('div');
-        baseColorsContainer.style.display = 'flex';
-        baseColorsContainer.style.flexWrap = 'wrap';
-        baseColorsContainer.style.justifyContent = 'center';
-        baseColorsContainer.style.gap = '10px';
-        baseColorsContainer.style.marginBottom = '20px';
-        container.appendChild(baseColorsContainer);
-
-        const baseColors = [
-            'White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate'
-        ];
-
-        let selectedBaseColor = null;
-        const baseColorDivs = [];
-
-        baseColors.forEach(color => {
-            const colorDiv = createColorSquare(color);
-            baseColorsContainer.appendChild(colorDiv.element);
-            baseColorDivs.push(colorDiv);
-
-            colorDiv.element.addEventListener('click', function () {
-                // Deselect all other base colors
-                baseColorDivs.forEach(div => {
-                    div.selected = false;
-                    div.element.style.border = '2px solid #ddd';
-                });
-                // Select this base color
-                colorDiv.selected = true;
-                colorDiv.element.style.border = '4px solid #0264D9';
-                selectedBaseColor = colorDiv.colorName;
-            });
-        });
-
-        // Accent Colors Selection
-        const accentColorsLabel = document.createElement('label');
-        accentColorsLabel.textContent = 'Choose Accent Colors:';
-        accentColorsLabel.style.color = '#0C1729';
-        accentColorsLabel.style.fontSize = '18px';
-        accentColorsLabel.style.marginBottom = '10px';
-        container.appendChild(accentColorsLabel);
-
-        const accentColorsContainer = document.createElement('div');
-        accentColorsContainer.style.display = 'flex';
-        accentColorsContainer.style.flexWrap = 'wrap';
-        accentColorsContainer.style.justifyContent = 'center';
-        accentColorsContainer.style.gap = '10px';
-        accentColorsContainer.style.marginBottom = '20px';
-        container.appendChild(accentColorsContainer);
-
-        const accentColors = [
-            'Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper'
-        ];
-
-        const accentColorDivs = [];
-
-        accentColors.forEach(color => {
-            const colorDiv = createColorSquare(color);
-            accentColorsContainer.appendChild(colorDiv.element);
-            accentColorDivs.push(colorDiv);
-        });
-
-        // Next Button
         const nextBtn = document.createElement('button');
         nextBtn.textContent = 'Add Item';
         styleButton(nextBtn);
         container.appendChild(nextBtn);
 
         nextBtn.addEventListener('click', function () {
-            // Validate base color selection
-            if (!selectedBaseColor) {
-                alert('Please select a base color.');
+            if (!selectedPattern) {
+                alert('Please select a finish pattern.');
                 return;
             }
-
-            // Get selected pattern
             shapeData.pattern = selectedPattern;
-
-            // Get base color
-            shapeData.baseColor = selectedBaseColor;
-
-            // Get selected accent colors
-            const selectedAccentColors = accentColorDivs.filter(div => div.selected).map(div => div.colorName);
-
-            if (selectedAccentColors.length > 3) {
-                alert('Please select up to 3 accent colors.');
-                return;
-            }
-
-            shapeData.accentColors = selectedAccentColors;
-
-            // Proceed to calculation and adding the item
             calculateAndAddItem(shape, shapeData, type, container);
         });
     }
 }
+
 
     
      
