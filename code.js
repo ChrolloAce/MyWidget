@@ -1678,7 +1678,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
 
 
          
-   // Function to calculate and add an item to the invoice
+// Function to calculate and add an item to the invoice
 function calculateAndAddItem(shape, shapeData, type, container) {
     const measurements = shapeData.measurements;
 
@@ -1746,6 +1746,73 @@ function calculateAndAddItem(shape, shapeData, type, container) {
     // Redirect back to the invoice page and show the updated item list
     createInvoicePage(container);
 }
+
+// Function to update the item list with the correct image
+function updateItemList(container) {
+    let itemListDiv = document.getElementById('itemList');
+
+    // Recreate itemListDiv if it doesn't exist
+    if (!itemListDiv) {
+        itemListDiv = document.createElement('div');
+        itemListDiv.id = 'itemList';
+        itemListDiv.style.marginTop = '30px';
+        container.appendChild(itemListDiv);
+    }
+
+    itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3>';
+
+    if (items.length === 0) {
+        itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
+    } else {
+        items.forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.style.display = 'flex';
+            itemDiv.style.alignItems = 'center'; // Align image and text
+            itemDiv.style.padding = '10px';
+            itemDiv.style.marginBottom = '15px';
+            itemDiv.style.borderBottom = '1px solid #ddd';
+            itemDiv.style.color = '#0C1729';
+
+            // Ensure the item image is displayed properly
+            const itemImage = document.createElement('img');
+            itemImage.src = item.imageUrl; // Display the correct image
+            itemImage.style.width = '60px'; // Thumbnail size
+            itemImage.style.height = '60px';
+            itemImage.style.borderRadius = '8px';
+            itemImage.style.marginRight = '15px'; // Space between image and text
+            itemDiv.appendChild(itemImage);
+
+            const itemText = document.createElement('span');
+            itemText.textContent = `${index + 1}. ${item.description} - $${item.cost}`;
+            itemDiv.appendChild(itemText);
+
+            // 'X' button to remove item
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'X';
+            removeBtn.style.color = '#ffffff';
+            removeBtn.style.backgroundColor = '#ff0000'; // Red color for the remove button
+            removeBtn.style.border = 'none';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.padding = '5px 10px';
+            removeBtn.style.borderRadius = '5px';
+            removeBtn.addEventListener('click', function () {
+                removeItem(index);
+            });
+            itemDiv.appendChild(removeBtn);
+
+            itemListDiv.appendChild(itemDiv);
+        });
+
+        const totalDiv = document.createElement('div');
+        totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
+        totalDiv.style.marginTop = '20px';
+        totalDiv.style.fontWeight = 'bold';
+        totalDiv.style.fontSize = '22px';
+        totalDiv.style.color = '#0264D9';
+        itemListDiv.appendChild(totalDiv);
+    }
+}
+
 
 // Function to update the item list with the correct image
 function updateItemList(container) {
