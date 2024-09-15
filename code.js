@@ -67,17 +67,22 @@
         container.appendChild(form);
     
         // Name input field
-        const nameInput = createInputField('Name', 'text');
-        form.appendChild(nameInput);
+    const nameInput = createInputField('Name', 'text');
+    form.appendChild(nameInput);
     
-        // Phone input field
-        const phoneInput = createInputField('Phone Number', 'tel');
-        form.appendChild(phoneInput);
-    
-        // Email input field
-        const emailInput = createInputField('Email', 'email');
-        form.appendChild(emailInput);
-    
+    // Phone input field
+    const phoneInput = createInputField('Phone Number', 'tel');
+    form.appendChild(phoneInput);
+
+    // Email input field
+    const emailInput = createInputField('Email', 'email');
+    form.appendChild(emailInput);
+
+    // Zip Code input field (newly added)
+    const zipCodeInput = createInputField('Zip Code', 'text');
+    form.appendChild(zipCodeInput);
+
+        
         // Continue button
         const continueBtn = document.createElement('button');
         continueBtn.textContent = 'Continue';
