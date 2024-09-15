@@ -1020,7 +1020,7 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
     }
     
     
- function promptFinishOptions(shape, type, container, shapeData) {
+function promptFinishOptions(shape, type, container, shapeData) {
     container.innerHTML = '';
 
     if (shapeData.finishType === 'crystal') {
@@ -1280,6 +1280,7 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
         });
     }
 }
+
          
     function calculateAndAddItem(shape, shapeData, type, container) {
         const measurements = shapeData.measurements;
