@@ -1234,7 +1234,7 @@ function promptBaseAndAddonColors(container, shapeData) {
 function promptFinishOptions(shape, type, container, shapeData) {
     container.innerHTML = ''; // Clear the container
 
-    if (shapeData.finishType === 'crystal') {
+   if (shapeData.finishType === 'crystal') {
         // CrystalTop Pour Options with images
         const header = document.createElement('h2');
         header.textContent = 'Choose Your Crystal Top Finish';
@@ -1347,6 +1347,9 @@ function promptFinishOptions(shape, type, container, shapeData) {
             label.style.color = '#0C1729';
             label.style.fontSize = '14px';
             label.style.fontWeight = 'bold';
+            label.style.backgroundColor = 'rgba(240, 240, 240, 0.8)';  // Gray background
+            label.style.padding = '5px';
+            label.style.borderRadius = '5px';
             colorDiv.appendChild(label);
 
             colorDiv.addEventListener('click', function () {
@@ -1374,14 +1377,23 @@ function promptFinishOptions(shape, type, container, shapeData) {
         crystalColorContainer.style.gap = '10px';
         container.appendChild(crystalColorContainer);
 
-        const crystalColors = ['Ice Blue', 'Glacier White', 'Emerald Green', 'Obsidian Black'];
+        const crystalColors = {
+            'Icy White': '#F8F8FF',
+            'Silver': '#C0C0C0',
+            'Champagne Gold': '#F7E7CE',
+            'Bronze': '#CD7F32',
+            'Cobalt Blue': '#0047AB',
+            'Pewter Blue': '#8BA8B7',
+            'Copper': '#B87333'
+        };
+
         const selectedCrystalColors = [];
 
-        crystalColors.forEach(color => {
+        Object.entries(crystalColors).forEach(([colorName, hexCode]) => {
             const colorDiv = document.createElement('div');
             colorDiv.style.width = '100px';
             colorDiv.style.height = '100px';
-            colorDiv.style.backgroundColor = color.toLowerCase().replace(' ', '-');
+            colorDiv.style.backgroundColor = hexCode;
             colorDiv.style.border = '2px solid #ddd';
             colorDiv.style.borderRadius = '10px';
             colorDiv.style.cursor = 'pointer';
@@ -1390,10 +1402,13 @@ function promptFinishOptions(shape, type, container, shapeData) {
             colorDiv.style.justifyContent = 'center';
 
             const label = document.createElement('span');
-            label.textContent = color;
+            label.textContent = colorName;
             label.style.color = '#0C1729';
             label.style.fontSize = '14px';
             label.style.fontWeight = 'bold';
+            label.style.backgroundColor = 'rgba(240, 240, 240, 0.8)';  // Gray background
+            label.style.padding = '5px';
+            label.style.borderRadius = '5px';
             colorDiv.appendChild(label);
 
             let selected = false;
@@ -1402,12 +1417,12 @@ function promptFinishOptions(shape, type, container, shapeData) {
                 if (selected) {
                     selected = false;
                     colorDiv.style.border = '2px solid #ddd';
-                    const index = selectedCrystalColors.indexOf(color);
+                    const index = selectedCrystalColors.indexOf(colorName);
                     if (index > -1) selectedCrystalColors.splice(index, 1);
                 } else if (selectedCrystalColors.length < 4) {
                     selected = true;
                     colorDiv.style.border = '4px solid #0264D9';
-                    selectedCrystalColors.push(color);
+                    selectedCrystalColors.push(colorName);
                 }
             });
 
@@ -1429,6 +1444,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
             shapeData.mixInColors = selectedCrystalColors;
             calculateAndAddItem(shape, shapeData, type, container);
         });
+    
     } else if (shapeData.finishType === 'standard') {
         // Standard Finish Options
         const header = document.createElement('h2');
@@ -1882,7 +1898,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
     #container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 40px;
       background-color: #ffffff;
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
       border-radius: 15px;
@@ -1891,14 +1907,14 @@ function promptFinishOptions(shape, type, container, shapeData) {
 
     @media (max-width: 768px) {
       #container {
-        padding: 10px;
+        padding: 20px;
       }
     }
 
     /* Form Input Fields */
     input, select, textarea {
       width: 100%;
-      padding: 12px;
+      padding: 16px;
       margin-bottom: 20px;
       border: 2px solid #ddd;
       border-radius: 8px;
@@ -1937,8 +1953,8 @@ function promptFinishOptions(shape, type, container, shapeData) {
     }
 
     .image-container img, .pattern-container img {
-      max-width: 200px;
-      height: 200px;
+      max-width: 250px;
+      height: 250px;
       object-fit: cover;
       border-radius: 10px;
       transition: all 0.3s ease;
@@ -2055,6 +2071,24 @@ function promptFinishOptions(shape, type, container, shapeData) {
         width: 100%;
         max-width: 300px;
         height: auto;
+      }
+    }
+
+    /* Smooth transitions between pages */
+    .transition-page {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.5s forwards ease-in-out;
+    }
+
+    @keyframes slideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
   `;
