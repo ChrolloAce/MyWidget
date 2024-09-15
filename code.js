@@ -1197,7 +1197,11 @@ function promptBaseAndAddonColors(container, shapeData) {
 
 
 
- if (shapeData.finishType === 'crystal') {
+function promptFinishOptions(shape, type, container, shapeData) {
+    container.innerHTML = ''; // Clear the container
+
+   
+    if (shapeData.finishType === 'crystal') {
         // CrystalTop Pour Options with images
         const header = document.createElement('h2');
         header.textContent = 'Choose Your Crystal Top Finish';
@@ -1212,6 +1216,7 @@ function promptBaseAndAddonColors(container, shapeData) {
         patternContainer.style.gap = '20px';  // Space between images
         container.appendChild(patternContainer);
 
+        // Update the crystal patterns with Pour Swirl and Directional Pour
         const crystalPatterns = [
             {
                 name: 'Pour Swirl',
@@ -1219,7 +1224,7 @@ function promptBaseAndAddonColors(container, shapeData) {
             },
             {
                 name: 'Directional Pour',
-                imageUrl: 'https://i.ibb.co/K21MDPq/Pour-Directional-2.jpg',
+                imageUrl: 'https://i.ibb.co/K21MDPq/Pour-Directional-2.jpg',  // Updated with the new image
             }
         ];
 
@@ -1267,8 +1272,130 @@ function promptBaseAndAddonColors(container, shapeData) {
             patternContainer.appendChild(patternDiv);
         });
 
-        // Call the promptBaseAndAddonColors to select base and additional colors
-        const { selectedBaseColor, selectedAddonColors } = promptBaseAndAddonColors(container, shapeData);
+        // Base Color and Mix-in Color selection (same as before)
+        const baseColorLabel = document.createElement('label');
+        baseColorLabel.textContent = 'Choose a Base Color for Crystal Top:';
+        baseColorLabel.style.color = '#0C1729';
+        baseColorLabel.style.fontSize = '18px';
+        baseColorLabel.style.marginBottom = '10px';
+        container.appendChild(baseColorLabel);
+
+        const baseColorContainer = document.createElement('div');
+        baseColorContainer.style.display = 'flex';
+        baseColorContainer.style.justifyContent = 'center';
+        baseColorContainer.style.gap = '10px';
+        container.appendChild(baseColorContainer);
+
+        const baseColors = {
+            'White': '#FFFFFF',
+            'Black': '#000000',
+            'Tornado Gray': '#4F4F4F',
+            'Charcoal Gray': '#2E2E2E',
+            'Toasted Almond': '#D2B48C',
+            'Milk Chocolate': '#8B4513',
+            'Dark Chocolate': '#5D3A1A'
+        };
+
+        let selectedBaseColor = null;
+
+        Object.entries(baseColors).forEach(([colorName, hexCode]) => {
+            const colorDiv = document.createElement('div');
+            colorDiv.style.width = '100px';
+            colorDiv.style.height = '100px';
+            colorDiv.style.backgroundColor = hexCode;
+            colorDiv.style.border = '2px solid #ddd';
+            colorDiv.style.borderRadius = '10px';
+            colorDiv.style.cursor = 'pointer';
+            colorDiv.style.display = 'flex';
+            colorDiv.style.alignItems = 'center';
+            colorDiv.style.justifyContent = 'center';
+
+            const label = document.createElement('span');
+            label.textContent = colorName;
+            label.style.color = '#0C1729';
+            label.style.fontSize = '14px';
+            label.style.fontWeight = 'bold';
+            label.style.backgroundColor = 'rgba(240, 240, 240, 0.8)';  // Gray background
+            label.style.padding = '5px';
+            label.style.borderRadius = '5px';
+            colorDiv.appendChild(label);
+
+            colorDiv.addEventListener('click', function () {
+                if (selectedBaseColor) {
+                    selectedBaseColor.style.border = '2px solid #ddd';
+                }
+                selectedBaseColor = colorDiv;
+                colorDiv.style.border = '4px solid #0264D9';
+            });
+
+            baseColorContainer.appendChild(colorDiv);
+        });
+
+        // Crystal Top Mix-in Color Selection
+        const crystalColorLabel = document.createElement('label');
+        crystalColorLabel.textContent = 'Choose up to 4 Mix-in Colors for Crystal Top:';
+        crystalColorLabel.style.color = '#0C1729';
+        crystalColorLabel.style.fontSize = '18px';
+        crystalColorLabel.style.marginBottom = '10px';
+        container.appendChild(crystalColorLabel);
+
+        const crystalColorContainer = document.createElement('div');
+        crystalColorContainer.style.display = 'flex';
+        crystalColorContainer.style.justifyContent = 'center';
+        crystalColorContainer.style.gap = '10px';
+        container.appendChild(crystalColorContainer);
+
+        const crystalColors = {
+            'Icy White': '#F8F8FF',
+            'Silver': '#C0C0C0',
+            'Champagne Gold': '#F7E7CE',
+            'Bronze': '#CD7F32',
+            'Cobalt Blue': '#0047AB',
+            'Pewter Blue': '#8BA8B7',
+            'Copper': '#B87333'
+        };
+
+        const selectedCrystalColors = [];
+
+        Object.entries(crystalColors).forEach(([colorName, hexCode]) => {
+            const colorDiv = document.createElement('div');
+            colorDiv.style.width = '100px';
+            colorDiv.style.height = '100px';
+            colorDiv.style.backgroundColor = hexCode;
+            colorDiv.style.border = '2px solid #ddd';
+            colorDiv.style.borderRadius = '10px';
+            colorDiv.style.cursor = 'pointer';
+            colorDiv.style.display = 'flex';
+            colorDiv.style.alignItems = 'center';
+            colorDiv.style.justifyContent = 'center';
+
+            const label = document.createElement('span');
+            label.textContent = colorName;
+            label.style.color = '#0C1729';
+            label.style.fontSize = '14px';
+            label.style.fontWeight = 'bold';
+            label.style.backgroundColor = 'rgba(240, 240, 240, 0.8)';  // Gray background
+            label.style.padding = '5px';
+            label.style.borderRadius = '5px';
+            colorDiv.appendChild(label);
+
+            let selected = false;
+
+            colorDiv.addEventListener('click', function () {
+                if (selected) {
+                    selected = false;
+                    colorDiv.style.border = '2px solid #ddd';
+                    const index = selectedCrystalColors.indexOf(colorName);
+                    if (index > -1) selectedCrystalColors.splice(index, 1);
+                } else if (selectedCrystalColors.length < 4) {
+                    selected = true;
+                    colorDiv.style.border = '4px solid #0264D9';
+                    selectedCrystalColors.push(colorName);
+                }
+            });
+
+            crystalColorContainer.appendChild(colorDiv);
+        });
 
         const nextBtn = document.createElement('button');
         nextBtn.textContent = 'Add Item';
@@ -1276,116 +1403,13 @@ function promptBaseAndAddonColors(container, shapeData) {
         container.appendChild(nextBtn);
 
         nextBtn.addEventListener('click', function () {
-            if (!selectedCrystalPattern || !selectedBaseColor || selectedAddonColors.length === 0) {
+            if (!selectedCrystalPattern || !selectedBaseColor || selectedCrystalColors.length === 0) {
                 alert('Please select a finish pattern, base color, and mix-in colors.');
                 return;
             }
             shapeData.pattern = selectedCrystalPattern;
-            shapeData.baseColor = selectedBaseColor.colorName;
-            shapeData.mixInColors = selectedAddonColors.map(colorDiv => colorDiv.colorName);
-            calculateAndAddItem(shape, shapeData, type, container);
-        });
-    } else if (shapeData.finishType === 'standard') {
-        // Standard Finish Options
-        const header = document.createElement('h2');
-        header.textContent = 'Standard Finish Options';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '20px';
-        header.style.fontSize = '24px';
-        container.appendChild(header);
-
-        const description = document.createElement('p');
-        description.textContent = 'With our Standard process, you can pick the colors and choose the pattern. Once all colors are complete, we will “tweak” the pattern to your liking.';
-        description.style.color = '#0C1729';
-        description.style.fontSize = '16px';
-        description.style.marginBottom = '20px';
-        container.appendChild(description);
-
-        // Pattern Selection
-        const patternLabel = document.createElement('label');
-        patternLabel.textContent = 'Select Pattern:';
-        patternLabel.style.color = '#0C1729';
-        patternLabel.style.fontSize = '18px';
-        patternLabel.style.marginBottom = '10px';
-        container.appendChild(patternLabel);
-
-        const patternContainer = document.createElement('div');
-        patternContainer.style.display = 'flex';
-        patternContainer.style.justifyContent = 'center';
-        patternContainer.style.gap = '20px';
-        container.appendChild(patternContainer);
-
-        const patterns = [
-            {
-                name: 'Quartz',
-                imageUrl: 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg'
-            },
-            {
-                name: 'Flowing Granite',
-                imageUrl: 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg'
-            }
-        ];
-
-        let selectedPattern = null;
-
-        patterns.forEach(pattern => {
-            const patternDiv = document.createElement('div');
-            patternDiv.style.border = '2px solid #ddd';
-            patternDiv.style.borderRadius = '10px';
-            patternDiv.style.overflow = 'hidden';
-            patternDiv.style.cursor = 'pointer';
-            patternDiv.style.width = '250px';  // Image width
-            patternDiv.style.height = '250px';  // Image height
-            patternDiv.style.position = 'relative';
-
-            const img = document.createElement('img');
-            img.src = pattern.imageUrl;
-            img.alt = pattern.name;
-            img.style.width = '100%';
-            img.style.height = '100%';
-            img.style.objectFit = 'cover';
-            patternDiv.appendChild(img);
-
-            const overlay = document.createElement('div');
-            overlay.textContent = pattern.name;
-            overlay.style.position = 'absolute';
-            overlay.style.bottom = '0';
-            overlay.style.width = '100%';
-            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
-            overlay.style.color = 'white';
-            overlay.style.padding = '10px';
-            overlay.style.textAlign = 'center';
-            overlay.style.fontSize = '16px';
-            patternDiv.appendChild(overlay);
-
-            patternDiv.addEventListener('click', function () {
-                selectedPattern = pattern.name;
-                // Visual feedback for selection
-                Array.from(patternContainer.children).forEach(child => {
-                    child.style.border = '2px solid #ddd';
-                });
-                patternDiv.style.border = '4px solid #0264D9';
-            });
-
-            patternContainer.appendChild(patternDiv);
-        });
-
-        // Call the promptBaseAndAddonColors to select base and additional colors
-        const { selectedBaseColor, selectedAddonColors } = promptBaseAndAddonColors(container, shapeData);
-
-        const nextBtn = document.createElement('button');
-        nextBtn.textContent = 'Add Item';
-        styleButton(nextBtn);
-        container.appendChild(nextBtn);
-
-        nextBtn.addEventListener('click', function () {
-            if (!selectedPattern || !selectedBaseColor || selectedAddonColors.length === 0) {
-                alert('Please select a pattern, base color, and add-on colors.');
-                return;
-            }
-            shapeData.pattern = selectedPattern;
-            shapeData.baseColor = selectedBaseColor.colorName;
-            shapeData.addonColors = selectedAddonColors.map(colorDiv => colorDiv.colorName);
+            shapeData.baseColor = selectedBaseColor.querySelector('span').textContent;
+            shapeData.mixInColors = selectedCrystalColors;
             calculateAndAddItem(shape, shapeData, type, container);
         });
     
@@ -1615,7 +1639,7 @@ function promptBaseAndAddonColors(container, shapeData) {
             calculateAndAddItem(shape, shapeData, type, container);
         });
     }
-
+}
 
 
 
@@ -1689,7 +1713,7 @@ function calculateAndAddItem(shape, shapeData, type, container) {
     createInvoicePage(container);
 }
 
-// Function to update the item list with a better layout and color squares
+// Function to update the item list with the correct image
 function updateItemList(container) {
     let itemListDiv = document.getElementById('itemList');
 
@@ -1708,51 +1732,25 @@ function updateItemList(container) {
     } else {
         items.forEach((item, index) => {
             const itemDiv = document.createElement('div');
-            itemDiv.style.display = 'grid';
-            itemDiv.style.gridTemplateColumns = '1fr auto'; // Description on left, price on right
+            itemDiv.style.display = 'flex';
             itemDiv.style.alignItems = 'center'; // Align image and text
             itemDiv.style.padding = '10px';
             itemDiv.style.marginBottom = '15px';
             itemDiv.style.borderBottom = '1px solid #ddd';
             itemDiv.style.color = '#0C1729';
 
-            // Left column: Image and description
-            const descriptionDiv = document.createElement('div');
-            descriptionDiv.style.display = 'flex';
-            descriptionDiv.style.alignItems = 'center';
-
-            // Item image
+            // Ensure the item image is displayed properly
             const itemImage = document.createElement('img');
             itemImage.src = item.imageUrl; // Display the correct image
             itemImage.style.width = '60px'; // Thumbnail size
             itemImage.style.height = '60px';
             itemImage.style.borderRadius = '8px';
             itemImage.style.marginRight = '15px'; // Space between image and text
-            descriptionDiv.appendChild(itemImage);
+            itemDiv.appendChild(itemImage);
 
-            // Description text
-            const descriptionText = document.createElement('div');
-            descriptionText.innerHTML = `
-                <strong>${item.description}</strong><br>
-                <div style="display: flex; align-items: center;">
-                    <div style="margin-right: 10px;">Base Color:</div>
-                    ${item.baseColor ? createColorSquare(item.baseColor).element.outerHTML : ''}
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <div style="margin-right: 10px;">Mix-in Colors:</div>
-                    ${item.mixInColors ? item.mixInColors.map(color => createColorSquare(color).element.outerHTML).join('') : ''}
-                </div>
-            `;
-            descriptionDiv.appendChild(descriptionText);
-
-            itemDiv.appendChild(descriptionDiv);
-
-            // Right column: Price
-            const priceDiv = document.createElement('div');
-            priceDiv.style.fontWeight = 'bold';
-            priceDiv.style.color = '#0264D9';
-            priceDiv.textContent = `$${item.cost}`;
-            itemDiv.appendChild(priceDiv);
+            const itemText = document.createElement('span');
+            itemText.textContent = `${index + 1}. ${item.description} - $${item.cost}`;
+            itemDiv.appendChild(itemText);
 
             // 'X' button to remove item
             const removeBtn = document.createElement('button');
@@ -1766,7 +1764,7 @@ function updateItemList(container) {
             removeBtn.addEventListener('click', function () {
                 removeItem(index);
             });
-            descriptionDiv.appendChild(removeBtn);
+            itemDiv.appendChild(removeBtn);
 
             itemListDiv.appendChild(itemDiv);
         });
@@ -1781,37 +1779,71 @@ function updateItemList(container) {
     }
 }
 
-// Helper function to create color squares with a background and border
-function createColorSquare(colorName) {
-    const colorHexCodes = {
-        'White': '#FFFFFF',
-        'Black': '#000000',
-        'Tornado Gray': '#4F4F4F',
-        'Charcoal Gray': '#2E2E2E',
-        'Toasted Almond': '#D2B48C',
-        'Milk Chocolate': '#8B4513',
-        'Dark Chocolate': '#5D3A1A',
-        'Icy White': '#F8F8FF',
-        'Silver': '#C0C0C0',
-        'Champagne Gold': '#F7E7CE',
-        'Bronze': '#CD7F32',
-        'Cobalt Blue': '#0047AB',
-        'Pewter Blue': '#8BA8B7',
-        'Copper': '#B87333'
-    };
 
-    const colorDiv = document.createElement('div');
-    colorDiv.style.width = '20px';
-    colorDiv.style.height = '20px';
-    colorDiv.style.backgroundColor = colorHexCodes[colorName] || '#FFFFFF';
-    colorDiv.style.border = '2px solid #ddd';
-    colorDiv.style.borderRadius = '4px';
-    colorDiv.style.marginRight = '5px';
+// Function to update the item list with the correct image
+function updateItemList(container) {
+    let itemListDiv = document.getElementById('itemList');
 
-    return {
-        element: colorDiv,
-        colorName: colorName
-    };
+    // Recreate itemListDiv if it doesn't exist
+    if (!itemListDiv) {
+        itemListDiv = document.createElement('div');
+        itemListDiv.id = 'itemList';
+        itemListDiv.style.marginTop = '30px';
+        container.appendChild(itemListDiv);
+    }
+
+    itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3>';
+
+    if (items.length === 0) {
+        itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
+    } else {
+        items.forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.style.display = 'flex';
+            itemDiv.style.alignItems = 'center'; // Align image and text
+            itemDiv.style.padding = '10px';
+            itemDiv.style.marginBottom = '15px';
+            itemDiv.style.borderBottom = '1px solid #ddd';
+            itemDiv.style.color = '#0C1729';
+
+            // Ensure the item image is displayed properly
+            const itemImage = document.createElement('img');
+            itemImage.src = item.imageUrl; // Display the correct image
+            itemImage.style.width = '60px'; // Thumbnail size
+            itemImage.style.height = '60px';
+            itemImage.style.borderRadius = '8px';
+            itemImage.style.marginRight = '15px'; // Space between image and text
+            itemDiv.appendChild(itemImage);
+
+            const itemText = document.createElement('span');
+            itemText.textContent = `${index + 1}. ${item.description} - $${item.cost}`;
+            itemDiv.appendChild(itemText);
+
+            // 'X' button to remove item
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'X';
+            removeBtn.style.color = '#ffffff';
+            removeBtn.style.backgroundColor = '#ff0000'; // Red color for the remove button
+            removeBtn.style.border = 'none';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.padding = '5px 10px';
+            removeBtn.style.borderRadius = '5px';
+            removeBtn.addEventListener('click', function () {
+                removeItem(index);
+            });
+            itemDiv.appendChild(removeBtn);
+
+            itemListDiv.appendChild(itemDiv);
+        });
+
+        const totalDiv = document.createElement('div');
+        totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
+        totalDiv.style.marginTop = '20px';
+        totalDiv.style.fontWeight = 'bold';
+        totalDiv.style.fontSize = '22px';
+        totalDiv.style.color = '#0264D9';
+        itemListDiv.appendChild(totalDiv);
+    }
 }
 
         
