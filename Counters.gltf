@@ -1040,23 +1040,19 @@
             "source" : 2
         }
     ],
-    "images" : [
-        {
-            "mimeType" : "image/png",
-            "name" : "wood_table_001_nor_gl_4k",
-            "uri" : "wood_table_001_nor_gl_4k.png"
-        },
-        {
-            "mimeType" : "image/png",
-            "name" : "wood_table_001_diff_4k",
-            "uri" : "wood_table_001_diff_4k.png"
-        },
-        {
-            "mimeType" : "image/png",
-            "name" : "wood_table_001_rough_4k",
-            "uri" : "wood_table_001_rough_4k.png"
-        }
-    ],
+   "images": [
+    {
+        "mimeType": "image/png",
+        "name": "Wood_img",
+        "uri": "https://raw.githubusercontent.com/YourUsername/YourRepo/main/Wood_img.png"
+    },
+    {
+        "mimeType": "image/png",
+        "name": "Counter_Top_VAR2_img",
+        "uri": "https://raw.githubusercontent.com/YourUsername/YourRepo/main/Counter_Top_VAR2_img.png"
+    }
+]
+,
     "accessors" : [
         {
             "bufferView" : 0,
