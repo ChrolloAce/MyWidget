@@ -433,7 +433,7 @@ continueBtn.addEventListener('click', function () {
     
       // Function to update the item list without showing square footage to the client
     // Function to update the item list with the option to remove items
-   function updateItemList(container) {
+  function updateItemList(container) {
     let itemListDiv = document.getElementById('itemList');
 
     // Recreate itemListDiv if it doesn't exist
@@ -460,7 +460,7 @@ continueBtn.addEventListener('click', function () {
 
             // Item image
             const itemImage = document.createElement('img');
-            itemImage.src = item.imageUrl; // Assuming the shape object has an imageUrl
+            itemImage.src = item.imageUrl; // Show the selected shape image
             itemImage.style.width = '60px'; // Smaller thumbnail
             itemImage.style.height = '60px';
             itemImage.style.borderRadius = '8px';
