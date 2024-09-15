@@ -1253,17 +1253,65 @@ function promptFinishOptions(shape, type, container, shapeData) {
             patternContainer.appendChild(patternDiv);
         });
 
+        // Crystal Top Colors
+        const crystalColorLabel = document.createElement('label');
+        crystalColorLabel.textContent = 'Choose Crystal Top Colors:';
+        crystalColorLabel.style.color = '#0C1729';
+        crystalColorLabel.style.fontSize = '18px';
+        crystalColorLabel.style.marginBottom = '10px';
+        container.appendChild(crystalColorLabel);
+
+        const crystalColorContainer = document.createElement('div');
+        crystalColorContainer.style.display = 'flex';
+        crystalColorContainer.style.justifyContent = 'center';
+        crystalColorContainer.style.gap = '10px';
+        container.appendChild(crystalColorContainer);
+
+        const crystalColors = ['Ice Blue', 'Glacier White', 'Emerald Green', 'Obsidian Black'];
+        let selectedCrystalColor = null;
+
+        crystalColors.forEach(color => {
+            const colorDiv = document.createElement('div');
+            colorDiv.style.width = '100px';
+            colorDiv.style.height = '100px';
+            colorDiv.style.backgroundColor = color.toLowerCase().replace(' ', '-');
+            colorDiv.style.border = '2px solid #ddd';
+            colorDiv.style.borderRadius = '10px';
+            colorDiv.style.cursor = 'pointer';
+            colorDiv.style.display = 'flex';
+            colorDiv.style.alignItems = 'center';
+            colorDiv.style.justifyContent = 'center';
+
+            const label = document.createElement('span');
+            label.textContent = color;
+            label.style.color = '#0C1729';
+            label.style.fontSize = '14px';
+            label.style.fontWeight = 'bold';
+            colorDiv.appendChild(label);
+
+            colorDiv.addEventListener('click', function () {
+                if (selectedCrystalColor) {
+                    selectedCrystalColor.style.border = '2px solid #ddd';
+                }
+                selectedCrystalColor = colorDiv;
+                colorDiv.style.border = '4px solid #0264D9';
+            });
+
+            crystalColorContainer.appendChild(colorDiv);
+        });
+
         const nextBtn = document.createElement('button');
         nextBtn.textContent = 'Add Item';
         styleButton(nextBtn);
         container.appendChild(nextBtn);
 
         nextBtn.addEventListener('click', function () {
-            if (!selectedCrystalPattern) {
-                alert('Please select a finish pattern.');
+            if (!selectedCrystalPattern || !selectedCrystalColor) {
+                alert('Please select both a finish pattern and a color.');
                 return;
             }
             shapeData.pattern = selectedCrystalPattern;
+            shapeData.color = selectedCrystalColor.querySelector('span').textContent;
             calculateAndAddItem(shape, shapeData, type, container);
         });
 
@@ -1298,7 +1346,6 @@ function promptFinishOptions(shape, type, container, shapeData) {
         patternContainer.style.gap = '20px';
         container.appendChild(patternContainer);
 
-        // Add the images for each option (Quartz, Granite, Marble)
         const patterns = [
             {
                 name: 'Quartz',
@@ -1348,7 +1395,6 @@ function promptFinishOptions(shape, type, container, shapeData) {
 
             patternDiv.addEventListener('click', function () {
                 selectedPattern = pattern.name;
-                // Visual feedback for selection
                 Array.from(patternContainer.children).forEach(child => {
                     child.style.border = '2px solid #ddd';
                 });
