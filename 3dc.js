@@ -1,122 +1,112 @@
-(function () {
-    // Load the Three.js library and OrbitControls
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    script.onload = () => {
-        const orbitScript = document.createElement('script');
-        orbitScript.src = 'https://threejs.org/examples/js/controls/OrbitControls.js';
-        orbitScript.onload = init;
-        document.head.appendChild(orbitScript);
-    };
-    document.head.appendChild(script);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model with Texture Change</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        #color-picker {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .color-btn {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
 
-    // Create the interface with color buttons and 3D model container
-    function createInterface() {
-        // Create container for 3D scene
-        const container = document.createElement('div');
-        container.id = 'container';
-        Object.assign(container.style, {
-            width: '100%',
-            height: '100vh',
-            margin: '0',
-            overflow: 'hidden',
-        });
-        document.body.appendChild(container);
+<div id="color-picker">
+    <div class="color-btn" style="background-color: red;" data-color="red"></div>
+    <div class="color-btn" style="background-color: green;" data-color="green"></div>
+    <div class="color-btn" style="background-color: blue;" data-color="blue"></div>
+</div>
 
-        // Create color change buttons (color squares)
-        const colorButtons = document.createElement('div');
-        colorButtons.id = 'colorButtons';
-        Object.assign(colorButtons.style, {
-            position: 'absolute',
-            top: '10px',
-            left: '10px',
-            zIndex: 100,
-            display: 'flex',
-            gap: '10px',
-        });
-        document.body.appendChild(colorButtons);
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
 
-        const colors = ['White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate'];
-        const colorHex = {
-            White: '#FFFFFF',
-            Black: '#000000',
-            'Tornado Gray': '#4F4F4F',
-            'Charcoal Gray': '#2E2E2E',
-            'Toasted Almond': '#D2B48C',
-            'Milk Chocolate': '#8B4513',
-            'Dark Chocolate': '#5D3A1A',
-        };
+<script>
+    let scene, camera, renderer, model;
 
-        colors.forEach((color) => {
-            const colorDiv = document.createElement('div');
-            colorDiv.style.width = '40px';
-            colorDiv.style.height = '40px';
-            colorDiv.style.backgroundColor = colorHex[color];
-            colorDiv.style.borderRadius = '5px';
-            colorDiv.style.cursor = 'pointer';
-            colorDiv.addEventListener('click', function () {
-                applyColorToCountertop(colorHex[color]);
-            });
-            colorButtons.appendChild(colorDiv);
-        });
-
-        return container;
-    }
-
-    // Initialize the 3D scene and add the countertop model
+    // Initialize the scene
     function init() {
-        const container = createInterface();
+        // Create a scene
+        scene = new THREE.Scene();
 
-        // Create the 3D scene
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 2, 5); // Adjusted the camera position for better view
+        // Create a camera
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        // Create a renderer
+        renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        container.appendChild(renderer.domElement);
+        document.body.appendChild(renderer.domElement);
 
-        // Add lights
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
+        // Add lighting to the scene
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(1, 1, 1).normalize();
+        scene.add(light);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(1, 1, 1);
-        scene.add(directionalLight);
-
-        // Create a simple 3D box representing a countertop
-        const geometry = new THREE.BoxGeometry(3, 0.2, 1.5);
-        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-        const countertopModel = new THREE.Mesh(geometry, material);
-        scene.add(countertopModel);
-
-        // Add orbit controls to rotate and zoom the model
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Smooth rotation and zoom
-        controls.dampingFactor = 0.05;
-        controls.minDistance = 1; // Minimum zoom distance
-        controls.maxDistance = 10; // Maximum zoom distance
-        controls.update();
-
-        // Function to apply selected color to the countertop
-        function applyColorToCountertop(color) {
-            countertopModel.material.color.set(color);
-        }
-
-        // Render loop
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        }
-
-        animate();
-
-        // Adjust renderer on window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        // Load the GLTF model
+        const loader = new THREE.GLTFLoader();
+        loader.load('https://raw.githubusercontent.com/ChrolloAce/MyWidget/main/Counters.gltf', function (gltf) {
+            model = gltf.scene;
+            model.scale.set(1, 1, 1); // Adjust scale if necessary
+            scene.add(model);
+            animate();
         });
+
+        // Event listener for window resize
+        window.addEventListener('resize', onWindowResize, false);
     }
-})();
+
+    // Handle window resize
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
+        if (model) {
+            model.rotation.y += 0.01; // Rotate the model for a dynamic effect
+        }
+        renderer.render(scene, camera);
+    }
+
+    // Change the texture (color in this case) of the model
+    function changeModelColor(color) {
+        if (model) {
+            model.traverse(function (child) {
+                if (child.isMesh) {
+                    child.material.color.set(color);  // Change color dynamically
+                }
+            });
+        }
+    }
+
+    // Add event listeners to color buttons
+    document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const color = this.getAttribute('data-color');
+            changeModelColor(color);
+        });
+    });
+
+    // Initialize the scene
+    init();
+</script>
+
+</body>
+</html>
