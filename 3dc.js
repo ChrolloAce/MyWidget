@@ -1,9 +1,7 @@
 (function () {
-    // Initial variables and configuration
     let points = [];
     let isPolygonClosed = false;
 
-    // Function to initialize the interface
     function initInterface() {
         document.body.innerHTML = '';
         const container = document.createElement('div');
@@ -62,7 +60,7 @@
 
         applyTextureBtn.addEventListener('click', function () {
             if (isPolygonClosed) {
-                applyTexture('https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg', canvas);
+                applyTexture('https://i.ibb.co/fH3RTKc/203a6c9c-c268-4a6c-9a9b-e5a754bd4ec3.webp', canvas);  // Use the repeating texture
             } else {
                 alert("Please finish selecting the countertop area before applying a texture.");
             }
@@ -116,7 +114,7 @@
         }
     }
 
-    // Function to apply textures only inside the selected area (polygon)
+    // Function to apply textures only inside the selected area (polygon) and repeat it
     function applyTexture(textureUrl, canvas) {
         const ctx = canvas.getContext('2d');
         const texture = new Image();
@@ -133,11 +131,12 @@
             ctx.closePath();
             ctx.clip();
 
-            // Draw the texture only inside the clipping region
-            ctx.globalAlpha = 0.6;  // Adjust transparency for blending
-            ctx.drawImage(texture, 0, 0, canvas.width, canvas.height);
-            ctx.globalAlpha = 1.0;  // Reset transparency
-            ctx.restore();
+            // Create a pattern and fill only the selected area
+            const pattern = ctx.createPattern(texture, 'repeat');  // Use 'repeat' to tile the texture
+            ctx.fillStyle = pattern;
+            ctx.fill();
+
+            ctx.restore();  // Restore context to prevent further clipping
         };
     }
 
@@ -193,75 +192,5 @@
         });
     }
 
-    // CSS Injection
-    const style = `
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f8f9fa;
-      color: #333;
-      padding: 20px;
-      overflow-x: hidden;
-    }
-
-    h1, h2 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #0C1729;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    #container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #ffffff;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-      border-radius: 15px;
-      transition: all 0.3s ease;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-      font-size: 16px;
-      transition: all 0.3s ease;
-    }
-
-    button {
-      padding: 14px 20px;
-      background-color: #0264D9;
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #004C99;
-    }
-
-    canvas {
-      margin-top: 20px;
-      max-width: 100%;
-      border: 1px solid #ddd;
-    }
-    `;
-
-    const styleElement = document.createElement('style');
-    styleElement.type = 'text/css';
-    if (styleElement.styleSheet) {
-        styleElement.styleSheet.cssText = style;
-    } else {
-        styleElement.appendChild(document.createTextNode(style));
-    }
-    document.head.appendChild(styleElement);
-
-    // Initialize the interface when the page loads
-    initInterface();
+    initInterface();  // Initialize the interface when the page loads
 })();
