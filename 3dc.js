@@ -1,20 +1,6 @@
 // Include THREE.js and OrbitControls at the top of your file
 // Add this script tag in your HTML file or the JS file if needed
 
-const script = document.createElement('script');
-script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-script.onload = () => init(); // Call the init function after loading three.js
-document.head.appendChild(script);
-
-const gltfLoaderScript = document.createElement('script');
-gltfLoaderScript.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
-document.head.appendChild(gltfLoaderScript);
-
-const orbitControlsScript = document.createElement('script');
-orbitControlsScript.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
-document.head.appendChild(orbitControlsScript);
-
-// Now the main code with THREE.js functionality
 (function () {
     let scene, camera, renderer, model;
 
@@ -97,5 +83,22 @@ document.head.appendChild(orbitControlsScript);
         renderer.render(scene, camera);
     }
 
-    // Ensure the init is called after THREE.js and other dependencies are loaded
+    // Load THREE.js and other dependencies before calling init
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    script.onload = () => {
+        const gltfLoaderScript = document.createElement('script');
+        gltfLoaderScript.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
+        document.head.appendChild(gltfLoaderScript);
+
+        const orbitControlsScript = document.createElement('script');
+        orbitControlsScript.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
+        document.head.appendChild(orbitControlsScript);
+
+        // Ensure all scripts are loaded before calling init
+        gltfLoaderScript.onload = () => {
+            orbitControlsScript.onload = init; // Call init once both GLTFLoader and OrbitControls are loaded
+        };
+    };
+    document.head.appendChild(script);
 })();
