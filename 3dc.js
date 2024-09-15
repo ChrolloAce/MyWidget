@@ -38,7 +38,7 @@
                 model.position.set(0, -1, 0);
 
                 // Apply initial texture (Counter Top Texture)
-                applyTextureToModel('https://raw.githubusercontent.com/YourUsername/YourRepo/main/Counter_Top_VAR2_img.png'); // Replace with your correct URL
+                applyTextureToModel('https://raw.githubusercontent.com/ChrolloAce/MyWidget/main/Counter_Top_VAR2_img.png'); // Replace with your correct URL
 
                 animate(); // Start the animation loop
             },
@@ -83,7 +83,7 @@
         woodTextureButton.textContent = 'Wood Texture';
         woodTextureButton.style.margin = '10px';
         woodTextureButton.addEventListener('click', () => {
-            applyTextureToModel('https://raw.githubusercontent.com/YourUsername/YourRepo/main/Wood_img.png'); // Replace with your correct URL
+            applyTextureToModel('https://raw.githubusercontent.com/ChrolloAce/MyWidget/main/Wood_img.png'); // Replace with your correct URL
         });
         buttonContainer.appendChild(woodTextureButton);
     }
