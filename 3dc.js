@@ -1,4 +1,16 @@
 (function () {
+    function loadScript(url, callback) {
+        const script = document.createElement('script');
+        script.src = url;
+        script.onload = callback;
+        document.head.appendChild(script);
+    }
+
+    // Load Three.js first, then GLTFLoader
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', function () {
+        loadScript('https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js', init);
+    });
+
     let scene, camera, renderer, model;
 
     function init() {
@@ -84,7 +96,4 @@
 
         document.body.appendChild(colorPicker);
     }
-
-    // Initialize everything when the page loads
-    init();
 })();
