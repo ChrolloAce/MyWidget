@@ -1,8 +1,13 @@
 (function () {
-    // Dynamically load the Three.js library
+    // Dynamically load the Three.js library and OrbitControls
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    script.onload = init;
+    script.onload = () => {
+        const orbitScript = document.createElement('script');
+        orbitScript.src = 'https://threejs.org/examples/js/controls/OrbitControls.js';
+        orbitScript.onload = init;
+        document.head.appendChild(orbitScript);
+    };
     document.head.appendChild(script);
 
     // Dynamically create the HTML structure
