@@ -18,47 +18,49 @@
         });
         document.body.appendChild(container);
 
-        // Create texture buttons
-        const textureButtons = document.createElement('div');
-        textureButtons.id = 'textureButtons';
-        Object.assign(textureButtons.style, {
+        // Create color change buttons (color squares)
+        const colorButtons = document.createElement('div');
+        colorButtons.id = 'colorButtons';
+        Object.assign(colorButtons.style, {
             position: 'absolute',
             top: '10px',
             left: '10px',
             zIndex: 100,
+            display: 'flex',
+            gap: '10px'
         });
-        document.body.appendChild(textureButtons);
+        document.body.appendChild(colorButtons);
 
-        const texture1 = document.createElement('button');
-        texture1.textContent = 'Apply Texture 1';
-        styleButton(texture1);
-        textureButtons.appendChild(texture1);
+        const colors = ['White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate'];
+        const colorHex = {
+            'White': '#FFFFFF',
+            'Black': '#000000',
+            'Tornado Gray': '#4F4F4F',
+            'Charcoal Gray': '#2E2E2E',
+            'Toasted Almond': '#D2B48C',
+            'Milk Chocolate': '#8B4513',
+            'Dark Chocolate': '#5D3A1A'
+        };
 
-        const texture2 = document.createElement('button');
-        texture2.textContent = 'Apply Texture 2';
-        styleButton(texture2);
-        textureButtons.appendChild(texture2);
-
-        return { texture1, texture2, container };
-    }
-
-    // Style buttons
-    function styleButton(button) {
-        Object.assign(button.style, {
-            padding: '10px',
-            margin: '5px',
-            backgroundColor: '#0264D9',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '16px',
-            fontWeight: 'bold',
+        colors.forEach(color => {
+            const colorDiv = document.createElement('div');
+            colorDiv.style.width = '40px';
+            colorDiv.style.height = '40px';
+            colorDiv.style.backgroundColor = colorHex[color];
+            colorDiv.style.borderRadius = '5px';
+            colorDiv.style.cursor = 'pointer';
+            colorDiv.addEventListener('click', function () {
+                applyColorToCountertop(colorHex[color]);
+            });
+            colorButtons.appendChild(colorDiv);
         });
+
+        return container;
     }
 
     // Initialize the 3D scene and add the countertop model
     function init() {
-        const { texture1, texture2, container } = createInterface();
+        const container = createInterface();
 
         // Create the 3D scene
         const scene = new THREE.Scene();
@@ -69,38 +71,33 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         container.appendChild(renderer.domElement);
 
-        const light = new THREE.AmbientLight(0xffffff, 0.7);
-        scene.add(light);
+        // Add lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        directionalLight.position.set(1, 1, 1).normalize();
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(1, 1, 1);
         scene.add(directionalLight);
 
         // Create a simple 3D box representing a countertop
-        const geometry = new THREE.BoxGeometry(2, 0.1, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const geometry = new THREE.BoxGeometry(3, 0.2, 1.5);
+        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
         const countertopModel = new THREE.Mesh(geometry, material);
         scene.add(countertopModel);
 
-        const textureLoader = new THREE.TextureLoader();
+        // Add orbit controls so you can rotate the model
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Smooth rotation
 
-        // Apply texture 1 when button is clicked
-        texture1.addEventListener('click', () => {
-            const texture = textureLoader.load('https://i.ibb.co/fH3RTKc/203a6c9c-c268-4a6c-9a9b-e5a754bd4ec3.webp'); // Texture 1
-            countertopModel.material.map = texture;
-            countertopModel.material.needsUpdate = true;
-        });
-
-        // Apply texture 2 when button is clicked
-        texture2.addEventListener('click', () => {
-            const texture = textureLoader.load('https://i.ibb.co/xm8PmSF/2.png'); // Texture 2
-            countertopModel.material.map = texture;
-            countertopModel.material.needsUpdate = true;
-        });
+        // Apply color to the countertop
+        function applyColorToCountertop(color) {
+            countertopModel.material.color.set(color);
+        }
 
         // Render loop
         function animate() {
             requestAnimationFrame(animate);
+            controls.update();
             renderer.render(scene, camera);
         }
 
