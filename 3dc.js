@@ -1,12 +1,5 @@
 (function () {
     // Initial variables and configuration
-    const PRICE_REGULAR = 26;
-    const PRICE_CRYSTAL = 39;
-    const MINIMUM_PRICE = 400;
-
-    let items = [];
-    let totalCost = 0;
-    let userInfo = {};
     let points = [];
     let isPolygonClosed = false;
 
@@ -94,11 +87,11 @@
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
             points.push({ x, y });
-            drawPolygon(canvas, points);
+            redrawCanvas(canvas, points, image); // Redraw with updated points
 
             if (points.length > 2 && isCloseEnough(points[0], points[points.length - 1])) {
                 isPolygonClosed = true;
-                closePolygon(canvas, points); // Close and fill the polygon
+                redrawCanvas(canvas, points, image, true); // Redraw and close the polygon
             }
         });
     }
@@ -148,10 +141,12 @@
         };
     }
 
-    // Function to draw the polygon (not closed yet)
-    function drawPolygon(canvas, points) {
+    // Function to redraw the canvas with the countertop image and polygon points
+    function redrawCanvas(canvas, points, imgElement, closePolygon = false) {
         const ctx = canvas.getContext('2d');
-        handleImageUpload(document.querySelector('#uploadImage'), document.querySelector('#countertopImage'), canvas); // Redraw the image
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(imgElement, 0, 0); // Always draw the image first
+
         ctx.strokeStyle = '#FF0000';
         ctx.lineWidth = 2;
 
@@ -160,20 +155,12 @@
         for (let i = 1; i < points.length; i++) {
             ctx.lineTo(points[i].x, points[i].y);
         }
-        ctx.stroke();
-    }
 
-    // Function to close and fill the polygon
-    function closePolygon(canvas, points) {
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        for (let i = 1; i < points.length; i++) {
-            ctx.lineTo(points[i].x, points[i].y);
+        if (closePolygon) {
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+            ctx.fill(); // Fill the closed polygon with a transparent green
         }
-        ctx.closePath();
-        ctx.fill();
         ctx.stroke();
     }
 
