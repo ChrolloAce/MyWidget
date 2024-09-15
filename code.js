@@ -1234,7 +1234,8 @@ function promptBaseAndAddonColors(container, shapeData) {
 function promptFinishOptions(shape, type, container, shapeData) {
     container.innerHTML = ''; // Clear the container
 
-   if (shapeData.finishType === 'crystal') {
+   
+    if (shapeData.finishType === 'crystal') {
         // CrystalTop Pour Options with images
         const header = document.createElement('h2');
         header.textContent = 'Choose Your Crystal Top Finish';
@@ -1249,14 +1250,15 @@ function promptFinishOptions(shape, type, container, shapeData) {
         patternContainer.style.gap = '20px';  // Space between images
         container.appendChild(patternContainer);
 
+        // Update the crystal patterns with Pour Swirl and Directional Pour
         const crystalPatterns = [
             {
                 name: 'Pour Swirl',
                 imageUrl: 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg',
             },
             {
-                name: 'Marble',
-                imageUrl: 'https://i.ibb.co/TcYP1FN/Marble-1-min.jpg',
+                name: 'Directional Pour',
+                imageUrl: 'https://i.ibb.co/K21MDPq/Pour-Directional-2.jpg',  // Updated with the new image
             }
         ];
 
@@ -1304,7 +1306,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
             patternContainer.appendChild(patternDiv);
         });
 
-        // Base Color Selection for CrystalTop Finish
+        // Base Color and Mix-in Color selection (same as before)
         const baseColorLabel = document.createElement('label');
         baseColorLabel.textContent = 'Choose a Base Color for Crystal Top:';
         baseColorLabel.style.color = '#0C1729';
@@ -1444,6 +1446,8 @@ function promptFinishOptions(shape, type, container, shapeData) {
             shapeData.mixInColors = selectedCrystalColors;
             calculateAndAddItem(shape, shapeData, type, container);
         });
+    
+
     
     } else if (shapeData.finishType === 'standard') {
         // Standard Finish Options
