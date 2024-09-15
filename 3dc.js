@@ -1,11 +1,27 @@
+// Include THREE.js and OrbitControls at the top of your file
+// Add this script tag in your HTML file or the JS file if needed
+
+const script = document.createElement('script');
+script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+script.onload = () => init(); // Call the init function after loading three.js
+document.head.appendChild(script);
+
+const gltfLoaderScript = document.createElement('script');
+gltfLoaderScript.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
+document.head.appendChild(gltfLoaderScript);
+
+const orbitControlsScript = document.createElement('script');
+orbitControlsScript.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
+document.head.appendChild(orbitControlsScript);
+
+// Now the main code with THREE.js functionality
 (function () {
     let scene, camera, renderer, model;
 
-    // Initialize Three.js
     function init() {
         // Scene
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xffffff); // White background
+        scene.background = new THREE.Color(0xffffff);
 
         // Camera
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -81,5 +97,5 @@
         renderer.render(scene, camera);
     }
 
-    init(); // Initialize the scene
+    // Ensure the init is called after THREE.js and other dependencies are loaded
 })();
