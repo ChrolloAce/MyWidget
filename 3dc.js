@@ -1,5 +1,5 @@
 (function () {
-    // Dynamically load the Three.js library and OrbitControls
+    // Load the Three.js library and OrbitControls
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
     script.onload = () => {
@@ -10,7 +10,7 @@
     };
     document.head.appendChild(script);
 
-    // Dynamically create the HTML structure
+    // Create the interface with color buttons and 3D model container
     function createInterface() {
         // Create container for 3D scene
         const container = document.createElement('div');
@@ -90,12 +90,15 @@
         const countertopModel = new THREE.Mesh(geometry, material);
         scene.add(countertopModel);
 
-        // Add orbit controls so you can rotate the model
+        // Add orbit controls to rotate and zoom the model
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Smooth rotation
+        controls.enableDamping = true; // Smooth rotation and zoom
+        controls.dampingFactor = 0.05;
+        controls.minDistance = 1; // Minimum zoom distance
+        controls.maxDistance = 10; // Maximum zoom distance
         controls.update();
 
-        // Apply color to the countertop
+        // Function to apply selected color to the countertop
         function applyColorToCountertop(color) {
             countertopModel.material.color.set(color);
         }
