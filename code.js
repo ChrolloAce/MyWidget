@@ -97,9 +97,9 @@ continueBtn.addEventListener('click', function () {
     userInfo.zipCode = zipCodeInput.querySelector('input').value;
 
     // Validate the inputs
-    const emailRegex = /^[^\s@]@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]+$/;
-    const zipCodeRegex = /^[0-9]{5}$/;
+     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[0-9]+$/;
+        const zipCodeRegex = /^[0-9]{5}$/;
 
     if (!userInfo.name || !emailRegex.test(userInfo.email)) {
         alert('Please enter a valid name and email address.');
