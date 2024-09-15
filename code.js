@@ -149,36 +149,38 @@ continueBtn.addEventListener('click', function () {
         return fieldDiv;
     }
     
-    function navigateToSelectionPage(container) {
-        container.innerHTML = '';  // Clear the container
-    
-        const header = document.createElement('h2');
-        header.textContent = 'Choose Type';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '30px';
-        header.style.fontSize = '28px';
-        container.appendChild(header);
-    
-        const typeContainer = document.createElement('div');
-        typeContainer.style.display = 'flex';
-        typeContainer.style.justifyContent = 'center';
-        typeContainer.style.gap = '20px';
-        container.appendChild(typeContainer);
-    
-        // Add kitchen and bathroom buttons with images
-        const kitchenBtn = createImageButton('Kitchen', 'kitchen-img.jpg');
-        const bathroomBtn = createImageButton('Bathroom', 'bathroom-img.jpg');
-        typeContainer.appendChild(kitchenBtn);
-        typeContainer.appendChild(bathroomBtn);
-    
-        kitchenBtn.addEventListener('click', function () {
-            selectKitchenType(container);
-        });
-    
-        bathroomBtn.addEventListener('click', function () {
-            selectBathroomType(container);
-        });
-    }
+   function navigateToSelectionPage(container) {
+    container.innerHTML = '';  // Clear the container
+
+    const header = document.createElement('h2');
+    header.textContent = 'Choose Type';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
+
+    const typeContainer = document.createElement('div');
+    typeContainer.style.display = 'flex';
+    typeContainer.style.justifyContent = 'center';
+    typeContainer.style.gap = '20px';
+    typeContainer.style.flexWrap = 'wrap'; // To ensure responsiveness on smaller screens
+    container.appendChild(typeContainer);
+
+    // Add kitchen and bathroom buttons with new images
+    const kitchenBtn = createImageButton('Kitchen', 'https://i.ibb.co/wWHG4XN/1.png');  // Kitchen image
+    const bathroomBtn = createImageButton('Bathroom', 'https://i.ibb.co/xm8PmSF/2.png');  // Bathroom image
+    typeContainer.appendChild(kitchenBtn);
+    typeContainer.appendChild(bathroomBtn);
+
+    kitchenBtn.addEventListener('click', function () {
+        selectKitchenType(container);
+    });
+
+    bathroomBtn.addEventListener('click', function () {
+        selectBathroomType(container);
+    });
+}
+
     
     // Function to create the invoice page
     function createInvoicePage(container) {
