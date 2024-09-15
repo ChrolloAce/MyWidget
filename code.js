@@ -1138,38 +1138,21 @@ function promptBaseAndAddonColors(container, shapeData) {
     let selectedBaseColor = null;
 
     baseColors.forEach(color => {
-        const colorDiv = document.createElement('div');
-        colorDiv.style.width = '100px';
-        colorDiv.style.height = '100px';
-        colorDiv.style.backgroundColor = color.toLowerCase().replace(' ', '-');
-        colorDiv.style.border = '2px solid #ddd';
-        colorDiv.style.borderRadius = '10px';
-        colorDiv.style.cursor = 'pointer';
-        colorDiv.style.display = 'flex';
-        colorDiv.style.alignItems = 'center';
-        colorDiv.style.justifyContent = 'center';
-
-        const label = document.createElement('span');
-        label.textContent = color;
-        label.style.color = '#0C1729';
-        label.style.fontSize = '14px';
-        label.style.fontWeight = 'bold';
-        colorDiv.appendChild(label);
-
-        colorDiv.addEventListener('click', function () {
+        const colorDiv = createColorSquare(color);  // Use helper function for consistent style
+        colorDiv.element.addEventListener('click', function () {
             if (selectedBaseColor) {
-                selectedBaseColor.style.border = '2px solid #ddd';
+                selectedBaseColor.element.style.border = '2px solid #ddd';
             }
             selectedBaseColor = colorDiv;
-            colorDiv.style.border = '4px solid #0264D9';
+            colorDiv.element.style.border = '4px solid #0264D9';
         });
 
-        baseColorContainer.appendChild(colorDiv);
+        baseColorContainer.appendChild(colorDiv.element);
     });
 
-    // Add-on Color Selection
+    // Add-on Colors (Now includes base colors as well)
     const addonColorLabel = document.createElement('label');
-    addonColorLabel.textContent = 'Choose up to 3 Add-on Colors:';
+    addonColorLabel.textContent = 'Choose up to 3 Additional Colors:';
     addonColorLabel.style.color = '#0C1729';
     addonColorLabel.style.fontSize = '18px';
     addonColorLabel.style.marginBottom = '10px';
@@ -1183,44 +1166,27 @@ function promptBaseAndAddonColors(container, shapeData) {
     addonColorContainer.style.marginBottom = '20px';
     container.appendChild(addonColorContainer);
 
-    const addonColors = ['Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper'];
+    const addonColors = baseColors.concat(['Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper']); // Includes base colors
     const selectedAddonColors = [];
 
     addonColors.forEach(color => {
-        const colorDiv = document.createElement('div');
-        colorDiv.style.width = '100px';
-        colorDiv.style.height = '100px';
-        colorDiv.style.backgroundColor = color.toLowerCase().replace(' ', '-');
-        colorDiv.style.border = '2px solid #ddd';
-        colorDiv.style.borderRadius = '10px';
-        colorDiv.style.cursor = 'pointer';
-        colorDiv.style.display = 'flex';
-        colorDiv.style.alignItems = 'center';
-        colorDiv.style.justifyContent = 'center';
-
-        const label = document.createElement('span');
-        label.textContent = color;
-        label.style.color = '#0C1729';
-        label.style.fontSize = '14px';
-        label.style.fontWeight = 'bold';
-        colorDiv.appendChild(label);
-
+        const colorDiv = createColorSquare(color);  // Use helper function for consistent style
         let selected = false;
 
-        colorDiv.addEventListener('click', function () {
+        colorDiv.element.addEventListener('click', function () {
             if (selected) {
                 selected = false;
-                colorDiv.style.border = '2px solid #ddd';
+                colorDiv.element.style.border = '2px solid #ddd';
                 const index = selectedAddonColors.indexOf(color);
                 if (index > -1) selectedAddonColors.splice(index, 1);
             } else if (selectedAddonColors.length < 3) {
                 selected = true;
-                colorDiv.style.border = '4px solid #0264D9';
+                colorDiv.element.style.border = '4px solid #0264D9';
                 selectedAddonColors.push(color);
             }
         });
 
-        addonColorContainer.appendChild(colorDiv);
+        addonColorContainer.appendChild(colorDiv.element);
     });
 
     return { selectedBaseColor, selectedAddonColors };
@@ -1747,7 +1713,7 @@ function calculateAndAddItem(shape, shapeData, type, container) {
     createInvoicePage(container);
 }
 
-// Function to update the item list with the correct image
+// Function to update the item list with a better layout and color squares
 function updateItemList(container) {
     let itemListDiv = document.getElementById('itemList');
 
@@ -1766,25 +1732,51 @@ function updateItemList(container) {
     } else {
         items.forEach((item, index) => {
             const itemDiv = document.createElement('div');
-            itemDiv.style.display = 'flex';
+            itemDiv.style.display = 'grid';
+            itemDiv.style.gridTemplateColumns = '1fr auto'; // Description on left, price on right
             itemDiv.style.alignItems = 'center'; // Align image and text
             itemDiv.style.padding = '10px';
             itemDiv.style.marginBottom = '15px';
             itemDiv.style.borderBottom = '1px solid #ddd';
             itemDiv.style.color = '#0C1729';
 
-            // Ensure the item image is displayed properly
+            // Left column: Image and description
+            const descriptionDiv = document.createElement('div');
+            descriptionDiv.style.display = 'flex';
+            descriptionDiv.style.alignItems = 'center';
+
+            // Item image
             const itemImage = document.createElement('img');
             itemImage.src = item.imageUrl; // Display the correct image
             itemImage.style.width = '60px'; // Thumbnail size
             itemImage.style.height = '60px';
             itemImage.style.borderRadius = '8px';
             itemImage.style.marginRight = '15px'; // Space between image and text
-            itemDiv.appendChild(itemImage);
+            descriptionDiv.appendChild(itemImage);
 
-            const itemText = document.createElement('span');
-            itemText.textContent = `${index + 1}. ${item.description} - $${item.cost}`;
-            itemDiv.appendChild(itemText);
+            // Description text
+            const descriptionText = document.createElement('div');
+            descriptionText.innerHTML = `
+                <strong>${item.description}</strong><br>
+                <div style="display: flex; align-items: center;">
+                    <div style="margin-right: 10px;">Base Color:</div>
+                    ${item.baseColor ? createColorSquare(item.baseColor).element.outerHTML : ''}
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <div style="margin-right: 10px;">Mix-in Colors:</div>
+                    ${item.mixInColors ? item.mixInColors.map(color => createColorSquare(color).element.outerHTML).join('') : ''}
+                </div>
+            `;
+            descriptionDiv.appendChild(descriptionText);
+
+            itemDiv.appendChild(descriptionDiv);
+
+            // Right column: Price
+            const priceDiv = document.createElement('div');
+            priceDiv.style.fontWeight = 'bold';
+            priceDiv.style.color = '#0264D9';
+            priceDiv.textContent = `$${item.cost}`;
+            itemDiv.appendChild(priceDiv);
 
             // 'X' button to remove item
             const removeBtn = document.createElement('button');
@@ -1798,7 +1790,7 @@ function updateItemList(container) {
             removeBtn.addEventListener('click', function () {
                 removeItem(index);
             });
-            itemDiv.appendChild(removeBtn);
+            descriptionDiv.appendChild(removeBtn);
 
             itemListDiv.appendChild(itemDiv);
         });
@@ -1813,71 +1805,37 @@ function updateItemList(container) {
     }
 }
 
+// Helper function to create color squares with a background and border
+function createColorSquare(colorName) {
+    const colorHexCodes = {
+        'White': '#FFFFFF',
+        'Black': '#000000',
+        'Tornado Gray': '#4F4F4F',
+        'Charcoal Gray': '#2E2E2E',
+        'Toasted Almond': '#D2B48C',
+        'Milk Chocolate': '#8B4513',
+        'Dark Chocolate': '#5D3A1A',
+        'Icy White': '#F8F8FF',
+        'Silver': '#C0C0C0',
+        'Champagne Gold': '#F7E7CE',
+        'Bronze': '#CD7F32',
+        'Cobalt Blue': '#0047AB',
+        'Pewter Blue': '#8BA8B7',
+        'Copper': '#B87333'
+    };
 
-// Function to update the item list with the correct image
-function updateItemList(container) {
-    let itemListDiv = document.getElementById('itemList');
+    const colorDiv = document.createElement('div');
+    colorDiv.style.width = '20px';
+    colorDiv.style.height = '20px';
+    colorDiv.style.backgroundColor = colorHexCodes[colorName] || '#FFFFFF';
+    colorDiv.style.border = '2px solid #ddd';
+    colorDiv.style.borderRadius = '4px';
+    colorDiv.style.marginRight = '5px';
 
-    // Recreate itemListDiv if it doesn't exist
-    if (!itemListDiv) {
-        itemListDiv = document.createElement('div');
-        itemListDiv.id = 'itemList';
-        itemListDiv.style.marginTop = '30px';
-        container.appendChild(itemListDiv);
-    }
-
-    itemListDiv.innerHTML = '<h3 style="color: #0C1729;">Items:</h3>';
-
-    if (items.length === 0) {
-        itemListDiv.innerHTML += '<p style="color: #777;">No items added yet.</p>';
-    } else {
-        items.forEach((item, index) => {
-            const itemDiv = document.createElement('div');
-            itemDiv.style.display = 'flex';
-            itemDiv.style.alignItems = 'center'; // Align image and text
-            itemDiv.style.padding = '10px';
-            itemDiv.style.marginBottom = '15px';
-            itemDiv.style.borderBottom = '1px solid #ddd';
-            itemDiv.style.color = '#0C1729';
-
-            // Ensure the item image is displayed properly
-            const itemImage = document.createElement('img');
-            itemImage.src = item.imageUrl; // Display the correct image
-            itemImage.style.width = '60px'; // Thumbnail size
-            itemImage.style.height = '60px';
-            itemImage.style.borderRadius = '8px';
-            itemImage.style.marginRight = '15px'; // Space between image and text
-            itemDiv.appendChild(itemImage);
-
-            const itemText = document.createElement('span');
-            itemText.textContent = `${index + 1}. ${item.description} - $${item.cost}`;
-            itemDiv.appendChild(itemText);
-
-            // 'X' button to remove item
-            const removeBtn = document.createElement('button');
-            removeBtn.textContent = 'X';
-            removeBtn.style.color = '#ffffff';
-            removeBtn.style.backgroundColor = '#ff0000'; // Red color for the remove button
-            removeBtn.style.border = 'none';
-            removeBtn.style.cursor = 'pointer';
-            removeBtn.style.padding = '5px 10px';
-            removeBtn.style.borderRadius = '5px';
-            removeBtn.addEventListener('click', function () {
-                removeItem(index);
-            });
-            itemDiv.appendChild(removeBtn);
-
-            itemListDiv.appendChild(itemDiv);
-        });
-
-        const totalDiv = document.createElement('div');
-        totalDiv.textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-        totalDiv.style.marginTop = '20px';
-        totalDiv.style.fontWeight = 'bold';
-        totalDiv.style.fontSize = '22px';
-        totalDiv.style.color = '#0264D9';
-        itemListDiv.appendChild(totalDiv);
-    }
+    return {
+        element: colorDiv,
+        colorName: colorName
+    };
 }
 
         
