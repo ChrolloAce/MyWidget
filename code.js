@@ -681,15 +681,15 @@ continueBtn.addEventListener('click', function () {
 }
 
 function styleInputField(input) {
-    input.style.width = '100%';
-    input.style.padding = '18px';  // Increase padding for bigger input fields
-    input.style.marginBottom = '20px';  // Add more space between fields
-    input.style.border = '2px solid #ddd';  // Thicker border for visibility
-    input.style.borderRadius = '12px';  // More rounded corners
-    input.style.fontSize = '18px';  // Increase font size for better readability
-    input.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';  // Add a nice shadow effect
-    input.style.transition = 'all 0.3s ease';  // Smooth transition for hover effects
-    input.style.outline = 'none';  // Remove outline
+    input.style.width = '100%';  // Full width
+    input.style.padding = '18px';  // Increase padding for a more clickable size
+    input.style.marginBottom = '20px';  // Space between fields
+    input.style.border = '2px solid #ddd';  // Border style for modern appearance
+    input.style.borderRadius = '12px';  // Rounded corners
+    input.style.fontSize = '18px';  // Larger font size for easier reading
+    input.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';  // Soft shadow for depth
+    input.style.transition = 'all 0.3s ease';  // Smooth transitions on hover/focus
+    input.style.outline = 'none';  // Remove default outline
 
     // Add hover and focus styles for better interaction
     input.addEventListener('focus', function () {
@@ -697,7 +697,7 @@ function styleInputField(input) {
     });
 
     input.addEventListener('blur', function () {
-        input.style.border = '2px solid #ddd';  // Return to original border
+        input.style.border = '2px solid #ddd';  // Back to default
     });
 }
 
@@ -1020,7 +1020,7 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
     }
     
     
-   function promptFinishOptions(shape, type, container, shapeData) {
+ function promptFinishOptions(shape, type, container, shapeData) {
     container.innerHTML = '';
 
     if (shapeData.finishType === 'crystal') {
@@ -1138,7 +1138,7 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
         patternContainer.style.gap = '20px';
         container.appendChild(patternContainer);
 
-        // Add the images here for each option (Quartz, Granite, Marble)
+        // Add the images for each option (Quartz, Granite, Marble)
         const patterns = [
             {
                 name: 'Quartz',
@@ -1198,6 +1198,65 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
             patternContainer.appendChild(patternDiv);
         });
 
+        const colorLabel = document.createElement('label');
+        colorLabel.textContent = 'Choose up to 4 Colors:';
+        colorLabel.style.color = '#0C1729';
+        colorLabel.style.fontSize = '18px';
+        colorLabel.style.marginBottom = '10px';
+        container.appendChild(colorLabel);
+
+        const colorContainer = document.createElement('div');
+        colorContainer.style.display = 'flex';
+        colorContainer.style.flexWrap = 'wrap';
+        colorContainer.style.justifyContent = 'center';
+        colorContainer.style.gap = '10px';
+        colorContainer.style.marginBottom = '20px';
+        container.appendChild(colorContainer);
+
+        const colors = [
+            'White', 'Black', 'Tornado Gray', 'Charcoal Gray', 'Toasted Almond', 'Milk Chocolate', 'Dark Chocolate',
+            'Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper'
+        ];
+
+        const selectedColors = [];
+
+        colors.forEach(color => {
+            const colorDiv = document.createElement('div');
+            colorDiv.style.width = '100px';
+            colorDiv.style.height = '100px';
+            colorDiv.style.backgroundColor = color.toLowerCase().replace(' ', '-');
+            colorDiv.style.border = '2px solid #ddd';
+            colorDiv.style.borderRadius = '10px';
+            colorDiv.style.cursor = 'pointer';
+            colorDiv.style.display = 'flex';
+            colorDiv.style.alignItems = 'center';
+            colorDiv.style.justifyContent = 'center';
+
+            const label = document.createElement('span');
+            label.textContent = color;
+            label.style.color = '#0C1729';
+            label.style.fontSize = '14px';
+            label.style.fontWeight = 'bold';
+            colorDiv.appendChild(label);
+
+            let selected = false;
+
+            colorDiv.addEventListener('click', function () {
+                if (selected) {
+                    selected = false;
+                    colorDiv.style.border = '2px solid #ddd';
+                    const index = selectedColors.indexOf(color);
+                    if (index > -1) selectedColors.splice(index, 1);
+                } else if (selectedColors.length < 4) {
+                    selected = true;
+                    colorDiv.style.border = '4px solid #0264D9';
+                    selectedColors.push(color);
+                }
+            });
+
+            colorContainer.appendChild(colorDiv);
+        });
+
         const nextBtn = document.createElement('button');
         nextBtn.textContent = 'Add Item';
         styleButton(nextBtn);
@@ -1205,19 +1264,23 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
 
         nextBtn.addEventListener('click', function () {
             if (!selectedPattern) {
-                alert('Please select a finish pattern.');
+                alert('Please select a pattern.');
                 return;
             }
+
+            if (selectedColors.length === 0 || selectedColors.length > 4) {
+                alert('Please select up to 4 colors.');
+                return;
+            }
+
             shapeData.pattern = selectedPattern;
+            shapeData.colors = selectedColors;
+
             calculateAndAddItem(shape, shapeData, type, container);
         });
     }
 }
-
-
-    
-     
-    
+         
     function calculateAndAddItem(shape, shapeData, type, container) {
         const measurements = shapeData.measurements;
     
