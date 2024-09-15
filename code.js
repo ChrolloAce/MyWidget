@@ -148,6 +148,46 @@ continueBtn.addEventListener('click', function () {
         
         return fieldDiv;
     }
+
+
+function selectBathroomType(container) {
+    container.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = 'Choose Bathroom Counter Shape';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '30px';
+    header.style.fontSize = '28px';
+    container.appendChild(header);
+
+    const bathroomOptions = document.createElement('div');
+    bathroomOptions.style.display = 'flex';
+    bathroomOptions.style.flexWrap = 'wrap';
+    bathroomOptions.style.justifyContent = 'center';
+    bathroomOptions.style.gap = '30px';
+    container.appendChild(bathroomOptions);
+
+    const shapes = getShapesForType('Bathroom');
+    shapes.forEach(shape => {
+        const shapeBtn = createImageButton(shape.name, shape.imageUrl);
+        bathroomOptions.appendChild(shapeBtn);
+
+        shapeBtn.addEventListener('click', function () {
+            startShapeConfiguration(shape, 'Bathroom', container); // Proceed to shape configuration
+        });
+    });
+
+    // Add a back button to go back to the previous page
+    const backButton = document.createElement('button');
+    backButton.textContent = 'Back';
+    styleButton(backButton);
+    backButton.addEventListener('click', function () {
+        navigateToSelectionPage(container);
+    });
+    container.appendChild(backButton);
+}
+
+
     
    function navigateToSelectionPage(container) {
     container.innerHTML = '';  // Clear the container
@@ -240,41 +280,41 @@ continueBtn.addEventListener('click', function () {
         });
     }
     
-    // Helper function to create image buttons
-    function createImageButton(text, imageUrl) {
-        const button = document.createElement('div');
-        button.style.position = 'relative';
-        button.style.width = '250px';  // Reduced width
-        button.style.height = '250px';  // Reduced height
-        button.style.border = '2px solid #000000';  // Black border
-        button.style.borderRadius = '15px';  // Reduced border radius
-        button.style.overflow = 'hidden';
-        button.style.cursor = 'pointer';
-        button.style.textAlign = 'center';
-        button.style.display = 'flex';
-        button.style.flexDirection = 'column';
-        button.style.justifyContent = 'center';
-        button.style.alignItems = 'center';
-        button.style.backgroundImage = `url(${imageUrl})`;
-        button.style.backgroundSize = 'cover';
-        button.style.backgroundPosition = 'center';
-        button.style.marginBottom = '20px';  // Reduced margin
-    
-        const overlay = document.createElement('div');
-        overlay.style.position = 'absolute';
-        overlay.style.bottom = '0';
-        overlay.style.width = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
-        overlay.style.color = 'white';
-        overlay.style.padding = '15px';  // Reduced padding
-        overlay.style.fontSize = '18px';  // Smaller font size
-        overlay.style.fontWeight = 'bold';
-        overlay.style.textAlign = 'center';
-        overlay.textContent = text;
-        button.appendChild(overlay);
-    
-        return button;
-    }
+   function createImageButton(text, imageUrl) {
+    const button = document.createElement('div');
+    button.style.position = 'relative';
+    button.style.width = '300px';  // Increased width for better visibility
+    button.style.height = '300px';  // Increased height for better visibility
+    button.style.border = '2px solid #000000';  // Black border
+    button.style.borderRadius = '15px';  // Rounded corners
+    button.style.overflow = 'hidden';
+    button.style.cursor = 'pointer';
+    button.style.textAlign = 'center';
+    button.style.display = 'flex';
+    button.style.flexDirection = 'column';
+    button.style.justifyContent = 'center';
+    button.style.alignItems = 'center';
+    button.style.backgroundImage = `url(${imageUrl})`;
+    button.style.backgroundSize = 'cover';
+    button.style.backgroundPosition = 'center';
+    button.style.marginBottom = '20px';  // Adjusted margin
+
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.bottom = '0';
+    overlay.style.width = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';  // Black overlay
+    overlay.style.color = 'white';
+    overlay.style.padding = '15px';  // Padding for text
+    overlay.style.fontSize = '20px';  // Larger font size for better readability
+    overlay.style.fontWeight = 'bold';
+    overlay.style.textAlign = 'center';
+    overlay.textContent = text;
+    button.appendChild(overlay);
+
+    return button;
+}
+
     
   function createRectangularImageButton(text, imageUrl) {
     const button = document.createElement('div');
