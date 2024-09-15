@@ -1806,7 +1806,149 @@ function promptFinishOptions(shape, type, container, shapeData) {
     }
     
     
-    
+    function injectCSS() {
+    const styles = `
+    /* Global Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        transition: all 0.5s ease; /* Smooth transition for page changes */
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    h1, h2 {
+        text-align: center;
+        color: #0C1729;
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        font-size: 28px;
+    }
+
+    p, label {
+        color: #0C1729;
+        font-size: 16px;
+    }
+
+    /* Input Fields */
+    input[type="text"], input[type="number"], input[type="email"], input[type="tel"] {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        box-sizing: border-box;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        font-size: 18px;
+        transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+        border-color: #0264D9;
+        outline: none;
+    }
+
+    button {
+        padding: 15px 25px;
+        background-color: #0264D9;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #004C99;
+    }
+
+    /* Image Buttons */
+    .image-button {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 15px;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+    }
+
+    .image-button:hover {
+        transform: scale(1.05);
+    }
+
+    .image-button img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-button .overlay {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        text-align: center;
+        padding: 10px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    /* Background for Colors */
+    .color-choice {
+        width: 100px;
+        height: 100px;
+        margin: 10px;
+        border-radius: 10px;
+        background-color: #f5f5f5;
+        border: 2px solid #ddd;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .color-choice:hover {
+        border-color: #0264D9;
+    }
+
+    .color-choice span {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        text-align: center;
+        padding: 5px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    `;
+
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = styles;
+    document.head.appendChild(styleSheet);
+}
+
+injectCSS();  // Call the function to inject the styles
+
     
     
     
