@@ -1,6 +1,7 @@
 (function () {
-    // URL to your hosted OrbitControls.js on Webflow
-    const ORBIT_CONTROLS_URL = 'https://assets.website-files.com/your-project-id/OrbitControls.js'; // Replace with your actual URL
+    // URLs for Three.js v128 and OrbitControls.js v128 from jsDelivr
+    const THREE_JS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
+    const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
 
     /**
      * Dynamically loads a script.
@@ -11,7 +12,7 @@
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
             script.src = url;
-            script.async = false; // Maintain execution order
+            script.async = false; // Ensure scripts are executed in order
             script.onload = () => {
                 console.log(`Successfully loaded script: ${url}`);
                 resolve();
@@ -143,10 +144,10 @@
      */
     function loadAndInitialize() {
         if (typeof THREE === 'undefined') {
-            // Load Three.js from jsDelivr
-            loadScript('https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js')
+            // Load Three.js first
+            loadScript(THREE_JS_URL)
                 .then(() => {
-                    // After Three.js is loaded, load OrbitControls.js from your hosted URL
+                    // After Three.js is loaded, load OrbitControls.js
                     return loadScript(ORBIT_CONTROLS_URL);
                 })
                 .then(() => {
@@ -161,7 +162,7 @@
             // THREE is already loaded
             // Check if OrbitControls is defined
             if (typeof THREE.OrbitControls === 'undefined') {
-                // Load OrbitControls.js from your hosted URL
+                // Load OrbitControls.js
                 loadScript(ORBIT_CONTROLS_URL)
                     .then(() => {
                         // Initialize the scene after OrbitControls.js is loaded
