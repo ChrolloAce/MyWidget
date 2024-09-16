@@ -1,12 +1,31 @@
 (function () {
-    // Variables for Three.js components
-    let scene, camera, renderer, cube;
+    // URLs for Three.js and GLTFLoader (if needed in future)
+    const THREE_JS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js';
+    // const GLTF_LOADER_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/examples/js/loaders/GLTFLoader.js';
 
-    // Initialize the scene
+    // Function to dynamically load a script
+    function loadScript(url) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = () => {
+                console.log(`Successfully loaded script: ${url}`);
+                resolve();
+            };
+            script.onerror = () => {
+                reject(new Error(`Failed to load script: ${url}`));
+            };
+            document.head.appendChild(script);
+        });
+    }
+
+    // Function to initialize the Three.js scene
     function init() {
+        let scene, camera, renderer, cube;
+
         // Create the scene
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x000000); // Set background to black
+        scene.background = new THREE.Color(0x000000); // Black background
 
         // Set up the camera
         camera = new THREE.PerspectiveCamera(
@@ -15,12 +34,12 @@
             0.1, // Near clipping plane
             1000 // Far clipping plane
         );
-        camera.position.z = 5; // Move the camera away from the origin
+        camera.position.z = 5;
 
         // Set up the renderer
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement); // Add renderer to the DOM
+        document.body.appendChild(renderer.domElement);
 
         // Add ambient light
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
@@ -31,28 +50,39 @@
         directionalLight.position.set(5, 5, 5);
         scene.add(directionalLight);
 
-        // Create a cube geometry and material
+        // Create a cube
         const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Initial color: green
+        const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Green
         cube = new THREE.Mesh(geometry, material);
-        scene.add(cube); // Add cube to the scene
+        scene.add(cube);
 
         // Create color buttons
-        createColorButtons();
+        createColorButtons(cube);
 
         // Handle window resize
-        window.addEventListener('resize', onWindowResize, false);
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }, false);
 
-        // Start the animation loop
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate the cube for a dynamic effect
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+        }
+
         animate();
     }
 
     // Function to create color picker buttons
-    function createColorButtons() {
-        // Define desired colors
+    function createColorButtons(cube) {
         const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff', '#000000'];
-
-        // Create a container for the buttons
         const buttonContainer = document.createElement('div');
         buttonContainer.style.position = 'absolute';
         buttonContainer.style.top = '20px';
@@ -63,7 +93,6 @@
         buttonContainer.style.gap = '10px';
         document.body.appendChild(buttonContainer);
 
-        // Create a button for each color
         colors.forEach((color) => {
             const button = document.createElement('button');
             button.style.backgroundColor = color;
@@ -74,51 +103,31 @@
             button.style.cursor = 'pointer';
             button.title = `Change color to ${color}`;
             button.addEventListener('click', () => {
-                changeCubeColor(color);
+                cube.material.color.set(color);
             });
             buttonContainer.appendChild(button);
         });
     }
 
-    // Function to change the cube's color
-    function changeCubeColor(hexColor) {
-        if (cube && cube.material) {
-            cube.material.color.set(hexColor);
-        }
-    }
+    // Load Three.js and initialize
+    loadScript(THREE_JS_URL)
+        .then(() => {
+            init();
+        })
+        .catch((error) => {
+            console.error(error.message);
+            alert('Failed to load Three.js. Please check the console for more details.');
+        });
 
-    // Function to handle window resize
-    function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix(); // Update the camera's projection matrix
-        renderer.setSize(window.innerWidth, window.innerHeight); // Update renderer size
-    }
-
-    // Animation loop
-    function animate() {
-        requestAnimationFrame(animate);
-
-        // Rotate the cube for a dynamic effect
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-
-        renderer.render(scene, camera); // Render the scene
-    }
-
-    // Function to load Three.js from CDN and initialize the scene
-    function loadThreeJS(callback) {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js';
-        script.onload = () => {
-            console.log('Three.js loaded successfully.');
-            callback();
-        };
-        script.onerror = () => {
-            console.error('Failed to load Three.js.');
-        };
-        document.head.appendChild(script);
-    }
-
-    // Start by loading Three.js and then initialize
-    loadThreeJS(init);
+    // If you need GLTFLoader in the future, uncomment and load it after Three.js
+    /*
+    loadScript(GLTF_LOADER_URL)
+        .then(() => {
+            // Initialize GLTFLoader-dependent features here
+        })
+        .catch((error) => {
+            console.error(error.message);
+            alert('Failed to load GLTFLoader. Please check the console for more details.');
+        });
+    */
 })();
