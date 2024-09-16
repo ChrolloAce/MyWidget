@@ -410,12 +410,19 @@ function startShapeConfiguration(shape, type, container) {
     };
 
     // Start by prompting for measurements
-    promptShapeMeasurements(shape, container, shapeData, function(measurements) {
+    promptShapeMeasurements(shape, container, shapeData, function (measurements) {
         shapeData.measurements = measurements;
-        // After measurements, ask about backsplash
-        promptBacksplash(shape, type, container, shapeData);
+
+        // Only ask about backsplash if it's a regular countertop
+        if (type === 'Regular Counter') {
+            promptBacksplash(shape, type, container, shapeData);
+        } else {
+            // Skip backsplash and go directly to finish type for Bar Top and Island
+            promptFinishType(shape, type, container, shapeData);
+        }
     });
 }
+
 
 
 
@@ -1992,8 +1999,7 @@ function updateItemList(container) {
     }
 }
 
- function promptShapeMeasurements(shape, container, shapeData, callback) {
-    // Existing logic remains unchanged
+function promptShapeMeasurements(shape, container, shapeData, callback) {
     container.innerHTML = '';
 
     // Add the shape image at the top
@@ -2026,6 +2032,7 @@ function updateItemList(container) {
     formDiv.style.gap = '10px';
     container.appendChild(formDiv);
 
+    // Initialize measurementInputs array here
     const measurementInputs = [];
 
     shape.measurements.forEach((measurement, index) => {
@@ -2046,6 +2053,7 @@ function updateItemList(container) {
         input.style.fontSize = '18px';
         formDiv.appendChild(input);
 
+        // Push each input element to the array
         measurementInputs.push(input);
     });
 
@@ -2054,6 +2062,7 @@ function updateItemList(container) {
     styleButton(nextBtn);
     formDiv.appendChild(nextBtn);
 
+    // Add event listener to the next button
     nextBtn.addEventListener('click', function () {
         const measurements = measurementInputs.map(input => parseFloat(input.value));
         if (measurements.some(value => isNaN(value) || value <= 0)) {
@@ -2063,6 +2072,7 @@ function updateItemList(container) {
         }
     });
 }
+
 
     
     function createColorSquare(colorName) {
