@@ -404,20 +404,21 @@ function startShapeConfiguration(shape, type, container) {
     let shapeData = {
         hasBacksplash: false,
         backsplashHeight: 0,
-        backsplashWidth: 0, // New property for backsplash width
+        backsplashWidth: 0,
         measurements: [],
         finishType: ''
     };
 
-    // Start by prompting for measurements
+    // Prompt for shape measurements first
     promptShapeMeasurements(shape, container, shapeData, function (measurements) {
         shapeData.measurements = measurements;
 
-        // Only ask about backsplash if it's a regular countertop
+        // Only ask about backsplash for regular countertops
         if (type === 'Regular Counter') {
+            console.log('Calling promptBacksplash for regular counter'); // Debugging log
             promptBacksplash(shape, type, container, shapeData);
         } else {
-            // Skip backsplash and go directly to finish type for Bar Top and Island
+            // Skip backsplash and go directly to finish type for other shapes
             promptFinishType(shape, type, container, shapeData);
         }
     });
@@ -425,7 +426,10 @@ function startShapeConfiguration(shape, type, container) {
 
 
 
+
 function promptBacksplash(shape, type, container, shapeData) {
+        console.log('Backsplash prompt is being called'); // Add this line for debugging
+
     container.innerHTML = ''; // Clear the container
 
     // Create the header for the question
@@ -2025,24 +2029,9 @@ function updateItemList(container) {
 }
 
 function promptShapeMeasurements(shape, container, shapeData, callback) {
-    container.innerHTML = '';
+    container.innerHTML = ''; // Clear the container
 
-    // Add the shape image at the top
-    const imageDiv = document.createElement('div');
-    imageDiv.style.textAlign = 'center';
-    imageDiv.style.marginBottom = '20px';
-
-    const shapeImage = document.createElement('img');
-    shapeImage.src = shape.imageUrl;
-    shapeImage.alt = shape.name;
-    shapeImage.style.maxWidth = '100%';
-    shapeImage.style.height = 'auto';
-    shapeImage.style.borderRadius = '15px';
-    shapeImage.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
-    imageDiv.appendChild(shapeImage);
-
-    container.appendChild(imageDiv);
-
+    // Header for entering measurements
     const header = document.createElement('h2');
     header.textContent = 'Enter Measurements (in inches)';
     header.style.color = '#0C1729';
@@ -2050,6 +2039,7 @@ function promptShapeMeasurements(shape, container, shapeData, callback) {
     header.style.fontSize = '24px';
     container.appendChild(header);
 
+    // Input fields for measurements
     const formDiv = document.createElement('div');
     formDiv.style.display = 'flex';
     formDiv.style.flexDirection = 'column';
@@ -2057,9 +2047,9 @@ function promptShapeMeasurements(shape, container, shapeData, callback) {
     formDiv.style.gap = '10px';
     container.appendChild(formDiv);
 
-    // Initialize measurementInputs array here
     const measurementInputs = [];
 
+    // Create input fields based on the number of measurements required
     shape.measurements.forEach((measurement, index) => {
         const label = document.createElement('label');
         label.textContent = `Measurement ${index + 1}:`;
@@ -2078,25 +2068,27 @@ function promptShapeMeasurements(shape, container, shapeData, callback) {
         input.style.fontSize = '18px';
         formDiv.appendChild(input);
 
-        // Push each input element to the array
         measurementInputs.push(input);
     });
 
+    // Next button to proceed
     const nextBtn = document.createElement('button');
     nextBtn.textContent = 'Next';
     styleButton(nextBtn);
     formDiv.appendChild(nextBtn);
 
-    // Add event listener to the next button
+    // On Next button click, gather inputs and proceed to backsplash
     nextBtn.addEventListener('click', function () {
         const measurements = measurementInputs.map(input => parseFloat(input.value));
         if (measurements.some(value => isNaN(value) || value <= 0)) {
             alert('Please enter valid measurements.');
         } else {
-            callback(measurements);
+            console.log('Measurements complete, calling callback for next step'); // Debugging log
+            callback(measurements); // Trigger the next step
         }
     });
 }
+
 
 
     
