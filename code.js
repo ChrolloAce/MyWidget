@@ -1784,61 +1784,78 @@ function updateItemList(container) {
     }
 }
 
-        
-    // Function to ask for measurements, one by one with different slides
-    function promptShapeMeasurements(shape, container, hasBacksplash, callback) {
-        let currentMeasurement = 0;
-        const measurements = [];
-    
-        // Clear the container for new content
-        container.innerHTML = '';
-    
-        function showNextMeasurement() {
-            if (currentMeasurement >= shape.measurements.length) {
-                // All measurements are done, proceed to the next step
-                callback(measurements);
-                return;
-            }
-    
-            // Clear the container for the new slide
-            container.innerHTML = '';
-    
-            const header = document.createElement('h2');
-            header.textContent = `Enter measurement for Side ${currentMeasurement + 1}`;
-            container.appendChild(header);
-    
-            const img = document.createElement('img');
-            img.src = shape.measurementImages[currentMeasurement];  // Assuming each shape has an image per measurement
-            img.style.width = '100%';
-            img.style.border = '2px solid red';  // Red outline to highlight
-            container.appendChild(img);
-    
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.placeholder = `Measurement for Side ${currentMeasurement + 1} (in inches)`;
-            container.appendChild(input);
-    
-            const nextButton = document.createElement('button');
-            nextButton.textContent = 'Next';
-            nextButton.style.marginTop = '10px';
-            container.appendChild(nextButton);
-    
-           nextButton.addEventListener('click', function() {
-        const value = parseFloat(input.value);
-        if (isNaN(value) || value <= 0) {  // Validate input
-            alert('Please enter a valid number greater than 0.');
+ function promptShapeMeasurements(shape, container, shapeData, callback) {
+    // Existing logic remains unchanged
+    container.innerHTML = '';
+
+    // Add the shape image at the top
+    const imageDiv = document.createElement('div');
+    imageDiv.style.textAlign = 'center';
+    imageDiv.style.marginBottom = '20px';
+
+    const shapeImage = document.createElement('img');
+    shapeImage.src = shape.imageUrl;
+    shapeImage.alt = shape.name;
+    shapeImage.style.maxWidth = '100%';
+    shapeImage.style.height = 'auto';
+    shapeImage.style.borderRadius = '15px';
+    shapeImage.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+    imageDiv.appendChild(shapeImage);
+
+    container.appendChild(imageDiv);
+
+    const header = document.createElement('h2');
+    header.textContent = 'Enter Measurements (in inches)';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    const formDiv = document.createElement('div');
+    formDiv.style.display = 'flex';
+    formDiv.style.flexDirection = 'column';
+    formDiv.style.alignItems = 'center';
+    formDiv.style.gap = '10px';
+    container.appendChild(formDiv);
+
+    const measurementInputs = [];
+
+    shape.measurements.forEach((measurement, index) => {
+        const label = document.createElement('label');
+        label.textContent = `Measurement ${index + 1}:`;
+        label.style.color = '#0C1729';
+        label.style.marginBottom = '5px';
+        label.style.fontSize = '18px';
+        formDiv.appendChild(label);
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.style.width = '80%';
+        input.style.padding = '10px';
+        input.style.marginBottom = '10px';
+        input.style.border = '1px solid #ddd';
+        input.style.borderRadius = '5px';
+        input.style.fontSize = '18px';
+        formDiv.appendChild(input);
+
+        measurementInputs.push(input);
+    });
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    styleButton(nextBtn);
+    formDiv.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', function () {
+        const measurements = measurementInputs.map(input => parseFloat(input.value));
+        if (measurements.some(value => isNaN(value) || value <= 0)) {
+            alert('Please enter valid measurements.');
         } else {
-            measurements.push(value);
-            currentMeasurement++;
-            showNextMeasurement();
+            callback(measurements);
         }
     });
-    
-        }
-    
-        // Start the measurement flow
-        showNextMeasurement();
-    }
+}
+
     
     function createColorSquare(colorName) {
         const colorHexCodes = {
