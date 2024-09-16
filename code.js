@@ -1713,7 +1713,6 @@ function calculateAndAddItem(shape, shapeData, type, container) {
     createInvoicePage(container);
 }
 
-// Function to update the item list with the correct image
 function updateItemList(container) {
     let itemListDiv = document.getElementById('itemList');
 
@@ -1778,6 +1777,7 @@ function updateItemList(container) {
         itemListDiv.appendChild(totalDiv);
     }
 }
+
 
 
 // Function to update the item list with the correct image
