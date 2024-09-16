@@ -1,21 +1,21 @@
 (function () {
-    // Array of Three.js CDN URLs (updated to a currently available version)
+    // Array of Three.js v148 CDN URLs with fallback options
     const THREE_JS_URLS = [
-        'https://cdnjs.cloudflare.com/ajax/libs/three.js/r153/three.min.js', // Updated version
-        'https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js',
-        'https://unpkg.com/three@0.153.0/build/three.min.js'
+        'https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js', // Primary CDN
+        'https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js',     // Fallback CDN
+        'https://unpkg.com/three@0.148.0/build/three.min.js'                // Another fallback CDN
     ];
 
-    // Array of OrbitControls.js CDN URLs corresponding to Three.js version
+    // Array of OrbitControls.js v148 CDN URLs with fallback options
     const ORBIT_CONTROLS_URLS = [
-        'https://cdnjs.cloudflare.com/ajax/libs/three.js/r153/examples/js/controls/OrbitControls.js', // Updated version
-        'https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/controls/OrbitControls.js',
-        'https://unpkg.com/three@0.153.0/examples/js/controls/OrbitControls.js'
+        'https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/examples/js/controls/OrbitControls.js', // Primary CDN
+        'https://cdn.jsdelivr.net/npm/three@0.148.0/examples/js/controls/OrbitControls.js',         // Fallback CDN
+        'https://unpkg.com/three@0.148.0/examples/js/controls/OrbitControls.js'                    // Another fallback CDN
     ];
 
     /**
-     * Function to dynamically load a script with fallback URLs.
-     * @param {Array} urls - Array of script URLs to try loading in order.
+     * Dynamically loads a script from an array of URLs with fallback.
+     * @param {Array} urls - Array of script URLs to attempt loading.
      * @param {number} index - Current index in the URLs array.
      * @returns {Promise} - Resolves when a script is successfully loaded.
      */
@@ -98,14 +98,10 @@
         animate();
 
         /**
-         * Animation loop to render the scene and rotate the cube.
+         * Animation loop to render the scene and update controls.
          */
         function animate() {
             requestAnimationFrame(animate);
-
-            // Optional: Rotate the cube automatically
-            // cube.rotation.x += 0.01;
-            // cube.rotation.y += 0.01;
 
             controls.update(); // Update controls (required if enableDamping is true)
 
@@ -158,18 +154,47 @@
         }
     }
 
-    // Load Three.js from multiple CDNs with fallback
-    loadScriptsWithFallback(THREE_JS_URLS)
-        .then(() => {
-            // After Three.js is loaded, load OrbitControls.js
-            return loadScriptsWithFallback(ORBIT_CONTROLS_URLS);
-        })
-        .then(() => {
-            // Initialize the scene after both Three.js and OrbitControls.js are loaded
-            init();
-        })
-        .catch((error) => {
-            console.error(error.message);
-            alert('Failed to load necessary scripts. Please check your internet connection or try again later.');
-        });
+    /**
+     * Checks if THREE is already loaded to prevent multiple instances.
+     * If not loaded, it proceeds to load Three.js and OrbitControls.js.
+     * Finally, it initializes the scene.
+     */
+    function loadAndInitialize() {
+        if (typeof THREE === 'undefined') {
+            // Load Three.js first
+            loadScriptsWithFallback(THREE_JS_URLS)
+                .then(() => {
+                    // After Three.js is loaded, load OrbitControls.js
+                    return loadScriptsWithFallback(ORBIT_CONTROLS_URLS);
+                })
+                .then(() => {
+                    // Initialize the scene after both scripts are loaded
+                    init();
+                })
+                .catch((error) => {
+                    console.error(error.message);
+                    alert('Failed to load necessary scripts. Please check your internet connection or try again later.');
+                });
+        } else {
+            // THREE is already loaded
+            if (typeof THREE.OrbitControls === 'undefined') {
+                // Load only OrbitControls.js
+                loadScriptsWithFallback(ORBIT_CONTROLS_URLS)
+                    .then(() => {
+                        // Initialize the scene after OrbitControls.js is loaded
+                        init();
+                    })
+                    .catch((error) => {
+                        console.error(error.message);
+                        alert('Failed to load OrbitControls.js. Please check your internet connection or try again later.');
+                    });
+            } else {
+                // Both THREE and OrbitControls are already loaded
+                init();
+            }
+        }
+    }
+
+    // Execute the load and initialize process
+    loadAndInitialize();
 })();
