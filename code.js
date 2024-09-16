@@ -400,19 +400,223 @@ function selectBathroomType(container) {
 }
 
     
-  function startShapeConfiguration(shape, type, container) {
+function startShapeConfiguration(shape, type, container) {
     let shapeData = {
         hasBacksplash: false,
         backsplashHeight: 0,
-        backsplashWidth: 0,  // New: Width for backsplash
+        backsplashWidth: 0, // New property for backsplash width
         measurements: [],
         finishType: ''
     };
 
-
-       promptMeasurements(shape, type, container, shapeData);  // Ask for measurements first
-
+    // Start by prompting for measurements
+    promptShapeMeasurements(shape, container, shapeData, function(measurements) {
+        shapeData.measurements = measurements;
+        // After measurements, ask about backsplash
+        promptBacksplash(shape, type, container, shapeData);
+    });
 }
+
+function promptBacksplash(shape, type, container, shapeData) {
+    container.innerHTML = '';
+
+    // Dynamic question based on type
+    const question = type === 'Bar Top' ? 'Does this bar top have a backsplash?' : 'Does this countertop have a backsplash?';
+
+    const header = document.createElement('h2');
+    header.textContent = question;
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    // Add the image
+    const imageDiv = document.createElement('div');
+    imageDiv.style.textAlign = 'center';
+    imageDiv.style.marginBottom = '20px';
+
+    const backsplashImage = document.createElement('img');
+    backsplashImage.src = 'https://i.ibb.co/XjdF26x/Backsplash.png';
+    backsplashImage.alt = 'Backsplash';
+    backsplashImage.style.maxWidth = '100%';
+    backsplashImage.style.height = 'auto';
+    imageDiv.appendChild(backsplashImage);
+
+    // Add explanatory text under the image
+    const description = document.createElement('p');
+    description.textContent = 'A backsplash is the vertical extension of your countertop that connects everything. It is usually 4 inches in height and varies in width based on your design.';
+    description.style.color = '#0C1729';
+    description.style.fontSize = '16px';
+    description.style.marginTop = '10px';
+    imageDiv.appendChild(description);
+
+    container.appendChild(imageDiv);
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'center';
+    buttonContainer.style.gap = '20px'; // Increased margin between buttons
+    container.appendChild(buttonContainer);
+
+    const yesBtn = document.createElement('button');
+    yesBtn.textContent = 'Yes';
+    styleColoredButton(yesBtn, '#28a745'); // Green color for 'Yes'
+    buttonContainer.appendChild(yesBtn);
+
+    const noBtn = document.createElement('button');
+    noBtn.textContent = 'No';
+    styleColoredButton(noBtn, '#dc3545'); // Red color for 'No'
+    buttonContainer.appendChild(noBtn);
+
+    yesBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = true;
+        promptBacksplashDimensions(shape, type, container, shapeData); // Proceed to collect height and width
+    });
+
+    noBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = false;
+        promptFinishType(shape, type, container, shapeData); // Proceed to next step
+    });
+}
+
+
+// 3. Create promptBacksplashDimensions Function
+function promptBacksplashDimensions(shape, type, container, shapeData) {
+    container.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = 'Enter Backsplash Dimensions (in inches)';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    // Height Input
+    const heightLabel = document.createElement('label');
+    heightLabel.textContent = 'Backsplash Height:';
+    heightLabel.style.color = '#0C1729';
+    heightLabel.style.marginBottom = '5px';
+    heightLabel.style.fontSize = '18px';
+    container.appendChild(heightLabel);
+
+    const heightInput = document.createElement('input');
+    heightInput.type = 'number';
+    heightInput.placeholder = 'Height (in inches)';
+    heightInput.style.width = '100%';
+    heightInput.style.padding = '10px';
+    heightInput.style.marginBottom = '15px';
+    heightInput.style.border = '1px solid #ddd';
+    heightInput.style.borderRadius = '5px';
+    heightInput.style.fontSize = '18px';
+    container.appendChild(heightInput);
+
+    // Width Input
+    const widthLabel = document.createElement('label');
+    widthLabel.textContent = 'Backsplash Width:';
+    widthLabel.style.color = '#0C1729';
+    widthLabel.style.marginBottom = '5px';
+    widthLabel.style.fontSize = '18px';
+    container.appendChild(widthLabel);
+
+    const widthInput = document.createElement('input');
+    widthInput.type = 'number';
+    widthInput.placeholder = 'Width (in inches)';
+    widthInput.style.width = '100%';
+    widthInput.style.padding = '10px';
+    widthInput.style.marginBottom = '15px';
+    widthInput.style.border = '1px solid #ddd';
+    widthInput.style.borderRadius = '5px';
+    widthInput.style.fontSize = '18px';
+    container.appendChild(widthInput);
+
+    // Next Button
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    styleButton(nextBtn);
+    container.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', function () {
+        const height = parseFloat(heightInput.value);
+        const width = parseFloat(widthInput.value);
+
+        if (isNaN(height) || height <= 0 || isNaN(width) || width <= 0) {
+            alert('Please enter valid positive numbers for both height and width.');
+            return;
+        }
+
+        shapeData.backsplashHeight = height;
+        shapeData.backsplashWidth = width;
+
+        // Proceed to finish type selection
+        promptFinishType(shape, type, container, shapeData);
+    });
+}
+
+
+// 4. Update calculateAndAddItem Function
+function calculateAndAddItem(shape, shapeData, type, container) {
+    const measurements = shapeData.measurements;
+
+    // Determine depth automatically based on type
+    let depth;
+    if (type === 'Kitchen' || type === 'Island' || type === 'Bar Top' || type === 'Regular Counter') {
+        depth = 25; // Standard depth for kitchen countertops
+    } else if (type === 'Bathroom') {
+        depth = 22; // Standard depth for bathroom countertops
+    } else {
+        depth = 25; // Default depth
+    }
+
+    // Calculate square footage based on shape formula
+    let squareFootage = shape.formula(measurements, depth);
+
+    // Add backsplash square footage if applicable
+    if (shapeData.hasBacksplash && shapeData.backsplashHeight > 0 && shapeData.backsplashWidth > 0) {
+        const backsplashArea = (shapeData.backsplashHeight * shapeData.backsplashWidth) / 144; // Convert square inches to square feet
+        squareFootage += backsplashArea;
+    }
+
+    // Update pricing based on finish type
+    let pricePerSqFt;
+    if (shapeData.finishType === 'crystal') {
+        pricePerSqFt = PRICE_CRYSTAL;
+    } else if (shapeData.finishType === 'standard') {
+        pricePerSqFt = PRICE_REGULAR;
+    } else {
+        pricePerSqFt = PRICE_REGULAR; // Default price if not specified
+    }
+
+    // Calculate the cost
+    const cost = squareFootage * pricePerSqFt;
+
+    // Build item description
+    let itemDescription = `${shape.name} - ${shape.type} - ${shapeData.finishType.charAt(0).toUpperCase() + shapeData.finishType.slice(1)} Finish`;
+
+    if (shapeData.pattern) {
+        itemDescription += ` - Pattern: ${shapeData.pattern}`;
+    }
+    if (shapeData.baseColor) {
+        itemDescription += ` - Base Color: ${shapeData.baseColor}`;
+    }
+    if (shapeData.mixInColors && shapeData.mixInColors.length > 0) {
+        itemDescription += ` - Mix-in Colors: ${shapeData.mixInColors.join(', ')}`;
+    }
+
+    // Add to items list with the imageUrl
+    items.push({
+        description: itemDescription,
+        squareFootage: squareFootage.toFixed(2),
+        cost: cost.toFixed(2),
+        imageUrl: shape.imageUrl // Ensure imageUrl is passed here
+    });
+
+    // Update the total cost
+    totalCost += cost;
+
+    // Redirect back to the invoice page and show the updated item list
+    createInvoicePage(container);
+}
+
 
     
      function selectShapeAndCalculate(type, container) {
@@ -445,37 +649,69 @@ function selectBathroomType(container) {
         container.appendChild(shapeDiv);
     }
     
-    function calculateAndAddItem(shape, shapeData, type, container) {
+   function calculateAndAddItem(shape, shapeData, type, container) {
     const measurements = shapeData.measurements;
 
-    // Determine depth and calculate square footage
-    let depth = (type === 'Kitchen' || type === 'Island' || type === 'Bar Top' || type === 'Regular Counter') ? 25 : 22;
+    // Determine depth automatically based on type
+    let depth;
+    if (type === 'Kitchen' || type === 'Island' || type === 'Bar Top' || type === 'Regular Counter') {
+        depth = 25; // Standard depth for kitchen countertops
+    } else if (type === 'Bathroom') {
+        depth = 22; // Standard depth for bathroom countertops
+    } else {
+        depth = 25; // Default depth
+    }
+
+    // Calculate square footage based on shape formula
     let squareFootage = shape.formula(measurements, depth);
 
     // Add backsplash square footage if applicable
-    if (shapeData.hasBacksplash && shapeData.backsplashHeight > 0) {
-        const backsplashArea = measurements[0] * (shapeData.backsplashHeight / 12);
-        squareFootage += backsplashArea / 12;
+    if (shapeData.hasBacksplash && shapeData.backsplashHeight > 0 && shapeData.backsplashWidth > 0) {
+        const backsplashArea = (shapeData.backsplashHeight * shapeData.backsplashWidth) / 144; // Convert square inches to square feet
+        squareFootage += backsplashArea;
     }
 
     // Update pricing based on finish type
-    let pricePerSqFt = shapeData.finishType === 'crystal' ? 39 : 26;
-    if (shapeData.finishType === 'crystal') pricePerSqFt *= 1.5;
+    let pricePerSqFt;
+    if (shapeData.finishType === 'crystal') {
+        pricePerSqFt = PRICE_CRYSTAL;
+    } else if (shapeData.finishType === 'standard') {
+        pricePerSqFt = PRICE_REGULAR;
+    } else {
+        pricePerSqFt = PRICE_REGULAR; // Default price if not specified
+    }
 
-    // Calculate cost
+    // Calculate the cost
     const cost = squareFootage * pricePerSqFt;
 
-    // Add to items with imageUrl
+    // Build item description
+    let itemDescription = `${shape.name} - ${shape.type} - ${shapeData.finishType.charAt(0).toUpperCase() + shapeData.finishType.slice(1)} Finish`;
+
+    if (shapeData.pattern) {
+        itemDescription += ` - Pattern: ${shapeData.pattern}`;
+    }
+    if (shapeData.baseColor) {
+        itemDescription += ` - Base Color: ${shapeData.baseColor}`;
+    }
+    if (shapeData.mixInColors && shapeData.mixInColors.length > 0) {
+        itemDescription += ` - Mix-in Colors: ${shapeData.mixInColors.join(', ')}`;
+    }
+
+    // Add to items list with the imageUrl
     items.push({
-        description: `${shape.name} - ${shape.type} - ${shapeData.finishType}`,
-        imageUrl: shape.imageUrl,  // Include image URL here
+        description: itemDescription,
         squareFootage: squareFootage.toFixed(2),
-        cost: cost.toFixed(2)
+        cost: cost.toFixed(2),
+        imageUrl: shape.imageUrl // Ensure imageUrl is passed here
     });
+
+    // Update the total cost
+    totalCost += cost;
 
     // Redirect back to the invoice page and show the updated item list
     createInvoicePage(container);
 }
+
 
     
       // Function to update the item list without showing square footage to the client
