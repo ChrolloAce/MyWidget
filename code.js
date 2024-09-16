@@ -857,22 +857,30 @@ function styleInputField(input) {
         });
     }
     
+ 
     
-
-function promptBacksplashHeight(shape, type, container, shapeData) {
+    
+  function promptBacksplash(shape, type, container, shapeData) {
     container.innerHTML = '';
 
     const header = document.createElement('h2');
-    header.textContent = 'Enter Backsplash Height (in inches)';
+    header.textContent = 'Enter Backsplash Dimensions';
     header.style.color = '#0C1729';
     header.style.marginBottom = '20px';
     header.style.fontSize = '24px';
     container.appendChild(header);
 
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.placeholder = 'Backsplash Height (in inches)';
-    container.appendChild(input);
+    // Create input for backsplash width
+    const widthInput = document.createElement('input');
+    widthInput.type = 'number';
+    widthInput.placeholder = 'Enter Backsplash Width (in inches)';
+    container.appendChild(widthInput);
+
+    // Create input for backsplash height
+    const heightInput = document.createElement('input');
+    heightInput.type = 'number';
+    heightInput.placeholder = 'Enter Backsplash Height (in inches)';
+    container.appendChild(heightInput);
 
     const nextBtn = document.createElement('button');
     nextBtn.textContent = 'Next';
@@ -880,80 +888,24 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
     container.appendChild(nextBtn);
 
     nextBtn.addEventListener('click', function () {
-        const height = parseFloat(input.value);
-        if (isNaN(height) || height <= 0) {
-            alert('Please enter a valid height.');
-        } else {
-            shapeData.backsplashHeight = height;
-            promptMeasurements(shape, type, container, shapeData); // Proceed to next step
+        const width = parseFloat(widthInput.value);
+        const height = parseFloat(heightInput.value);
+
+        if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
+            alert('Please enter valid dimensions for the backsplash.');
+            return;
         }
-    });
-}
 
-    
-    
-    
-  function promptBacksplash(shape, type, container, shapeData) {
-    container.innerHTML = '';
-
-    // Dynamic question based on type
-    const question = type === 'Bar Top' ? 'Does this bar top have a backsplash?' : 'Does this countertop have a backsplash?';
-
-    const header = document.createElement('h2');
-    header.textContent = question;
-    header.style.color = '#0C1729';
-    header.style.marginBottom = '20px';
-    header.style.fontSize = '24px';
-    container.appendChild(header);
-
-    // Add the image
-    const imageDiv = document.createElement('div');
-    imageDiv.style.textAlign = 'center';
-    imageDiv.style.marginBottom = '20px';
-
-    const backsplashImage = document.createElement('img');
-    backsplashImage.src = 'https://i.ibb.co/XjdF26x/Backsplash.png';
-    backsplashImage.alt = 'Backsplash';
-    backsplashImage.style.maxWidth = '100%';
-    backsplashImage.style.height = 'auto';
-    imageDiv.appendChild(backsplashImage);
-
-    // Add explanatory text under the image
-    const description = document.createElement('p');
-    description.textContent = 'A backsplash is the vertical extension of your countertop that connects everything. It is usually 4 inches in height.';
-    description.style.color = '#0C1729';
-    description.style.fontSize = '16px';
-    description.style.marginTop = '10px';
-    imageDiv.appendChild(description);
-
-    container.appendChild(imageDiv);
-
-    const buttonContainer = document.createElement('div');
-    buttonContainer.style.display = 'flex';
-    buttonContainer.style.justifyContent = 'center';
-    buttonContainer.style.gap = '20px'; // Increase margin between buttons
-    container.appendChild(buttonContainer);
-
-    const yesBtn = document.createElement('button');
-    yesBtn.textContent = 'Yes';
-    styleColoredButton(yesBtn, '#28a745'); // Green color for 'Yes'
-    buttonContainer.appendChild(yesBtn);
-
-    const noBtn = document.createElement('button');
-    noBtn.textContent = 'No';
-    styleColoredButton(noBtn, '#dc3545'); // Red color for 'No'
-    buttonContainer.appendChild(noBtn);
-
-    yesBtn.addEventListener('click', function () {
+        // Store the backsplash dimensions
         shapeData.hasBacksplash = true;
-        promptBacksplashHeight(shape, type, container, shapeData);
-    });
+        shapeData.backsplashWidth = width;
+        shapeData.backsplashHeight = height;
 
-    noBtn.addEventListener('click', function () {
-        shapeData.hasBacksplash = false;
-        promptMeasurements(shape, type, container, shapeData);
+        // Proceed to the finish type selection
+        promptFinishType(shape, type, container, shapeData);
     });
 }
+
 
     
     
@@ -1644,7 +1596,6 @@ function promptFinishOptions(shape, type, container, shapeData) {
 
 
          
-// Function to calculate and add an item to the invoice
 function calculateAndAddItem(shape, shapeData, type, container) {
     const measurements = shapeData.measurements;
 
@@ -1662,9 +1613,9 @@ function calculateAndAddItem(shape, shapeData, type, container) {
     let squareFootage = shape.formula(measurements, depth);
 
     // Add backsplash square footage if applicable
-    if (shapeData.hasBacksplash && shapeData.backsplashHeight > 0) {
-        const backsplashArea = measurements[0] * (shapeData.backsplashHeight / 12); // Convert height to feet
-        squareFootage += backsplashArea / 12; // Convert length to feet
+    if (shapeData.hasBacksplash) {
+        const backsplashArea = (shapeData.backsplashWidth * shapeData.backsplashHeight) / 144;  // Convert to square feet
+        squareFootage += backsplashArea;  // Add backsplash area to the total
     }
 
     // Update pricing based on finish type
@@ -1698,7 +1649,11 @@ function calculateAndAddItem(shape, shapeData, type, container) {
         itemDescription += ` - Mix-in Colors: ${shapeData.mixInColors.join(', ')}`;
     }
 
-    // Add to items list with the imageUrl (fix)
+    if (shapeData.hasBacksplash) {
+        itemDescription += ` - Backsplash: ${shapeData.backsplashWidth}x${shapeData.backsplashHeight} inches`;
+    }
+
+    // Add to items list
     items.push({
         description: itemDescription,
         squareFootage: squareFootage.toFixed(2),
