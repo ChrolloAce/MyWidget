@@ -857,7 +857,7 @@ function styleInputField(input) {
  
     
     
-  function promptBacksplash(shape, type, container, shapeData) {
+ function promptBacksplash(shape, type, container, shapeData) {
     container.innerHTML = '';
 
     const header = document.createElement('h2');
@@ -903,80 +903,66 @@ function styleInputField(input) {
     });
 }
 
+    
+    
+  function promptMeasurements(shape, type, container, shapeData) {
+    container.innerHTML = '';
 
-    
-    
-    function promptMeasurements(shape, type, container, shapeData) {
-        container.innerHTML = '';
-    
-        // Add the shape image at the top
-        const imageDiv = document.createElement('div');
-        imageDiv.style.textAlign = 'center';
-        imageDiv.style.marginBottom = '20px';
-    
-        const shapeImage = document.createElement('img');
-        shapeImage.src = shape.imageUrl;
-        shapeImage.alt = shape.name;
-        shapeImage.style.maxWidth = '100%';
-        shapeImage.style.height = 'auto';
-        shapeImage.style.borderRadius = '15px';
-        shapeImage.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
-        imageDiv.appendChild(shapeImage);
-    
-        container.appendChild(imageDiv);
-        
-        const header = document.createElement('h2');
-        header.textContent = 'Enter Measurements (in inches)';
-        header.style.color = '#0C1729';
-        header.style.marginBottom = '20px';
-        header.style.fontSize = '24px';
-        container.appendChild(header);
-    
-        const formDiv = document.createElement('div');
-        formDiv.style.display = 'flex';
-        formDiv.style.flexDirection = 'column';
-        formDiv.style.alignItems = 'center';
-        formDiv.style.gap = '10px';
-        container.appendChild(formDiv);
-    
-        const measurementInputs = [];
-    
-        shape.measurements.forEach((measurement, index) => {
-            const label = document.createElement('label');
-            label.textContent = `Measurement ${index + 1}:`;
-            label.style.color = '#0C1729';
-            label.style.marginBottom = '5px';
-            label.style.fontSize = '18px';
-            formDiv.appendChild(label);
-    
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.style.width = '80%';
-            input.style.padding = '10px';
-            input.style.marginBottom = '10px';
-            input.style.border = '1px solid #ddd';
-            input.style.borderRadius = '5px';
-            input.style.fontSize = '18px';
-            formDiv.appendChild(input);
-    
-            measurementInputs.push(input);
-        });
-    
-        const nextBtn = document.createElement('button');
-        nextBtn.textContent = 'Next';
-        styleButton(nextBtn);
-        formDiv.appendChild(nextBtn);
-    
-        nextBtn.addEventListener('click', function () {
-            const measurements = measurementInputs.map(input => parseFloat(input.value));
-            if (measurements.some(value => isNaN(value) || value <= 0)) {
-                alert('Please enter valid measurements.');
-            } else {
-                shapeData.measurements = measurements;
-                promptFinishType(shape, type, container, shapeData);
-            }
-        });
-    }
+    const header = document.createElement('h2');
+    header.textContent = 'Enter Measurements (in inches)';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    const formDiv = document.createElement('div');
+    formDiv.style.display = 'flex';
+    formDiv.style.flexDirection = 'column';
+    formDiv.style.alignItems = 'center';
+    formDiv.style.gap = '10px';
+    container.appendChild(formDiv);
+
+    const measurementInputs = [];
+
+    shape.measurements.forEach((measurement, index) => {
+        const label = document.createElement('label');
+        label.textContent = `Measurement ${index + 1}:`;
+        label.style.color = '#0C1729';
+        label.style.marginBottom = '5px';
+        label.style.fontSize = '18px';
+        formDiv.appendChild(label);
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.style.width = '80%';
+        input.style.padding = '10px';
+        input.style.marginBottom = '10px';
+        input.style.border = '1px solid #ddd';
+        input.style.borderRadius = '5px';
+        input.style.fontSize = '18px';
+        formDiv.appendChild(input);
+
+        measurementInputs.push(input);
+    });
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    styleButton(nextBtn);
+    formDiv.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', function () {
+        const measurements = measurementInputs.map(input => parseFloat(input.value));
+        if (measurements.some(value => isNaN(value) || value <= 0)) {
+            alert('Please enter valid measurements.');
+        } else {
+            shapeData.measurements = measurements;
+
+            // Once measurements are entered, prompt for backsplash
+            promptBacksplash(shape, type, container, shapeData);
+        }
+    });
+}
+
     
     function promptFinishType(shape, type, container, shapeData) {
     container.innerHTML = '';
