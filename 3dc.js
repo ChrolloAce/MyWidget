@@ -4,8 +4,8 @@
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
 
-    // URL to your hosted countermain.fbx file (replace this with your raw GitHub link)
-    const FBX_MODEL_URL = 'https://github.com/ChrolloAce/MyWidget/raw/main/countermain.fbx';
+    // Use the direct Dropbox link to your FBX file
+    const FBX_MODEL_URL = 'https://www.dropbox.com/scl/fi/a75mvfx8z5xeunh7s7tk6/countermain.fbx?raw=1';
 
     /**
      * Dynamically loads a script.
@@ -181,7 +181,6 @@
                             child.material.color.set(color);
                             child.material.needsUpdate = true;
                         }
-                        // If the material uses textures, consider replacing or modifying them accordingly
                     }
                 }
             });
