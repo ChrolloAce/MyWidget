@@ -4,8 +4,8 @@
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
 
-    // Use the new Netlify-hosted URL for the .fbx file
-    const FBX_MODEL_URL = 'https://66e89f4410326b29f01a8ae1--timely-lebkuchen-1a0c24.netlify.app/countermain.fbx';
+    // Use the CORS proxy to load the .fbx file
+    const FBX_MODEL_URL = 'https://cors-anywhere.herokuapp.com/https://66e89f4410326b29f01a8ae1--timely-lebkuchen-1a0c24.netlify.app/countermain.fbx';
 
     /**
      * Dynamically loads a script.
@@ -70,7 +70,7 @@
         controls.minDistance = 2; // Minimum zoom distance
         controls.maxDistance = 10; // Maximum zoom distance
 
-        // Load the FBX model
+        // Load the FBX model using CORS proxy
         loadFBXModel(FBX_MODEL_URL)
             .then((loadedModel) => {
                 model = loadedModel;
