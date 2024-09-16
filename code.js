@@ -417,6 +417,7 @@ function startShapeConfiguration(shape, type, container) {
     });
 }
 
+
 function promptBacksplash(shape, type, container, shapeData) {
     container.innerHTML = '';
 
