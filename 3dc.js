@@ -6,6 +6,13 @@
         'https://unpkg.com/three@0.153.0/build/three.min.js'
     ];
 
+    // Array of OrbitControls.js CDN URLs corresponding to Three.js version
+    const ORBIT_CONTROLS_URLS = [
+        'https://cdnjs.cloudflare.com/ajax/libs/three.js/r153/examples/js/controls/OrbitControls.js', // Updated version
+        'https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/controls/OrbitControls.js',
+        'https://unpkg.com/three@0.153.0/examples/js/controls/OrbitControls.js'
+    ];
+
     /**
      * Function to dynamically load a script with fallback URLs.
      * @param {Array} urls - Array of script URLs to try loading in order.
@@ -15,18 +22,18 @@
     function loadScriptsWithFallback(urls, index = 0) {
         return new Promise((resolve, reject) => {
             if (index >= urls.length) {
-                reject(new Error('All attempts to load Three.js failed.'));
+                reject(new Error('All attempts to load the script failed.'));
                 return;
             }
 
             const script = document.createElement('script');
             script.src = urls[index];
             script.onload = () => {
-                console.log(`Successfully loaded Three.js from: ${urls[index]}`);
+                console.log(`Successfully loaded script from: ${urls[index]}`);
                 resolve();
             };
             script.onerror = () => {
-                console.warn(`Failed to load Three.js from: ${urls[index]}`);
+                console.warn(`Failed to load script from: ${urls[index]}`);
                 // Attempt to load the next URL in the array
                 loadScriptsWithFallback(urls, index + 1).then(resolve).catch(reject);
             };
@@ -38,7 +45,7 @@
      * Initializes the Three.js scene with a rotating cube and color buttons.
      */
     function init() {
-        let scene, camera, renderer, cube;
+        let scene, camera, renderer, cube, controls;
 
         // Create the scene
         scene = new THREE.Scene();
@@ -73,6 +80,14 @@
         cube = new THREE.Mesh(geometry, material);
         scene.add(cube); // Add cube to the scene
 
+        // Initialize OrbitControls for manual rotation
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Enable smooth damping
+        controls.dampingFactor = 0.05;
+        controls.enablePan = false; // Disable panning
+        controls.minDistance = 2; // Minimum zoom distance
+        controls.maxDistance = 10; // Maximum zoom distance
+
         // Create color buttons
         createColorButtons(cube);
 
@@ -88,9 +103,11 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // Rotate the cube for a dynamic effect
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
+            // Optional: Rotate the cube automatically
+            // cube.rotation.x += 0.01;
+            // cube.rotation.y += 0.01;
+
+            controls.update(); // Update controls (required if enableDamping is true)
 
             renderer.render(scene, camera); // Render the scene
         }
@@ -144,10 +161,15 @@
     // Load Three.js from multiple CDNs with fallback
     loadScriptsWithFallback(THREE_JS_URLS)
         .then(() => {
-            init(); // Initialize the scene after Three.js is loaded
+            // After Three.js is loaded, load OrbitControls.js
+            return loadScriptsWithFallback(ORBIT_CONTROLS_URLS);
+        })
+        .then(() => {
+            // Initialize the scene after both Three.js and OrbitControls.js are loaded
+            init();
         })
         .catch((error) => {
             console.error(error.message);
-            alert('Failed to load Three.js. Please check your internet connection or try again later.');
+            alert('Failed to load necessary scripts. Please check your internet connection or try again later.');
         });
 })();
