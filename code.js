@@ -425,43 +425,68 @@ function startShapeConfiguration(shape, type, container) {
 
 
 
-
 function promptBacksplash(shape, type, container, shapeData) {
-    container.innerHTML = '';  // Clears the container
-    
-    const question = type === 'Bar Top' ? 'Does this bar top have a backsplash?' : 'Does this countertop have a backsplash?';
+    container.innerHTML = ''; // Clear the container
 
+    // Create the header for the question
     const header = document.createElement('h2');
-    header.textContent = question;
+    header.textContent = 'Does this countertop have a backsplash?';
     header.style.color = '#0C1729';
     header.style.marginBottom = '20px';
     header.style.fontSize = '24px';
     container.appendChild(header);
 
+    // Add explanatory image and text
+    const imageDiv = document.createElement('div');
+    imageDiv.style.textAlign = 'center';
+    imageDiv.style.marginBottom = '20px';
+
+    const backsplashImage = document.createElement('img');
+    backsplashImage.src = 'https://i.ibb.co/XjdF26x/Backsplash.png'; // Backsplash image URL
+    backsplashImage.alt = 'Backsplash';
+    backsplashImage.style.maxWidth = '100%';
+    backsplashImage.style.height = 'auto';
+    imageDiv.appendChild(backsplashImage);
+
+    // Add explanatory text below the image
+    const description = document.createElement('p');
+    description.textContent = 'A backsplash is the vertical extension of your countertop that connects everything. It is usually 4 inches in height and varies in width based on your design.';
+    description.style.color = '#0C1729';
+    description.style.fontSize = '16px';
+    description.style.marginTop = '10px';
+    imageDiv.appendChild(description);
+
+    container.appendChild(imageDiv);
+
+    // Create Yes/No button container
     const buttonContainer = document.createElement('div');
     buttonContainer.style.display = 'flex';
     buttonContainer.style.justifyContent = 'center';
-    buttonContainer.style.gap = '20px';
+    buttonContainer.style.gap = '20px'; // Space between buttons
     container.appendChild(buttonContainer);
 
+    // Create the Yes button
     const yesBtn = document.createElement('button');
     yesBtn.textContent = 'Yes';
     styleColoredButton(yesBtn, '#28a745'); // Green color for 'Yes'
     buttonContainer.appendChild(yesBtn);
 
+    // Create the No button
     const noBtn = document.createElement('button');
     noBtn.textContent = 'No';
     styleColoredButton(noBtn, '#dc3545'); // Red color for 'No'
     buttonContainer.appendChild(noBtn);
 
+    // Handle Yes click
     yesBtn.addEventListener('click', function () {
         shapeData.hasBacksplash = true;
-        promptBacksplashDimensions(shape, type, container, shapeData); // Proceed to collect height and width
+        promptBacksplashDimensions(shape, type, container, shapeData); // Proceed to collect backsplash dimensions
     });
 
+    // Handle No click
     noBtn.addEventListener('click', function () {
         shapeData.hasBacksplash = false;
-        promptFinishType(shape, type, container, shapeData); // Proceed to next step
+        promptFinishType(shape, type, container, shapeData); // Proceed to finish type selection
     });
 }
 
