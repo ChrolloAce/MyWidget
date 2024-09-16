@@ -29,6 +29,8 @@
         });
     }
 
+
+    
     /**
      * Initializes the Three.js scene with the FBX model and color buttons.
      */
@@ -128,9 +130,18 @@
             });
         }
 
-        /**
-         * Function to create interactive color buttons arranged side by side.
-         */
+       
+promptShapeMeasurements(shape, container, shapeData, function (measurements) {
+    shapeData.measurements = measurements;
+    if (type === 'Regular Counter') {
+        promptBacksplash(shape, type, container, shapeData); // Ensure this is called
+    } else {
+        promptFinishType(shape, type, container, shapeData);
+    }
+});
+
+
+         
         function createColorButtons() {
             // Define desired colors
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff', '#000000'];
