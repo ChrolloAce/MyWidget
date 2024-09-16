@@ -4,8 +4,8 @@
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
 
-    // URL to your hosted countermain.fbx file
-    const FBX_MODEL_URL = 'https://assets.website-files.com/your-project-id/countermain.fbx'; // Replace with your actual URL
+    // URL to your hosted countermain.fbx file (replace this with your raw GitHub link)
+    const FBX_MODEL_URL = 'https://github.com/ChrolloAce/MyWidget/raw/main/countermain.fbx';
 
     /**
      * Dynamically loads a script.
@@ -201,80 +201,17 @@
      * Ensures that Three.js, OrbitControls.js, and FBXLoader.js are loaded before initializing the scene.
      */
     function loadAndInitialize() {
-        const THREE_JS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
-        const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
-        const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
-        const FBX_MODEL_URL = 'https://assets.website-files.com/your-project-id/countermain.fbx'; // Replace with your actual URL
-
-        /**
-         * Dynamically loads a script.
-         * @param {string} url - The URL of the script to load.
-         * @returns {Promise} - Resolves when the script is loaded successfully.
-         */
-        function loadScript(url) {
-            return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = url;
-                script.async = false; // Ensure scripts are executed in order
-                script.onload = () => {
-                    console.log(`Successfully loaded script: ${url}`);
-                    resolve();
-                };
-                script.onerror = () => {
-                    console.error(`Failed to load script: ${url}`);
-                    reject(new Error(`Failed to load script: ${url}`));
-                };
-                document.head.appendChild(script);
+        loadScript(THREE_JS_URL)
+            .then(() => loadScript(ORBIT_CONTROLS_URL))
+            .then(() => loadScript(FBX_LOADER_URL))
+            .then(() => {
+                // Initialize the scene after all scripts are loaded
+                init();
+            })
+            .catch((error) => {
+                console.error(error.message);
+                alert('Failed to load necessary scripts. Please check your internet connection or try again later.');
             });
-        }
-
-        // Check if THREE is already loaded to prevent multiple instances
-        if (typeof THREE === 'undefined') {
-            // Load Three.js, OrbitControls.js, and FBXLoader.js sequentially
-            loadScript(THREE_JS_URL)
-                .then(() => loadScript(ORBIT_CONTROLS_URL))
-                .then(() => loadScript(FBX_LOADER_URL))
-                .then(() => {
-                    // Initialize the scene after all scripts are loaded
-                    init();
-                })
-                .catch((error) => {
-                    console.error(error.message);
-                    alert('Failed to load necessary scripts. Please check your internet connection or try again later.');
-                });
-        } else {
-            // THREE is already loaded
-            // Check if OrbitControls is defined
-            if (typeof THREE.OrbitControls === 'undefined') {
-                loadScript(ORBIT_CONTROLS_URL)
-                    .then(() => loadScript(FBX_LOADER_URL))
-                    .then(() => {
-                        // Initialize the scene after OrbitControls.js and FBXLoader.js are loaded
-                        init();
-                    })
-                    .catch((error) => {
-                        console.error(error.message);
-                        alert('Failed to load OrbitControls.js or FBXLoader.js. Please check your internet connection or try again later.');
-                    });
-            } else {
-                // OrbitControls.js is already loaded
-                // Check if FBXLoader is defined
-                if (typeof THREE.FBXLoader === 'undefined') {
-                    loadScript(FBX_LOADER_URL)
-                        .then(() => {
-                            // Initialize the scene after FBXLoader.js is loaded
-                            init();
-                        })
-                        .catch((error) => {
-                            console.error(error.message);
-                            alert('Failed to load FBXLoader.js. Please check your internet connection or try again later.');
-                        });
-                } else {
-                    // All necessary scripts are already loaded
-                    init();
-                }
-            }
-        }
     }
 
     // Execute the load and initialize process
