@@ -28,6 +28,7 @@
 
             const script = document.createElement('script');
             script.src = urls[index];
+            script.async = false; // Ensure scripts are executed in order
             script.onload = () => {
                 console.log(`Successfully loaded script from: ${urls[index]}`);
                 resolve();
