@@ -496,9 +496,8 @@ function promptBacksplash(shape, type, container, shapeData) {
 
 
 
-// 3. Create promptBacksplashDimensions Function
 function promptBacksplashDimensions(shape, type, container, shapeData) {
-    container.innerHTML = '';
+    container.innerHTML = ''; // Clear the container
 
     const header = document.createElement('h2');
     header.textContent = 'Enter Backsplash Dimensions (in inches)';
@@ -552,8 +551,8 @@ function promptBacksplashDimensions(shape, type, container, shapeData) {
     container.appendChild(nextBtn);
 
     nextBtn.addEventListener('click', function () {
-        const height = parseFloat(heightInput.value);
-        const width = parseFloat(widthInput.value);
+        const height = parseFloat(heightInput.value);  // Get the height value
+        const width = parseFloat(widthInput.value);    // Get the width value
 
         if (isNaN(height) || height <= 0 || isNaN(width) || width <= 0) {
             alert('Please enter valid positive numbers for both height and width.');
@@ -563,10 +562,12 @@ function promptBacksplashDimensions(shape, type, container, shapeData) {
         shapeData.backsplashHeight = height;
         shapeData.backsplashWidth = width;
 
-        // Proceed to finish type selection
+        // Proceed to the next step, which is prompting for finish type
         promptFinishType(shape, type, container, shapeData);
     });
 }
+
+
 
 
 // 4. Update calculateAndAddItem Function
