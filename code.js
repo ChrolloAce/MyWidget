@@ -404,17 +404,14 @@ function selectBathroomType(container) {
     let shapeData = {
         hasBacksplash: false,
         backsplashHeight: 0,
+        backsplashWidth: 0,  // New: Width for backsplash
         measurements: [],
         finishType: ''
     };
 
-    // Skip backsplash for Island
-    if (type === 'Island') {
-        promptMeasurements(shape, type, container, shapeData);  // Skip directly to measurements
-    } else {
-        // Start the first step
-        promptBacksplash(shape, type, container, shapeData);  // Ask for backsplash if not Island
-    }
+
+       promptMeasurements(shape, type, container, shapeData);  // Ask for measurements first
+
 }
 
     
