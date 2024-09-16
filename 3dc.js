@@ -4,8 +4,8 @@
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
 
-    // Use the Netlify-hosted URL for the .fbx file
-    const FBX_MODEL_URL = 'https://chipper-licorice-40e27b.netlify.app/countermain.fbx';
+    // Use the new Netlify-hosted URL for the .fbx file
+    const FBX_MODEL_URL = 'https://66e89f4410326b29f01a8ae1--timely-lebkuchen-1a0c24.netlify.app/counters.fbx';
 
     /**
      * Dynamically loads a script.
