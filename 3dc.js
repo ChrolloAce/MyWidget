@@ -4,8 +4,8 @@
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
 
-    // Use the direct Dropbox link to your FBX file
-    const FBX_MODEL_URL = 'https://www.dropbox.com/scl/fi/a75mvfx8z5xeunh7s7tk6/countermain.fbx?raw=1';
+    // Use the Netlify-hosted URL for the .fbx file
+    const FBX_MODEL_URL = 'https://chipper-licorice-40e27b.netlify.app/countermain.fbx';
 
     /**
      * Dynamically loads a script.
@@ -29,8 +29,6 @@
         });
     }
 
-
-    
     /**
      * Initializes the Three.js scene with the FBX model and color buttons.
      */
@@ -130,18 +128,9 @@
             });
         }
 
-       
-promptShapeMeasurements(shape, container, shapeData, function (measurements) {
-    shapeData.measurements = measurements;
-    if (type === 'Regular Counter') {
-        promptBacksplash(shape, type, container, shapeData); // Ensure this is called
-    } else {
-        promptFinishType(shape, type, container, shapeData);
-    }
-});
-
-
-         
+        /**
+         * Function to create interactive color buttons arranged side by side.
+         */
         function createColorButtons() {
             // Define desired colors
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff', '#000000'];
