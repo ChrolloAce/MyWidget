@@ -418,10 +418,10 @@ function startShapeConfiguration(shape, type, container) {
 }
 
 
-function promptBacksplash(shape, type, container, shapeData) {
-    container.innerHTML = '';
 
-    // Dynamic question based on type
+function promptBacksplash(shape, type, container, shapeData) {
+    container.innerHTML = '';  // Clears the container
+    
     const question = type === 'Bar Top' ? 'Does this bar top have a backsplash?' : 'Does this countertop have a backsplash?';
 
     const header = document.createElement('h2');
@@ -431,32 +431,10 @@ function promptBacksplash(shape, type, container, shapeData) {
     header.style.fontSize = '24px';
     container.appendChild(header);
 
-    // Add the image
-    const imageDiv = document.createElement('div');
-    imageDiv.style.textAlign = 'center';
-    imageDiv.style.marginBottom = '20px';
-
-    const backsplashImage = document.createElement('img');
-    backsplashImage.src = 'https://i.ibb.co/XjdF26x/Backsplash.png';
-    backsplashImage.alt = 'Backsplash';
-    backsplashImage.style.maxWidth = '100%';
-    backsplashImage.style.height = 'auto';
-    imageDiv.appendChild(backsplashImage);
-
-    // Add explanatory text under the image
-    const description = document.createElement('p');
-    description.textContent = 'A backsplash is the vertical extension of your countertop that connects everything. It is usually 4 inches in height and varies in width based on your design.';
-    description.style.color = '#0C1729';
-    description.style.fontSize = '16px';
-    description.style.marginTop = '10px';
-    imageDiv.appendChild(description);
-
-    container.appendChild(imageDiv);
-
     const buttonContainer = document.createElement('div');
     buttonContainer.style.display = 'flex';
     buttonContainer.style.justifyContent = 'center';
-    buttonContainer.style.gap = '20px'; // Increased margin between buttons
+    buttonContainer.style.gap = '20px';
     container.appendChild(buttonContainer);
 
     const yesBtn = document.createElement('button');
@@ -479,6 +457,7 @@ function promptBacksplash(shape, type, container, shapeData) {
         promptFinishType(shape, type, container, shapeData); // Proceed to next step
     });
 }
+
 
 
 // 3. Create promptBacksplashDimensions Function
@@ -1121,23 +1100,15 @@ function styleInputField(input) {
     styleButton(nextBtn);
     container.appendChild(nextBtn);
 
-    nextBtn.addEventListener('click', function () {
-        const width = parseFloat(widthInput.value);
-        const height = parseFloat(heightInput.value);
+  nextBtn.addEventListener('click', function () {
+    const measurements = measurementInputs.map(input => parseFloat(input.value));
+    if (measurements.some(value => isNaN(value) || value <= 0)) {
+        alert('Please enter valid measurements.');
+    } else {
+        callback(measurements); // This should trigger `promptBacksplash`
+    }
+});
 
-        if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
-            alert('Please enter valid dimensions for the backsplash.');
-            return;
-        }
-
-        // Store the backsplash dimensions
-        shapeData.hasBacksplash = true;
-        shapeData.backsplashWidth = width;
-        shapeData.backsplashHeight = height;
-
-        // Proceed to the finish type selection
-        promptFinishType(shape, type, container, shapeData);
-    });
 }
 
     
