@@ -105,10 +105,11 @@
     }
 
     /**
-     * Initializes the Three.js scene with a cube and color buttons.
+     * Initializes the Three.js scene with a countertop and color customization for the top and cabinets.
      */
     function init() {
-        let scene, camera, renderer, cube, controls;
+        let scene, camera, renderer, controls;
+        let countertop, cabinets;
 
         // Create the container elements for layout
         const container = document.createElement('div');
@@ -117,7 +118,12 @@
 
         const editor = document.createElement('div');
         editor.classList.add('editor');
-        editor.innerHTML = '<h2>Color Editor</h2><div class="button-container"></div>';
+        editor.innerHTML = `
+            <h2>Countertop Colors</h2>
+            <div class="top-container"></div>
+            <h2>Cabinet Colors</h2>
+            <div class="cabinet-container"></div>
+        `;
         container.appendChild(editor);
 
         const sceneContainer = document.createElement('div');
@@ -135,7 +141,7 @@
             0.1, // Near clipping plane
             1000 // Far clipping plane
         );
-        camera.position.set(0, 2, 5); // Adjust camera position as needed
+        camera.position.set(0, 3, 5); // Adjust camera position as needed
 
         // Set up the renderer
         renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -151,11 +157,19 @@
         directionalLight.position.set(5, 10, 7.5);
         scene.add(directionalLight);
 
-        // Create a cube (square in 3D)
-        const geometry = new THREE.BoxGeometry(1, 1, 1); // A 1x1x1 cube
-        const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Default green color
-        cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+        // Create the countertop
+        const countertopGeometry = new THREE.BoxGeometry(3, 0.1, 2); // Top surface of the countertop
+        const countertopMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 }); // Default gray color
+        countertop = new THREE.Mesh(countertopGeometry, countertopMaterial);
+        countertop.position.y = 1; // Set it at the top
+        scene.add(countertop);
+
+        // Create the cabinets (below the countertop)
+        const cabinetGeometry = new THREE.BoxGeometry(3, 1, 2); // Cabinet part below the countertop
+        const cabinetMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 }); // Default dark color
+        cabinets = new THREE.Mesh(cabinetGeometry, cabinetMaterial);
+        cabinets.position.y = 0.5; // Just below the countertop
+        scene.add(cabinets);
 
         // Initialize OrbitControls for manual rotation
         controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -165,8 +179,9 @@
         controls.minDistance = 2; // Minimum zoom distance
         controls.maxDistance = 10; // Maximum zoom distance
 
-        // Create color buttons
-        createColorButtons();
+        // Create color buttons for both the countertop and cabinets
+        createColorButtons('top-container', changeTopColor);
+        createColorButtons('cabinet-container', changeCabinetColor);
 
         // Handle window resize
         window.addEventListener('resize', onWindowResize, false);
@@ -184,11 +199,11 @@
         }
 
         /**
-         * Function to create interactive color buttons arranged side by side.
+         * Function to create interactive color buttons for either the countertop or cabinets.
          */
-        function createColorButtons() {
+        function createColorButtons(containerClass, changeColorCallback) {
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff', '#000000'];
-            const buttonContainer = document.querySelector('.button-container');
+            const buttonContainer = document.querySelector(`.${containerClass}`);
 
             // Create a button for each color
             colors.forEach((color) => {
@@ -196,23 +211,36 @@
                 button.style.backgroundColor = color;
                 button.title = `Change color to ${color}`;
                 button.addEventListener('click', () => {
-                    changeCubeColor(color);
+                    changeColorCallback(color);
                 });
                 buttonContainer.appendChild(button);
             });
         }
 
         /**
-         * Function to change the color of the cube.
+         * Function to change the color of the countertop.
          * @param {string} color - The hexadecimal color code to apply.
          */
-        function changeCubeColor(color) {
-            if (!cube) {
-                console.warn('Cube not loaded yet.');
+        function changeTopColor(color) {
+            if (!countertop) {
+                console.warn('Countertop not loaded yet.');
                 return;
             }
-            cube.material.color.set(color);
-            cube.material.needsUpdate = true;
+            countertop.material.color.set(color);
+            countertop.material.needsUpdate = true;
+        }
+
+        /**
+         * Function to change the color of the cabinets.
+         * @param {string} color - The hexadecimal color code to apply.
+         */
+        function changeCabinetColor(color) {
+            if (!cabinets) {
+                console.warn('Cabinets not loaded yet.');
+                return;
+            }
+            cabinets.material.color.set(color);
+            cabinets.material.needsUpdate = true;
         }
 
         /**
