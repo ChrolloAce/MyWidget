@@ -1445,7 +1445,6 @@ function promptFinishOptions(shape, type, container, shapeData) {
 
 
          
-// Function to calculate and add an item to the invoice
 function calculateAndAddItem(shape, shapeData, type, container) {
     const measurements = shapeData.measurements;
 
@@ -1462,10 +1461,16 @@ function calculateAndAddItem(shape, shapeData, type, container) {
     // Calculate square footage based on shape formula
     let squareFootage = shape.formula(measurements, depth);
 
-    // Add backsplash square footage if applicable
-    if (shapeData.hasBacksplash && shapeData.backsplashHeight > 0) {
-        const backsplashArea = measurements[0] * (shapeData.backsplashHeight / 12); // Convert height to feet
-        squareFootage += backsplashArea / 12; // Convert length to feet
+    // Check for backsplash input and calculate area
+    if (shapeData.hasBacksplash) {
+        const backsplashWidth = parseFloat(shapeData.backsplashWidthInput.value);
+        const backsplashHeight = parseFloat(shapeData.backsplashHeightInput.value);
+
+        if (backsplashWidth > 0 && backsplashHeight > 0) {
+            // Convert both width and height to feet from inches
+            const backsplashArea = (backsplashWidth / 12) * (backsplashHeight / 12);
+            squareFootage += backsplashArea; // Add backsplash area to total square footage
+        }
     }
 
     // Update pricing based on finish type
@@ -1502,6 +1507,15 @@ function calculateAndAddItem(shape, shapeData, type, container) {
         itemDescription += ` - Add-on Colors: ${shapeData.addonColors.join(', ')}`;
     }
 
+    if (shapeData.hasBacksplash) {
+        const backsplashWidth = parseFloat(shapeData.backsplashWidthInput.value);
+        const backsplashHeight = parseFloat(shapeData.backsplashHeightInput.value);
+
+        if (backsplashWidth > 0 && backsplashHeight > 0) {
+            itemDescription += ` - Backsplash: ${backsplashWidth}in x ${backsplashHeight}in`;
+        }
+    }
+
     // Add to items list with the imageUrl (ensure imageUrl is passed correctly)
     items.push({
         description: itemDescription,
@@ -1516,6 +1530,7 @@ function calculateAndAddItem(shape, shapeData, type, container) {
     // Redirect back to the invoice page and show the updated item list
     createInvoicePage(container);
 }
+
 
 
 function updateItemList(container) {
