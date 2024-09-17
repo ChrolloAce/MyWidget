@@ -362,12 +362,94 @@ body {
         return button;
     }
 
+    function selectCategory(category, container) {
+    container.innerHTML = '';
+
+    const header = createElement('h2', null, `Choose a ${category} Shape`);
+    container.appendChild(header);
+
+    const shapeContainer = createElement('div', 'button-group');
+    container.appendChild(shapeContainer);
+
+    const shapes = getShapesForType(category);
+    shapes.forEach(shape => {
+        const shapeBtn = createImageButton(shape.name, shape.imageUrl);
+        shapeContainer.appendChild(shapeBtn);
+
+        shapeBtn.addEventListener('click', () => {
+            previousPage = () => selectCategory(category, container);
+            startShapeConfiguration(shape, category, container);
+        });
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        previousPage(container);
+    });
+}
+
+    
+
     function styleButton(button, additionalClasses = '') {
         button.classList.add('button');
         if (additionalClasses) {
             additionalClasses.split(' ').forEach(cls => button.classList.add(cls));
         }
     }
+
+
+    function navigateToCategorySelectionPage(container) {
+    container.innerHTML = '';
+
+    const header = createElement('h2', null, 'Choose a Category');
+    container.appendChild(header);
+
+    const categoryContainer = createElement('div', 'button-group');
+    container.appendChild(categoryContainer);
+
+    const categories = ['Counter', 'Island', 'Bar Top']; // Define your categories here
+
+    categories.forEach(category => {
+        const categoryBtn = createImageButton(category, getCategoryImageUrl(category));
+        categoryContainer.appendChild(categoryBtn);
+
+      categoryBtn.addEventListener('click', () => {
+    // Remove 'selected-category' from all category buttons
+    Array.from(categoryContainer.children).forEach(child => {
+        child.classList.remove('selected-category');
+    });
+    // Add 'selected-category' to the clicked button
+    categoryBtn.classList.add('selected-category');
+
+    previousPage = navigateToCategorySelectionPage;
+    selectCategory(category, container);
+});
+    });
+
+    // Back Button (if exists)
+    if (previousPage) {
+        const backButton = createElement('button', 'button back-button', 'Back');
+        container.appendChild(backButton);
+
+        backButton.addEventListener('click', () => {
+            previousPage(container);
+        });
+    }
+}
+
+// Helper function to get category image URLs
+function getCategoryImageUrl(category) {
+    const images = {
+        'Counter': 'https://i.ibb.co/tPH5VT2/10.png', // Replace with actual image URLs
+        'Island': 'https://i.ibb.co/2WfRSkn/islandsquare.png',
+        'Bar Top': 'https://i.ibb.co/4PNXrnc/1.png'
+    };
+    return images[category] || 'https://via.placeholder.com/250'; // Fallback image
+}
+
 
     function createColorSquare(colorName, hexCode) {
         const colorDiv = createElement('div', 'color-square');
@@ -546,9 +628,16 @@ body {
             bathroomOptions.appendChild(shapeBtn);
 
             shapeBtn.addEventListener('click', () => {
-                previousPage = selectBathroomType;
-                startShapeConfiguration(shape, 'Bathroom', container);
-            });
+    // Remove 'selected-shape' from all shape buttons
+    Array.from(shapeContainer.children).forEach(child => {
+        child.classList.remove('selected-shape');
+    });
+    // Add 'selected-shape' to the clicked button
+    shapeBtn.classList.add('selected-shape');
+
+    previousPage = () => selectCategory(category, container);
+    startShapeConfiguration(shape, category, container);
+});
         });
 
         // Back Button
