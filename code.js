@@ -41,326 +41,378 @@
     (function injectStyles() {
         const styles = `
         /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #ffffff;
-            font-family: 'Arial', sans-serif;
-        }
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
 
-        /* Container */
-        .container {
-            width: 95%;
-            max-width: 800px;
-            background-color: #f9f9f9;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin: 60px auto 30px auto;
-            transition: all 0.3s ease;
-        }
+/* Container */
+.container {
+    width: 95%;
+    max-width: 800px;
+    background-color: #f9f9f9;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 60px auto 30px auto;
+    transition: all 0.3s ease;
+}
 
-        /* Headers */
-        .container h1,
-        .container h2,
-        .container h3 {
-            color: #333333;
-            margin-bottom: 20px;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        }
+/* Headers */
+.container h1,
+.container h2 {
+    color: #333333;
+    margin-bottom: 20px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
 
-        .container h1 {
-            font-size: 32px;
-        }
+.container h1 {
+    font-size: 32px;
+}
 
-        .container h2 {
-            font-size: 24px;
-        }
+.container h2 {
+    font-size: 24px;
+}
 
-        .container h3 {
-            font-size: 20px;
-        }
+/* Paragraphs */
+.container p {
+    color: #555555;
+    font-size: 16px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
 
-        /* Paragraphs */
-        .container p {
-            color: #555555;
-            font-size: 16px;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
+/* Form Styles */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 20px;
+}
 
-        /* Form Styles */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 100%;
-            margin-bottom: 20px;
-        }
+.form-group label {
+    color: #333333;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
 
-        .form-group label {
-            color: #333333;
-            margin-bottom: 5px;
-            font-size: 16px;
-            font-weight: bold;
-        }
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
 
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #cccccc;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
+.form-group input:focus {
+    border-color: #0264D9;
+    outline: none;
+    box-shadow: 0 0 5px rgba(2, 100, 217, 0.5);
+}
 
-        .form-group input:focus {
-            border-color: #0264D9;
-            outline: none;
-            box-shadow: 0 0 5px rgba(2, 100, 217, 0.5);
-        }
+/* Button Styles */
+.button {
+    padding: 14px 20px;
+    background-color: #0264D9;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px auto;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: block;
+    max-width: 200px;
+}
 
-        /* Button Styles */
-        .button {
-            padding: 14px 20px;
-            background-color: #0264D9;
-            color: #ffffff;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 20px auto;
-            transition: background-color 0.3s ease, opacity 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: block;
-            text-align: center;
-            max-width: 200px;
-        }
+.button:hover {
+    background-color: #004C99;
+}
 
-        .button:hover {
-            background-color: #004C99;
-        }
+.button-group {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
 
-        /* Image Button Styles */
-        .image-button {
-            position: relative;
-            width: 250px;
-            aspect-ratio: 1 / 1;
-            border: 2px solid #000000;
-            border-radius: 15px;
-            overflow: hidden;
-            cursor: pointer;
-            background-size: cover;
-            background-position: center;
-            margin: 20px auto;
-            transition: border 0.3s ease, transform 0.3s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* Green Button */
+.button.green-button {
+    background-color: #28a745;
+    color: #ffffff;
+}
 
-        .image-button:hover {
-            border: 4px solid #0264D9;
-            transform: scale(1.05);
-        }
+.button.green-button:hover {
+    background-color: #218838;
+}
 
-        .image-button .overlay {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
-            padding: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-        }
+/* Image Button Styles */
+.image-button {
+    position: relative;
+    width: 250px;
+    aspect-ratio: 1 / 1;
+    border: 2px solid #000000;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    margin: 20px auto;
+    transition: border 0.3s ease, transform 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        /* Back Button Styles */
-        .back-button {
-            background-color: #f44336;
-            max-width: 150px;
-        }
+.image-button:hover {
+    border: 4px solid #0264D9;
+    transform: scale(1.05);
+}
 
-        .back-button:hover {
-            background-color: #d32f2f;
-        }
+.image-button .overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
 
-        /* Item List Styles */
-        .item-list {
-            margin-top: 30px;
-            text-align: left;
-        }
+/* Backsplash Question */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
 
-        .item-list h3 {
-            color: #333333;
-            margin-bottom: 15px;
-        }
+/* Invoice / Quote Screen */
+h2 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
 
-        .item-list p {
-            color: #777777;
-        }
+p {
+    font-size: 28px;
+    color: #333333;
+    margin-bottom: 20px;
+}
 
-        .item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #dddddd;
-        }
+/* Item List */
+.item-list {
+    margin-top: 30px;
+    text-align: left;
+}
 
-        .item img {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
+.item-list h3 {
+    color: #333333;
+    margin-bottom: 15px;
+}
 
-        .item-description {
-            flex: 1;
-            display: flex;
-            align-items: center;
-        }
+.item-list p {
+    color: #777777;
+}
 
-        .item-description span {
-            margin-left: 10px;
-            font-size: 16px;
-            color: #333333;
-        }
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #dddddd;
+}
 
-        .item-remove {
-            background-color: #dc3545;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            color: #ffffff;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-        }
+.item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 10px;
+}
 
-        .item-remove:hover {
-            background-color: #c82333;
-        }
+.item-description {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
+.item-description span {
+    margin-left: 10px;
+    font-size: 16px;
+    color: #333333;
+}
 
-            .image-button {
-                width: 100%;
-                max-width: 250px;
-                aspect-ratio: 1 / 1;
-                margin: 10px auto;
-            }
+.item-remove {
+    background-color: #dc3545;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
 
-            .button, .back-button {
-                width: 100%;
-                max-width: none;
-            }
+.item-remove:hover {
+    background-color: #c82333;
+}
 
-            .item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
 
-            .item-remove {
-                margin-top: 10px;
-            }
+    .image-button {
+        width: 100%;
+        max-width: 250px;
+        margin: 10px auto;
+    }
 
-            .container h1 {
-                font-size: 28px;
-            }
+    .button, .back-button {
+        width: 100%;
+        max-width: none;
+    }
 
-            .container h2 {
-                font-size: 20px;
-            }
+    .item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-            .container h3 {
-                font-size: 18px;
-            }
+    .item-remove {
+        margin-top: 10px;
+    }
 
-            .container p, .form-group label, .form-group input, .item-description span {
-                font-size: 14px;
-            }
+    .container h1 {
+        font-size: 28px;
+    }
 
-            .image-button .overlay {
-                font-size: 14px;
-                padding: 8px;
-            }
-        }
+    .container h2 {
+        font-size: 20px;
+    }
 
-        /* Color Selection Styles */
-        .color-selection {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+    .container p, .form-group label, .form-group input, .item-description span {
+        font-size: 14px;
+    }
 
-        .color-square {
-            width: 80px;
-            height: 80px;
-            border: 2px solid #dddddd;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: border 0.3s ease;
-        }
+    .image-button .overlay {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
 
-        .color-square.selected {
-            border: 4px solid #0264D9;
-        }
+/* Large Quote Price */
+.quote-price {
+    font-size: 48px;
+    font-weight: bold;
+    color: #333333;
+}
 
-        .color-square span {
-            color: #333333;
-            font-size: 12px;
-            font-weight: bold;
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 3px;
-            border-radius: 5px;
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+/* Form Button Container */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
 
-        /* Form Button Container */
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
+/* Back Button */
+.back-button {
+    background-color: #f44336;
+    max-width: 150px;
+}
 
-        /* Fade In Animation */
-        .fade-in {
-            animation: fadeIn 0.5s forwards;
-        }
+.back-button:hover {
+    background-color: #d32f2f;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+/* Add New Countertop Button */
+.add-countertop-button {
+    background-color: #28a745;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 14px 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 30px;
+}
+
+.add-countertop-button:hover {
+    background-color: #218838;
+}
+
+/* Color Selection Styles */
+.color-selection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.color-square {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #dddddd;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: border 0.3s ease;
+}
+
+.color-square.selected {
+    border: 4px solid #0264D9;
+}
+
+.color-square span {
+    color: #333333;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 3px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Fade In Animation */
+.fade-in {
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
         `;
 
         const styleElement = document.createElement('style');
@@ -802,141 +854,194 @@
         // Not needed as Bathroom doesn't have subcategories
     }
 
-    // Input Measurements and Backsplash
-    function inputMeasurements(container, shape) {
-        container.innerHTML = '';
 
-        const header = createElement('h2', null, `Configure ${shape.name}`);
-        container.appendChild(header);
+function askBacksplash(container, shape) {
+    container.innerHTML = '';
 
-        // Display the shape image
-        const imageDiv = createElement('div', 'image-container');
-        const shapeImage = createElement('img');
-        shapeImage.src = shape.imageUrl;
-        shapeImage.alt = shape.name;
-        shapeImage.style.width = '100%';
-        shapeImage.style.maxWidth = '300px';
-        imageDiv.appendChild(shapeImage);
-        container.appendChild(imageDiv);
+    const header = createElement('h2', null, 'Does this countertop have a backsplash?');
+    container.appendChild(header);
 
-        const form = createElement('div', 'form');
-        container.appendChild(form);
+    const buttonGroup = createElement('div', 'button-group');
+    container.appendChild(buttonGroup);
 
-        // Measurement Inputs
-        const measurementInputs = [];
-        shape.measurements.forEach((label, index) => {
-            const formGroup = createElement('div', 'form-group');
-            const inputLabel = createElement('label', null, `${label}:`);
-            const inputField = createElement('input');
-            inputField.type = 'number';
-            inputField.min = '0';
-            formGroup.appendChild(inputLabel);
-            formGroup.appendChild(inputField);
-            form.appendChild(formGroup);
-            measurementInputs.push(inputField);
-        });
+    const yesBtn = createElement('button', 'button', 'Yes');
+    const noBtn = createElement('button', 'button', 'No');
 
-        // Backsplash Option
-        const backsplashQuestion = createElement('h3', null, 'Does this countertop have a backsplash?');
-        form.appendChild(backsplashQuestion);
+    buttonGroup.appendChild(yesBtn);
+    buttonGroup.appendChild(noBtn);
 
-        const backsplashContainer = createElement('div', 'button-group');
-        form.appendChild(backsplashContainer);
+    yesBtn.addEventListener('click', () => {
+        promptBacksplashDimensions(container, shape);
+    });
 
-        const yesBtn = createElement('button', 'button', 'Yes');
-        const noBtn = createElement('button', 'button', 'No');
+    noBtn.addEventListener('click', () => {
+        shape.hasBacksplash = false;
+        addToQuote(container, shape);
+    });
 
-        backsplashContainer.appendChild(yesBtn);
-        backsplashContainer.appendChild(noBtn);
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
 
-        let hasBacksplash = false;
-        let backsplashDimensions = { width: 0, height: 0 };
+    backButton.addEventListener('click', () => {
+        inputMeasurements(container, shape);
+    });
+}
 
-        yesBtn.addEventListener('click', () => {
-            hasBacksplash = true;
-            promptBacksplashDimensions(form, () => {});
-        });
+function createQuotePage(container) {
+    container.innerHTML = '';
 
-        noBtn.addEventListener('click', () => {
-            hasBacksplash = false;
-            // Remove any existing backsplash inputs
-            const existingInputs = form.querySelectorAll('.backsplash-input');
-            existingInputs.forEach(input => input.remove());
-        });
+    const header = createElement('h2', null, 'Your Quote');
+    container.appendChild(header);
 
-        // Add to Invoice Button
-        const addBtn = createElement('button', 'button', 'Add to Invoice');
-        form.appendChild(addBtn);
+    // Display the total price, larger font
+    const totalText = createElement('p', null, `Total Price: $${totalCost.toFixed(2)}`);
+    totalText.style.fontSize = '36px';  // Make price bigger
+    totalText.style.fontWeight = 'bold';
+    container.appendChild(totalText);
 
-        addBtn.addEventListener('click', () => {
-            const measurements = measurementInputs.map(input => parseFloat(input.value));
-            if (measurements.some(value => isNaN(value) || value <= 0)) {
-                alert('Please enter valid measurements.');
-                return;
-            }
+    // View Price Estimate Button
+    const viewEstimateBtn = createElement('button', 'button', 'View Price Estimate for Free →');
+    viewEstimateBtn.style.display = 'inline-block';
+    viewEstimateBtn.style.margin = '20px';
+    container.appendChild(viewEstimateBtn);
 
-            if (hasBacksplash) {
-                const width = parseFloat(form.querySelector('#backsplash-width').value);
-                const height = parseFloat(form.querySelector('#backsplash-height').value);
-                if (isNaN(width) || width <= 0 || isNaN(height) || height <= 0) {
-                    alert('Please enter valid backsplash dimensions.');
-                    return;
-                }
-                backsplashDimensions.width = width;
-                backsplashDimensions.height = height;
-            }
+    viewEstimateBtn.addEventListener('click', () => {
+        // Collect user info or proceed to finalize quote
+        collectUserInfo(container);
+    });
 
-            // Add item to items array
-            items.push({
-                shape: shape.name,
-                measurements: measurements,
-                backsplash: hasBacksplash ? { width: backsplashDimensions.width, height: backsplashDimensions.height } : null
-            });
+    // Add New Countertop Button
+    const addCountertopBtn = createElement('button', 'button green-button', 'Add New Countertop to Your Quote');
+    addCountertopBtn.style.display = 'inline-block';
+    addCountertopBtn.style.margin = '20px';
+    container.appendChild(addCountertopBtn);
 
-            // Calculate total cost
-            calculateTotalCost();
+    addCountertopBtn.addEventListener('click', () => {
+        previousPage = createQuotePage;
+        addItem(container);
+    });
+}
 
-            // Redirect back to add item page
-            addItem(container);
-        });
+    
+function inputMeasurements(container, shape) {
+    container.innerHTML = '';
 
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        form.appendChild(backButton);
+    const header = createElement('h2', null, `Configure ${shape.name}`);
+    container.appendChild(header);
 
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
-        });
-    }
+    // Display the shape image
+    const imageDiv = createElement('div', 'image-container');
+    const shapeImage = createElement('img');
+    shapeImage.src = shape.imageUrl;
+    shapeImage.alt = shape.name;
+    shapeImage.style.width = '100%';
+    shapeImage.style.maxWidth = '300px';
+    imageDiv.appendChild(shapeImage);
+    container.appendChild(imageDiv);
 
-    // Prompt Backsplash Dimensions
-    function promptBacksplashDimensions(form, callback) {
-        // Remove existing backsplash inputs if any
-        const existingInputs = form.querySelectorAll('.backsplash-input');
-        existingInputs.forEach(input => input.remove());
+    const form = createElement('div', 'form');
+    container.appendChild(form);
 
-        // Width Input
-        const widthInput = createElement('div', 'form-group backsplash-input');
-        const widthLabel = createElement('label', null, 'Backsplash Width (in inches):');
-        const widthField = createElement('input');
-        widthField.type = 'number';
-        widthField.min = '0';
-        widthField.id = 'backsplash-width';
-        widthInput.appendChild(widthLabel);
-        widthInput.appendChild(widthField);
-        form.appendChild(widthInput);
+    // Measurement Inputs
+    const measurementInputs = [];
+    shape.measurements.forEach((label, index) => {
+        const formGroup = createElement('div', 'form-group');
+        const inputLabel = createElement('label', null, `${label}:`);
+        const inputField = createElement('input');
+        inputField.type = 'number';
+        inputField.min = '0';
+        formGroup.appendChild(inputLabel);
+        formGroup.appendChild(inputField);
+        form.appendChild(formGroup);
+        measurementInputs.push(inputField);
+    });
 
-        // Height Input
-        const heightInput = createElement('div', 'form-group backsplash-input');
-        const heightLabel = createElement('label', null, 'Backsplash Height (in inches):');
-        const heightField = createElement('input');
-        heightField.type = 'number';
-        heightField.min = '0';
-        heightField.id = 'backsplash-height';
-        heightInput.appendChild(heightLabel);
-        heightInput.appendChild(heightField);
-        form.appendChild(heightInput);
-    }
+    // Next Button for measurements
+    const nextBtn = createElement('button', 'button', 'Next');
+    form.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', () => {
+        const measurements = measurementInputs.map(input => parseFloat(input.value));
+        if (measurements.some(value => isNaN(value) || value <= 0)) {
+            alert('Please enter valid measurements.');
+            return;
+        }
+
+        // Store measurements
+        shape.measurements = measurements;
+
+        // Proceed to ask about the backsplash
+        askBacksplash(container, shape);
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    form.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        if (previousPage) previousPage();
+    });
+}
+
+
+   function promptBacksplashDimensions(container, shape) {
+    container.innerHTML = '';
+
+    const header = createElement('h2', null, 'Enter Backsplash Dimensions');
+    container.appendChild(header);
+
+    const form = createElement('div', 'form');
+    container.appendChild(form);
+
+    // Width Input
+    const widthInput = createElement('div', 'form-group');
+    const widthLabel = createElement('label', null, 'Backsplash Width (in inches):');
+    const widthField = createElement('input');
+    widthField.type = 'number';
+    widthField.min = '0';
+    widthInput.appendChild(widthLabel);
+    widthInput.appendChild(widthField);
+    form.appendChild(widthInput);
+
+    // Height Input
+    const heightInput = createElement('div', 'form-group');
+    const heightLabel = createElement('label', null, 'Backsplash Height (in inches):');
+    const heightField = createElement('input');
+    heightField.type = 'number';
+    heightField.min = '0';
+    heightInput.appendChild(heightLabel);
+    heightInput.appendChild(heightField);
+    form.appendChild(heightInput);
+
+    // Next Button
+    const nextBtn = createElement('button', 'button', 'Next');
+    form.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', () => {
+        const width = parseFloat(widthField.value);
+        const height = parseFloat(heightField.value);
+
+        if (isNaN(width) || width <= 0 || isNaN(height) || height <= 0) {
+            alert('Please enter valid dimensions.');
+            return;
+        }
+
+        shape.backsplashWidth = width;
+        shape.backsplashHeight = height;
+        shape.hasBacksplash = true;
+
+        addToQuote(container, shape);
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    form.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        askBacksplash(container, shape);
+    });
+}
 
     // Calculate Total Cost
     function calculateTotalCost() {
@@ -1069,121 +1174,101 @@
 
     // Collect User Information
     function collectUserInfo(container) {
-        container.innerHTML = '';
+    container.innerHTML = '';
 
-        const header = createElement('h2', null, 'Tell Us About You');
-        container.appendChild(header);
+    const header = createElement('h2', null, 'Tell Us About You');
+    container.appendChild(header);
 
-        const description = createElement('p', null, 'Please enter your contact information. We will send you a detailed quote.');
-        container.appendChild(description);
+    const description = createElement('p', null, 'Please enter your contact information. We will send you a detailed quote.');
+    container.appendChild(description);
 
-        const form = createElement('div', 'form');
-        container.appendChild(form);
+    const form = createElement('div', 'form');
+    container.appendChild(form);
 
-        // Name Input
-        const nameInput = createInputField('Name', 'text');
-        form.appendChild(nameInput);
+    // Name Input
+    const nameInput = createInputField('Name', 'text');
+    form.appendChild(nameInput);
 
-        // Phone Input
-        const phoneInput = createInputField('Phone Number', 'tel');
-        form.appendChild(phoneInput);
+    // Phone Input
+    const phoneInput = createInputField('Phone Number', 'tel');
+    form.appendChild(phoneInput);
 
-        // Email Input
-        const emailInput = createInputField('Email', 'email');
-        form.appendChild(emailInput);
+    // Email Input
+    const emailInput = createInputField('Email', 'email');
+    form.appendChild(emailInput);
 
-        // Zip Code Input
-        const zipCodeInput = createInputField('Zip Code', 'text');
-        form.appendChild(zipCodeInput);
+    // Zip Code Input
+    const zipCodeInput = createInputField('Zip Code', 'text');
+    form.appendChild(zipCodeInput);
 
-        // Submit Button
-        const submitBtn = createElement('button', 'button', 'Submit');
-        form.appendChild(submitBtn);
+    // Submit Button
+    const submitBtn = createElement('button', 'button', 'Submit');
+    form.appendChild(submitBtn);
 
-        submitBtn.addEventListener('click', () => {
-            // Retrieve user input values
-            userInfo.name = nameInput.querySelector('input').value.trim();
-            userInfo.phone = phoneInput.querySelector('input').value.trim();
-            userInfo.email = emailInput.querySelector('input').value.trim();
-            userInfo.zipCode = zipCodeInput.querySelector('input').value.trim();
+    submitBtn.addEventListener('click', () => {
+        // Retrieve user input values
+        userInfo.name = nameInput.querySelector('input').value.trim();
+        userInfo.phone = phoneInput.querySelector('input').value.trim();
+        userInfo.email = emailInput.querySelector('input').value.trim();
+        userInfo.zipCode = zipCodeInput.querySelector('input').value.trim();
 
-            // Validate the inputs
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const phoneRegex = /^[0-9]+$/;
-            const zipCodeRegex = /^[0-9]{5}$/;
+        // Validate the inputs
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[0-9]+$/;
+        const zipCodeRegex = /^[0-9]{5}$/;
 
-            if (!userInfo.name || !emailRegex.test(userInfo.email)) {
-                alert('Please enter a valid name and email address.');
-                return;
-            }
+        if (!userInfo.name || !emailRegex.test(userInfo.email)) {
+            alert('Please enter a valid name and email address.');
+            return;
+        }
 
-            if (!phoneRegex.test(userInfo.phone)) {
-                alert('Please enter a valid phone number.');
-                return;
-            }
+        if (!phoneRegex.test(userInfo.phone)) {
+            alert('Please enter a valid phone number.');
+            return;
+        }
 
-            if (!zipCodeRegex.test(userInfo.zipCode)) {
-                alert('Please enter a valid 5-digit zip code.');
-                return;
-            }
+        if (!zipCodeRegex.test(userInfo.zipCode)) {
+            alert('Please enter a valid 5-digit zip code.');
+            return;
+        }
 
-            // Proceed to finalize invoice
-            finalizeInvoice(container);
-        });
+        // Show final price after collecting user info
+        finalizeInvoice(container);
+    });
+}
 
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        form.appendChild(backButton);
 
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
-        });
-    }
-
-    // Finalize Invoice
     function finalizeInvoice(container) {
-        container.innerHTML = '';
+    container.innerHTML = '';
 
-        const header = createElement('h2', null, 'Your Quote');
-        container.appendChild(header);
+    const header = createElement('h2', null, 'Your Final Price');
+    container.appendChild(header);
 
-        const totalText = createElement('p', null, `Total Price: $${totalCost.toFixed(2)}`);
-        container.appendChild(totalText);
+    // Display the total cost
+    const totalText = createElement('p', null, `Total Price: $${totalCost.toFixed(2)}`);
+    totalText.style.fontSize = '36px';  // Larger font for visibility
+    totalText.style.fontWeight = 'bold';
+    container.appendChild(totalText);
 
-        // Call Now Button
-        const callBtn = createElement('button', 'button', 'Call Now');
-        container.appendChild(callBtn);
+    // Call Now Button
+    const callBtn = createElement('button', 'button', 'Call Now');
+    callBtn.style.marginTop = '20px';
+    container.appendChild(callBtn);
 
-        callBtn.addEventListener('click', () => {
-            window.location.href = 'tel:1234567890'; // Replace with actual phone number
-        });
+    callBtn.addEventListener('click', () => {
+        alert('Calling...');
+    });
 
-        // Visualize Button
-        const visualizeBtn = createElement('button', 'button', 'Visualize & Done!');
-        container.appendChild(visualizeBtn);
+    // Visualize Quote Button
+    const visualizeBtn = createElement('button', 'button', 'Visualize Your Quote');
+    visualizeBtn.style.marginTop = '20px';
+    container.appendChild(visualizeBtn);
 
-        visualizeBtn.addEventListener('click', () => {
-            // Implement visualization feature or redirect
-            alert('Visualization feature is under development.');
-        });
+    visualizeBtn.addEventListener('click', () => {
+        alert('Visualizing...');
+    });
+}
 
-        // Thank You Message
-        const thankYou = createElement('p', null, 'Thank you for your request! We will contact you shortly with your quote.');
-        container.appendChild(thankYou);
-
-        // Reset for next quote
-        items = [];
-        totalCost = 0;
-        designSelections = {
-            type: '',
-            finishType: '',
-            material: '',
-            baseColor: '',
-            mixInColors: []
-        };
-        userInfo = {};
-        previousPage = null;
-    }
 
     // Create Input Field
     function createInputField(labelText, type) {
