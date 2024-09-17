@@ -755,7 +755,7 @@ function addItem(container) {
     backButton.addEventListener('click', () => {
         if (previousPage) previousPage();
     });
-}
+
 
     
  function getSubcategoryImageUrl(subcategory) {
