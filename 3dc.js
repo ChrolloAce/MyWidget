@@ -139,6 +139,7 @@
         styleSheet.type = "text/css";
         styleSheet.innerText = styles;
         document.head.appendChild(styleSheet);
+        console.log('Styles injected.');
     }
 
     /**
@@ -199,11 +200,11 @@
         document.body.appendChild(sidebar);
         document.body.appendChild(main);
 
-        // Populate the sidebar with controls
-        populateSidebar(sidebar);
-
-        // Initialize Three.js in the main container
+        // Initialize Three.js in the main container first
         initializeThreeJS(main);
+
+        // Populate the sidebar with controls after Three.js is initialized
+        populateSidebar(sidebar);
     }
 
     /**
