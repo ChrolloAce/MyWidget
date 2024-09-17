@@ -719,7 +719,7 @@ function addItem(container) {
 
         viewInvoiceBtn.addEventListener('click', () => {
             previousPage = () => addItem(container);
-            createInvoicePage(container);  // Proceed to the quote page without showing the price yet
+    createInvoicePage(container);  // Skip the price display and go to the item list
         });
     }
 
@@ -839,6 +839,17 @@ function addItem(container) {
         return shapes[type] && shapes[type][subcategory] ? shapes[type][subcategory] : [];
     }
 
+
+function getTypeImageUrl(type) {
+    const images = {
+        'Kitchen': 'https://i.ibb.co/CwwQ0Gd/1.png', // New Kitchen image
+        'Bathroom': 'https://i.ibb.co/RPJgsCB/2.png'  // New Bathroom image
+    };
+    return images[type] || 'https://via.placeholder.com/250';
+}
+
+
+    
     // Choose Shape for Bathroom
     function chooseShapeBathroom(container) {
         // Not needed as Bathroom doesn't have subcategories
@@ -846,52 +857,58 @@ function addItem(container) {
 // Define addToQuote before it's used anywhere
 function addToQuote(container, shape) {
     // Add item to the quote and calculate cost
-    items.push({
+     items.push({
         shape: shape.name,
         measurements: shape.measurements,
         backsplash: shape.hasBacksplash ? { width: shape.backsplashWidth, height: shape.backsplashHeight } : null
     });
     calculateTotalCost();
-    createQuotePage(container);
+    createQuotePage(container);  // Directly go to the quote page instead of showing price.
 }
 
-// Correct placement of event listeners after button creation
 function askBacksplash(container, shape) {
     container.innerHTML = ''; // Clear the container
 
     const header = createElement('h2', null, 'Does this countertop have a backsplash?');
     container.appendChild(header);
 
+    // Add the backsplash image
+    const imageDiv = createElement('div', 'image-container');
+    const backsplashImage = createElement('img');
+    backsplashImage.src = 'https://i.ibb.co/bQHKHN0/Backsplash-min.png';  // New backsplash image
+    backsplashImage.alt = 'Backsplash Image';
+    backsplashImage.style.width = '100%';
+    backsplashImage.style.maxWidth = '400px';
+    imageDiv.appendChild(backsplashImage);
+    container.appendChild(imageDiv);
+
     const buttonGroup = createElement('div', 'button-group');
     container.appendChild(buttonGroup);
 
-    // Properly declare the yesBtn and noBtn here
     const yesBtn = createElement('button', 'button', 'Yes');
     const noBtn = createElement('button', 'button', 'No');
 
-    // Append buttons to the buttonGroup
     buttonGroup.appendChild(yesBtn);
     buttonGroup.appendChild(noBtn);
 
-    // Add event listener for 'Yes' button
-    yesBtn.addEventListener('click', function() {
-        promptBacksplashDimensions(container, shape); // Call backsplash dimension prompt if 'Yes' is clicked
+    yesBtn.addEventListener('click', () => {
+        promptBacksplashDimensions(container, shape);
     });
 
-    // Add event listener for 'No' button
-    noBtn.addEventListener('click', function() {
-        shape.hasBacksplash = false; // Set the backsplash to false
-        addToQuote(container, shape); // Proceed to add the item to the quote
+    noBtn.addEventListener('click', () => {
+        shape.hasBacksplash = false;
+        addToQuote(container, shape);  // Directly go to the quote page
     });
 
-    // Back button to go back to the previous page
+    // Back Button
     const backButton = createElement('button', 'button back-button', 'Back');
     container.appendChild(backButton);
 
-    backButton.addEventListener('click', function() {
-        inputMeasurements(container, shape); // Go back to the measurement input page
+    backButton.addEventListener('click', () => {
+        inputMeasurements(container, shape);
     });
 }
+
 
 
 
@@ -1307,33 +1324,139 @@ function finalizeInvoice(container) {
         return formGroup;
     }
 
-    // Get Shapes for Type
-    function getShapesForType(type) {
-        const shapeData = {
-            'Bathroom': [
-                {
-                    name: 'Rectangle',
-                    measurements: ['Length', 'Width'],
-                    formula: (measurements, depth) => (measurements[0] * measurements[1] * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/KmS1PKB/recbath.png'
-                },
-                {
-                    name: 'Square',
-                    measurements: ['Side'],
-                    formula: (measurements, depth) => (Math.pow(measurements[0], 2) * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/1qLTRBc/bathsqaure.png'
-                },
-                {
-                    name: 'Hexagonal',
-                    measurements: ['Side Length'],
-                    formula: (measurements, depth) => (1.5 * Math.sqrt(3) * Math.pow(measurements[0], 2) * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png'
-                }
-            ]
-        };
+   function getShapesForType(type) {
+    const shapes = [];
 
-        return shapeData[type] || [];
+    if (type === 'Regular Counter') {
+        shapes.push({
+            name: '2 Sides',
+            type: 'Regular Counter',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://i.ibb.co/tPH5VT2/10.png'
+        });
+        shapes.push({
+            name: '5 Sides',
+            type: 'Regular Counter',
+            measurements: ['1', '2', '3', '4', '5'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/8BsnF1W/11.png'
+        });
+        shapes.push({
+            name: '3 Sides (Style 1)',
+            type: 'Regular Counter',
+            measurements: ['1', '2', '3'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/hHSRgjk/13.png'
+        });
+        shapes.push({
+            name: '6 Sides',
+            type: 'Regular Counter',
+            measurements: ['1', '2', '3', '4', '5', '6'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/b7fyPTL/14.png'
+        });
+        shapes.push({
+            name: '3 Sides (Style 2)',
+            type: 'Regular Counter',
+            measurements: ['1', '2', '3'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/C9t7rzy/15.png'
+        });
+        shapes.push({
+            name: '2 Sides (Style 2)',
+            type: 'Regular Counter',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://i.ibb.co/Zf3JzCz/16.png'
+        });
+    } 
+    else if (type === 'Island') {
+        shapes.push({
+            name: '1 Side',
+            type: 'Island',
+            measurements: ['1'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://i.ibb.co/2WfRSkn/islandsquare.png'
+        });
+        shapes.push({
+            name: '5 Sides',
+            type: 'Island',
+            measurements: ['1', '2', '3', '4', '5'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/M6dqLGH/islandlong.png'
+        });
+    } 
+    else if (type === 'Bar Top') {
+        shapes.push({
+            name: '2 Sides',
+            type: 'Bar Top',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://i.ibb.co/4PNXrnc/1.png'
+        });
+        shapes.push({
+            name: '3 Sides',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/bmV9twv/2.png'
+        });
+        shapes.push({
+            name: '4 Sides',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/MD63PFz/3.png'
+        });
+        shapes.push({
+            name: '5 Sides',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4', '5'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/j4TL0VK/4.png'
+        });
+        shapes.push({
+            name: '6 Sides',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4', '5', '6'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/YcXnY2y/5.png'
+        });
+        shapes.push({
+            name: '9 Sides',
+            type: 'Bar Top',
+            measurements: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/XWQ6Twg/6.png'
+        });
+    } 
+    else if (type === 'Bathroom') {
+        shapes.push({
+            name: '2 Sides (Rectangle)',
+            type: 'Bathroom',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://i.ibb.co/KmS1PKB/recbath.png'
+        });
+        shapes.push({
+            name: '2 Sides (Square)',
+            type: 'Bathroom',
+            measurements: ['1', '2'],
+            formula: (measurements, depth) => ((measurements[0] * depth) / 144),
+            imageUrl: 'https://i.ibb.co/1qLTRBc/bathsqaure.png'
+        });
+        shapes.push({
+            name: '6 Sides',
+            type: 'Bathroom',
+            measurements: ['1', '2', '3', '4', '5', '6'],
+            formula: (measurements, depth) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * depth) / 144,
+            imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png'
+        });
     }
+
+    return shapes;
+}
 
     // Get Shapes for Subcategory
     function getShapesForSubcategory(type, subcategory) {
