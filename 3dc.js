@@ -191,6 +191,8 @@
      * Initializes the user interface and Three.js scene
      */
     function init() {
+        console.log('Initializing application...');
+
         // Create the main container elements for layout
         const sidebar = createElement('div', 'sidebar');
         const main = createElement('div', 'main');
@@ -209,6 +211,8 @@
      * @param {HTMLElement} sidebar - The sidebar DOM element
      */
     function populateSidebar(sidebar) {
+        console.log('Populating sidebar with controls...');
+
         // Header
         const header = createElement('h1', null, 'Countertop Customizer');
         sidebar.appendChild(header);
@@ -243,6 +247,7 @@
                 // Allow only one selection
                 document.querySelectorAll('.color-square').forEach(div => div.classList.remove('selected'));
                 colorDiv.classList.add('selected');
+                console.log(`Color selected: ${name} (${hex})`);
                 updateCountertop();
             });
 
@@ -253,6 +258,7 @@
         const firstColor = colorSelection.querySelector('.color-square');
         if (firstColor) {
             firstColor.classList.add('selected');
+            console.log('Default color selected.');
         }
 
         // Pattern Selection
@@ -270,6 +276,7 @@
         sidebar.appendChild(patternGroup);
 
         patternSelect.addEventListener('change', () => {
+            console.log(`Pattern selected: ${patternSelect.value}`);
             updateCountertop();
         });
 
@@ -288,6 +295,7 @@
         sidebar.appendChild(finishGroup);
 
         finishSelect.addEventListener('change', () => {
+            console.log(`Finish selected: ${finishSelect.value}`);
             updateCountertop();
         });
     }
@@ -297,6 +305,8 @@
      * @param {HTMLElement} container - The main container for the 3D scene
      */
     function initializeThreeJS(container) {
+        console.log('Initializing Three.js scene...');
+
         // Scene
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf0f0f0);
@@ -343,12 +353,15 @@
          * @param {string} options.finish - Finish type
          */
         function createCountertop(options = {}) {
+            console.log('Creating/updating countertop with options:', options);
+
             // Remove existing countertop if any
             if (countertop) {
                 scene.remove(countertop);
                 countertop.geometry.dispose();
                 countertop.material.dispose();
                 countertop = null;
+                console.log('Existing countertop removed.');
             }
 
             // Default Options
@@ -405,6 +418,7 @@
             countertop.receiveShadow = true;
 
             scene.add(countertop);
+            console.log('Countertop added to the scene.');
         }
 
         /**
@@ -507,6 +521,7 @@
          * Updates the countertop based on user selections
          */
         function updateCountertop() {
+            console.log('Updating countertop...');
             // Get selected color
             const selectedColorDiv = document.querySelector('.color-square.selected');
             if (!selectedColorDiv) {
@@ -542,24 +557,32 @@
         // Expose updateCountertop to the global scope within the IIFE
         window.updateCountertop = updateCountertop;
 
-        // Initial Countertop Creation
-        updateCountertop();
+        /**
+         * Handle window resize
+         */
+        function handleWindowResize(container) {
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                console.log('Window resized. Renderer and camera updated.');
+            }, false);
+        }
 
-        // Handle Window Resize
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        }, false);
-
-        // Animation Loop
+        /**
+         * Animation loop
+         */
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
             renderer.render(scene, camera);
         }
 
+        // Start the animation loop
         animate();
+
+        // Handle window resize
+        handleWindowResize(container);
     }
 
     /**
