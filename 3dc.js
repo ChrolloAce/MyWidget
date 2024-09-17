@@ -1,16 +1,11 @@
 (function () {
     // URLs for Three.js, OrbitControls, and FBXLoader
-    const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
-
     const THREE_JS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
 
-    // URL for the FBX model file
-const FBX_MODEL_URL = 'https://dl.dropboxusercontent.com/s/a75mvfx8z5xeunh7s7tk6/countermain.fbx';
-
-    // Move FULL_URL construction here, after FBX_MODEL_URL is declared
-    const FULL_URL = CORS_PROXY + FBX_MODEL_URL;
+    // URL for the FBX model file from Dropbox (direct download link)
+    const FBX_MODEL_URL = 'https://dl.dropboxusercontent.com/s/a75mvfx8z5xeunh7s7tk6/countermain.fbx';
 
     // CSS styles injected dynamically
     const styles = `
@@ -91,7 +86,6 @@ const FBX_MODEL_URL = 'https://dl.dropboxusercontent.com/s/a75mvfx8z5xeunh7s7tk6
      */
     function loadScript(url) {
         return new Promise((resolve, reject) => {
-            // Check if the script is already loaded
             if (document.querySelector(`script[src="${url}"]`)) {
                 console.log(`Script already loaded: ${url}`);
                 resolve();
@@ -100,7 +94,7 @@ const FBX_MODEL_URL = 'https://dl.dropboxusercontent.com/s/a75mvfx8z5xeunh7s7tk6
 
             const script = document.createElement('script');
             script.src = url;
-            script.async = false; // Ensure scripts are executed in order
+            script.async = false;
             script.onload = () => {
                 console.log(`Successfully loaded script: ${url}`);
                 resolve();
@@ -175,7 +169,7 @@ const FBX_MODEL_URL = 'https://dl.dropboxusercontent.com/s/a75mvfx8z5xeunh7s7tk6
         controls.maxDistance = 10; // Maximum zoom distance
 
         // Load the FBX model
-            loadFBXModel(FULL_URL)
+        loadFBXModel(FBX_MODEL_URL)
             .then(loadedModel => {
                 fbxModel = loadedModel;
 
