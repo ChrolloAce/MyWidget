@@ -668,7 +668,6 @@ p {
         return colorDiv;
     }
 
-   // Add Item Function
 function addItem(container) {
     container.innerHTML = '';
 
@@ -691,29 +690,6 @@ function addItem(container) {
                 chooseShape(container, subcategory);
             });
         });
-
-        // Show Item List and Invoice button
-        if (items.length > 0) {
-            const itemListDiv = createElement('div', 'item-list');
-            container.appendChild(itemListDiv);
-            updateItemList(itemListDiv);
-
-            const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
-            container.appendChild(viewInvoiceBtn);
-
-            viewInvoiceBtn.addEventListener('click', () => {
-                previousPage = () => addItem(container);
-                createQuotePage(container);
-            });
-        }
-
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
-
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
-        });
     } else {
         // For Bathroom, directly choose shape
         const shapeContainer = createElement('div', 'button-group');
@@ -729,31 +705,34 @@ function addItem(container) {
                 inputMeasurements(container, shape);
             });
         });
+    }
 
-        // Show Item List and Invoice button
-        if (items.length > 0) {
-            const itemListDiv = createElement('div', 'item-list');
-            container.appendChild(itemListDiv);
-            updateItemList(itemListDiv);
+    // Show Item List and Invoice button
+    if (items.length > 0) {
+        const itemListDiv = createElement('div', 'item-list');
+        container.appendChild(itemListDiv);
+        updateItemList(itemListDiv);  // Always display the item list
 
-            const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
-            container.appendChild(viewInvoiceBtn);
+        // Add "View Price Estimate for Free" button (without showing the price)
+        const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
+        container.appendChild(viewInvoiceBtn);
 
-            viewInvoiceBtn.addEventListener('click', () => {
-                previousPage = () => addItem(container);
-                createQuotePage(container);
-            });
-        }
-
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
-
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
+        viewInvoiceBtn.addEventListener('click', () => {
+            previousPage = () => addItem(container);
+            createInvoicePage(container);  // Proceed to the quote page without showing the price yet
         });
     }
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        if (previousPage) previousPage();
+    });
 }
+
+    
     // Helper function to get subcategory image URLs
     function getSubcategoryImageUrl(subcategory) {
         const images = {
@@ -1129,41 +1108,37 @@ function calculateTotalCost() {
         ];
     }
 
-    // Create Invoice Page
-    function createInvoicePage(container) {
-        container.innerHTML = '';
+  // Create Invoice Page (Only show price after the user enters their info)
+function createInvoicePage(container) {
+    container.innerHTML = '';
 
-        const header = createElement('h2', null, 'Your Invoice');
-        container.appendChild(header);
+    const header = createElement('h2', null, 'Your Quote');
+    container.appendChild(header);
 
-        if (items.length === 0) {
-            const noItems = createElement('p', null, 'No items added yet.');
-            container.appendChild(noItems);
-        } else {
-            const itemListDiv = createElement('div', 'item-list');
-            container.appendChild(itemListDiv);
-            updateItemList(itemListDiv);
-        }
-
-        // Proceed to User Info Button
-        if (items.length > 0) {
-            const proceedBtn = createElement('button', 'button', 'Proceed to Checkout');
-            container.appendChild(proceedBtn);
-
-            proceedBtn.addEventListener('click', () => {
-                previousPage = () => createInvoicePage(container);
-                collectUserInfo(container);
-            });
-        }
-
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
-
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
-        });
+    if (items.length > 0) {
+        const itemListDiv = createElement('div', 'item-list');
+        container.appendChild(itemListDiv);
+        updateItemList(itemListDiv);
     }
+
+    // Proceed to Collect User Info
+    const proceedBtn = createElement('button', 'button', 'Proceed to Checkout');
+    container.appendChild(proceedBtn);
+
+    proceedBtn.addEventListener('click', () => {
+        previousPage = () => createInvoicePage(container);
+        collectUserInfo(container);  // Now we proceed to collect user info
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        if (previousPage) previousPage();
+    });
+}
+
 
    // Update Item List UI (Keep the item list visible)
 function updateItemList(itemListDiv) {
@@ -1202,7 +1177,8 @@ function updateItemList(itemListDiv) {
     }
 
     // Collect User Information
-    function collectUserInfo(container) {
+    // Collect User Information and show final price after input
+function collectUserInfo(container) {
     container.innerHTML = '';
 
     const header = createElement('h2', null, 'Tell Us About You');
@@ -1261,7 +1237,7 @@ function updateItemList(itemListDiv) {
             return;
         }
 
-        // Show final price after collecting user info
+        // Now show the final price
         finalizeInvoice(container);
     });
 }
