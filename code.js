@@ -1156,7 +1156,7 @@ function createInvoicePage(container) {
 }
 
     
-// Update Item List UI (Same as the old version, shows items without prices)
+// Update Item List UI (Displays the item list properly)
 function updateItemList(itemListDiv) {
     itemListDiv.innerHTML = '<h3>Items in Your Quote:</h3>';
 
@@ -1183,7 +1183,6 @@ function updateItemList(itemListDiv) {
         itemListDiv.appendChild(itemDiv);
     });
 }
-
 
     // Remove Item from Invoice
     function removeItem(index) {
