@@ -1061,6 +1061,7 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
 
 // Base Color Selection
 function promptBaseAndAddonColors(container, shapeData) {
+    // Base color selection
     const baseColorLabel = document.createElement('label');
     baseColorLabel.textContent = 'Choose a Base Color:';
     baseColorLabel.style.color = '#0C1729';
@@ -1093,7 +1094,7 @@ function promptBaseAndAddonColors(container, shapeData) {
 
     // Add-on Colors (Now includes base colors as well)
     const addonColorLabel = document.createElement('label');
-    addonColorLabel.textContent = 'Choose up to 3 Additional Colors:';
+    addonColorLabel.textContent = 'Choose up to 4 Additional Colors:';
     addonColorLabel.style.color = '#0C1729';
     addonColorLabel.style.fontSize = '18px';
     addonColorLabel.style.marginBottom = '10px';
@@ -1107,7 +1108,8 @@ function promptBaseAndAddonColors(container, shapeData) {
     addonColorContainer.style.marginBottom = '20px';
     container.appendChild(addonColorContainer);
 
-const addonColors = Object.keys(baseColors).concat(['Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper']);
+    // Combine base colors with additional colors
+    const addonColors = baseColors.concat(['Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper']);
     const selectedAddonColors = [];
 
     addonColors.forEach(color => {
@@ -1120,7 +1122,7 @@ const addonColors = Object.keys(baseColors).concat(['Icy White', 'Silver', 'Cham
                 colorDiv.element.style.border = '2px solid #ddd';
                 const index = selectedAddonColors.indexOf(color);
                 if (index > -1) selectedAddonColors.splice(index, 1);
-            } else if (selectedAddonColors.length < 3) {
+            } else if (selectedAddonColors.length < 4) {
                 selected = true;
                 colorDiv.element.style.border = '4px solid #0264D9';
                 selectedAddonColors.push(color);
@@ -1159,7 +1161,7 @@ function promptBacksplashDimensions(container, shapeData, callback) {
 
     const nextBtn = document.createElement('button');
     nextBtn.textContent = 'Next';
-    styleButton(nextBtn);
+    styleButton(nextBtn);  // Reuse your existing button style function
     container.appendChild(nextBtn);
 
     nextBtn.addEventListener('click', function () {
@@ -1174,6 +1176,7 @@ function promptBacksplashDimensions(container, shapeData, callback) {
         }
     });
 }
+
 
 
 
@@ -1637,50 +1640,30 @@ function promptFinishOptions(shape, type, container, shapeData) {
 function calculateAndAddItem(shape, shapeData, type, container) {
     const measurements = shapeData.measurements;
 
-    // Determine depth automatically based on type
-    let depth;
-    if (type === 'Kitchen' || type === 'Island' || type === 'Bar Top' || type === 'Regular Counter') {
-        depth = 25; // Standard depth for kitchen countertops
-    } else if (type === 'Bathroom') {
-        depth = 22; // Standard depth for bathroom countertops
-    } else {
-        depth = 25; // Default depth
-    }
-
-    // Calculate square footage based on shape formula
+    // Determine depth based on type (Kitchen, Island, Bar Top, etc.)
+    let depth = (type === 'Kitchen' || type === 'Island' || type === 'Bar Top' || type === 'Regular Counter') ? 25 : 22;
+    
+    // Calculate square footage based on the shape's formula and depth
     let squareFootage = shape.formula(measurements, depth);
 
     // Check for backsplash input and calculate area
-    if (shapeData.hasBacksplash) {
-        const backsplashWidth = parseFloat(shapeData.backsplashWidthInput.value);
-        const backsplashHeight = parseFloat(shapeData.backsplashHeightInput.value);
-
-        if (backsplashWidth > 0 && backsplashHeight > 0) {
-            // Convert both width and height to feet from inches
-            const backsplashArea = (backsplashWidth / 12) * (backsplashHeight / 12);
-            squareFootage += backsplashArea; // Add backsplash area to total square footage
-        }
+    if (shapeData.hasBacksplash && shapeData.backsplashWidth > 0 && shapeData.backsplashHeight > 0) {
+        const backsplashArea = (shapeData.backsplashWidth / 12) * (shapeData.backsplashHeight / 12); // Convert inches to feet
+        squareFootage += backsplashArea; // Add backsplash area to the total square footage
     }
 
-    // Update pricing based on finish type
-    let pricePerSqFt;
+    // Pricing logic based on finish type (CrystalTop or Standard)
+    let pricePerSqFt = shapeData.finishType === 'crystal' ? 39 : 26;
+
+    // CrystalTop multiplier (if applicable)
     if (shapeData.finishType === 'crystal') {
-        pricePerSqFt = 39;
-    } else if (shapeData.finishType === 'standard') {
-        pricePerSqFt = 26;
-    } else {
-        pricePerSqFt = PRICE_REGULAR; // Default price if not specified
+        pricePerSqFt *= 1.5; // Apply multiplier for CrystalTop finish
     }
 
-    // Adjust price for CrystalTop being 1.5 times the standard process
-    if (shapeData.finishType === 'crystal') {
-        pricePerSqFt *= 1.5;
-    }
-
-    // Calculate the cost
+    // Calculate total cost
     const cost = squareFootage * pricePerSqFt;
 
-    // Build item description
+    // Build a detailed item description, including patterns, colors, and backsplash details
     let itemDescription = `${shape.name} - ${shape.type} - ${shapeData.finishType.charAt(0).toUpperCase() + shapeData.finishType.slice(1)} Finish`;
 
     if (shapeData.pattern) {
@@ -1697,28 +1680,24 @@ function calculateAndAddItem(shape, shapeData, type, container) {
     }
 
     if (shapeData.hasBacksplash) {
-        const backsplashWidth = parseFloat(shapeData.backsplashWidthInput.value);
-        const backsplashHeight = parseFloat(shapeData.backsplashHeightInput.value);
-
-        if (backsplashWidth > 0 && backsplashHeight > 0) {
-            itemDescription += ` - Backsplash: ${backsplashWidth}in x ${backsplashHeight}in`;
-        }
+        itemDescription += ` - Backsplash: ${shapeData.backsplashWidth}in x ${shapeData.backsplashHeight}in`;
     }
 
-    // Add to items list with the imageUrl (ensure imageUrl is passed correctly)
+    // Add the item to the list with the imageUrl (make sure the image is displayed)
     items.push({
         description: itemDescription,
         squareFootage: squareFootage.toFixed(2),
         cost: cost.toFixed(2),
-        imageUrl: shape.imageUrl // Ensure imageUrl is included
+        imageUrl: shape.imageUrl  // Ensure the imageUrl is included in the item
     });
 
     // Update the total cost
     totalCost += cost;
 
-    // Redirect back to the invoice page and show the updated item list
+    // Redirect back to the invoice page to display the updated item list
     createInvoicePage(container);
 }
+
 
 
 
