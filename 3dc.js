@@ -2,10 +2,10 @@
     // URLs for Three.js, OrbitControls, and FBXLoader
     const THREE_JS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
-const FBX_MODEL_URL = 'https://github.com/ChrolloAce/MyWidget/raw/main/countermain.fbx';
+    const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
 
     // URL for the FBX model file
-    const FBX_MODEL_URL = 'https://your-username.github.io/your-fbx-directory/countertop.fbx'; // Replace with your actual FBX file URL
+const FBX_MODEL_URL = 'https://github.com/ChrolloAce/MyWidget/raw/main/countermain.fbx';
 
     // CSS styles injected dynamically
     const styles = `
