@@ -853,7 +853,6 @@ p {
     function chooseShapeBathroom(container) {
         // Not needed as Bathroom doesn't have subcategories
     }
-
 // Define addToQuote before it's used anywhere
 function addToQuote(container, shape) {
     // Add item to the quote and calculate cost
@@ -866,14 +865,7 @@ function addToQuote(container, shape) {
     createQuotePage(container);
 }
 
-// Example usage of addToQuote
-yesBtn.addEventListener('click', () => {
-    addToQuote(container, shape);  // This call will work only if addToQuote is defined earlier
-});
-
-
-    
-
+// Correct placement of event listeners after button creation
 function askBacksplash(container, shape) {
     container.innerHTML = ''; // Clear the container
 
