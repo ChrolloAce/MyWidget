@@ -1256,7 +1256,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
 
         // Mix-in Colors
         const crystalColorLabel = document.createElement('label');
-        crystalColorLabel.textContent = 'Choose up to 4 Mix-in Colors for Crystal Top:';
+        crystalColorLabel.textContent = 'Choose up to 4 Mix-in Colors for Crystal Top (Base colors included):';
         crystalColorLabel.style.color = '#0C1729';
         crystalColorLabel.style.fontSize = '18px';
         crystalColorLabel.style.marginBottom = '10px';
@@ -1268,7 +1268,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
         crystalColorContainer.style.gap = '10px';
         container.appendChild(crystalColorContainer);
 
-        const crystalColors = {
+        const crystalColors = Object.assign({}, baseColors, {
             'Icy White': '#F8F8FF',
             'Silver': '#C0C0C0',
             'Champagne Gold': '#F7E7CE',
@@ -1276,7 +1276,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
             'Cobalt Blue': '#0047AB',
             'Pewter Blue': '#8BA8B7',
             'Copper': '#B87333'
-        };
+        });
 
         const selectedCrystalColors = [];
 
@@ -1500,7 +1500,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
         addonColorContainer.style.gap = '10px';
         container.appendChild(addonColorContainer);
 
-        const addonColors = {
+        const addonColors = Object.assign({}, baseColors, {
             'Icy White': '#F8F8FF',
             'Silver': '#C0C0C0',
             'Champagne Gold': '#F7E7CE',
@@ -1508,7 +1508,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
             'Cobalt Blue': '#0047AB',
             'Pewter Blue': '#8BA8B7',
             'Copper': '#B87333'
-        };
+        });
 
         const selectedAddonColors = [];
 
@@ -1574,6 +1574,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
         });
     }
 }
+
 
 
 
