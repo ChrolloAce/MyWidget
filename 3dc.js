@@ -1,11 +1,7 @@
 (function () {
-    // URLs for Three.js v128, OrbitControls.js v128, and FBXLoader.js v128 from jsDelivr
+    // URLs for Three.js v128 and OrbitControls.js v128 from jsDelivr
     const THREE_JS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
-    const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
-
-    // Use the GitHub Pages-hosted URL for the .fbx file
-    const FBX_MODEL_URL = 'https://your-username.github.io/fbx-host/countermain.fbx'; // Replace with your actual URL
 
     /**
      * Dynamically loads a script.
@@ -37,10 +33,10 @@
     }
 
     /**
-     * Initializes the Three.js scene with the FBX model and color buttons.
+     * Initializes the Three.js scene with a cube and color buttons.
      */
     function init() {
-        let scene, camera, renderer, model, controls;
+        let scene, camera, renderer, cube, controls;
 
         // Create the scene with a white background
         scene = new THREE.Scene();
@@ -69,6 +65,12 @@
         directionalLight.position.set(5, 10, 7.5);
         scene.add(directionalLight);
 
+        // Create a cube (square in 3D)
+        const geometry = new THREE.BoxGeometry(1, 1, 1); // A 1x1x1 cube
+        const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Default green color
+        cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
         // Initialize OrbitControls for manual rotation
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true; // Enable smooth damping
@@ -76,16 +78,6 @@
         controls.enablePan = false; // Disable panning
         controls.minDistance = 2; // Minimum zoom distance
         controls.maxDistance = 10; // Maximum zoom distance
-
-        // Load the FBX model
-        loadFBXModel(FBX_MODEL_URL)
-            .then((loadedModel) => {
-                model = loadedModel;
-                scene.add(model);
-            })
-            .catch((error) => {
-                console.error('Error loading FBX model:', error);
-            });
 
         // Create color buttons
         createColorButtons();
@@ -105,34 +97,6 @@
             controls.update(); // Update controls (required if enableDamping is true)
 
             renderer.render(scene, camera); // Render the scene
-        }
-
-        /**
-         * Function to load the FBX model.
-         * @param {string} url - The URL of the FBX model to load.
-         * @returns {Promise} - Resolves with the loaded model.
-         */
-        function loadFBXModel(url) {
-            return new Promise((resolve, reject) => {
-                const loader = new THREE.FBXLoader();
-                loader.load(
-                    url,
-                    (object) => {
-                        console.log('FBX model loaded successfully.');
-                        // Optional: Scale and position the model as needed
-                        object.scale.set(1, 1, 1);
-                        object.position.set(0, 0, 0);
-                        resolve(object);
-                    },
-                    (xhr) => {
-                        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-                    },
-                    (error) => {
-                        console.error('An error happened while loading the FBX model:', error);
-                        reject(error);
-                    }
-                );
-            });
         }
 
         /**
@@ -164,33 +128,23 @@
                 button.style.cursor = 'pointer';
                 button.title = `Change color to ${color}`;
                 button.addEventListener('click', () => {
-                    changeModelColor(color);
+                    changeCubeColor(color);
                 });
                 buttonContainer.appendChild(button);
             });
         }
 
         /**
-         * Function to change the color of the loaded model.
+         * Function to change the color of the cube.
          * @param {string} color - The hexadecimal color code to apply.
          */
-        function changeModelColor(color) {
-            if (!model) {
-                console.warn('Model not loaded yet.');
+        function changeCubeColor(color) {
+            if (!cube) {
+                console.warn('Cube not loaded yet.');
                 return;
             }
-
-            model.traverse((child) => {
-                if (child.isMesh) {
-                    if (child.material) {
-                        // If the material has a color property, change it
-                        if (child.material.color) {
-                            child.material.color.set(color);
-                            child.material.needsUpdate = true;
-                        }
-                    }
-                }
-            });
+            cube.material.color.set(color);
+            cube.material.needsUpdate = true;
         }
 
         /**
@@ -204,12 +158,11 @@
     }
 
     /**
-     * Ensures that Three.js, OrbitControls.js, and FBXLoader.js are loaded before initializing the scene.
+     * Ensures that Three.js and OrbitControls.js are loaded before initializing the scene.
      */
     function loadAndInitialize() {
         loadScript(THREE_JS_URL)
             .then(() => loadScript(ORBIT_CONTROLS_URL))
-            .then(() => loadScript(FBX_LOADER_URL))
             .then(() => {
                 // Initialize the scene after all scripts are loaded
                 init();
