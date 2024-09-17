@@ -1115,11 +1115,11 @@ function createInvoicePage(container) {
     const header = createElement('h2', null, 'Your Quote');
     container.appendChild(header);
 
-    // Display the list of items (but not the total price)
+    // Display the item list (but no price)
     if (items.length > 0) {
         const itemListDiv = createElement('div', 'item-list');
         container.appendChild(itemListDiv);
-        updateItemList(itemListDiv); // Display the item list
+        updateItemList(itemListDiv);  // Display the item list as per old version
     } else {
         const noItems = createElement('p', null, 'No items added yet.');
         container.appendChild(noItems);
@@ -1152,7 +1152,7 @@ function createInvoicePage(container) {
     });
 }
 
-// Update Item List UI (Shows items in the invoice page without prices)
+// Update Item List UI (Same as the old version, shows items without prices)
 function updateItemList(itemListDiv) {
     itemListDiv.innerHTML = '<h3>Items in Your Quote:</h3>';
 
@@ -1254,7 +1254,8 @@ function collectUserInfo(container) {
     });
 }
 
-   function finalizeInvoice(container) {
+// Finalize Invoice Page (Show price only after collecting user info)
+function finalizeInvoice(container) {
     container.innerHTML = '';
 
     const header = createElement('h2', null, 'Your Final Price');
