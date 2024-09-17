@@ -799,42 +799,7 @@ function styleInputField(input) {
     }
     
     
-
-function promptBacksplashHeight(shape, type, container, shapeData) {
-    container.innerHTML = '';
-
-    const header = document.createElement('h2');
-    header.textContent = 'Enter Backsplash Height (in inches)';
-    header.style.color = '#0C1729';
-    header.style.marginBottom = '20px';
-    header.style.fontSize = '24px';
-    container.appendChild(header);
-
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.placeholder = 'Backsplash Height (in inches)';
-    container.appendChild(input);
-
-    const nextBtn = document.createElement('button');
-    nextBtn.textContent = 'Next';
-    styleButton(nextBtn);
-    container.appendChild(nextBtn);
-
-    nextBtn.addEventListener('click', function () {
-        const height = parseFloat(input.value);
-        if (isNaN(height) || height <= 0) {
-            alert('Please enter a valid height.');
-        } else {
-            shapeData.backsplashHeight = height;
-            promptMeasurements(shape, type, container, shapeData); // Proceed to next step
-        }
-    });
-}
-
-    
-    
-    
-  function promptBacksplash(shape, type, container, shapeData) {
+function promptBacksplash(shape, type, container, shapeData) {
     container.innerHTML = '';
 
     // Dynamic question based on type
@@ -846,28 +811,6 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
     header.style.marginBottom = '20px';
     header.style.fontSize = '24px';
     container.appendChild(header);
-
-    // Add the image
-    const imageDiv = document.createElement('div');
-    imageDiv.style.textAlign = 'center';
-    imageDiv.style.marginBottom = '20px';
-
-    const backsplashImage = document.createElement('img');
-    backsplashImage.src = 'https://i.ibb.co/XjdF26x/Backsplash.png';
-    backsplashImage.alt = 'Backsplash';
-    backsplashImage.style.maxWidth = '100%';
-    backsplashImage.style.height = 'auto';
-    imageDiv.appendChild(backsplashImage);
-
-    // Add explanatory text under the image
-    const description = document.createElement('p');
-    description.textContent = 'A backsplash is the vertical extension of your countertop that connects everything. It is usually 4 inches in height.';
-    description.style.color = '#0C1729';
-    description.style.fontSize = '16px';
-    description.style.marginTop = '10px';
-    imageDiv.appendChild(description);
-
-    container.appendChild(imageDiv);
 
     const buttonContainer = document.createElement('div');
     buttonContainer.style.display = 'flex';
@@ -887,16 +830,16 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
 
     yesBtn.addEventListener('click', function () {
         shapeData.hasBacksplash = true;
-        promptBacksplashHeight(shape, type, container, shapeData);
+        promptBacksplashDimensions(container, shapeData, function () {
+            promptMeasurements(shape, type, container, shapeData);
+        });
     });
 
     noBtn.addEventListener('click', function () {
         shapeData.hasBacksplash = false;
         promptMeasurements(shape, type, container, shapeData);
     });
-}
-
-    
+}  
     
     function promptMeasurements(shape, type, container, shapeData) {
         container.innerHTML = '';
@@ -1059,7 +1002,6 @@ function promptBacksplashHeight(shape, type, container, shapeData) {
 }
 
 
-// Base Color Selection
 function promptBaseAndAddonColors(container, shapeData) {
     // Base color selection
     const baseColorLabel = document.createElement('label');
@@ -1092,7 +1034,7 @@ function promptBaseAndAddonColors(container, shapeData) {
         baseColorContainer.appendChild(colorDiv.element);
     });
 
-    // Add-on Colors (Now includes base colors as well)
+    // Add-on Colors (Base colors now also included in addon color selection)
     const addonColorLabel = document.createElement('label');
     addonColorLabel.textContent = 'Choose up to 4 Additional Colors:';
     addonColorLabel.style.color = '#0C1729';
@@ -1176,6 +1118,7 @@ function promptBacksplashDimensions(container, shapeData, callback) {
         }
     });
 }
+
 
 
 
