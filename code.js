@@ -1179,6 +1179,7 @@ function promptBacksplashDimensions(container, shapeData, callback) {
 
 
 
+
 function promptFinishOptions(shape, type, container, shapeData) {
     container.innerHTML = ''; // Clear the container
 
