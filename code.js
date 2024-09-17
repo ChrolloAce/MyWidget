@@ -419,63 +419,63 @@
         return formGroup;
     }
 
-    // Navigation Functions
-    function navigateToSelectionPage(container) {
-        container.innerHTML = '';
+   function navigateToSelectionPage(container) {
+    container.innerHTML = '';
 
-        const header = createElement('h2', null, 'Choose Type of Countertop');
-        container.appendChild(header);
+    const header = createElement('h2', null, 'Choose Type of Countertop');
+    container.appendChild(header);
 
-        const typeContainer = createElement('div', 'button-group');
-        container.appendChild(typeContainer);
+    const typeContainer = createElement('div', 'button-group');
+    container.appendChild(typeContainer);
 
-        // Kitchen Button
-        const kitchenBtn = createElement('button', 'button', 'Kitchen');
-        typeContainer.appendChild(kitchenBtn);
+    // Kitchen Button with Image
+    const kitchenBtn = createImageButton('Kitchen', 'https://i.ibb.co/Zf3skZV/kitchen.png');
+    typeContainer.appendChild(kitchenBtn);
 
-        // Bathroom Button
-        const bathroomBtn = createElement('button', 'button', 'Bathroom');
-        typeContainer.appendChild(bathroomBtn);
+    // Bathroom Button with Image
+    const bathroomBtn = createImageButton('Bathroom', 'https://i.ibb.co/YNk8yXR/bathroom.png');
+    typeContainer.appendChild(bathroomBtn);
 
-        // Bar Top Button
-        const barTopBtn = createElement('button', 'button', 'Bar Top');
-        typeContainer.appendChild(barTopBtn);
+    // Bar Top Button with Image
+    const barTopBtn = createImageButton('Bar Top', 'https://i.ibb.co/4PNXrnc/1.png');
+    typeContainer.appendChild(barTopBtn);
 
-        // Island Button
-        const islandBtn = createElement('button', 'button', 'Island');
-        typeContainer.appendChild(islandBtn);
+    // Island Button with Image
+    const islandBtn = createImageButton('Island', 'https://i.ibb.co/2WfRSkn/islandsquare.png');
+    typeContainer.appendChild(islandBtn);
 
-        // Back Button (if exists)
-        if (previousPage) {
-            const backButton = createElement('button', 'button back-button', 'Back');
-            typeContainer.appendChild(backButton);
+    // Back Button (if exists)
+    if (previousPage) {
+        const backButton = createElement('button', 'button back-button', 'Back');
+        container.appendChild(backButton);
 
-            backButton.addEventListener('click', () => {
-                previousPage(container);
-            });
-        }
-
-        // Event Listeners
-        kitchenBtn.addEventListener('click', () => {
-            previousPage = navigateToSelectionPage;
-            selectKitchenType(container);
-        });
-
-        bathroomBtn.addEventListener('click', () => {
-            previousPage = navigateToSelectionPage;
-            selectBathroomType(container);
-        });
-
-        barTopBtn.addEventListener('click', () => {
-            previousPage = navigateToSelectionPage;
-            selectBarTopType(container);
-        });
-
-        islandBtn.addEventListener('click', () => {
-            previousPage = navigateToSelectionPage;
-            selectIslandType(container);
+        backButton.addEventListener('click', () => {
+            previousPage(container);
         });
     }
+
+    // Event Listeners
+    kitchenBtn.addEventListener('click', () => {
+        previousPage = navigateToSelectionPage;
+        selectKitchenType(container);
+    });
+
+    bathroomBtn.addEventListener('click', () => {
+        previousPage = navigateToSelectionPage;
+        selectBathroomType(container);
+    });
+
+    barTopBtn.addEventListener('click', () => {
+        previousPage = navigateToSelectionPage;
+        selectBarTopType(container);
+    });
+
+    islandBtn.addEventListener('click', () => {
+        previousPage = navigateToSelectionPage;
+        selectIslandType(container);
+    });
+}
+
 
     // Shape Selection Functions
     function selectKitchenType(container) {
@@ -622,36 +622,48 @@
         }
     }
 
-    // Backsplash Prompt
-    function promptBacksplash(shape, type, container, shapeData, callback) {
-        container.innerHTML = '';
+function promptBacksplash(shape, type, container, shapeData, callback) {
+    container.innerHTML = '';
 
-        const question = type === 'Bar Top' ? 'Does this bar top have a backsplash?' : 'Does this countertop have a backsplash?';
+    const question = type === 'Bar Top' ? 'Does this bar top have a backsplash?' : 'Does this countertop have a backsplash?';
 
-        const header = createElement('h2', null, question);
-        container.appendChild(header);
+    const header = createElement('h2', null, question);
+    container.appendChild(header);
 
-        const buttonGroup = createElement('div', 'button-group');
-        container.appendChild(buttonGroup);
+    // Add backsplash image
+    const imageDiv = createElement('div', 'image-container');
+    const backsplashImage = createElement('img');
+    backsplashImage.src = 'https://i.ibb.co/0VcttP1/backsplash.png'; // Replace with your backsplash image URL
+    backsplashImage.alt = 'Backsplash Example';
+    imageDiv.appendChild(backsplashImage);
+    container.appendChild(imageDiv);
 
-        const yesBtn = createElement('button', 'button', 'Yes');
-        const noBtn = createElement('button', 'button', 'No');
+    // Add description
+    const description = createElement('p', null, 'A backsplash is a vertical extension to a counter which protects the wall from splashes.');
+    container.appendChild(description);
 
-        buttonGroup.appendChild(yesBtn);
-        buttonGroup.appendChild(noBtn);
+    const buttonGroup = createElement('div', 'button-group');
+    container.appendChild(buttonGroup);
 
-        yesBtn.addEventListener('click', () => {
-            shapeData.hasBacksplash = true;
-            promptBacksplashDimensions(container, shapeData, () => {
-                callback();
-            });
-        });
+    const yesBtn = createElement('button', 'button', 'Yes');
+    const noBtn = createElement('button', 'button', 'No');
 
-        noBtn.addEventListener('click', () => {
-            shapeData.hasBacksplash = false;
+    buttonGroup.appendChild(yesBtn);
+    buttonGroup.appendChild(noBtn);
+
+    yesBtn.addEventListener('click', () => {
+        shapeData.hasBacksplash = true;
+        promptBacksplashDimensions(container, shapeData, () => {
             callback();
         });
-    }
+    });
+
+    noBtn.addEventListener('click', () => {
+        shapeData.hasBacksplash = false;
+        callback();
+    });
+}
+
 
     // Backsplash Dimensions Prompt
     function promptBacksplashDimensions(container, shapeData, callback) {
@@ -700,50 +712,51 @@
         });
     }
 
-    // Measurements Prompt
     function promptMeasurements(shape, type, container, shapeData, callback) {
-        container.innerHTML = '';
+    container.innerHTML = '';
 
-        const header = createElement('h2', null, 'Enter Measurements (in inches)');
-        container.appendChild(header);
+    const header = createElement('h2', null, 'Enter Measurements (in inches)');
+    container.appendChild(header);
 
-        const imageDiv = createElement('div', 'image-container');
-        const shapeImage = createElement('img');
-        shapeImage.src = shape.imageUrl;
-        shapeImage.alt = shape.name;
-        shapeImage.classList.add('shape-image');
-        imageDiv.appendChild(shapeImage);
-        container.appendChild(imageDiv);
+    // Display the shape image
+    const imageDiv = createElement('div', 'image-container');
+    const shapeImage = createElement('img');
+    shapeImage.src = shape.imageUrl; // Use the image URL from the selected shape
+    shapeImage.alt = shape.name;
+    shapeImage.classList.add('shape-image');
+    imageDiv.appendChild(shapeImage);
+    container.appendChild(imageDiv);
 
-        const form = createElement('div', 'form');
-        container.appendChild(form);
+    const form = createElement('div', 'form');
+    container.appendChild(form);
 
-        const measurementInputs = [];
-        shape.measurements.forEach((label, index) => {
-            const formGroup = createElement('div', 'form-group');
-            const inputLabel = createElement('label', null, `Measurement ${index + 1}:`);
-            const inputField = createElement('input');
-            inputField.type = 'number';
-            inputField.min = '0';
-            formGroup.appendChild(inputLabel);
-            formGroup.appendChild(inputField);
-            form.appendChild(formGroup);
-            measurementInputs.push(inputField);
-        });
+    const measurementInputs = [];
+    shape.measurements.forEach((label, index) => {
+        const formGroup = createElement('div', 'form-group');
+        const inputLabel = createElement('label', null, `${label}:`);
+        const inputField = createElement('input');
+        inputField.type = 'number';
+        inputField.min = '0';
+        formGroup.appendChild(inputLabel);
+        formGroup.appendChild(inputField);
+        form.appendChild(formGroup);
+        measurementInputs.push(inputField);
+    });
 
-        const nextBtn = createElement('button', 'button', 'Next');
-        form.appendChild(nextBtn);
+    const nextBtn = createElement('button', 'button', 'Next');
+    form.appendChild(nextBtn);
 
-        nextBtn.addEventListener('click', () => {
-            const measurements = measurementInputs.map(input => parseFloat(input.value));
-            if (measurements.some(value => isNaN(value) || value <= 0)) {
-                alert('Please enter valid measurements.');
-                return;
-            }
-            shapeData.measurements = measurements;
-            callback();
-        });
-    }
+    nextBtn.addEventListener('click', () => {
+        const measurements = measurementInputs.map(input => parseFloat(input.value));
+        if (measurements.some(value => isNaN(value) || value <= 0)) {
+            alert('Please enter valid measurements.');
+            return;
+        }
+        shapeData.measurements = measurements;
+        callback();
+    });
+}
+
 
     // Finish Type Prompt
     function promptFinishType(shape, type, container, shapeData) {
@@ -791,260 +804,266 @@
         }
     }
 
-    // Crystal Finish Prompt
     function promptCrystalFinish(shape, type, container, shapeData) {
-        const header = createElement('h2', null, 'Choose Your Crystal Top Finish');
-        container.appendChild(header);
+    container.innerHTML = '';
 
-        const patternContainer = createElement('div', 'button-group');
-        container.appendChild(patternContainer);
+    const header = createElement('h2', null, 'Choose Your Crystal Top Finish');
+    container.appendChild(header);
 
-        const crystalPatterns = [
-            {
-                name: 'Pour Swirl',
-                imageUrl: 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg',
-            },
-            {
-                name: 'Directional Pour',
-                imageUrl: 'https://i.ibb.co/K21MDPq/Pour-Directional-2.jpg',
-            }
-        ];
+    // Pattern Selection with Images
+    const patternContainer = createElement('div', 'button-group');
+    container.appendChild(patternContainer);
 
-        let selectedPattern = '';
+    const crystalPatterns = [
+        {
+            name: 'Pour Swirl',
+            imageUrl: 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg',
+        },
+        {
+            name: 'Directional Pour',
+            imageUrl: 'https://i.ibb.co/K21MDPq/Pour-Directional-2.jpg',
+        }
+    ];
 
-        crystalPatterns.forEach(pattern => {
-            const patternBtn = createImageButton(pattern.name, pattern.imageUrl);
-            patternContainer.appendChild(patternBtn);
+    let selectedPattern = '';
 
-            patternBtn.addEventListener('click', () => {
-                selectedPattern = pattern.name;
-                Array.from(patternContainer.children).forEach(child => {
-                    child.classList.remove('selected');
-                });
-                patternBtn.classList.add('selected');
+    crystalPatterns.forEach(pattern => {
+        const patternBtn = createImageButton(pattern.name, pattern.imageUrl);
+        patternContainer.appendChild(patternBtn);
+
+        patternBtn.addEventListener('click', () => {
+            selectedPattern = pattern.name;
+            Array.from(patternContainer.children).forEach(child => {
+                child.classList.remove('selected');
             });
+            patternBtn.classList.add('selected');
         });
+    });
 
-        // Color Selection
-        const baseColorLabel = createElement('h3', null, 'Choose a Base Color for Crystal Top:');
-        container.appendChild(baseColorLabel);
+    // Base Color Selection (Single Selection)
+    const baseColorLabel = createElement('h3', null, 'Choose a Base Color for Crystal Top:');
+    container.appendChild(baseColorLabel);
 
-        const baseColorContainer = createElement('div', 'color-selection');
-        container.appendChild(baseColorContainer);
+    const baseColorContainer = createElement('div', 'color-selection');
+    container.appendChild(baseColorContainer);
 
-        Object.entries(baseColors).forEach(([colorName, hexCode]) => {
-            const colorSquare = createColorSquare(colorName, hexCode);
-            baseColorContainer.appendChild(colorSquare);
+    Object.entries(baseColors).forEach(([colorName, hexCode]) => {
+        const colorSquare = createColorSquare(colorName, hexCode);
+        baseColorContainer.appendChild(colorSquare);
 
-            colorSquare.addEventListener('click', () => {
-                colorSquare.classList.toggle('selected');
-                if (colorSquare.classList.contains('selected')) {
-                    shapeData.baseColor = colorName;
-                } else {
-                    shapeData.baseColor = '';
-                }
+        colorSquare.addEventListener('click', () => {
+            Array.from(baseColorContainer.children).forEach(child => {
+                child.classList.remove('selected');
             });
+            colorSquare.classList.add('selected');
+            shapeData.baseColor = colorName;
         });
+    });
 
-        // Mix-in Colors
-        const mixInLabel = createElement('h3', null, 'Choose up to 4 Mix-in Colors:');
-        container.appendChild(mixInLabel);
+    // Mix-in Colors (Multiple Selection up to 4)
+    const mixInLabel = createElement('h3', null, 'Choose up to 4 Mix-in Colors:');
+    container.appendChild(mixInLabel);
 
-        const mixInContainer = createElement('div', 'color-selection');
-        container.appendChild(mixInContainer);
+    const mixInContainer = createElement('div', 'color-selection');
+    container.appendChild(mixInContainer);
 
-        const mixInColors = Object.assign({}, baseColors, {
-            'Icy White': '#F8F8FF',
-            'Silver': '#C0C0C0',
-            'Champagne Gold': '#F7E7CE',
-            'Bronze': '#CD7F32',
-            'Cobalt Blue': '#0047AB',
-            'Pewter Blue': '#8BA8B7',
-            'Copper': '#B87333'
+    const mixInColors = Object.assign({}, baseColors, {
+        'Icy White': '#F8F8FF',
+        'Silver': '#C0C0C0',
+        'Champagne Gold': '#F7E7CE',
+        'Bronze': '#CD7F32',
+        'Cobalt Blue': '#0047AB',
+        'Pewter Blue': '#8BA8B7',
+        'Copper': '#B87333'
+    });
+
+    const selectedMixIn = [];
+
+    Object.entries(mixInColors).forEach(([colorName, hexCode]) => {
+        const colorSquare = createColorSquare(colorName, hexCode);
+        mixInContainer.appendChild(colorSquare);
+
+        colorSquare.addEventListener('click', () => {
+            if (colorSquare.classList.contains('selected')) {
+                colorSquare.classList.remove('selected');
+                const index = selectedMixIn.indexOf(colorName);
+                if (index > -1) selectedMixIn.splice(index, 1);
+            } else if (selectedMixIn.length < 4) {
+                colorSquare.classList.add('selected');
+                selectedMixIn.push(colorName);
+            } else {
+                alert('You can select up to 4 mix-in colors.');
+            }
+            shapeData.mixInColors = selectedMixIn;
         });
+    });
 
-        const selectedMixIn = [];
+    // Add Item Button
+    const addItemBtn = createElement('button', 'button', 'Add Item');
+    container.appendChild(addItemBtn);
 
-        Object.entries(mixInColors).forEach(([colorName, hexCode]) => {
-            const colorSquare = createColorSquare(colorName, hexCode);
-            mixInContainer.appendChild(colorSquare);
+    addItemBtn.addEventListener('click', () => {
+        if (!selectedPattern) {
+            alert('Please select a crystal pattern.');
+            return;
+        }
+        if (!shapeData.baseColor) {
+            alert('Please select a base color.');
+            return;
+        }
+        if (shapeData.mixInColors.length === 0) {
+            alert('Please select at least one mix-in color.');
+            return;
+        }
 
-            colorSquare.addEventListener('click', () => {
-                if (colorSquare.classList.contains('selected')) {
-                    colorSquare.classList.remove('selected');
-                    const index = selectedMixIn.indexOf(colorName);
-                    if (index > -1) selectedMixIn.splice(index, 1);
-                } else if (selectedMixIn.length < 4) {
-                    colorSquare.classList.add('selected');
-                    selectedMixIn.push(colorName);
-                }
-                shapeData.mixInColors = selectedMixIn;
+        shapeData.pattern = selectedPattern;
+
+        // Calculate and add item
+        calculateAndAddItem(shape, shapeData, type, container);
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        previousPage(container);
+    });
+}
+
+  function promptRegularFinish(shape, type, container, shapeData) {
+    container.innerHTML = '';
+
+    const header = createElement('h2', null, 'Select Pattern and Colors for Regular Finish');
+    container.appendChild(header);
+
+    // Pattern Selection with Images
+    const patternLabel = createElement('h3', null, 'Select Pattern:');
+    container.appendChild(patternLabel);
+
+    const patternContainer = createElement('div', 'button-group');
+    container.appendChild(patternContainer);
+
+    const patterns = [
+        {
+            name: 'Quartz',
+            imageUrl: 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg'
+        },
+        {
+            name: 'Marble',
+            imageUrl: 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg'
+        },
+        {
+            name: 'Flowing Granite',
+            imageUrl: 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg'
+        }
+    ];
+
+    let selectedPattern = '';
+
+    patterns.forEach(pattern => {
+        const patternBtn = createImageButton(pattern.name, pattern.imageUrl);
+        patternContainer.appendChild(patternBtn);
+
+        patternBtn.addEventListener('click', () => {
+            selectedPattern = pattern.name;
+            Array.from(patternContainer.children).forEach(child => {
+                child.classList.remove('selected');
             });
+            patternBtn.classList.add('selected');
         });
+    });
 
-        // Add Item Button
-        const addItemBtn = createElement('button', 'button', 'Add Item');
-        container.appendChild(addItemBtn);
+    // Base Color Selection (Single Selection)
+    const baseColorLabel = createElement('h3', null, 'Choose a Base Color:');
+    container.appendChild(baseColorLabel);
 
-        addItemBtn.addEventListener('click', () => {
-            if (!selectedPattern) {
-                alert('Please select a crystal pattern.');
-                return;
-            }
-            if (!shapeData.baseColor) {
-                alert('Please select a base color.');
-                return;
-            }
-            if (shapeData.mixInColors.length === 0) {
-                alert('Please select at least one mix-in color.');
-                return;
-            }
+    const baseColorContainer = createElement('div', 'color-selection');
+    container.appendChild(baseColorContainer);
 
-            shapeData.pattern = selectedPattern;
+    Object.entries(baseColors).forEach(([colorName, hexCode]) => {
+        const colorSquare = createColorSquare(colorName, hexCode);
+        baseColorContainer.appendChild(colorSquare);
 
-            // Calculate and add item
-            calculateAndAddItem(shape, shapeData, type, container);
-        });
-
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
-
-        backButton.addEventListener('click', () => {
-            previousPage(container);
-        });
-    }
-
-    // Regular Finish Prompt
-    function promptRegularFinish(shape, type, container, shapeData) {
-        const header = createElement('h2', null, 'Select Pattern and Colors for Regular Finish');
-        container.appendChild(header);
-
-        const patternLabel = createElement('h3', null, 'Select Pattern:');
-        container.appendChild(patternLabel);
-
-        const patternContainer = createElement('div', 'button-group');
-        container.appendChild(patternContainer);
-
-        const patterns = [
-            {
-                name: 'Quartz',
-                imageUrl: 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg'
-            },
-            {
-                name: 'Marble',
-                imageUrl: 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg'
-            },
-            {
-                name: 'Flowing Granite',
-                imageUrl: 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg'
-            }
-        ];
-
-        let selectedPattern = '';
-
-        patterns.forEach(pattern => {
-            const patternBtn = createImageButton(pattern.name, pattern.imageUrl);
-            patternContainer.appendChild(patternBtn);
-
-            patternBtn.addEventListener('click', () => {
-                selectedPattern = pattern.name;
-                Array.from(patternContainer.children).forEach(child => {
-                    child.classList.remove('selected');
-                });
-                patternBtn.classList.add('selected');
+        colorSquare.addEventListener('click', () => {
+            Array.from(baseColorContainer.children).forEach(child => {
+                child.classList.remove('selected');
             });
+            colorSquare.classList.add('selected');
+            shapeData.baseColor = colorName;
         });
+    });
 
-        // Base Color Selection
-        const baseColorLabel = createElement('h3', null, 'Choose a Base Color:');
-        container.appendChild(baseColorLabel);
+    // Add-on Colors (Multiple Selection up to 3)
+    const addonLabel = createElement('h3', null, 'Choose up to 3 Add-on Colors:');
+    container.appendChild(addonLabel);
 
-        const baseColorContainer = createElement('div', 'color-selection');
-        container.appendChild(baseColorContainer);
+    const addonContainer = createElement('div', 'color-selection');
+    container.appendChild(addonContainer);
 
-        Object.entries(baseColors).forEach(([colorName, hexCode]) => {
-            const colorSquare = createColorSquare(colorName, hexCode);
-            baseColorContainer.appendChild(colorSquare);
+    const addonColors = Object.assign({}, baseColors, {
+        'Icy White': '#F8F8FF',
+        'Silver': '#C0C0C0',
+        'Champagne Gold': '#F7E7CE',
+        'Bronze': '#CD7F32',
+        'Cobalt Blue': '#0047AB',
+        'Pewter Blue': '#8BA8B7',
+        'Copper': '#B87333'
+    });
 
-            colorSquare.addEventListener('click', () => {
-                colorSquare.classList.toggle('selected');
-                if (colorSquare.classList.contains('selected')) {
-                    shapeData.baseColor = colorName;
-                } else {
-                    shapeData.baseColor = '';
-                }
-            });
-        });
+    const selectedAddons = [];
 
-        // Add-on Colors
-        const addonLabel = createElement('h3', null, 'Choose up to 3 Add-on Colors:');
-        container.appendChild(addonLabel);
+    Object.entries(addonColors).forEach(([colorName, hexCode]) => {
+        const colorSquare = createColorSquare(colorName, hexCode);
+        addonContainer.appendChild(colorSquare);
 
-        const addonContainer = createElement('div', 'color-selection');
-        container.appendChild(addonContainer);
-
-        const addonColors = Object.assign({}, baseColors, {
-            'Icy White': '#F8F8FF',
-            'Silver': '#C0C0C0',
-            'Champagne Gold': '#F7E7CE',
-            'Bronze': '#CD7F32',
-            'Cobalt Blue': '#0047AB',
-            'Pewter Blue': '#8BA8B7',
-            'Copper': '#B87333'
-        });
-
-        const selectedAddons = [];
-
-        Object.entries(addonColors).forEach(([colorName, hexCode]) => {
-            const colorSquare = createColorSquare(colorName, hexCode);
-            addonContainer.appendChild(colorSquare);
-
-            colorSquare.addEventListener('click', () => {
-                if (colorSquare.classList.contains('selected')) {
-                    colorSquare.classList.remove('selected');
-                    const index = selectedAddons.indexOf(colorName);
-                    if (index > -1) selectedAddons.splice(index, 1);
-                } else if (selectedAddons.length < 3) {
-                    colorSquare.classList.add('selected');
-                    selectedAddons.push(colorName);
-                }
-                shapeData.addonColors = selectedAddons;
-            });
-        });
-
-        // Add Item Button
-        const addItemBtn = createElement('button', 'button', 'Add Item');
-        container.appendChild(addItemBtn);
-
-        addItemBtn.addEventListener('click', () => {
-            if (!selectedPattern) {
-                alert('Please select a pattern.');
-                return;
+        colorSquare.addEventListener('click', () => {
+            if (colorSquare.classList.contains('selected')) {
+                colorSquare.classList.remove('selected');
+                const index = selectedAddons.indexOf(colorName);
+                if (index > -1) selectedAddons.splice(index, 1);
+            } else if (selectedAddons.length < 3) {
+                colorSquare.classList.add('selected');
+                selectedAddons.push(colorName);
+            } else {
+                alert('You can select up to 3 add-on colors.');
             }
-            if (!shapeData.baseColor) {
-                alert('Please select a base color.');
-                return;
-            }
-            if (shapeData.addonColors.length === 0) {
-                alert('Please select at least one add-on color.');
-                return;
-            }
-
-            shapeData.pattern = selectedPattern;
-
-            // Calculate and add item
-            calculateAndAddItem(shape, shapeData, type, container);
+            shapeData.addonColors = selectedAddons;
         });
+    });
 
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
+    // Add Item Button
+    const addItemBtn = createElement('button', 'button', 'Add Item');
+    container.appendChild(addItemBtn);
 
-        backButton.addEventListener('click', () => {
-            previousPage(container);
-        });
-    }
+    addItemBtn.addEventListener('click', () => {
+        if (!selectedPattern) {
+            alert('Please select a pattern.');
+            return;
+        }
+        if (!shapeData.baseColor) {
+            alert('Please select a base color.');
+            return;
+        }
+        if (shapeData.addonColors.length === 0) {
+            alert('Please select at least one add-on color.');
+            return;
+        }
+
+        shapeData.pattern = selectedPattern;
+
+        // Calculate and add item
+        calculateAndAddItem(shape, shapeData, type, container);
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        previousPage(container);
+    });
+}
 
     // Calculate and Add Item to Invoice
     function calculateAndAddItem(shape, shapeData, type, container) {
