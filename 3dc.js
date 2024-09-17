@@ -184,6 +184,9 @@
         return element;
     }
 
+    // Shared variables for Three.js components
+    let scene, camera, renderer, countertop, controls;
+
     /**
      * Initializes the user interface and Three.js scene
      */
@@ -295,11 +298,11 @@
      */
     function initializeThreeJS(container) {
         // Scene
-        const scene = new THREE.Scene();
+        scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf0f0f0);
 
         // Camera
-        const camera = new THREE.PerspectiveCamera(
+        camera = new THREE.PerspectiveCamera(
             45,
             container.clientWidth / container.clientHeight,
             0.1,
@@ -308,13 +311,13 @@
         camera.position.set(0, 5, 10);
 
         // Renderer
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
 
         // Controls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.enablePan = false;
@@ -330,10 +333,14 @@
         scene.add(directionalLight);
 
         // Countertop Mesh
-        let countertop;
+        countertop = null;
 
         /**
          * Creates or updates the countertop mesh based on user selections
+         * @param {Object} options - Customization options
+         * @param {THREE.Color} options.color - Base color
+         * @param {string} options.pattern - Pattern type
+         * @param {string} options.finish - Finish type
          */
         function createCountertop(options = {}) {
             // Remove existing countertop if any
@@ -503,17 +510,25 @@
             // Get selected color
             const selectedColorDiv = document.querySelector('.color-square.selected');
             if (!selectedColorDiv) {
-                alert('Please select a base color.');
+                console.warn('No color selected.');
                 return;
             }
             const colorHex = selectedColorDiv.dataset.color;
 
             // Get selected pattern
             const patternSelect = document.querySelector('#patternSelect');
+            if (!patternSelect) {
+                console.warn('Pattern select element not found.');
+                return;
+            }
             const selectedPattern = patternSelect.value;
 
             // Get selected finish
             const finishSelect = document.querySelector('#finishSelect');
+            if (!finishSelect) {
+                console.warn('Finish select element not found.');
+                return;
+            }
             const selectedFinish = finishSelect.value;
 
             // Update the countertop
@@ -523,6 +538,9 @@
                 finish: selectedFinish
             });
         }
+
+        // Expose updateCountertop to the global scope within the IIFE
+        window.updateCountertop = updateCountertop;
 
         // Initial Countertop Creation
         updateCountertop();
