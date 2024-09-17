@@ -874,8 +874,9 @@ yesBtn.addEventListener('click', () => {
 
     
 
+// Ask Backsplash Function (Corrected)
 function askBacksplash(container, shape) {
-    container.innerHTML = '';
+    container.innerHTML = ''; // Clear the container
 
     const header = createElement('h2', null, 'Does this countertop have a backsplash?');
     container.appendChild(header);
@@ -883,29 +884,34 @@ function askBacksplash(container, shape) {
     const buttonGroup = createElement('div', 'button-group');
     container.appendChild(buttonGroup);
 
-    const yesBtn = createElement('button', 'button', 'Yes');
+    // Declare and Create Buttons
+    const yesBtn = createElement('button', 'button', 'Yes');  // Ensure yesBtn is declared
     const noBtn = createElement('button', 'button', 'No');
 
+    // Append buttons to the button group
     buttonGroup.appendChild(yesBtn);
     buttonGroup.appendChild(noBtn);
 
+    // Define behavior for 'Yes' button
     yesBtn.addEventListener('click', () => {
         promptBacksplashDimensions(container, shape);
     });
 
+    // Define behavior for 'No' button
     noBtn.addEventListener('click', () => {
         shape.hasBacksplash = false;
         addToQuote(container, shape);
     });
 
-    // Back Button
+    // Back Button to navigate to previous page
     const backButton = createElement('button', 'button back-button', 'Back');
     container.appendChild(backButton);
 
     backButton.addEventListener('click', () => {
-        inputMeasurements(container, shape);
+        inputMeasurements(container, shape); // Correct flow control
     });
 }
+
 
 function createQuotePage(container) {
     container.innerHTML = '';
