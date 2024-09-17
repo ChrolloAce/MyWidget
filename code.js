@@ -719,6 +719,31 @@ function addItem(container) {
 
         viewInvoiceBtn.addEventListener('click', () => {
             previousPage = () => addItem(container);
+            createInvoicePage(container);  // Skip the price display and go to the item list
+        });
+    }
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        if (previousPage) previousPage();
+    });
+}
+
+    // Show Item List and Invoice button
+    if (items.length > 0) {
+        const itemListDiv = createElement('div', 'item-list');
+        container.appendChild(itemListDiv);
+        updateItemList(itemListDiv);  // Always display the item list
+
+        // Add "View Price Estimate for Free" button (without showing the price)
+        const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
+        container.appendChild(viewInvoiceBtn);
+
+        viewInvoiceBtn.addEventListener('click', () => {
+            previousPage = () => addItem(container);
     createInvoicePage(container);  // Skip the price display and go to the item list
         });
     }
@@ -733,15 +758,14 @@ function addItem(container) {
 }
 
     
-    // Helper function to get subcategory image URLs
-    function getSubcategoryImageUrl(subcategory) {
-        const images = {
-            'Bartops': 'https://i.ibb.co/4PNXrnc/1.png', // Replace with actual Bartops image URL
-            'Countertops': 'https://i.ibb.co/tPH5VT2/10.png', // Replace with actual Countertops image URL
-            'Islands': 'https://i.ibb.co/2WfRSkn/islandsquare.png' // Replace with actual Islands image URL
-        };
-        return images[subcategory] || 'https://via.placeholder.com/250';
-    }
+ function getSubcategoryImageUrl(subcategory) {
+    const images = {
+        'Bartops': 'https://i.ibb.co/NFwbHmk/counter.png',   // New Bartop image
+        'Countertops': 'https://i.ibb.co/xs2zDQn/Marble-2.png',  // New Counter image
+        'Islands': 'https://i.ibb.co/Dt9LxBZ/Island.png'   // New Island image
+    };
+    return images[subcategory] || 'https://via.placeholder.com/250';
+}
 
     // Choose Shape
     function chooseShape(container, subcategory) {
