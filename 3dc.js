@@ -7,7 +7,7 @@
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
 
     // URL for the FBX model file
-    const FBX_MODEL_URL = 'https://github.com/ChrolloAce/MyWidget/raw/main/countermain.fbx';
+const FBX_MODEL_URL = 'https://dl.dropboxusercontent.com/s/a75mvfx8z5xeunh7s7tk6/countermain.fbx';
 
     // Move FULL_URL construction here, after FBX_MODEL_URL is declared
     const FULL_URL = CORS_PROXY + FBX_MODEL_URL;
