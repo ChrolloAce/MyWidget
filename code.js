@@ -874,7 +874,6 @@ yesBtn.addEventListener('click', () => {
 
     
 
-// Ask Backsplash Function (Corrected)
 function askBacksplash(container, shape) {
     container.innerHTML = ''; // Clear the container
 
@@ -884,33 +883,34 @@ function askBacksplash(container, shape) {
     const buttonGroup = createElement('div', 'button-group');
     container.appendChild(buttonGroup);
 
-    // Declare and Create Buttons
-    const yesBtn = createElement('button', 'button', 'Yes');  // Ensure yesBtn is declared
+    // Properly declare the yesBtn and noBtn here
+    const yesBtn = createElement('button', 'button', 'Yes');
     const noBtn = createElement('button', 'button', 'No');
 
-    // Append buttons to the button group
+    // Append buttons to the buttonGroup
     buttonGroup.appendChild(yesBtn);
     buttonGroup.appendChild(noBtn);
 
-    // Define behavior for 'Yes' button
-    yesBtn.addEventListener('click', () => {
-        promptBacksplashDimensions(container, shape);
+    // Add event listener for 'Yes' button
+    yesBtn.addEventListener('click', function() {
+        promptBacksplashDimensions(container, shape); // Call backsplash dimension prompt if 'Yes' is clicked
     });
 
-    // Define behavior for 'No' button
-    noBtn.addEventListener('click', () => {
-        shape.hasBacksplash = false;
-        addToQuote(container, shape);
+    // Add event listener for 'No' button
+    noBtn.addEventListener('click', function() {
+        shape.hasBacksplash = false; // Set the backsplash to false
+        addToQuote(container, shape); // Proceed to add the item to the quote
     });
 
-    // Back Button to navigate to previous page
+    // Back button to go back to the previous page
     const backButton = createElement('button', 'button back-button', 'Back');
     container.appendChild(backButton);
 
-    backButton.addEventListener('click', () => {
-        inputMeasurements(container, shape); // Correct flow control
+    backButton.addEventListener('click', function() {
+        inputMeasurements(container, shape); // Go back to the measurement input page
     });
 }
+
 
 
 function createQuotePage(container) {
