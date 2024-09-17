@@ -40,7 +40,7 @@
     // Inject CSS Styles Globally
     (function injectStyles() {
         const styles = `
-        /* General Reset */
+       /* General Reset */
 * {
     margin: 0;
     padding: 0;
@@ -56,7 +56,7 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
-/* Container */
+/* Main Container Styling */
 .container {
     width: 95%;
     max-width: 800px;
@@ -65,7 +65,7 @@ body {
     border-radius: 15px;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
     text-align: center;
-    margin: 60px auto 30px auto;
+    margin: 60px auto;
     transition: all 0.3s ease;
 }
 
@@ -124,8 +124,19 @@ body {
     box-shadow: 0 0 5px rgba(2, 100, 217, 0.5);
 }
 
+/* Horizontal Button Group Styling */
+.button-group {
+    display: flex;
+    justify-content: space-between;  /* Align buttons horizontally */
+    flex-wrap: wrap;  /* Wrap buttons in case there's no space */
+    gap: 20px;  /* Space between buttons */
+    margin-bottom: 20px;
+    width: 100%;  /* Ensure the buttons use all available width */
+}
+
 /* Button Styles */
 .button {
+    flex-grow: 1;
     padding: 14px 20px;
     background-color: #0264D9;
     color: #ffffff;
@@ -134,26 +145,19 @@ body {
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    margin: 20px auto;
+    margin: 10px;
+    text-align: center;
     transition: background-color 0.3s ease, opacity 0.3s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: block;
-    max-width: 200px;
+    max-width: 150px;  /* Optional: Limit button width */
 }
 
+/* Button Hover Effects */
 .button:hover {
     background-color: #004C99;
 }
 
-.button-group {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-/* Green Button */
+/* Green Button (Alternative Styling) */
 .button.green-button {
     background-color: #28a745;
     color: #ffffff;
@@ -161,6 +165,15 @@ body {
 
 .button.green-button:hover {
     background-color: #218838;
+}
+
+/* Red Button (Danger or Back Button) */
+.button.red-button {
+    background-color: #dc3545;
+}
+
+.button.red-button:hover {
+    background-color: #c82333;
 }
 
 /* Image Button Styles */
@@ -196,13 +209,6 @@ body {
     font-size: 16px;
     font-weight: bold;
     text-align: center;
-}
-
-/* Backsplash Question */
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
 }
 
 /* Invoice / Quote Screen */
@@ -276,76 +282,6 @@ p {
     background-color: #c82333;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .container {
-        padding: 20px;
-    }
-
-    .image-button {
-        width: 100%;
-        max-width: 250px;
-        margin: 10px auto;
-    }
-
-    .button, .back-button {
-        width: 100%;
-        max-width: none;
-    }
-
-    .item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .item-remove {
-        margin-top: 10px;
-    }
-
-    .container h1 {
-        font-size: 28px;
-    }
-
-    .container h2 {
-        font-size: 20px;
-    }
-
-    .container p, .form-group label, .form-group input, .item-description span {
-        font-size: 14px;
-    }
-
-    .image-button .overlay {
-        font-size: 14px;
-        padding: 8px;
-    }
-}
-
-/* Large Quote Price */
-.quote-price {
-    font-size: 48px;
-    font-weight: bold;
-    color: #333333;
-}
-
-/* Form Button Container */
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-/* Back Button */
-.back-button {
-    background-color: #f44336;
-    max-width: 150px;
-}
-
-.back-button:hover {
-    background-color: #d32f2f;
-}
-
 /* Add New Countertop Button */
 .add-countertop-button {
     background-color: #28a745;
@@ -403,6 +339,81 @@ p {
     transform: translateX(-50%);
 }
 
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .image-button {
+        width: 100%;
+        max-width: 250px;
+        margin: 10px auto;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button {
+        max-width: none;
+        width: 100%;
+    }
+
+    .item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .item-remove {
+        margin-top: 10px;
+    }
+
+    .container h1 {
+        font-size: 28px;
+    }
+
+    .container h2 {
+        font-size: 20px;
+    }
+
+    .container p, .form-group label, .form-group input, .item-description span {
+        font-size: 14px;
+    }
+
+    .image-button .overlay {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+/* Large Quote Price */
+.quote-price {
+    font-size: 48px;
+    font-weight: bold;
+    color: #333333;
+}
+
+/* Form Button Container */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+/* Back Button */
+.back-button {
+    background-color: #f44336;
+    max-width: 150px;
+}
+
+.back-button:hover {
+    background-color: #d32f2f;
+}
+
 /* Fade In Animation */
 .fade-in {
     animation: fadeIn 0.5s forwards;
@@ -412,7 +423,6 @@ p {
     from { opacity: 0; }
     to { opacity: 1; }
 }
-
         `;
 
         const styleElement = document.createElement('style');
