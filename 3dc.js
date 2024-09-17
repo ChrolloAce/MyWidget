@@ -1,8 +1,9 @@
 (function () {
-    // URLs for Three.js, OrbitControls, and FBXLoader
+    // URLs for Three.js, OrbitControls, FBXLoader, and fflate
     const THREE_JS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
+    const FFLATE_URL = 'https://cdn.jsdelivr.net/npm/fflate/umd/fflate.min.js';  // fflate library URL
 
     // URL for the FBX model file hosted on Vercel
     const FBX_MODEL_URL = 'https://my-widget-nu.vercel.app/countermain.fbx';
@@ -153,6 +154,7 @@
         injectStyles();  // Inject CSS styles dynamically
         loadScript(THREE_JS_URL)
             .then(() => loadScript(ORBIT_CONTROLS_URL))
+            .then(() => loadScript(FFLATE_URL))  // Load fflate.min.js
             .then(() => loadScript(FBX_LOADER_URL))
             .then(() => init())  // Initialize the scene after scripts are loaded
             .catch(error => {
