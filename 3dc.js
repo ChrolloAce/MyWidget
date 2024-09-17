@@ -1,8 +1,12 @@
 (function () {
     // URLs for Three.js, OrbitControls, and FBXLoader
+    const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+
     const THREE_JS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
+    const FULL_URL = CORS_PROXY + FBX_MODEL_URL;
+
 
     // URL for the FBX model file
 const FBX_MODEL_URL = 'https://github.com/ChrolloAce/MyWidget/raw/main/countermain.fbx';
@@ -170,7 +174,7 @@ const FBX_MODEL_URL = 'https://github.com/ChrolloAce/MyWidget/raw/main/counterma
         controls.maxDistance = 10; // Maximum zoom distance
 
         // Load the FBX model
-        loadFBXModel(FBX_MODEL_URL)
+            loadFBXModel(FULL_URL)
             .then(loadedModel => {
                 fbxModel = loadedModel;
 
