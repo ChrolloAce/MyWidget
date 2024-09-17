@@ -526,6 +526,11 @@ p {
         });
     }
 
+
+
+
+    
+
     // Helper function to get finish image URLs
     function getFinishImageUrl(finish) {
         const images = {
@@ -679,7 +684,7 @@ p {
     }
 
 function addItem(container) {
-    container.innerHTML = '';
+    container.innerHTML = '';  // Clear the container
 
     const header = createElement('h2', null, 'Add a Countertop Item');
     container.appendChild(header);
@@ -697,7 +702,7 @@ function addItem(container) {
 
             subcategoryBtn.addEventListener('click', () => {
                 previousPage = () => addItem(container);
-                chooseShape(container, subcategory);
+                chooseShape(container, subcategory);  // Proceed to shape selection
             });
         });
     } else {
@@ -712,24 +717,24 @@ function addItem(container) {
 
             shapeBtn.addEventListener('click', () => {
                 previousPage = () => addItem(container);
-                inputMeasurements(container, shape);
+                inputMeasurements(container, shape);  // Proceed to measurement input
             });
         });
     }
 
-    // Show Item List and Invoice button
+    // Show Item List and Invoice button (if items exist)
     if (items.length > 0) {
         const itemListDiv = createElement('div', 'item-list');
         container.appendChild(itemListDiv);
-        updateItemList(itemListDiv);  // Always display the item list
+        updateItemList(itemListDiv);  // Update item list
 
-        // Add "View Price Estimate for Free" button (without showing the price)
+        // Add "View Price Estimate for Free" button
         const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
         container.appendChild(viewInvoiceBtn);
 
         viewInvoiceBtn.addEventListener('click', () => {
             previousPage = () => addItem(container);
-            createInvoicePage(container);  // Skip the price display and go to the item list
+            createInvoicePage(container);  // Proceed to the invoice page
         });
     }
 
@@ -741,30 +746,6 @@ function addItem(container) {
         if (previousPage) previousPage();
     });
 }
-
-    // Show Item List and Invoice button
-    if (items.length > 0) {
-        const itemListDiv = createElement('div', 'item-list');
-        container.appendChild(itemListDiv);
-        updateItemList(itemListDiv);  // Always display the item list
-
-        // Add "View Price Estimate for Free" button (without showing the price)
-        const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
-        container.appendChild(viewInvoiceBtn);
-
-        viewInvoiceBtn.addEventListener('click', () => {
-            previousPage = () => addItem(container);
-    createInvoicePage(container);  // Skip the price display and go to the item list
-        });
-    }
-
-    // Back Button
-    const backButton = createElement('button', 'button back-button', 'Back');
-    container.appendChild(backButton);
-
-    backButton.addEventListener('click', () => {
-        if (previousPage) previousPage();
-    });
 
 
     
