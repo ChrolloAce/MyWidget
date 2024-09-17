@@ -1135,6 +1135,48 @@ function promptBaseAndAddonColors(container, shapeData) {
 }
 
 
+function promptBacksplashDimensions(container, shapeData, callback) {
+    container.innerHTML = ''; // Clear the container
+
+    const header = document.createElement('h2');
+    header.textContent = 'Enter Backsplash Dimensions (Width and Height in inches)';
+    header.style.color = '#0C1729';
+    header.style.marginBottom = '20px';
+    header.style.fontSize = '24px';
+    container.appendChild(header);
+
+    // Width Input
+    const widthInput = document.createElement('input');
+    widthInput.type = 'number';
+    widthInput.placeholder = 'Backsplash Width (in inches)';
+    widthInput.style.marginBottom = '10px';
+    container.appendChild(widthInput);
+
+    // Height Input
+    const heightInput = document.createElement('input');
+    heightInput.type = 'number';
+    heightInput.placeholder = 'Backsplash Height (in inches)';
+    heightInput.style.marginBottom = '10px';
+    container.appendChild(heightInput);
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    styleButton(nextBtn);
+    container.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', function () {
+        const width = parseFloat(widthInput.value);
+        const height = parseFloat(heightInput.value);
+        if (isNaN(width) || width <= 0 || isNaN(height) || height <= 0) {
+            alert('Please enter valid width and height.');
+        } else {
+            // Store the width and height in shapeData
+            shapeData.backsplashWidth = width;
+            shapeData.backsplashHeight = height;
+            callback(); // Proceed to the next step
+        }
+    });
+}
 
 
 
@@ -1371,7 +1413,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
         description.style.marginBottom = '20px';
         container.appendChild(description);
 
-        // Pattern Selection
+        // Pattern Selection for Standard Finish
         const patternLabel = document.createElement('label');
         patternLabel.textContent = 'Select Pattern:';
         patternLabel.style.color = '#0C1729';
@@ -1500,7 +1542,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
             baseColorContainer.appendChild(colorDiv);
         });
 
-        // Add-on Color Selection for Standard Finish
+        // Add-on Colors for Standard Finish
         const addonColorLabel = document.createElement('label');
         addonColorLabel.textContent = 'Choose up to 3 Add-on Colors for Standard Finish:';
         addonColorLabel.style.color = '#0C1729';
@@ -1588,6 +1630,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
         });
     }
 }
+
 
 
 
