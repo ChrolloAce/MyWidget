@@ -668,81 +668,92 @@ p {
         return colorDiv;
     }
 
-    // Add Item Function
-    function addItem(container) {
-        container.innerHTML = '';
+   // Add Item Function
+function addItem(container) {
+    container.innerHTML = '';
 
-        const header = createElement('h2', null, 'Add a Countertop Item');
-        container.appendChild(header);
+    const header = createElement('h2', null, 'Add a Countertop Item');
+    container.appendChild(header);
 
-        // If Kitchen, choose subcategory
-        if (designSelections.type === 'Kitchen') {
-            const subcategoryContainer = createElement('div', 'button-group');
-            container.appendChild(subcategoryContainer);
+    // If Kitchen, choose subcategory
+    if (designSelections.type === 'Kitchen') {
+        const subcategoryContainer = createElement('div', 'button-group');
+        container.appendChild(subcategoryContainer);
 
-            const subcategories = ['Bartops', 'Countertops', 'Islands'];
+        const subcategories = ['Bartops', 'Countertops', 'Islands'];
 
-            subcategories.forEach(subcategory => {
-                const subcategoryBtn = createImageButton(subcategory, getSubcategoryImageUrl(subcategory));
-                subcategoryContainer.appendChild(subcategoryBtn);
+        subcategories.forEach(subcategory => {
+            const subcategoryBtn = createImageButton(subcategory, getSubcategoryImageUrl(subcategory));
+            subcategoryContainer.appendChild(subcategoryBtn);
 
-                subcategoryBtn.addEventListener('click', () => {
-                    previousPage = () => addItem(container);
-                    chooseShape(container, subcategory);
-                });
+            subcategoryBtn.addEventListener('click', () => {
+                previousPage = () => addItem(container);
+                chooseShape(container, subcategory);
             });
+        });
 
-            // View Invoice Button
-            const viewInvoiceBtn = createElement('button', 'button', 'View Invoice');
+        // Show Item List and Invoice button
+        if (items.length > 0) {
+            const itemListDiv = createElement('div', 'item-list');
+            container.appendChild(itemListDiv);
+            updateItemList(itemListDiv);
+
+            const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
             container.appendChild(viewInvoiceBtn);
 
             viewInvoiceBtn.addEventListener('click', () => {
                 previousPage = () => addItem(container);
-                createInvoicePage(container);
-            });
-
-            // Back Button
-            const backButton = createElement('button', 'button back-button', 'Back');
-            container.appendChild(backButton);
-
-            backButton.addEventListener('click', () => {
-                if (previousPage) previousPage();
-            });
-        } else {
-            // For Bathroom, directly choose shape
-            const shapeContainer = createElement('div', 'button-group');
-            container.appendChild(shapeContainer);
-
-            const shapes = getShapesForType(designSelections.type);
-            shapes.forEach(shape => {
-                const shapeBtn = createImageButton(shape.name, shape.imageUrl);
-                shapeContainer.appendChild(shapeBtn);
-
-                shapeBtn.addEventListener('click', () => {
-                    previousPage = () => addItem(container);
-                    inputMeasurements(container, shape);
-                });
-            });
-
-            // View Invoice Button
-            const viewInvoiceBtn = createElement('button', 'button', 'View Invoice');
-            container.appendChild(viewInvoiceBtn);
-
-            viewInvoiceBtn.addEventListener('click', () => {
-                previousPage = () => addItem(container);
-                createInvoicePage(container);
-            });
-
-            // Back Button
-            const backButton = createElement('button', 'button back-button', 'Back');
-            container.appendChild(backButton);
-
-            backButton.addEventListener('click', () => {
-                if (previousPage) previousPage();
+                createQuotePage(container);
             });
         }
-    }
 
+        // Back Button
+        const backButton = createElement('button', 'button back-button', 'Back');
+        container.appendChild(backButton);
+
+        backButton.addEventListener('click', () => {
+            if (previousPage) previousPage();
+        });
+    } else {
+        // For Bathroom, directly choose shape
+        const shapeContainer = createElement('div', 'button-group');
+        container.appendChild(shapeContainer);
+
+        const shapes = getShapesForType(designSelections.type);
+        shapes.forEach(shape => {
+            const shapeBtn = createImageButton(shape.name, shape.imageUrl);
+            shapeContainer.appendChild(shapeBtn);
+
+            shapeBtn.addEventListener('click', () => {
+                previousPage = () => addItem(container);
+                inputMeasurements(container, shape);
+            });
+        });
+
+        // Show Item List and Invoice button
+        if (items.length > 0) {
+            const itemListDiv = createElement('div', 'item-list');
+            container.appendChild(itemListDiv);
+            updateItemList(itemListDiv);
+
+            const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
+            container.appendChild(viewInvoiceBtn);
+
+            viewInvoiceBtn.addEventListener('click', () => {
+                previousPage = () => addItem(container);
+                createQuotePage(container);
+            });
+        }
+
+        // Back Button
+        const backButton = createElement('button', 'button back-button', 'Back');
+        container.appendChild(backButton);
+
+        backButton.addEventListener('click', () => {
+            if (previousPage) previousPage();
+        });
+    }
+}
     // Helper function to get subcategory image URLs
     function getSubcategoryImageUrl(subcategory) {
         const images = {
@@ -905,22 +916,21 @@ function askBacksplash(container, shape) {
 
 
 
+// Create Quote Page (Total Price is rounded and shown here)
 function createQuotePage(container) {
     container.innerHTML = '';
 
     const header = createElement('h2', null, 'Your Quote');
     container.appendChild(header);
 
-    // Display the total price, larger font
-    const totalText = createElement('p', null, `Total Price: $${totalCost.toFixed(2)}`);
+    // Only display the total price here
+    const totalText = createElement('p', null, `Total Price: $${Math.ceil(totalCost)}`); // Rounded up total price
     totalText.style.fontSize = '36px';  // Make price bigger
     totalText.style.fontWeight = 'bold';
     container.appendChild(totalText);
 
     // View Price Estimate Button
     const viewEstimateBtn = createElement('button', 'button', 'View Price Estimate for Free →');
-    viewEstimateBtn.style.display = 'inline-block';
-    viewEstimateBtn.style.margin = '20px';
     container.appendChild(viewEstimateBtn);
 
     viewEstimateBtn.addEventListener('click', () => {
@@ -930,8 +940,6 @@ function createQuotePage(container) {
 
     // Add New Countertop Button
     const addCountertopBtn = createElement('button', 'button green-button', 'Add New Countertop to Your Quote');
-    addCountertopBtn.style.display = 'inline-block';
-    addCountertopBtn.style.margin = '20px';
     container.appendChild(addCountertopBtn);
 
     addCountertopBtn.addEventListener('click', () => {
@@ -939,6 +947,7 @@ function createQuotePage(container) {
         addItem(container);
     });
 }
+
 
     
 function inputMeasurements(container, shape) {
@@ -1060,38 +1069,41 @@ function inputMeasurements(container, shape) {
     });
 }
 
-    // Calculate Total Cost
-    function calculateTotalCost() {
-        totalCost = 0;
-        items.forEach(item => {
-            const depth = designSelections.type === 'Kitchen' ? 25 : 22; // Standard depths
-            let squareFootage = 0;
+   // Calculate Total Cost (Use Math.ceil to round up the total cost)
+function calculateTotalCost() {
+    totalCost = 0;
+    items.forEach(item => {
+        const depth = designSelections.type === 'Kitchen' ? 25 : 22; // Standard depths
+        let squareFootage = 0;
 
-            // Calculate area based on shape formula
-            const shape = getShapeByName(item.shape);
-            if (shape && typeof shape.formula === 'function') {
-                squareFootage += shape.formula(item.measurements, depth);
-            }
-
-            // Add backsplash area if applicable
-            if (item.backsplash) {
-                const backsplashArea = (item.backsplash.width / 12) * (item.backsplash.height / 12);
-                squareFootage += backsplashArea;
-            }
-
-            // Determine price per sq ft
-            let pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
-
-            // Calculate cost
-            const cost = squareFootage * pricePerSqFt;
-            totalCost += cost;
-        });
-
-        // Enforce minimum price
-        if (totalCost < MINIMUM_PRICE) {
-            totalCost = MINIMUM_PRICE;
+        // Calculate area based on shape formula
+        const shape = getShapeByName(item.shape);
+        if (shape && typeof shape.formula === 'function') {
+            squareFootage += shape.formula(item.measurements, depth);
         }
+
+        // Add backsplash area if applicable
+        if (item.backsplash) {
+            const backsplashArea = (item.backsplash.width / 12) * (item.backsplash.height / 12);
+            squareFootage += backsplashArea;
+        }
+
+        // Determine price per sq ft
+        let pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
+
+        // Calculate cost
+        const cost = squareFootage * pricePerSqFt;
+        totalCost += cost;
+    });
+
+    // Enforce minimum price
+    if (totalCost < MINIMUM_PRICE) {
+        totalCost = MINIMUM_PRICE;
     }
+
+    // Round up the total cost
+    totalCost = Math.ceil(totalCost);
+}
 
     // Get Shape by Name
     function getShapeByName(name) {
@@ -1153,33 +1165,33 @@ function inputMeasurements(container, shape) {
         });
     }
 
-    // Update Item List UI
-    function updateItemList(itemListDiv) {
-        itemListDiv.innerHTML = '<h3>Items:</h3>';
+   // Update Item List UI (Keep the item list visible)
+function updateItemList(itemListDiv) {
+    itemListDiv.innerHTML = '<h3>Items in Your Quote:</h3>';
 
-        items.forEach((item, index) => {
-            const itemDiv = createElement('div', 'item');
+    items.forEach((item, index) => {
+        const itemDiv = createElement('div', 'item');
 
-            const descDiv = createElement('div', 'item-description');
-            const img = createElement('img');
-            img.src = getShapeByName(item.shape).imageUrl;
-            img.alt = item.shape;
-            descDiv.appendChild(img);
+        const descDiv = createElement('div', 'item-description');
+        const img = createElement('img');
+        img.src = getShapeByName(item.shape).imageUrl;
+        img.alt = item.shape;
+        descDiv.appendChild(img);
 
-            const descText = createElement('span', null, `${item.shape}`);
-            descDiv.appendChild(descText);
+        const descText = createElement('span', null, `${item.shape}`);
+        descDiv.appendChild(descText);
 
-            const removeBtn = createElement('button', 'item-remove', 'Remove');
-            removeBtn.addEventListener('click', () => {
-                removeItem(index);
-            });
-
-            itemDiv.appendChild(descDiv);
-            itemDiv.appendChild(removeBtn);
-
-            itemListDiv.appendChild(itemDiv);
+        const removeBtn = createElement('button', 'item-remove', 'Remove');
+        removeBtn.addEventListener('click', () => {
+            removeItem(index);
         });
-    }
+
+        itemDiv.appendChild(descDiv);
+        itemDiv.appendChild(removeBtn);
+
+        itemListDiv.appendChild(itemDiv);
+    });
+}
 
     // Remove Item from Invoice
     function removeItem(index) {
