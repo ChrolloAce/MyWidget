@@ -3,7 +3,7 @@
     const THREE_JS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
-    const FFLATE_URL = 'https://unpkg.com/fflate@0.6.9/umd/fflate.min.js'; // Updated fflate URL from unpkg
+    const FFLATE_URL = 'https://cdn.jsdelivr.net/npm/fflate@0.6.9/umd/fflate.min.js'; // Another CDN for fflate.min.js
 
     // URL for the FBX model file hosted on Vercel
     const FBX_MODEL_URL = 'https://my-widget-nu.vercel.app/countermain.fbx';
@@ -49,7 +49,8 @@
     function loadScript(url) {
         return new Promise((resolve, reject) => {
             if (document.querySelector(`script[src="${url}"]`)) {
-                resolve();
+                console.log(`Script already loaded: ${url}`);
+                resolve();  // Script is already loaded, so resolve immediately
                 return;
             }
 
