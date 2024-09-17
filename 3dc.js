@@ -1,169 +1,1003 @@
 (function () {
-    // URLs for Three.js, OrbitControls, FBXLoader, and fflate
-    const THREE_JS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
-    const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
-    const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
-    const FFLATE_URL = 'https://cdn.jsdelivr.net/npm/fflate@0.6.9/umd/fflate.min.js'; // Another CDN for fflate.min.js
+    // Constants and Configuration
+    const PRICE_REGULAR = 26;
+    const PRICE_CRYSTAL = 39;
+    const MINIMUM_PRICE = 400;
 
-    // URL for the FBX model file hosted on Vercel
-    const FBX_MODEL_URL = 'https://my-widget-nu.vercel.app/countermain.fbx';
+    let items = [];
+    let totalCost = 0;
+    let previousPage = null;
+    let userInfo = {};
 
-    // CSS styles dynamically injected into the page
-    const styles = `
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
+    const baseColors = {
+        'White': '#FFFFFF',
+        'Black': '#000000',
+        'Tornado Gray': '#4F4F4F',
+        'Charcoal Gray': '#2E2E2E',
+        'Toasted Almond': '#D2B48C',
+        'Milk Chocolate': '#8B4513',
+        'Dark Chocolate': '#5D3A1A'
+    };
 
-        .container {
-            display: flex;
-            width: 100%;
-            height: 100%;
-        }
+    // Inject CSS Styles Globally
+    (function injectStyles() {
+        const styles = `
+            /* General Reset */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-        .scene {
-            flex-grow: 1;
-            background-color: #ffffff;
-        }
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: 100vh;
+                background-color: #ffffff;
+                font-family: 'Arial', sans-serif;
+            }
 
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-    `;
+            /* Container */
+            .container {
+                width: 95%;
+                max-width: 800px;
+                background-color: #f1f1f1;
+                padding: 40px;
+                border-radius: 15px;
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+                text-align: center;
+                margin: 80px auto 30px auto;
+                transition: all 0.3s ease;
+            }
 
-    // Function to inject CSS styles into the document
-    function injectStyles() {
-        const styleSheet = document.createElement("style");
-        styleSheet.type = "text/css";
-        styleSheet.innerText = styles;
-        document.head.appendChild(styleSheet);
+            /* Headers */
+            .container h1,
+            .container h2 {
+                color: #0C1729;
+                margin-bottom: 20px;
+            }
+
+            .container h1 {
+                font-size: 36px;
+            }
+
+            .container h2 {
+                font-size: 28px;
+            }
+
+            /* Paragraphs */
+            .container p {
+                color: #0C1729;
+                font-size: 18px;
+                margin-bottom: 30px;
+            }
+
+            /* Form Styles */
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                color: #0C1729;
+                margin-bottom: 5px;
+                font-size: 18px;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 18px;
+                transition: border-color 0.3s ease;
+            }
+
+            .form-group input:focus {
+                border-color: #0264D9;
+                outline: none;
+            }
+
+            /* Button Styles */
+            .button {
+                padding: 14px;
+                background-color: #0264D9;
+                color: #ffffff;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 18px;
+                font-weight: bold;
+                margin: 20px 0;
+                transition: background-color 0.3s ease, opacity 0.3s ease;
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .button:hover {
+                background-color: #004C99;
+            }
+
+            /* Image Button Styles */
+            .image-button {
+                position: relative;
+                width: 250px;
+                height: 250px;
+                border: 2px solid #000000;
+                border-radius: 15px;
+                overflow: hidden;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-size: cover;
+                background-position: center;
+                margin-bottom: 20px;
+                transition: border 0.3s ease;
+            }
+
+            .image-button:hover {
+                border: 4px solid #0264D9;
+            }
+
+            .image-button .overlay {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                color: white;
+                padding: 15px;
+                font-size: 18px;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            /* Back Button Styles */
+            .back-button {
+                background-color: #f44336;
+            }
+
+            .back-button:hover {
+                background-color: #d32f2f;
+            }
+
+            /* Item List Styles */
+            .item-list {
+                margin-top: 30px;
+                text-align: left;
+            }
+
+            .item-list h3 {
+                color: #0C1729;
+            }
+
+            .item-list p {
+                color: #777;
+            }
+
+            .item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .item img {
+                width: 50px;
+                height: 50px;
+                object-fit: cover;
+                border-radius: 5px;
+                margin-right: 10px;
+            }
+
+            .item-description {
+                flex: 1;
+                display: flex;
+                align-items: center;
+            }
+
+            .item-description span {
+                margin-left: 10px;
+                font-size: 16px;
+                color: #333;
+            }
+
+            .item-remove {
+                background-color: #dc3545;
+                padding: 5px 10px;
+                border: none;
+                border-radius: 5px;
+                color: #ffffff;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background-color 0.3s ease;
+            }
+
+            .item-remove:hover {
+                background-color: #c82333;
+            }
+
+            /* Responsive Styles */
+            @media (max-width: 768px) {
+                .image-button {
+                    width: 100%;
+                    height: auto;
+                }
+
+                .item {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .item-remove {
+                    margin-top: 10px;
+                }
+            }
+
+            /* Color Selection Styles */
+            .color-selection {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .color-square {
+                width: 100px;
+                height: 100px;
+                border: 2px solid #ddd;
+                border-radius: 10px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                transition: border 0.3s ease;
+            }
+
+            .color-square.selected {
+                border: 4px solid #0264D9;
+            }
+
+            .color-square span {
+                color: #0C1729;
+                font-size: 14px;
+                font-weight: bold;
+                text-align: center;
+                background-color: rgba(255, 255, 255, 0.7);
+                padding: 5px;
+                border-radius: 5px;
+                position: absolute;
+                bottom: 5px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            /* Form Button Container */
+            .button-group {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+
+            /* Fade In Animation */
+            .fade-in {
+                animation: fadeIn 0.5s forwards;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+        `;
+
+        const styleElement = document.createElement('style');
+        styleElement.type = 'text/css';
+        styleElement.appendChild(document.createTextNode(styles));
+        document.head.appendChild(styleElement);
+    })();
+
+    // Helper Functions
+    function createElement(tag, className, textContent) {
+        const element = document.createElement(tag);
+        if (className) element.className = className;
+        if (textContent) element.textContent = textContent;
+        return element;
     }
 
-    // Function to dynamically load external scripts
-    function loadScript(url) {
-        return new Promise((resolve, reject) => {
-            if (document.querySelector(`script[src="${url}"]`)) {
-                console.log(`Script already loaded: ${url}`);
-                resolve();  // Script is already loaded, so resolve immediately
+    function createImageButton(text, imageUrl) {
+        const button = createElement('div', 'image-button');
+        button.style.backgroundImage = `url(${imageUrl})`;
+
+        const overlay = createElement('div', 'overlay', text);
+        button.appendChild(overlay);
+
+        return button;
+    }
+
+    function styleButton(button, additionalClasses = '') {
+        button.classList.add('button');
+        if (additionalClasses) {
+            additionalClasses.split(' ').forEach(cls => button.classList.add(cls));
+        }
+    }
+
+    function createColorSquare(colorName, hexCode) {
+        const colorDiv = createElement('div', 'color-square');
+        colorDiv.style.backgroundColor = hexCode;
+
+        const label = createElement('span', null, colorName);
+        colorDiv.appendChild(label);
+
+        return {
+            element: colorDiv,
+            colorName: colorName
+        };
+    }
+
+    // Initialization Function
+    function initInterface() {
+        const container = createElement('div', 'container');
+        document.body.innerHTML = '';
+        document.body.appendChild(container);
+
+        const header = createElement('h1', null, 'Start New Invoice');
+        container.appendChild(header);
+
+        const description = createElement('p', null, 'Please enter your contact information to proceed.');
+        container.appendChild(description);
+
+        const form = createElement('div', 'form');
+        container.appendChild(form);
+
+        // Name Input
+        const nameInput = createInputField('Name', 'text');
+        form.appendChild(nameInput);
+
+        // Phone Input
+        const phoneInput = createInputField('Phone Number', 'tel');
+        form.appendChild(phoneInput);
+
+        // Email Input
+        const emailInput = createInputField('Email', 'email');
+        form.appendChild(emailInput);
+
+        // Zip Code Input
+        const zipCodeInput = createInputField('Zip Code', 'text');
+        form.appendChild(zipCodeInput);
+
+        // Continue Button
+        const continueBtn = createElement('button', 'button', 'Continue');
+        form.appendChild(continueBtn);
+
+        continueBtn.addEventListener('click', () => {
+            // Retrieve user input values
+            userInfo.name = nameInput.querySelector('input').value.trim();
+            userInfo.phone = phoneInput.querySelector('input').value.trim();
+            userInfo.email = emailInput.querySelector('input').value.trim();
+            userInfo.zipCode = zipCodeInput.querySelector('input').value.trim();
+
+            // Validate the inputs
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const phoneRegex = /^[0-9]+$/;
+            const zipCodeRegex = /^[0-9]{5}$/;
+
+            if (!userInfo.name || !emailRegex.test(userInfo.email)) {
+                alert('Please enter a valid name and email address.');
                 return;
             }
 
-            const script = document.createElement('script');
-            script.src = url;
-            script.async = false;  // Ensure scripts are loaded in order
-            script.onload = () => resolve();
-            script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
-            document.head.appendChild(script);
+            if (!phoneRegex.test(userInfo.phone)) {
+                alert('Please enter a valid phone number.');
+                return;
+            }
+
+            if (!zipCodeRegex.test(userInfo.zipCode)) {
+                alert('Please enter a valid 5-digit zip code.');
+                return;
+            }
+
+            // Proceed if validation passes
+            previousPage = initInterface;  // Store the current page function for "Back" navigation
+            createInvoicePage(container);  // Proceed to invoice creation
         });
     }
 
-    // Function to initialize the Three.js scene with an FBX model
-    function init() {
-        let scene, camera, renderer, controls;
+    function createInputField(labelText, type) {
+        const formGroup = createElement('div', 'form-group');
 
-        // Create a container for layout
-        const container = document.createElement('div');
-        container.classList.add('container');
-        document.body.appendChild(container);
+        const label = createElement('label', null, labelText);
+        formGroup.appendChild(label);
 
-        const sceneContainer = document.createElement('div');
-        sceneContainer.classList.add('scene');
-        container.appendChild(sceneContainer);
+        const input = createElement('input');
+        input.type = type;
+        formGroup.appendChild(input);
 
-        // Create a Three.js scene with a white background
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xffffff);
+        return formGroup;
+    }
 
-        // Set up the camera
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 3, 5);
+    // Navigation Functions
+    function navigateToSelectionPage(container) {
+        container.innerHTML = ''; // Clear the container
 
-        // Set up the renderer
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        sceneContainer.appendChild(renderer.domElement);
+        const header = createElement('h2', null, 'Choose Type of Countertop');
+        container.appendChild(header);
 
-        // Add ambient light
-        const ambientLight = new THREE.AmbientLight(0x404040, 2);
-        scene.add(ambientLight);
+        const typeContainer = createElement('div', 'button-group');
+        container.appendChild(typeContainer);
 
-        // Add directional light
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(5, 10, 7.5);
-        scene.add(directionalLight);
+        // Kitchen and Bathroom buttons with their respective images
+        const kitchenBtn = createImageButton('Kitchen', 'https://i.ibb.co/wWHG4XN/1.png');
+        const bathroomBtn = createImageButton('Bathroom', 'https://i.ibb.co/xm8PmSF/2.png');
+        typeContainer.appendChild(kitchenBtn);
+        typeContainer.appendChild(bathroomBtn);
 
-        // Initialize OrbitControls
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.enablePan = false;
-        controls.minDistance = 2;
-        controls.maxDistance = 10;
+        kitchenBtn.addEventListener('click', function () {
+            selectKitchenType(container);
+        });
 
-        // Load the FBX model
-        loadFBXModel(FBX_MODEL_URL)
-            .then(loadedModel => {
-                scene.add(loadedModel);  // Add the FBX model to the scene
-            })
-            .catch(error => {
-                console.error('Error loading FBX model:', error);
+        bathroomBtn.addEventListener('click', function () {
+            selectBathroomType(container);
+        });
+
+        // Back button to return to the previous page
+        const backButton = document.createElement('button');
+        backButton.textContent = 'Back';
+        styleButton(backButton);
+        backButton.addEventListener('click', function () {
+            if (previousPage) {
+                previousPage(container);
+            }
+        });
+        container.appendChild(backButton);
+    }
+
+    // Shape Selection Functions
+    function selectKitchenType(container) {
+        container.innerHTML = '';
+
+        const header = createElement('h2', null, 'Choose Kitchen Counter Shape');
+        container.appendChild(header);
+
+        const kitchenOptions = createElement('div', 'button-group');
+        container.appendChild(kitchenOptions);
+
+        const shapes = getShapesForType('Kitchen');
+        shapes.forEach(shape => {
+            const shapeBtn = createImageButton(shape.name, shape.imageUrl);
+            kitchenOptions.appendChild(shapeBtn);
+
+            shapeBtn.addEventListener('click', () => {
+                previousPage = selectKitchenType;
+                startShapeConfiguration(shape, 'Kitchen', container);
             });
+        });
 
-        // Handle window resizing
-        window.addEventListener('resize', onWindowResize, false);
+        // Back Button
+        const backButton = createElement('button', 'button back-button', 'Back');
+        container.appendChild(backButton);
 
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        }
-        animate();
+        backButton.addEventListener('click', () => {
+            navigateToSelectionPage(container);
+        });
+    }
 
-        // Function to handle window resizing
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+    function selectBathroomType(container) {
+        container.innerHTML = '';
+
+        const header = createElement('h2', null, 'Choose Bathroom Counter Shape');
+        container.appendChild(header);
+
+        const bathroomOptions = createElement('div', 'button-group');
+        container.appendChild(bathroomOptions);
+
+        const shapes = getShapesForType('Bathroom');
+        shapes.forEach(shape => {
+            const shapeBtn = createImageButton(shape.name, shape.imageUrl);
+            bathroomOptions.appendChild(shapeBtn);
+
+            shapeBtn.addEventListener('click', () => {
+                previousPage = selectBathroomType;
+                startShapeConfiguration(shape, 'Bathroom', container);
+            });
+        });
+
+        // Back Button
+        const backButton = createElement('button', 'button back-button', 'Back');
+        container.appendChild(backButton);
+
+        backButton.addEventListener('click', () => {
+            navigateToSelectionPage(container);
+        });
+    }
+
+    // Shape Configuration Function
+    function startShapeConfiguration(shape, type, container) {
+        let shapeData = {
+            hasBacksplash: false,
+            backsplashWidth: 0,
+            backsplashHeight: 0,
+            measurements: [],
+            finishType: '',
+            pattern: '',
+            baseColor: '',
+            mixInColors: [],
+            addonColors: []
+        };
+
+        // Skip backsplash for Island
+        if (type === 'Island') {
+            promptMeasurements(shape, type, container, shapeData, () => {
+                promptFinishType(shape, type, container, shapeData);
+            });
+        } else {
+            promptBacksplash(shape, type, container, shapeData, () => {
+                promptMeasurements(shape, type, container, shapeData, () => {
+                    promptFinishType(shape, type, container, shapeData);
+                });
+            });
         }
     }
 
-    // Function to load the FBX model
-    function loadFBXModel(url) {
-        return new Promise((resolve, reject) => {
-            const loader = new THREE.FBXLoader();
-            loader.load(
-                url,
-                object => {
-                    object.scale.set(0.01, 0.01, 0.01);  // Scale down the model if necessary
-                    resolve(object);
+    // Measurements Prompt
+    function promptMeasurements(shape, type, container, shapeData) {
+        container.innerHTML = ''; // Clear the container
+
+        const header = document.createElement('h2');
+        header.textContent = 'Enter Measurements (in inches)';
+        container.appendChild(header);
+
+        // Add the shape image to the measurements screen
+        const shapeImage = document.createElement('img');
+        shapeImage.src = shape.imageUrl;
+        shapeImage.alt = `${shape.name} Shape`;
+        shapeImage.style.width = '100%';
+        shapeImage.style.height = 'auto';
+        shapeImage.style.marginBottom = '20px';
+        container.appendChild(shapeImage);
+
+        const formDiv = document.createElement('div');
+        formDiv.classList.add('form-container');  // Use global styles for form layout
+        container.appendChild(formDiv);
+
+        const measurementInputs = [];
+        shape.measurements.forEach((measurement, index) => {
+            const label = document.createElement('label');
+            label.textContent = `Measurement ${index + 1}:`;
+            formDiv.appendChild(label);
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.placeholder = `Measurement for side ${index + 1} (in inches)`;
+            formDiv.appendChild(input);
+            measurementInputs.push(input);
+        });
+
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Next';
+        styleButton(nextBtn);
+        formDiv.appendChild(nextBtn);
+
+        nextBtn.addEventListener('click', function () {
+            const measurements = measurementInputs.map(input => parseFloat(input.value));
+            if (measurements.some(value => isNaN(value) || value <= 0)) {
+                alert('Please enter valid measurements.');
+            } else {
+                shapeData.measurements = measurements;
+                promptFinishType(shape, type, container, shapeData);
+            }
+        });
+    }
+
+    // Finish Type Prompt
+    function promptFinishType(shape, type, container, shapeData) {
+        container.innerHTML = ''; // Clear the container
+
+        const header = createElement('h2', null, 'Select Finish Type');
+        container.appendChild(header);
+
+        const finishContainer = createElement('div');
+        finishContainer.classList.add('button-group');
+        container.appendChild(finishContainer);
+
+        const regularBtn = createElement('button', 'button', 'Standard Finish');
+        const crystalBtn = createElement('button', 'button', 'CrystalTop Finish');
+        finishContainer.appendChild(regularBtn);
+        finishContainer.appendChild(crystalBtn);
+
+        regularBtn.addEventListener('click', () => {
+            shapeData.finishType = 'standard';
+            promptFinishOptions(shape, type, container, shapeData);
+        });
+
+        crystalBtn.addEventListener('click', () => {
+            shapeData.finishType = 'crystal';
+            promptFinishOptions(shape, type, container, shapeData);
+        });
+
+        // Back Button
+        const backButton = createElement('button', 'button back-button', 'Back');
+        container.appendChild(backButton);
+
+        backButton.addEventListener('click', () => {
+            previousPage(container);
+        });
+    }
+
+    // Finish Options Prompt
+    function promptFinishOptions(shape, type, container, shapeData) {
+        container.innerHTML = ''; // Clear the container
+        
+        // Header for base color selection
+        const baseColorLabel = document.createElement('h3');
+        baseColorLabel.textContent = 'Choose Base Color';
+        container.appendChild(baseColorLabel);
+
+        const baseColorContainer = document.createElement('div');
+        baseColorContainer.classList.add('color-container'); // Global styles for color container
+        container.appendChild(baseColorContainer);
+
+        let selectedBaseColor = null;
+
+        // Base Color Selection - User can choose only one
+        Object.entries(baseColors).forEach(([colorName, hexCode]) => {
+            const colorDiv = createColorSquare(colorName, hexCode); // Create color square buttons
+            colorDiv.element.addEventListener('click', function () {
+                if (selectedBaseColor) {
+                    selectedBaseColor.element.style.border = '2px solid #ddd';  // Reset previously selected color
+                }
+                selectedBaseColor = colorDiv;  // Set the new base color
+                colorDiv.element.style.border = '4px solid #0264D9';  // Highlight selected color
+            });
+            baseColorContainer.appendChild(colorDiv.element);
+        });
+
+        // Add-on Colors Selection (User can select up to 4)
+        const addonColorLabel = document.createElement('h3');
+        addonColorLabel.textContent = 'Choose up to 4 Add-on Colors';
+        container.appendChild(addonColorLabel);
+
+        const addonColorContainer = document.createElement('div');
+        addonColorContainer.classList.add('color-container');
+        container.appendChild(addonColorContainer);
+
+        const addonColors = Object.assign({}, baseColors, {
+            'Icy White': '#F8F8FF',
+            'Silver': '#C0C0C0',
+            'Champagne Gold': '#F7E7CE',
+            'Bronze': '#CD7F32',
+            'Cobalt Blue': '#0047AB',
+            'Pewter Blue': '#8BA8B7',
+            'Copper': '#B87333'
+        });
+
+        const selectedAddonColors = [];
+
+        // Add-on color selection logic, allowing up to 4
+        Object.entries(addonColors).forEach(([colorName, hexCode]) => {
+            const colorDiv = createColorSquare(colorName, hexCode);
+            let selected = false;
+
+            colorDiv.element.addEventListener('click', function () {
+                if (selected) {
+                    // Deselect color
+                    selected = false;
+                    colorDiv.element.style.border = '2px solid #ddd';
+                    const index = selectedAddonColors.indexOf(colorName);
+                    if (index > -1) selectedAddonColors.splice(index, 1);
+                } else if (selectedAddonColors.length < 4) {
+                    // Select color (limit to 4)
+                    selected = true;
+                    colorDiv.element.style.border = '4px solid #0264D9';
+                    selectedAddonColors.push(colorName);
+                }
+            });
+
+            addonColorContainer.appendChild(colorDiv.element);
+        });
+
+        // Image selection for CrystalTop Finish
+        if (shapeData.finishType === 'crystal') {
+            const header = document.createElement('h3');
+            header.textContent = 'Choose Your Crystal Top Finish';
+            container.appendChild(header);
+
+            const patternContainer = document.createElement('div');
+            patternContainer.classList.add('image-container');
+            container.appendChild(patternContainer);
+
+            const crystalPatterns = [
+                {
+                    name: 'Pour Swirl',
+                    imageUrl: 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg',
                 },
-                xhr => console.log((xhr.loaded / xhr.total * 100) + '% loaded'),
-                error => reject(error)
-            );
+                {
+                    name: 'Directional Pour',
+                    imageUrl: 'https://i.ibb.co/K21MDPq/Pour-Directional-2.jpg',
+                }
+            ];
+
+            let selectedCrystalPattern = null;
+
+            crystalPatterns.forEach(pattern => {
+                const patternDiv = createImageButton(pattern.name, pattern.imageUrl);
+                patternContainer.appendChild(patternDiv);
+
+                patternDiv.addEventListener('click', function () {
+                    selectedCrystalPattern = pattern.name;
+                    // Visual feedback for selection
+                    Array.from(patternContainer.children).forEach(child => {
+                        child.style.border = '2px solid #ddd';
+                    });
+                    patternDiv.style.border = '4px solid #0264D9';
+                });
+            });
+
+            // Button to proceed after selections
+            const nextBtn = document.createElement('button');
+            nextBtn.textContent = 'Add Item';
+            styleButton(nextBtn);
+            container.appendChild(nextBtn);
+
+            nextBtn.addEventListener('click', function () {
+                if (!selectedCrystalPattern || !selectedBaseColor || selectedAddonColors.length === 0) {
+                    alert('Please select a finish pattern, base color, and mix-in colors.');
+                    return;
+                }
+                shapeData.pattern = selectedCrystalPattern;
+                shapeData.baseColor = selectedBaseColor.colorName;
+                shapeData.mixInColors = selectedAddonColors;
+
+                calculateAndAddItem(shape, shapeData, type, container);
+            });
+        }
+
+        // Standard Finish options
+        if (shapeData.finishType === 'standard') {
+            const header = document.createElement('h3');
+            header.textContent = 'Choose Your Standard Finish Pattern';
+            container.appendChild(header);
+
+            const patternContainer = document.createElement('div');
+            patternContainer.classList.add('image-container');
+            container.appendChild(patternContainer);
+
+            const standardPatterns = [
+                {
+                    name: 'Quartz',
+                    imageUrl: 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg'
+                },
+                {
+                    name: 'Marble',
+                    imageUrl: 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg'
+                },
+                {
+                    name: 'Flowing Granite',
+                    imageUrl: 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg'
+                }
+            ];
+
+            let selectedPattern = null;
+
+            standardPatterns.forEach(pattern => {
+                const patternDiv = createImageButton(pattern.name, pattern.imageUrl);
+                patternContainer.appendChild(patternDiv);
+
+                patternDiv.addEventListener('click', function () {
+                    selectedPattern = pattern.name;
+                    // Visual feedback for selection
+                    Array.from(patternContainer.children).forEach(child => {
+                        child.style.border = '2px solid #ddd';
+                    });
+                    patternDiv.style.border = '4px solid #0264D9';
+                });
+            });
+
+            // Button to proceed after selections
+            const nextBtn = document.createElement('button');
+            nextBtn.textContent = 'Add Item';
+            styleButton(nextBtn);
+            container.appendChild(nextBtn);
+
+            nextBtn.addEventListener('click', function () {
+                if (!selectedPattern || !selectedBaseColor || selectedAddonColors.length === 0) {
+                    alert('Please select a pattern, base color, and add-on colors.');
+                    return;
+                }
+                shapeData.pattern = selectedPattern;
+                shapeData.baseColor = selectedBaseColor.colorName;
+                shapeData.addonColors = selectedAddonColors;
+
+                calculateAndAddItem(shape, shapeData, type, container);
+            });
+        }
+    }
+
+    // Calculate and Add Item to Invoice
+    function calculateAndAddItem(shape, shapeData, type, container) {
+        const measurements = shapeData.measurements;
+
+        // Determine depth
+        const depth = ['Kitchen', 'Island', 'Bar Top', 'Regular Counter'].includes(type) ? 25 : 22;
+        let squareFootage = shape.formula(measurements, depth);
+
+        // Add backsplash area if applicable
+        if (shapeData.hasBacksplash) {
+            const backsplashArea = (shapeData.backsplashWidth / 12) * (shapeData.backsplashHeight / 12);
+            squareFootage += backsplashArea;
+        }
+
+        // Determine price per sq ft
+        let pricePerSqFt = shapeData.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
+
+        // Calculate cost
+        const cost = squareFootage * pricePerSqFt;
+
+        // Add to items
+        items.push({
+            description: `${shape.name} - ${type} - ${shapeData.finishType.charAt(0).toUpperCase() + shapeData.finishType.slice(1)}`,
+            imageUrl: shape.imageUrl,
+            squareFootage: squareFootage.toFixed(2),
+            cost: cost.toFixed(2)
+        });
+
+        // Update total cost
+        totalCost += parseFloat(cost);
+
+        // Redirect back to the invoice page and show the updated item list
+        createInvoicePage(container);
+    }
+
+    // Create Invoice Page
+    function createInvoicePage(container) {
+        container.innerHTML = '';
+
+        const header = createElement('h2', null, 'Current Invoice');
+        container.appendChild(header);
+
+        // Add New Item Button
+        const addItemBtn = createElement('button', 'button', 'Add New Item');
+        container.appendChild(addItemBtn);
+
+        addItemBtn.addEventListener('click', () => {
+            previousPage = createInvoicePage;
+            navigateToSelectionPage(container);
+        });
+
+        // Item List
+        const itemListDiv = createElement('div', 'item-list');
+        container.appendChild(itemListDiv);
+        updateItemList(itemListDiv);
+
+        // Finalize Invoice Button
+        const finalizeBtn = createElement('button', 'button', 'Finalize Invoice');
+        finalizeBtn.style.marginTop = '30px';
+        container.appendChild(finalizeBtn);
+
+        finalizeBtn.addEventListener('click', () => {
+            finalizeInvoice(container);
         });
     }
 
-    // Function to load scripts and initialize the scene
-    function loadAndInitialize() {
-        injectStyles();  // Inject CSS styles dynamically
-        loadScript(THREE_JS_URL)
-            .then(() => loadScript(ORBIT_CONTROLS_URL))
-            .then(() => loadScript(FFLATE_URL))  // Load fflate.min.js
-            .then(() => loadScript(FBX_LOADER_URL))
-            .then(() => init())  // Initialize the scene after scripts are loaded
-            .catch(error => {
-                console.error(error.message);
-                alert('Failed to load necessary scripts.');
+    // Update Item List UI
+    function updateItemList(itemListDiv) {
+        itemListDiv.innerHTML = '<h3>Items:</h3>';
+
+        if (items.length === 0) {
+            const noItems = createElement('p', null, 'No items added yet.');
+            itemListDiv.appendChild(noItems);
+            return;
+        }
+
+        items.forEach((item, index) => {
+            const itemDiv = createElement('div', 'item');
+
+            const descDiv = createElement('div', 'item-description');
+            const img = createElement('img');
+            img.src = item.imageUrl;
+            img.alt = item.description;
+            descDiv.appendChild(img);
+
+            const descText = createElement('span', null, `${item.description} - ${item.squareFootage} sq ft`);
+            descDiv.appendChild(descText);
+
+            const costSpan = createElement('span', null, `$${item.cost}`);
+            descDiv.appendChild(costSpan);
+
+            const removeBtn = createElement('button', 'item-remove', 'Remove');
+            removeBtn.addEventListener('click', () => {
+                removeItem(index);
             });
+
+            itemDiv.appendChild(descDiv);
+            itemDiv.appendChild(removeBtn);
+
+            itemListDiv.appendChild(itemDiv);
+        });
     }
 
-    // Start the script
-    loadAndInitialize();
+    // Remove Item from Invoice
+    function removeItem(index) {
+        totalCost -= parseFloat(items[index].cost);
+        items.splice(index, 1);
+        const itemListDiv = document.querySelector('.item-list');
+        updateItemList(itemListDiv);
+    }
+
+    // Finalize Invoice
+    function finalizeInvoice(container) {
+        if (totalCost < MINIMUM_PRICE) {
+            totalCost = MINIMUM_PRICE;
+        }
+
+        alert(`Finalized Invoice Total: $${totalCost.toFixed(2)}`);
+        items = [];
+        totalCost = 0;
+        createInvoicePage(container);
+    }
+
+    // Get Shapes Based on Type
+    function getShapesForType(type) {
+        const shapes = [];
+
+        const shapeData = {
+            'Kitchen': [
+                {
+                    name: 'Island',
+                    type: 'Kitchen',
+                    measurements: ['Length', 'Width'],
+                    formula: (measurements, depth) => (measurements[0] * measurements[1] * depth) / 144,
+                    imageUrl: 'https://i.ibb.co/Hrr8ztS/Pour-Directional.png'
+                },
+                {
+                    name: 'Regular Counter',
+                    type: 'Kitchen',
+                    measurements: ['Length', 'Width'],
+                    formula: (measurements, depth) => (measurements[0] * measurements[1] * depth) / 144,
+                    imageUrl: 'https://i.ibb.co/gw8Bxw2/counter.png'
+                },
+                {
+                    name: 'Bar Top',
+                    type: 'Kitchen',
+                    measurements: ['Length', 'Width'],
+                    formula: (measurements, depth) => (measurements[0] * measurements[1] * depth) / 144,
+                    imageUrl: 'https://i.ibb.co/yS5gzGd/Marble-2.png'
+                }
+            ],
+            'Bathroom': [
+                {
+                    name: 'Rectangle',
+                    type: 'Bathroom',
+                    measurements: ['Length', 'Width'],
+                    formula: (measurements, depth) => (measurements[0] * measurements[1] * depth) / 144,
+                    imageUrl: 'https://i.ibb.co/KmS1PKB/recbath.png'
+                },
+                {
+                    name: 'Square',
+                    type: 'Bathroom',
+                    measurements: ['Side'],
+                    formula: (measurements, depth) => (measurements[0] * depth) / 144,
+                    imageUrl: 'https://i.ibb.co/1qLTRBc/bathsqaure.png'
+                },
+                {
+                    name: 'Hexagonal',
+                    type: 'Bathroom',
+                    measurements: ['Side Length'],
+                    formula: (measurements, depth) => (1.5 * Math.sqrt(3) * Math.pow(measurements[0], 2) * depth) / 144,
+                    imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png'
+                }
+            ]
+        };
+
+        return shapeData[type] || [];
+    }
+
+    // Finalize the Interface
+    initInterface();
 })();
