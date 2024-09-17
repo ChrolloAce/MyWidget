@@ -460,7 +460,7 @@ function selectBathroomType(container) {
         container.appendChild(shapeDiv);
     }
     
-    function calculateAndAddItem(shape, shapeData, type, container) {
+   function calculateAndAddItem(shape, shapeData, type, container) {
     const measurements = shapeData.measurements;
 
     // Determine depth and calculate square footage
@@ -468,14 +468,13 @@ function selectBathroomType(container) {
     let squareFootage = shape.formula(measurements, depth);
 
     // Add backsplash square footage if applicable
-    if (shapeData.hasBacksplash && shapeData.backsplashHeight > 0) {
-        const backsplashArea = measurements[0] * (shapeData.backsplashHeight / 12);
-        squareFootage += backsplashArea / 12;
+    if (shapeData.hasBacksplash && shapeData.backsplashWidth > 0 && shapeData.backsplashHeight > 0) {
+        const backsplashArea = (shapeData.backsplashWidth / 12) * (shapeData.backsplashHeight / 12);
+        squareFootage += backsplashArea; // Add backsplash area to total square footage
     }
 
     // Update pricing based on finish type
     let pricePerSqFt = shapeData.finishType === 'crystal' ? 39 : 26;
-    if (shapeData.finishType === 'crystal') pricePerSqFt *= 1.5;
 
     // Calculate cost
     const cost = squareFootage * pricePerSqFt;
