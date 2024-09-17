@@ -40,7 +40,7 @@
     // Inject CSS Styles Globally
     (function injectStyles() {
         const styles = `
-       /* General Reset */
+     /* General Reset */
 * {
     margin: 0;
     padding: 0;
@@ -127,16 +127,15 @@ body {
 /* Horizontal Button Group Styling */
 .button-group {
     display: flex;
-    justify-content: space-between;  /* Align buttons horizontally */
-    flex-wrap: wrap;  /* Wrap buttons in case there's no space */
-    gap: 20px;  /* Space between buttons */
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
     margin-bottom: 20px;
-    width: 100%;  /* Ensure the buttons use all available width */
+    width: 100%;
 }
 
 /* Button Styles */
 .button {
-    flex-grow: 1;
     padding: 14px 20px;
     background-color: #0264D9;
     color: #ffffff;
@@ -147,14 +146,15 @@ body {
     font-weight: bold;
     margin: 10px;
     text-align: center;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 150px;  /* Optional: Limit button width */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    max-width: 150px;
 }
 
 /* Button Hover Effects */
 .button:hover {
     background-color: #004C99;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
 /* Green Button (Alternative Styling) */
@@ -188,15 +188,17 @@ body {
     background-size: cover;
     background-position: center;
     margin: 20px auto;
-    transition: border 0.3s ease, transform 0.3s ease;
+    transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .image-button:hover {
     border: 4px solid #0264D9;
     transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .image-button .overlay {
@@ -318,11 +320,13 @@ p {
     align-items: center;
     justify-content: center;
     position: relative;
-    transition: border 0.3s ease;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .color-square.selected {
     border: 4px solid #0264D9;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .color-square span {
