@@ -21,7 +21,7 @@
 
     // Inject CSS Styles Globally
     (function injectStyles() {
-        const styles = 
+        const styles = `
             /* General Reset */
             * {
                 margin: 0;
@@ -295,7 +295,7 @@
                 from { opacity: 0; }
                 to { opacity: 1; }
             }
-        ;
+        `;
 
         const styleElement = document.createElement('style');
         styleElement.type = 'text/css';
@@ -313,7 +313,7 @@
 
     function createImageButton(text, imageUrl) {
         const button = createElement('div', 'image-button');
-        button.style.backgroundImage = url(${imageUrl});
+        button.style.backgroundImage = `url(${imageUrl})`;
 
         const overlay = createElement('div', 'overlay', text);
         button.appendChild(overlay);
@@ -721,7 +721,7 @@
         const measurementInputs = [];
         shape.measurements.forEach((label, index) => {
             const formGroup = createElement('div', 'form-group');
-            const inputLabel = createElement('label', null, Measurement ${index + 1}:);
+            const inputLabel = createElement('label', null, `Measurement ${index + 1}:`);
             const inputField = createElement('input');
             inputField.type = 'number';
             inputField.min = '0';
@@ -1068,7 +1068,7 @@
 
         // Add to items
         items.push({
-            description: ${shape.name} - ${type} - ${shapeData.finishType.charAt(0).toUpperCase() + shapeData.finishType.slice(1)},
+            description: `${shape.name} - ${type} - ${shapeData.finishType.charAt(0).toUpperCase() + shapeData.finishType.slice(1)}`,
             imageUrl: shape.imageUrl,
             squareFootage: squareFootage.toFixed(2),
             cost: cost.toFixed(2)
@@ -1131,10 +1131,10 @@
             img.alt = item.description;
             descDiv.appendChild(img);
 
-            const descText = createElement('span', null, ${item.description} - ${item.squareFootage} sq ft);
+            const descText = createElement('span', null, `${item.description} - ${item.squareFootage} sq ft`);
             descDiv.appendChild(descText);
 
-            const costSpan = createElement('span', null, $${item.cost});
+            const costSpan = createElement('span', null, `$${item.cost}`);
             descDiv.appendChild(costSpan);
 
             const removeBtn = createElement('button', 'item-remove', 'Remove');
@@ -1163,7 +1163,7 @@
             totalCost = MINIMUM_PRICE;
         }
 
-        alert(Finalized Invoice Total: $${totalCost.toFixed(2)});
+        alert(`Finalized Invoice Total: $${totalCost.toFixed(2)}`);
         items = [];
         totalCost = 0;
         createInvoicePage(container);
@@ -1260,4 +1260,4 @@
 
     // Finalize the Interface
     initInterface();
-})(); 
+})();
