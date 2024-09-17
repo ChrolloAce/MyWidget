@@ -801,24 +801,95 @@
     });
 }
 
+function promptFinishOptions(shape, type, container, shapeData) {
+    container.innerHTML = ''; // Clear the container
+    
+    // Header for base color selection
+    const baseColorLabel = document.createElement('h3');
+    baseColorLabel.textContent = 'Choose Base Color';
+    container.appendChild(baseColorLabel);
 
-    // Finish Options Prompt
-    function promptFinishOptions(shape, type, container, shapeData) {
-        container.innerHTML = '';
+    const baseColorContainer = document.createElement('div');
+    baseColorContainer.classList.add('color-container'); // Global styles for color container
+    container.appendChild(baseColorContainer);
 
-        if (shapeData.finishType === 'crystal') {
-            promptCrystalFinish(shape, type, container, shapeData);
-        } else if (shapeData.finishType === 'regular') {
-            promptRegularFinish(shape, type, container, shapeData);
-        }
-    }
+    const baseColors = {
+        'White': '#FFFFFF',
+        'Black': '#000000',
+        'Tornado Gray': '#4F4F4F',
+        'Charcoal Gray': '#2E2E2E',
+        'Toasted Almond': '#D2B48C',
+        'Milk Chocolate': '#8B4513',
+        'Dark Chocolate': '#5D3A1A'
+    };
 
-    // Crystal Finish Prompt
-    function promptCrystalFinish(shape, type, container, shapeData) {
-        const header = createElement('h2', null, 'Choose Your Crystal Top Finish');
+    let selectedBaseColor = null;
+
+    // Base Color Selection - User can choose only one
+    Object.entries(baseColors).forEach(([colorName, hexCode]) => {
+        const colorDiv = createColorSquare(colorName, hexCode); // Create color square buttons
+        colorDiv.element.addEventListener('click', function () {
+            if (selectedBaseColor) {
+                selectedBaseColor.element.style.border = '2px solid #ddd';  // Reset previously selected color
+            }
+            selectedBaseColor = colorDiv;  // Set the new base color
+            colorDiv.element.style.border = '4px solid #0264D9';  // Highlight selected color
+        });
+        baseColorContainer.appendChild(colorDiv.element);
+    });
+
+    // Add-on Colors Selection (User can select up to 4)
+    const addonColorLabel = document.createElement('h3');
+    addonColorLabel.textContent = 'Choose up to 4 Add-on Colors';
+    container.appendChild(addonColorLabel);
+
+    const addonColorContainer = document.createElement('div');
+    addonColorContainer.classList.add('color-container');
+    container.appendChild(addonColorContainer);
+
+    const addonColors = Object.assign({}, baseColors, {
+        'Icy White': '#F8F8FF',
+        'Silver': '#C0C0C0',
+        'Champagne Gold': '#F7E7CE',
+        'Bronze': '#CD7F32',
+        'Cobalt Blue': '#0047AB',
+        'Pewter Blue': '#8BA8B7',
+        'Copper': '#B87333'
+    });
+
+    const selectedAddonColors = [];
+
+    // Add-on color selection logic, allowing up to 4
+    Object.entries(addonColors).forEach(([colorName, hexCode]) => {
+        const colorDiv = createColorSquare(colorName, hexCode);
+        let selected = false;
+
+        colorDiv.element.addEventListener('click', function () {
+            if (selected) {
+                // Deselect color
+                selected = false;
+                colorDiv.element.style.border = '2px solid #ddd';
+                const index = selectedAddonColors.indexOf(colorName);
+                if (index > -1) selectedAddonColors.splice(index, 1);
+            } else if (selectedAddonColors.length < 4) {
+                // Select color (limit to 4)
+                selected = true;
+                colorDiv.element.style.border = '4px solid #0264D9';
+                selectedAddonColors.push(colorName);
+            }
+        });
+
+        addonColorContainer.appendChild(colorDiv.element);
+    });
+
+    // Image selection for CrystalTop Finish
+    if (shapeData.finishType === 'crystal') {
+        const header = document.createElement('h3');
+        header.textContent = 'Choose Your Crystal Top Finish';
         container.appendChild(header);
 
-        const patternContainer = createElement('div', 'button-group');
+        const patternContainer = document.createElement('div');
+        patternContainer.classList.add('image-container');
         container.appendChild(patternContainer);
 
         const crystalPatterns = [
@@ -832,77 +903,116 @@
             }
         ];
 
-        let selectedPattern = '';
+        let selectedCrystalPattern = null;
 
         crystalPatterns.forEach(pattern => {
-            const patternBtn = createImageButton(pattern.name, pattern.imageUrl);
-            patternContainer.appendChild(patternBtn);
+            const patternDiv = createImageButton(pattern.name, pattern.imageUrl);
+            patternContainer.appendChild(patternDiv);
 
-            patternBtn.addEventListener('click', () => {
-                selectedPattern = pattern.name;
+            patternDiv.addEventListener('click', function () {
+                selectedCrystalPattern = pattern.name;
+                // Visual feedback for selection
                 Array.from(patternContainer.children).forEach(child => {
-                    child.classList.remove('selected');
+                    child.style.border = '2px solid #ddd';
                 });
-                patternBtn.classList.add('selected');
+                patternDiv.style.border = '4px solid #0264D9';
             });
         });
 
-        // Color Selection
-        const baseColorLabel = createElement('h3', null, 'Choose a Base Color for Crystal Top:');
-        container.appendChild(baseColorLabel);
+        // Button to proceed after selections
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Add Item';
+        styleButton(nextBtn);
+        container.appendChild(nextBtn);
 
-        const baseColorContainer = createElement('div', 'color-selection');
-        container.appendChild(baseColorContainer);
+        nextBtn.addEventListener('click', function () {
+            if (!selectedCrystalPattern || !selectedBaseColor || selectedAddonColors.length === 0) {
+                alert('Please select a finish pattern, base color, and mix-in colors.');
+                return;
+            }
+            shapeData.pattern = selectedCrystalPattern;
+            shapeData.baseColor = selectedBaseColor.colorName;
+            shapeData.mixInColors = selectedAddonColors;
 
-        Object.entries(baseColors).forEach(([colorName, hexCode]) => {
-            const colorSquare = createColorSquare(colorName, hexCode);
-            baseColorContainer.appendChild(colorSquare);
+            // If the countertop has a backsplash, prompt for dimensions
+            if (shapeData.hasBacksplash) {
+                promptBacksplashDimensions(container, shapeData, function () {
+                    calculateAndAddItem(shape, shapeData, type, container);
+                });
+            } else {
+                calculateAndAddItem(shape, shapeData, type, container);
+            }
+        });
+    }
 
-            colorSquare.addEventListener('click', () => {
-                colorSquare.classList.toggle('selected');
-                if (colorSquare.classList.contains('selected')) {
-                    shapeData.baseColor = colorName;
-                } else {
-                    shapeData.baseColor = '';
-                }
+    // Standard Finish options
+    if (shapeData.finishType === 'standard') {
+        const header = document.createElement('h3');
+        header.textContent = 'Choose Your Standard Finish Pattern';
+        container.appendChild(header);
+
+        const patternContainer = document.createElement('div');
+        patternContainer.classList.add('image-container');
+        container.appendChild(patternContainer);
+
+        const standardPatterns = [
+            {
+                name: 'Quartz',
+                imageUrl: 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg'
+            },
+            {
+                name: 'Marble',
+                imageUrl: 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg'
+            },
+            {
+                name: 'Flowing Granite',
+                imageUrl: 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg'
+            }
+        ];
+
+        let selectedPattern = null;
+
+        standardPatterns.forEach(pattern => {
+            const patternDiv = createImageButton(pattern.name, pattern.imageUrl);
+            patternContainer.appendChild(patternDiv);
+
+            patternDiv.addEventListener('click', function () {
+                selectedPattern = pattern.name;
+                // Visual feedback for selection
+                Array.from(patternContainer.children).forEach(child => {
+                    child.style.border = '2px solid #ddd';
+                });
+                patternDiv.style.border = '4px solid #0264D9';
             });
         });
 
-        // Mix-in Colors
-        const mixInLabel = createElement('h3', null, 'Choose up to 4 Mix-in Colors:');
-        container.appendChild(mixInLabel);
+        // Button to proceed after selections
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Add Item';
+        styleButton(nextBtn);
+        container.appendChild(nextBtn);
 
-        const mixInContainer = createElement('div', 'color-selection');
-        container.appendChild(mixInContainer);
+        nextBtn.addEventListener('click', function () {
+            if (!selectedPattern || !selectedBaseColor || selectedAddonColors.length === 0) {
+                alert('Please select a pattern, base color, and add-on colors.');
+                return;
+            }
+            shapeData.pattern = selectedPattern;
+            shapeData.baseColor = selectedBaseColor.colorName;
+            shapeData.addonColors = selectedAddonColors;
 
-        const mixInColors = Object.assign({}, baseColors, {
-            'Icy White': '#F8F8FF',
-            'Silver': '#C0C0C0',
-            'Champagne Gold': '#F7E7CE',
-            'Bronze': '#CD7F32',
-            'Cobalt Blue': '#0047AB',
-            'Pewter Blue': '#8BA8B7',
-            'Copper': '#B87333'
+            // If the countertop has a backsplash, prompt for dimensions
+            if (shapeData.hasBacksplash) {
+                promptBacksplashDimensions(container, shapeData, function () {
+                    calculateAndAddItem(shape, shapeData, type, container);
+                });
+            } else {
+                calculateAndAddItem(shape, shapeData, type, container);
+            }
         });
+    }
+}
 
-        const selectedMixIn = [];
-
-        Object.entries(mixInColors).forEach(([colorName, hexCode]) => {
-            const colorSquare = createColorSquare(colorName, hexCode);
-            mixInContainer.appendChild(colorSquare);
-
-            colorSquare.addEventListener('click', () => {
-                if (colorSquare.classList.contains('selected')) {
-                    colorSquare.classList.remove('selected');
-                    const index = selectedMixIn.indexOf(colorName);
-                    if (index > -1) selectedMixIn.splice(index, 1);
-                } else if (selectedMixIn.length < 4) {
-                    colorSquare.classList.add('selected');
-                    selectedMixIn.push(colorName);
-                }
-                shapeData.mixInColors = selectedMixIn;
-            });
-        });
 
         // Add Item Button
         const addItemBtn = createElement('button', 'button', 'Add Item');
