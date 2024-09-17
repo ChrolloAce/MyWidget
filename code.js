@@ -1045,7 +1045,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
         backButton.addEventListener('click', () => {
             previousPage(container);
         });
-    }
+    
 
     // Regular Finish Prompt
     function promptRegularFinish(shape, type, container, shapeData) {
