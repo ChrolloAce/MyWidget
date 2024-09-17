@@ -1155,23 +1155,25 @@ function createInvoicePage(container) {
     });
 }
 
-    
-// Update Item List UI (Displays the item list properly)
+// Update Item List UI (This will show items without any price details)
 function updateItemList(itemListDiv) {
     itemListDiv.innerHTML = '<h3>Items in Your Quote:</h3>';
 
     items.forEach((item, index) => {
         const itemDiv = createElement('div', 'item');
 
+        // Image of the selected item
         const descDiv = createElement('div', 'item-description');
         const img = createElement('img');
         img.src = getShapeByName(item.shape).imageUrl;
         img.alt = item.shape;
         descDiv.appendChild(img);
 
+        // Description of the selected item
         const descText = createElement('span', null, `${item.shape}`);
         descDiv.appendChild(descText);
 
+        // Remove button for each item
         const removeBtn = createElement('button', 'item-remove', 'Remove');
         removeBtn.addEventListener('click', () => {
             removeItem(index);
@@ -1180,9 +1182,10 @@ function updateItemList(itemListDiv) {
         itemDiv.appendChild(descDiv);
         itemDiv.appendChild(removeBtn);
 
-        itemListDiv.appendChild(itemDiv);
+        itemListDiv.appendChild(itemDiv);  // Append each item to the list
     });
 }
+
 
     // Remove Item from Invoice
     function removeItem(index) {
