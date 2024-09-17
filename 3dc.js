@@ -1,7 +1,11 @@
 (function () {
-    // URLs for Three.js v128 and OrbitControls.js v128 from jsDelivr
+    // URLs for Three.js, OrbitControls, and FBXLoader
     const THREE_JS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
+    const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
+
+    // URL for the FBX model file
+    const FBX_MODEL_URL = 'https://your-username.github.io/your-fbx-directory/countertop.fbx'; // Replace with your actual FBX file URL
 
     // CSS styles injected dynamically
     const styles = `
@@ -105,11 +109,11 @@
     }
 
     /**
-     * Initializes the Three.js scene with a countertop and color customization for the top and cabinets.
+     * Initializes the Three.js scene with an FBX model and color customization for its parts.
      */
     function init() {
         let scene, camera, renderer, controls;
-        let countertop, cabinets;
+        let countertop, cabinets, fbxModel;
 
         // Create the container elements for layout
         const container = document.createElement('div');
@@ -157,20 +161,6 @@
         directionalLight.position.set(5, 10, 7.5);
         scene.add(directionalLight);
 
-        // Create the countertop
-        const countertopGeometry = new THREE.BoxGeometry(3, 0.1, 2); // Top surface of the countertop
-        const countertopMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 }); // Default gray color
-        countertop = new THREE.Mesh(countertopGeometry, countertopMaterial);
-        countertop.position.y = 1; // Set it at the top
-        scene.add(countertop);
-
-        // Create the cabinets (below the countertop)
-        const cabinetGeometry = new THREE.BoxGeometry(3, 1, 2); // Cabinet part below the countertop
-        const cabinetMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 }); // Default dark color
-        cabinets = new THREE.Mesh(cabinetGeometry, cabinetMaterial);
-        cabinets.position.y = 0.5; // Just below the countertop
-        scene.add(cabinets);
-
         // Initialize OrbitControls for manual rotation
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true; // Enable smooth damping
@@ -178,6 +168,28 @@
         controls.enablePan = false; // Disable panning
         controls.minDistance = 2; // Minimum zoom distance
         controls.maxDistance = 10; // Maximum zoom distance
+
+        // Load the FBX model
+        loadFBXModel(FBX_MODEL_URL)
+            .then(loadedModel => {
+                fbxModel = loadedModel;
+
+                // Traverse the FBX model and identify specific parts (countertop, cabinets)
+                fbxModel.traverse(function (child) {
+                    if (child.isMesh) {
+                        if (child.name.includes("Countertop")) {
+                            countertop = child; // Assuming the part name contains "Countertop"
+                        } else if (child.name.includes("Cabinet")) {
+                            cabinets = child; // Assuming the part name contains "Cabinet"
+                        }
+                    }
+                });
+
+                scene.add(fbxModel); // Add the entire FBX model to the scene
+            })
+            .catch(error => {
+                console.error('Error loading FBX model:', error);
+            });
 
         // Create color buttons for both the countertop and cabinets
         createColorButtons('top-container', changeTopColor);
@@ -196,6 +208,32 @@
             requestAnimationFrame(animate);
             controls.update(); // Update controls (required if enableDamping is true)
             renderer.render(scene, camera); // Render the scene
+        }
+
+        /**
+         * Function to load the FBX model.
+         * @param {string} url - The URL of the FBX model to load.
+         * @returns {Promise} - Resolves with the loaded model.
+         */
+        function loadFBXModel(url) {
+            return new Promise((resolve, reject) => {
+                const loader = new THREE.FBXLoader();
+                loader.load(
+                    url,
+                    (object) => {
+                        console.log('FBX model loaded successfully.');
+                        object.scale.set(0.01, 0.01, 0.01); // Scale down if necessary
+                        resolve(object);
+                    },
+                    (xhr) => {
+                        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                    },
+                    (error) => {
+                        console.error('An error happened while loading the FBX model:', error);
+                        reject(error);
+                    }
+                );
+            });
         }
 
         /**
@@ -254,12 +292,13 @@
     }
 
     /**
-     * Ensures that Three.js and OrbitControls.js are loaded before initializing the scene.
+     * Ensures that Three.js, OrbitControls.js, and FBXLoader.js are loaded before initializing the scene.
      */
     function loadAndInitialize() {
         injectStyles(); // Inject CSS styles dynamically
         loadScript(THREE_JS_URL)
             .then(() => loadScript(ORBIT_CONTROLS_URL))
+            .then(() => loadScript(FBX_LOADER_URL))
             .then(() => {
                 // Initialize the scene after all scripts are loaded
                 init();
