@@ -429,20 +429,12 @@
     container.appendChild(typeContainer);
 
     // Kitchen Button with Image
-    const kitchenBtn = createImageButton('Kitchen', 'https://i.ibb.co/Zf3skZV/kitchen.png');
+    const kitchenBtn = createImageButton('Kitchen', 'https://i.ibb.co/CwwQ0Gd/1.png'); // Replace with your kitchen image URL
     typeContainer.appendChild(kitchenBtn);
 
     // Bathroom Button with Image
-    const bathroomBtn = createImageButton('Bathroom', 'https://i.ibb.co/YNk8yXR/bathroom.png');
+    const bathroomBtn = createImageButton('Bathroom', 'https://i.ibb.co/RPJgsCB/2.png'); // Replace with your bathroom image URL
     typeContainer.appendChild(bathroomBtn);
-
-    // Bar Top Button with Image
-    const barTopBtn = createImageButton('Bar Top', 'https://i.ibb.co/4PNXrnc/1.png');
-    typeContainer.appendChild(barTopBtn);
-
-    // Island Button with Image
-    const islandBtn = createImageButton('Island', 'https://i.ibb.co/2WfRSkn/islandsquare.png');
-    typeContainer.appendChild(islandBtn);
 
     // Back Button (if exists)
     if (previousPage) {
@@ -464,48 +456,39 @@
         previousPage = navigateToSelectionPage;
         selectBathroomType(container);
     });
-
-    barTopBtn.addEventListener('click', () => {
-        previousPage = navigateToSelectionPage;
-        selectBarTopType(container);
-    });
-
-    islandBtn.addEventListener('click', () => {
-        previousPage = navigateToSelectionPage;
-        selectIslandType(container);
-    });
 }
 
 
-    // Shape Selection Functions
-    function selectKitchenType(container) {
-        container.innerHTML = '';
 
-        const header = createElement('h2', null, 'Choose Kitchen Counter Shape');
-        container.appendChild(header);
+  function selectKitchenType(container) {
+    container.innerHTML = '';
 
-        const kitchenOptions = createElement('div', 'button-group');
-        container.appendChild(kitchenOptions);
+    const header = createElement('h2', null, 'Choose Kitchen Counter Shape');
+    container.appendChild(header);
 
-        const shapes = getShapesForType('Kitchen');
-        shapes.forEach(shape => {
-            const shapeBtn = createImageButton(shape.name, shape.imageUrl);
-            kitchenOptions.appendChild(shapeBtn);
+    const kitchenOptions = createElement('div', 'button-group');
+    container.appendChild(kitchenOptions);
 
-            shapeBtn.addEventListener('click', () => {
-                previousPage = selectKitchenType;
-                startShapeConfiguration(shape, 'Kitchen', container);
-            });
+    const shapes = getShapesForType('Kitchen');
+    shapes.forEach(shape => {
+        const shapeBtn = createImageButton(shape.name, shape.imageUrl);
+        kitchenOptions.appendChild(shapeBtn);
+
+        shapeBtn.addEventListener('click', () => {
+            previousPage = selectKitchenType;
+            startShapeConfiguration(shape, 'Kitchen', container);
         });
+    });
 
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
 
-        backButton.addEventListener('click', () => {
-            navigateToSelectionPage(container);
-        });
-    }
+    backButton.addEventListener('click', () => {
+        navigateToSelectionPage(container);
+    });
+}
+
 
     function selectBathroomType(container) {
         container.innerHTML = '';
@@ -593,39 +576,37 @@
             navigateToSelectionPage(container);
         });
     }
+function startShapeConfiguration(shape, type, container) {
+    let shapeData = {
+        hasBacksplash: false,
+        backsplashWidth: 0,
+        backsplashHeight: 0,
+        measurements: [],
+        finishType: '',
+        pattern: '',
+        baseColor: '',
+        mixInColors: [],
+        addonColors: []
+    };
 
-    // Shape Configuration Function
-    function startShapeConfiguration(shape, type, container) {
-        let shapeData = {
-            hasBacksplash: false,
-            backsplashWidth: 0,
-            backsplashHeight: 0,
-            measurements: [],
-            finishType: '',
-            pattern: '',
-            baseColor: '',
-            mixInColors: [],
-            addonColors: []
-        };
-
-        // Skip backsplash for Island
-        if (type === 'Island') {
+    // Only prompt backsplash for Regular Counter shapes
+    if (shape.name === 'Regular Counter' || shape.name === 'Rectangle') {
+        promptBacksplash(shape, type, container, shapeData, () => {
             promptMeasurements(shape, type, container, shapeData, () => {
                 promptFinishType(shape, type, container, shapeData);
             });
-        } else {
-            promptBacksplash(shape, type, container, shapeData, () => {
-                promptMeasurements(shape, type, container, shapeData, () => {
-                    promptFinishType(shape, type, container, shapeData);
-                });
-            });
-        }
+        });
+    } else {
+        promptMeasurements(shape, type, container, shapeData, () => {
+            promptFinishType(shape, type, container, shapeData);
+        });
     }
+}
 
 function promptBacksplash(shape, type, container, shapeData, callback) {
     container.innerHTML = '';
 
-    const question = type === 'Bar Top' ? 'Does this bar top have a backsplash?' : 'Does this countertop have a backsplash?';
+    const question = 'Does this countertop have a backsplash?';
 
     const header = createElement('h2', null, question);
     container.appendChild(header);
@@ -633,7 +614,7 @@ function promptBacksplash(shape, type, container, shapeData, callback) {
     // Add backsplash image
     const imageDiv = createElement('div', 'image-container');
     const backsplashImage = createElement('img');
-    backsplashImage.src = 'https://i.ibb.co/0VcttP1/backsplash.png'; // Replace with your backsplash image URL
+    backsplashImage.src = 'https://i.ibb.co/jy18LMM/Backsplash.png'; // Use your provided backsplash image URL
     backsplashImage.alt = 'Backsplash Example';
     imageDiv.appendChild(backsplashImage);
     container.appendChild(imageDiv);
@@ -663,6 +644,7 @@ function promptBacksplash(shape, type, container, shapeData, callback) {
         callback();
     });
 }
+
 
 
     // Backsplash Dimensions Prompt
@@ -756,6 +738,7 @@ function promptBacksplash(shape, type, container, shapeData, callback) {
         callback();
     });
 }
+
 
 
     // Finish Type Prompt
@@ -1187,95 +1170,61 @@ function promptBacksplash(shape, type, container, shapeData, callback) {
         totalCost = 0;
         createInvoicePage(container);
     }
+function getShapesForType(type) {
+    const shapes = [];
 
-    // Get Shapes Based on Type
-    function getShapesForType(type) {
-        const shapes = [];
+    const shapeData = {
+        'Kitchen': [
+            {
+                name: 'Regular Counter',
+                type: 'Kitchen',
+                measurements: ['Length', 'Width'],
+                formula: (measurements) => (measurements[0] * measurements[1]) / 144,
+                imageUrl: 'https://i.ibb.co/gw8Bxw2/counter.png' // Replace with your Regular Counter image URL
+            },
+            {
+                name: 'Island',
+                type: 'Kitchen',
+                measurements: ['Length', 'Width'],
+                formula: (measurements) => (measurements[0] * measurements[1]) / 144,
+                imageUrl: 'https://i.ibb.co/2WfRSkn/islandsquare.png' // Replace with your Island image URL
+            },
+            {
+                name: 'Bar Top',
+                type: 'Kitchen',
+                measurements: ['Length', 'Width'],
+                formula: (measurements) => (measurements[0] * measurements[1]) / 144,
+                imageUrl: 'https://i.ibb.co/4PNXrnc/1.png' // Replace with your Bar Top image URL
+            }
+        ],
+        'Bathroom': [
+            {
+                name: 'Rectangle',
+                type: 'Bathroom',
+                measurements: ['Length', 'Width'],
+                formula: (measurements) => (measurements[0] * measurements[1]) / 144,
+                imageUrl: 'https://i.ibb.co/KmS1PKB/recbath.png' // Replace with your Rectangle image URL
+            },
+            {
+                name: 'Square',
+                type: 'Bathroom',
+                measurements: ['Side'],
+                formula: (measurements) => (Math.pow(measurements[0], 2)) / 144,
+                imageUrl: 'https://i.ibb.co/1qLTRBc/bathsqaure.png' // Replace with your Square image URL
+            },
+            {
+                name: 'Hexagonal',
+                type: 'Bathroom',
+                measurements: ['Side Length'],
+                formula: (measurements) => (1.5 * Math.sqrt(3) * Math.pow(measurements[0], 2)) / 144,
+                imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png' // Replace with your Hexagonal image URL
+            }
+        ]
+    };
 
-        const shapeData = {
-            'Kitchen': [
-                {
-                    name: 'Island',
-                    type: 'Kitchen',
-                    measurements: ['Length', 'Width'],
-                    formula: (measurements, depth) => (measurements[0] * measurements[1] * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/Hrr8ztS/Pour-Directional.png'
-                },
-                {
-                    name: 'Regular Counter',
-                    type: 'Kitchen',
-                    measurements: ['Length', 'Width'],
-                    formula: (measurements, depth) => (measurements[0] * measurements[1] * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/gw8Bxw2/counter.png'
-                },
-                {
-                    name: 'Bar Top',
-                    type: 'Kitchen',
-                    measurements: ['Length', 'Width'],
-                    formula: (measurements, depth) => (measurements[0] * measurements[1] * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/yS5gzGd/Marble-2.png'
-                }
-            ],
-            'Bathroom': [
-                {
-                    name: 'Rectangle',
-                    type: 'Bathroom',
-                    measurements: ['Length', 'Width'],
-                    formula: (measurements, depth) => (measurements[0] * measurements[1] * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/KmS1PKB/recbath.png'
-                },
-                {
-                    name: 'Square',
-                    type: 'Bathroom',
-                    measurements: ['Side'],
-                    formula: (measurements, depth) => (measurements[0] * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/1qLTRBc/bathsqaure.png'
-                },
-                {
-                    name: 'Hexagonal',
-                    type: 'Bathroom',
-                    measurements: ['Side Length'],
-                    formula: (measurements, depth) => (1.5 * Math.sqrt(3) * Math.pow(measurements[0], 2) * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png'
-                }
-            ],
-            'Bar Top': [
-                {
-                    name: '2 Sides',
-                    type: 'Bar Top',
-                    measurements: ['Length', 'Width'],
-                    formula: (measurements, depth) => (measurements[0] * measurements[1] * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/4PNXrnc/1.png'
-                },
-                {
-                    name: '3 Sides',
-                    type: 'Bar Top',
-                    measurements: ['Side 1', 'Side 2', 'Side 3'],
-                    formula: (measurements, depth) => (measurements.reduce((acc, cur) => acc + cur, 0) * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/bmV9twv/2.png'
-                },
-                // Add more Bar Top shapes as needed
-            ],
-            'Island': [
-                {
-                    name: '1 Side',
-                    type: 'Island',
-                    measurements: ['Radius'],
-                    formula: (measurements, depth) => (Math.PI * Math.pow(measurements[0], 2) * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/2WfRSkn/islandsquare.png'
-                },
-                {
-                    name: '5 Sides',
-                    type: 'Island',
-                    measurements: ['Side 1', 'Side 2', 'Side 3', 'Side 4', 'Side 5'],
-                    formula: (measurements, depth) => (measurements.reduce((acc, cur) => acc + cur, 0) * depth) / 144,
-                    imageUrl: 'https://i.ibb.co/M6dqLGH/islandlong.png'
-                }
-            ]
-        };
+    return shapeData[type] || [];
+}
 
-        return shapeData[type] || [];
-    }
 
     // Finalize the Interface
     initInterface();
