@@ -467,11 +467,11 @@ function selectBathroomType(container) {
     let depth = (type === 'Kitchen' || type === 'Island' || type === 'Bar Top' || type === 'Regular Counter') ? 25 : 22;
     let squareFootage = shape.formula(measurements, depth);
 
-    // Add backsplash square footage if applicable
-    if (shapeData.hasBacksplash && shapeData.backsplashWidth > 0 && shapeData.backsplashHeight > 0) {
-        const backsplashArea = (shapeData.backsplashWidth / 12) * (shapeData.backsplashHeight / 12);
-        squareFootage += backsplashArea; // Add backsplash area to total square footage
-    }
+   if (shapeData.hasBacksplash && shapeData.backsplashWidth > 0 && shapeData.backsplashHeight > 0) {
+    const backsplashArea = (shapeData.backsplashWidth / 12) * (shapeData.backsplashHeight / 12);
+    squareFootage += backsplashArea; // Add backsplash area to total square footage
+}
+
 
     // Update pricing based on finish type
     let pricePerSqFt = shapeData.finishType === 'crystal' ? 39 : 26;
@@ -1107,7 +1107,7 @@ function promptBaseAndAddonColors(container, shapeData) {
     addonColorContainer.style.marginBottom = '20px';
     container.appendChild(addonColorContainer);
 
-    const addonColors = baseColors.concat(['Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper']); // Includes base colors
+const addonColors = Object.keys(baseColors).concat(['Icy White', 'Silver', 'Champagne Gold', 'Bronze', 'Cobalt Blue', 'Pewter Blue', 'Copper']);
     const selectedAddonColors = [];
 
     addonColors.forEach(color => {
