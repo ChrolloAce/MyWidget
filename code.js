@@ -1213,21 +1213,37 @@ function promptFinishOptions(shape, type, container, shapeData) {
         createInvoicePage(container);
     }
 
-    // Create Invoice Page
-    function createInvoicePage(container) {
-        container.innerHTML = '';
+  function createInvoicePage(container) {
+    container = container || document.querySelector('.container') || document.body;
+    container.innerHTML = '';
 
-        const header = createElement('h2', null, 'Current Invoice');
-        container.appendChild(header);
+    const header = createElement('h2', null, 'Current Invoice');
+    container.appendChild(header);
 
-        // Add New Item Button
-        const addItemBtn = createElement('button', 'button', 'Add New Item');
-        container.appendChild(addItemBtn);
+    // Add New Item Button
+    const addItemBtn = createElement('button', 'button', 'Add New Item');
+    container.appendChild(addItemBtn);
 
-        addItemBtn.addEventListener('click', () => {
-            previousPage = createInvoicePage;
-            navigateToSelectionPage(container);
-        });
+    addItemBtn.addEventListener('click', () => {
+        previousPage = createInvoicePage;
+        navigateToSelectionPage(container); // Make sure container is defined here
+    });
+
+    // Item List
+    const itemListDiv = createElement('div', 'item-list');
+    container.appendChild(itemListDiv);
+    updateItemList(itemListDiv);
+
+    // Finalize Invoice Button
+    const finalizeBtn = createElement('button', 'button', 'Finalize Invoice');
+    finalizeBtn.style.marginTop = '30px';
+    container.appendChild(finalizeBtn);
+
+    finalizeBtn.addEventListener('click', () => {
+        finalizeInvoice(container);
+    });
+}
+
 
         // Item List
         const itemListDiv = createElement('div', 'item-list');
