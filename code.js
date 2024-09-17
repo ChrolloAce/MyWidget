@@ -1109,30 +1109,33 @@ function calculateTotalCost() {
     }
 
   // Create Invoice Page (Only show price after the user enters their info)
+// Create Invoice Page (Only the item list is shown, no price at this point)
 function createInvoicePage(container) {
     container.innerHTML = '';
 
     const header = createElement('h2', null, 'Your Quote');
     container.appendChild(header);
 
-    // Display the item list (but no price)
+    // Display the item list (without showing the price)
     if (items.length > 0) {
         const itemListDiv = createElement('div', 'item-list');
         container.appendChild(itemListDiv);
-        updateItemList(itemListDiv);  // Display the item list as per old version
+        updateItemList(itemListDiv);  // Display the list of items
     } else {
         const noItems = createElement('p', null, 'No items added yet.');
         container.appendChild(noItems);
     }
 
-    // Button to finalize and proceed to checkout (collect user info)
-    const finalizeBtn = createElement('button', 'button', 'Proceed to Checkout');
-    container.appendChild(finalizeBtn);
+    // Button to proceed to checkout (collect user info)
+    if (items.length > 0) {
+        const proceedBtn = createElement('button', 'button', 'Proceed to Checkout');
+        container.appendChild(proceedBtn);
 
-    finalizeBtn.addEventListener('click', () => {
-        previousPage = () => createInvoicePage(container);
-        collectUserInfo(container);  // Proceed to collect user info
-    });
+        proceedBtn.addEventListener('click', () => {
+            previousPage = () => createInvoicePage(container);
+            collectUserInfo(container);  // Proceed to collect user info
+        });
+    }
 
     // Button to add more items to the quote
     const addCountertopBtn = createElement('button', 'button green-button', 'Add More Items');
@@ -1152,6 +1155,7 @@ function createInvoicePage(container) {
     });
 }
 
+    
 // Update Item List UI (Same as the old version, shows items without prices)
 function updateItemList(itemListDiv) {
     itemListDiv.innerHTML = '<h3>Items in Your Quote:</h3>';
