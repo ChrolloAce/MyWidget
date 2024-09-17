@@ -1171,30 +1171,108 @@ function promptBacksplash(shape, type, container, shapeData, callback) {
         createInvoicePage(container);
     }
 function getShapesForType(type) {
-    const shapes = [];
-
     const shapeData = {
         'Kitchen': [
+            // Regular Counter shapes
             {
-                name: 'Regular Counter',
-                type: 'Kitchen',
-                measurements: ['Length', 'Width'],
-                formula: (measurements) => (measurements[0] * measurements[1]) / 144,
-                imageUrl: 'https://i.ibb.co/gw8Bxw2/counter.png' // Replace with your Regular Counter image URL
+                name: 'Regular Counter - 2 Sides',
+                type: 'Regular Counter',
+                measurements: ['Measurement 1', 'Measurement 2'],
+                formula: (measurements) => (measurements[0] * 25) / 144, // Using standard depth of 25 inches
+                imageUrl: 'https://i.ibb.co/tPH5VT2/10.png'
             },
             {
-                name: 'Island',
-                type: 'Kitchen',
-                measurements: ['Length', 'Width'],
-                formula: (measurements) => (measurements[0] * measurements[1]) / 144,
-                imageUrl: 'https://i.ibb.co/2WfRSkn/islandsquare.png' // Replace with your Island image URL
+                name: 'Regular Counter - 3 Sides (Style 1)',
+                type: 'Regular Counter',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
+                formula: (measurements) => (measurements.reduce((acc, cur) => acc + cur, 0) * 25) / 144,
+                imageUrl: 'https://i.ibb.co/hHSRgjk/13.png'
             },
             {
-                name: 'Bar Top',
-                type: 'Kitchen',
+                name: 'Regular Counter - 3 Sides (Style 2)',
+                type: 'Regular Counter',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
+                formula: (measurements) => (measurements.reduce((acc, cur) => acc + cur, 0) * 25) / 144,
+                imageUrl: 'https://i.ibb.co/C9t7rzy/15.png'
+            },
+            {
+                name: 'Regular Counter - 5 Sides',
+                type: 'Regular Counter',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5'],
+                formula: (measurements) => (measurements.reduce((acc, cur) => acc + cur, 0) * 25) / 144,
+                imageUrl: 'https://i.ibb.co/8BsnF1W/11.png'
+            },
+            {
+                name: 'Regular Counter - 6 Sides',
+                type: 'Regular Counter',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
+                formula: (measurements) => (measurements.reduce((acc, cur) => acc + cur, 0) * 25) / 144,
+                imageUrl: 'https://i.ibb.co/b7fyPTL/14.png'
+            },
+            {
+                name: 'Regular Counter - 2 Sides (Style 2)',
+                type: 'Regular Counter',
+                measurements: ['Measurement 1', 'Measurement 2'],
+                formula: (measurements) => (measurements[0] * 25) / 144,
+                imageUrl: 'https://i.ibb.co/Zf3JzCz/16.png'
+            },
+            // Island shapes
+            {
+                name: 'Island - 1 Side',
+                type: 'Island',
                 measurements: ['Length', 'Width'],
                 formula: (measurements) => (measurements[0] * measurements[1]) / 144,
-                imageUrl: 'https://i.ibb.co/4PNXrnc/1.png' // Replace with your Bar Top image URL
+                imageUrl: 'https://i.ibb.co/2WfRSkn/islandsquare.png'
+            },
+            {
+                name: 'Island - 5 Sides',
+                type: 'Island',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5'],
+                formula: (measurements) => (measurements.reduce((acc, cur) => acc + cur, 0) * 25) / 144,
+                imageUrl: 'https://i.ibb.co/M6dqLGH/islandlong.png'
+            },
+            // Bar Top shapes
+            {
+                name: 'Bar Top - 2 Sides',
+                type: 'Bar Top',
+                measurements: ['Measurement 1', 'Measurement 2'],
+                formula: (measurements) => (measurements[0] * 15) / 144, // Assuming bar top depth of 15 inches
+                imageUrl: 'https://i.ibb.co/4PNXrnc/1.png'
+            },
+            {
+                name: 'Bar Top - 3 Sides',
+                type: 'Bar Top',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
+                formula: (measurements) => (measurements.reduce((acc, cur) => acc + cur, 0) * 15) / 144,
+                imageUrl: 'https://i.ibb.co/bmV9twv/2.png'
+            },
+            {
+                name: 'Bar Top - 4 Sides',
+                type: 'Bar Top',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
+                formula: (measurements) => (measurements.reduce((acc, cur) => acc + cur, 0) * 15) / 144,
+                imageUrl: 'https://i.ibb.co/MD63PFz/3.png'
+            },
+            {
+                name: 'Bar Top - 5 Sides',
+                type: 'Bar Top',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5'],
+                formula: (measurements) => (measurements.reduce((acc, cur) => acc + cur, 0) * 15) / 144,
+                imageUrl: 'https://i.ibb.co/j4TL0VK/4.png'
+            },
+            {
+                name: 'Bar Top - 6 Sides',
+                type: 'Bar Top',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
+                formula: (measurements) => (measurements.reduce((acc, cur) => acc + cur, 0) * 15) / 144,
+                imageUrl: 'https://i.ibb.co/YcXnY2y/5.png'
+            },
+            {
+                name: 'Bar Top - 9 Sides',
+                type: 'Bar Top',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7', 'Measurement 8', 'Measurement 9'],
+                formula: (measurements) => (measurements.reduce((acc, cur) => acc + cur, 0) * 15) / 144,
+                imageUrl: 'https://i.ibb.co/XWQ6Twg/6.png'
             }
         ],
         'Bathroom': [
@@ -1203,27 +1281,28 @@ function getShapesForType(type) {
                 type: 'Bathroom',
                 measurements: ['Length', 'Width'],
                 formula: (measurements) => (measurements[0] * measurements[1]) / 144,
-                imageUrl: 'https://i.ibb.co/KmS1PKB/recbath.png' // Replace with your Rectangle image URL
+                imageUrl: 'https://i.ibb.co/KmS1PKB/recbath.png'
             },
             {
                 name: 'Square',
                 type: 'Bathroom',
                 measurements: ['Side'],
                 formula: (measurements) => (Math.pow(measurements[0], 2)) / 144,
-                imageUrl: 'https://i.ibb.co/1qLTRBc/bathsqaure.png' // Replace with your Square image URL
+                imageUrl: 'https://i.ibb.co/1qLTRBc/bathsqaure.png'
             },
             {
                 name: 'Hexagonal',
                 type: 'Bathroom',
                 measurements: ['Side Length'],
                 formula: (measurements) => (1.5 * Math.sqrt(3) * Math.pow(measurements[0], 2)) / 144,
-                imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png' // Replace with your Hexagonal image URL
+                imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png'
             }
         ]
     };
 
     return shapeData[type] || [];
 }
+
 
 
     // Finalize the Interface
