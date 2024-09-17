@@ -420,62 +420,43 @@
     }
 
     // Navigation Functions
-    function navigateToSelectionPage(container) {
-        container.innerHTML = '';
+ function navigateToSelectionPage(container) {
+    container.innerHTML = ''; // Clear the container
 
-        const header = createElement('h2', null, 'Choose Type of Countertop');
-        container.appendChild(header);
+    const header = document.createElement('h2');
+    header.textContent = 'Choose Type of Countertop';
+    container.appendChild(header);
 
-        const typeContainer = createElement('div', 'button-group');
-        container.appendChild(typeContainer);
+    const typeContainer = document.createElement('div');
+    typeContainer.classList.add('image-container'); // Use global CSS for image container
+    container.appendChild(typeContainer);
 
-        // Kitchen Button
-        const kitchenBtn = createElement('button', 'button', 'Kitchen');
-        typeContainer.appendChild(kitchenBtn);
+    // Kitchen and Bathroom buttons with their respective images
+    const kitchenBtn = createImageButton('Kitchen', 'https://i.ibb.co/wWHG4XN/1.png');
+    const bathroomBtn = createImageButton('Bathroom', 'https://i.ibb.co/xm8PmSF/2.png');
+    typeContainer.appendChild(kitchenBtn);
+    typeContainer.appendChild(bathroomBtn);
 
-        // Bathroom Button
-        const bathroomBtn = createElement('button', 'button', 'Bathroom');
-        typeContainer.appendChild(bathroomBtn);
+    kitchenBtn.addEventListener('click', function () {
+        selectKitchenType(container);
+    });
 
-        // Bar Top Button
-        const barTopBtn = createElement('button', 'button', 'Bar Top');
-        typeContainer.appendChild(barTopBtn);
+    bathroomBtn.addEventListener('click', function () {
+        selectBathroomType(container);
+    });
 
-        // Island Button
-        const islandBtn = createElement('button', 'button', 'Island');
-        typeContainer.appendChild(islandBtn);
-
-        // Back Button (if exists)
+    // Back button to return to the previous page
+    const backButton = document.createElement('button');
+    backButton.textContent = 'Back';
+    styleButton(backButton);
+    backButton.addEventListener('click', function () {
         if (previousPage) {
-            const backButton = createElement('button', 'button back-button', 'Back');
-            typeContainer.appendChild(backButton);
-
-            backButton.addEventListener('click', () => {
-                previousPage(container);
-            });
+            previousPage(container);
         }
+    });
+    container.appendChild(backButton);
+}
 
-        // Event Listeners
-        kitchenBtn.addEventListener('click', () => {
-            previousPage = navigateToSelectionPage;
-            selectKitchenType(container);
-        });
-
-        bathroomBtn.addEventListener('click', () => {
-            previousPage = navigateToSelectionPage;
-            selectBathroomType(container);
-        });
-
-        barTopBtn.addEventListener('click', () => {
-            previousPage = navigateToSelectionPage;
-            selectBarTopType(container);
-        });
-
-        islandBtn.addEventListener('click', () => {
-            previousPage = navigateToSelectionPage;
-            selectIslandType(container);
-        });
-    }
 
     // Shape Selection Functions
     function selectKitchenType(container) {
@@ -622,36 +603,50 @@
         }
     }
 
-    // Backsplash Prompt
-    function promptBacksplash(shape, type, container, shapeData, callback) {
-        container.innerHTML = '';
+  function promptBacksplash(shape, type, container, shapeData) {
+    container.innerHTML = ''; // Clear the container
 
-        const question = type === 'Bar Top' ? 'Does this bar top have a backsplash?' : 'Does this countertop have a backsplash?';
+    const header = document.createElement('h2');
+    header.textContent = 'Does this countertop have a backsplash?';
+    container.appendChild(header);
 
-        const header = createElement('h2', null, question);
-        container.appendChild(header);
+    // Add an image representing backsplash
+    const backsplashImage = document.createElement('img');
+    backsplashImage.src = 'https://i.ibb.co/C9t7rzy/backsplash-image.png';  // Replace with the correct image URL
+    backsplashImage.alt = 'Backsplash Example';
+    backsplashImage.style.width = '100%';  // Make it responsive
+    container.appendChild(backsplashImage);
 
-        const buttonGroup = createElement('div', 'button-group');
-        container.appendChild(buttonGroup);
+    const description = document.createElement('p');
+    description.textContent = 'A backsplash is an extension of the countertop surface that covers the wall behind the countertop.';
+    container.appendChild(description);
 
-        const yesBtn = createElement('button', 'button', 'Yes');
-        const noBtn = createElement('button', 'button', 'No');
+    const buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('button-container');
+    container.appendChild(buttonContainer);
 
-        buttonGroup.appendChild(yesBtn);
-        buttonGroup.appendChild(noBtn);
+    const yesBtn = document.createElement('button');
+    yesBtn.textContent = 'Yes';
+    styleButton(yesBtn);
+    buttonContainer.appendChild(yesBtn);
 
-        yesBtn.addEventListener('click', () => {
-            shapeData.hasBacksplash = true;
-            promptBacksplashDimensions(container, shapeData, () => {
-                callback();
-            });
+    const noBtn = document.createElement('button');
+    noBtn.textContent = 'No';
+    styleButton(noBtn);
+    buttonContainer.appendChild(noBtn);
+
+    yesBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = true;
+        promptBacksplashDimensions(container, shapeData, function () {
+            promptMeasurements(shape, type, container, shapeData);
         });
+    });
 
-        noBtn.addEventListener('click', () => {
-            shapeData.hasBacksplash = false;
-            callback();
-        });
-    }
+    noBtn.addEventListener('click', function () {
+        shapeData.hasBacksplash = false;
+        promptMeasurements(shape, type, container, shapeData);
+    });
+}
 
     // Backsplash Dimensions Prompt
     function promptBacksplashDimensions(container, shapeData, callback) {
@@ -701,84 +696,111 @@
     }
 
     // Measurements Prompt
-    function promptMeasurements(shape, type, container, shapeData, callback) {
-        container.innerHTML = '';
+    function promptMeasurements(shape, type, container, shapeData) {
+    container.innerHTML = ''; // Clear the container
 
-        const header = createElement('h2', null, 'Enter Measurements (in inches)');
-        container.appendChild(header);
+    const header = document.createElement('h2');
+    header.textContent = 'Enter Measurements (in inches)';
+    container.appendChild(header);
 
-        const imageDiv = createElement('div', 'image-container');
-        const shapeImage = createElement('img');
-        shapeImage.src = shape.imageUrl;
-        shapeImage.alt = shape.name;
-        shapeImage.classList.add('shape-image');
-        imageDiv.appendChild(shapeImage);
-        container.appendChild(imageDiv);
+    // Add the shape image to the measurements screen
+    const shapeImage = document.createElement('img');
+    shapeImage.src = shape.imageUrl;
+    shapeImage.alt = `${shape.name} Shape`;
+    shapeImage.style.width = '100%';
+    shapeImage.style.height = 'auto';
+    shapeImage.style.marginBottom = '20px';
+    container.appendChild(shapeImage);
 
-        const form = createElement('div', 'form');
-        container.appendChild(form);
+    const formDiv = document.createElement('div');
+    formDiv.classList.add('form-container');  // Use global styles for form layout
+    container.appendChild(formDiv);
 
-        const measurementInputs = [];
-        shape.measurements.forEach((label, index) => {
-            const formGroup = createElement('div', 'form-group');
-            const inputLabel = createElement('label', null, `Measurement ${index + 1}:`);
-            const inputField = createElement('input');
-            inputField.type = 'number';
-            inputField.min = '0';
-            formGroup.appendChild(inputLabel);
-            formGroup.appendChild(inputField);
-            form.appendChild(formGroup);
-            measurementInputs.push(inputField);
-        });
+    const measurementInputs = [];
+    shape.measurements.forEach((measurement, index) => {
+        const label = document.createElement('label');
+        label.textContent = `Measurement ${index + 1}:`;
+        formDiv.appendChild(label);
 
-        const nextBtn = createElement('button', 'button', 'Next');
-        form.appendChild(nextBtn);
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.placeholder = `Measurement for side ${index + 1} (in inches)`;
+        formDiv.appendChild(input);
+        measurementInputs.push(input);
+    });
 
-        nextBtn.addEventListener('click', () => {
-            const measurements = measurementInputs.map(input => parseFloat(input.value));
-            if (measurements.some(value => isNaN(value) || value <= 0)) {
-                alert('Please enter valid measurements.');
-                return;
-            }
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    styleButton(nextBtn);
+    formDiv.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', function () {
+        const measurements = measurementInputs.map(input => parseFloat(input.value));
+        if (measurements.some(value => isNaN(value) || value <= 0)) {
+            alert('Please enter valid measurements.');
+        } else {
             shapeData.measurements = measurements;
-            callback();
+            promptFinishType(shape, type, container, shapeData);
+        }
+    });
+}
+
+
+  function promptFinishType(shape, type, container, shapeData) {
+    container.innerHTML = ''; // Clear the container
+
+    const header = document.createElement('h2');
+    header.textContent = 'Select Finish Type';
+    container.appendChild(header);
+
+    const finishContainer = document.createElement('div');
+    finishContainer.classList.add('image-container'); // Global styles for image container
+    container.appendChild(finishContainer);
+
+    const finishes = [
+        {
+            name: 'CrystalTop Finish',
+            imageUrl: 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg',  // Image for CrystalTop
+            value: 'crystal'
+        },
+        {
+            name: 'Standard Finish',
+            imageUrl: 'https://i.ibb.co/TcYP1FN/Marble-1-min.jpg',  // Image for Standard Finish
+            value: 'standard'
+        }
+    ];
+
+    let selectedFinishType = null;
+
+    finishes.forEach(finish => {
+        const finishDiv = createImageButton(finish.name, finish.imageUrl);
+        finishContainer.appendChild(finishDiv);
+
+        finishDiv.addEventListener('click', function () {
+            selectedFinishType = finish.value;
+            // Update UI to reflect selection
+            Array.from(finishContainer.children).forEach(child => {
+                child.style.border = '2px solid #ddd';
+            });
+            finishDiv.style.border = '4px solid #0264D9';
         });
-    }
+    });
 
-    // Finish Type Prompt
-    function promptFinishType(shape, type, container, shapeData) {
-        container.innerHTML = '';
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    styleButton(nextBtn);
+    container.appendChild(nextBtn);
 
-        const header = createElement('h2', null, 'Select Finish Type');
-        container.appendChild(header);
+    nextBtn.addEventListener('click', function () {
+        if (!selectedFinishType) {
+            alert('Please select a finish type.');
+            return;
+        }
+        shapeData.finishType = selectedFinishType;
+        promptFinishOptions(shape, type, container, shapeData);
+    });
+}
 
-        const buttonGroup = createElement('div', 'button-group');
-        container.appendChild(buttonGroup);
-
-        const regularBtn = createElement('button', 'button', 'Regular Finish');
-        const crystalBtn = createElement('button', 'button', 'Crystal Top Finish');
-
-        buttonGroup.appendChild(regularBtn);
-        buttonGroup.appendChild(crystalBtn);
-
-        regularBtn.addEventListener('click', () => {
-            shapeData.finishType = 'regular';
-            promptFinishOptions(shape, type, container, shapeData);
-        });
-
-        crystalBtn.addEventListener('click', () => {
-            shapeData.finishType = 'crystal';
-            promptFinishOptions(shape, type, container, shapeData);
-        });
-
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
-
-        backButton.addEventListener('click', () => {
-            previousPage(container);
-        });
-    }
 
     // Finish Options Prompt
     function promptFinishOptions(shape, type, container, shapeData) {
