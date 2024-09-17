@@ -854,6 +854,25 @@ p {
         // Not needed as Bathroom doesn't have subcategories
     }
 
+// Define addToQuote before it's used anywhere
+function addToQuote(container, shape) {
+    // Add item to the quote and calculate cost
+    items.push({
+        shape: shape.name,
+        measurements: shape.measurements,
+        backsplash: shape.hasBacksplash ? { width: shape.backsplashWidth, height: shape.backsplashHeight } : null
+    });
+    calculateTotalCost();
+    createQuotePage(container);
+}
+
+// Example usage of addToQuote
+yesBtn.addEventListener('click', () => {
+    addToQuote(container, shape);  // This call will work only if addToQuote is defined earlier
+});
+
+
+    
 
 function askBacksplash(container, shape) {
     container.innerHTML = '';
