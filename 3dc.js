@@ -260,12 +260,15 @@
         if (firstColor) {
             firstColor.classList.add('selected');
             console.log('Default color selected.');
+            // Create initial countertop
+            updateCountertop();
         }
 
         // Pattern Selection
         const patternGroup = createElement('div', 'form-group');
         const patternLabel = createElement('label', null, 'Choose Pattern:');
         const patternSelect = createElement('select', null, null);
+        patternSelect.id = 'patternSelect'; // Assign ID
         const patterns = ['Solid', 'Marble', 'Granite', 'Quartz'];
         patterns.forEach(pattern => {
             const option = createElement('option', null, pattern);
@@ -285,6 +288,7 @@
         const finishGroup = createElement('div', 'form-group');
         const finishLabel = createElement('label', null, 'Choose Finish:');
         const finishSelect = createElement('select', null, null);
+        finishSelect.id = 'finishSelect'; // Assign ID
         const finishes = ['Polished', 'Matte', 'Satin'];
         finishes.forEach(finish => {
             const option = createElement('option', null, finish);
@@ -320,6 +324,7 @@
             1000
         );
         camera.position.set(0, 5, 10);
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
 
         // Renderer
         renderer = new THREE.WebGLRenderer({ antialias: true });
