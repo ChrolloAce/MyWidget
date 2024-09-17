@@ -4,8 +4,8 @@
     const ORBIT_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
     const FBX_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js';
 
-    // Use the CORS proxy to load the .fbx file
-    const FBX_MODEL_URL = 'https://cors-anywhere.herokuapp.com/https://66e89f4410326b29f01a8ae1--timely-lebkuchen-1a0c24.netlify.app/countermain.fbx';
+    // Use the GitHub Pages-hosted URL for the .fbx file
+    const FBX_MODEL_URL = 'https://your-username.github.io/fbx-host/countermain.fbx'; // Replace with your actual URL
 
     /**
      * Dynamically loads a script.
@@ -14,6 +14,13 @@
      */
     function loadScript(url) {
         return new Promise((resolve, reject) => {
+            // Check if the script is already loaded
+            if (document.querySelector(`script[src="${url}"]`)) {
+                console.log(`Script already loaded: ${url}`);
+                resolve();
+                return;
+            }
+
             const script = document.createElement('script');
             script.src = url;
             script.async = false; // Ensure scripts are executed in order
@@ -70,7 +77,7 @@
         controls.minDistance = 2; // Minimum zoom distance
         controls.maxDistance = 10; // Maximum zoom distance
 
-        // Load the FBX model using CORS proxy
+        // Load the FBX model
         loadFBXModel(FBX_MODEL_URL)
             .then((loadedModel) => {
                 model = loadedModel;
