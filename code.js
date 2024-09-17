@@ -1258,7 +1258,7 @@ function promptFinishOptions(shape, type, container, shapeData) {
         finalizeBtn.addEventListener('click', () => {
             finalizeInvoice(container);
         });
-    }
+    
 
     // Update Item List UI
     function updateItemList(itemListDiv) {
