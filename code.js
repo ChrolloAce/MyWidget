@@ -1134,7 +1134,6 @@ function promptBaseAndAddonColors(container, shapeData) {
     return { selectedBaseColor, selectedAddonColors };
 }
 
-
 function promptBacksplashDimensions(container, shapeData, callback) {
     container.innerHTML = ''; // Clear the container
 
@@ -1170,13 +1169,14 @@ function promptBacksplashDimensions(container, shapeData, callback) {
         if (isNaN(width) || width <= 0 || isNaN(height) || height <= 0) {
             alert('Please enter valid width and height.');
         } else {
-            // Store the width and height in shapeData
+            // Store the width and height in shapeData correctly
             shapeData.backsplashWidth = width;
             shapeData.backsplashHeight = height;
             callback(); // Proceed to the next step
         }
     });
 }
+
 
 
 
