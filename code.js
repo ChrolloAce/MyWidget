@@ -854,17 +854,20 @@ function getTypeImageUrl(type) {
     function chooseShapeBathroom(container) {
         // Not needed as Bathroom doesn't have subcategories
     }
-// Define addToQuote before it's used anywhere
+// Helper function to add item to the quote and return to item list
 function addToQuote(container, shape) {
     // Add item to the quote and calculate cost
-     items.push({
+    items.push({
         shape: shape.name,
         measurements: shape.measurements,
         backsplash: shape.hasBacksplash ? { width: shape.backsplashWidth, height: shape.backsplashHeight } : null
     });
     calculateTotalCost();
-    createQuotePage(container);  // Directly go to the quote page instead of showing price.
+
+    // Now go back to the item list instead of the quote screen
+    createInvoicePage(container);  // Directly go to the item list
 }
+
 
 function askBacksplash(container, shape) {
     container.innerHTML = ''; // Clear the container
@@ -945,7 +948,6 @@ function createQuotePage(container) {
 }
 
 
-    
 function inputMeasurements(container, shape) {
     container.innerHTML = '';
 
@@ -965,11 +967,11 @@ function inputMeasurements(container, shape) {
     const form = createElement('div', 'form');
     container.appendChild(form);
 
-    // Measurement Inputs
+    // Measurement Inputs with dynamic labeling
     const measurementInputs = [];
     shape.measurements.forEach((label, index) => {
         const formGroup = createElement('div', 'form-group');
-        const inputLabel = createElement('label', null, `${label}:`);
+        const inputLabel = createElement('label', null, `Measurement ${index + 1}:`);
         const inputField = createElement('input');
         inputField.type = 'number';
         inputField.min = '0';
@@ -1212,7 +1214,7 @@ function updateItemList(itemListDiv) {
         if (itemListDiv) updateItemList(itemListDiv);
     }
 
-// Collect User Info and show final price only after this step
+// Collect user info for final invoice (This will only be done when the user finalizes the quote)
 function collectUserInfo(container) {
     container.innerHTML = '';
 
