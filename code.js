@@ -40,7 +40,7 @@
     // Inject CSS Styles Globally
     (function injectStyles() {
         const styles = `
-     /* General Reset */
+    /* General Reset */
 * {
     margin: 0;
     padding: 0;
@@ -53,17 +53,17 @@ body {
     align-items: center;
     min-height: 100vh;
     background-color: #ffffff;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Georgia', serif; /* Switched to serif font */
 }
 
 /* Main Container Styling */
 .container {
     width: 95%;
-    max-width: 800px;
+    max-width: 900px; /* Increased max width */
     background-color: #f9f9f9;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    padding: 60px; /* More padding for readability */
+    border-radius: 20px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2); /* Heavier shadow */
     text-align: center;
     margin: 60px auto;
     transition: all 0.3s ease;
@@ -73,24 +73,24 @@ body {
 .container h1,
 .container h2 {
     color: #333333;
-    margin-bottom: 20px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin-bottom: 40px; /* Increased margin for spacing */
+    font-family: 'Georgia', serif; /* Serif font */
 }
 
 .container h1 {
-    font-size: 32px;
+    font-size: 36px;
 }
 
 .container h2 {
-    font-size: 24px;
+    font-size: 28px;
 }
 
 /* Paragraphs */
 .container p {
     color: #555555;
-    font-size: 16px;
-    margin-bottom: 30px;
-    line-height: 1.5;
+    font-size: 18px;
+    margin-bottom: 40px; /* Increased margin for spacing */
+    line-height: 1.8; /* Improved readability */
 }
 
 /* Form Styles */
@@ -99,62 +99,60 @@ body {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 30px; /* More spacing between form elements */
 }
 
 .form-group label {
     color: #333333;
-    margin-bottom: 5px;
-    font-size: 16px;
+    margin-bottom: 10px;
+    font-size: 18px;
     font-weight: bold;
 }
 
 .form-group input {
     width: 100%;
-    padding: 10px;
+    padding: 15px;
     border: 1px solid #cccccc;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 10px;
+    font-size: 18px;
     transition: border-color 0.3s ease;
 }
 
 .form-group input:focus {
     border-color: #0264D9;
     outline: none;
-    box-shadow: 0 0 5px rgba(2, 100, 217, 0.5);
+    box-shadow: 0 0 8px rgba(2, 100, 217, 0.5);
 }
 
 /* Horizontal Button Group Styling */
 .button-group {
     display: flex;
     justify-content: center;
+    gap: 30px; /* Increased spacing between buttons */
     flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 20px;
-    width: 100%;
+    margin-bottom: 40px; /* Increased spacing between sections */
 }
 
 /* Button Styles */
 .button {
-    padding: 14px 20px;
+    padding: 18px 30px; /* More padding for larger buttons */
     background-color: #0264D9;
     color: #ffffff;
     border: none;
-    border-radius: 10px;
+    border-radius: 15px; /* Larger border radius */
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
-    margin: 10px;
     text-align: center;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    max-width: 150px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* More box shadow */
+    max-width: 200px; /* Limit button width */
 }
 
 /* Button Hover Effects */
 .button:hover {
     background-color: #004C99;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
 }
 
 /* Green Button (Alternative Styling) */
@@ -187,54 +185,41 @@ body {
     cursor: pointer;
     background-size: cover;
     background-position: center;
-    margin: 20px auto;
+    margin: 30px auto; /* More spacing */
     transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Larger shadow */
 }
 
 .image-button:hover {
     border: 4px solid #0264D9;
     transform: scale(1.05);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); /* Increased hover shadow */
 }
 
 .image-button .overlay {
     position: absolute;
     bottom: 0;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
     color: white;
-    padding: 10px;
-    font-size: 16px;
+    padding: 12px;
+    font-size: 18px;
     font-weight: bold;
     text-align: center;
 }
 
-/* Invoice / Quote Screen */
-h2 {
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 30px;
-}
-
-p {
-    font-size: 28px;
-    color: #333333;
-    margin-bottom: 20px;
-}
-
 /* Item List */
 .item-list {
-    margin-top: 30px;
+    margin-top: 40px;
     text-align: left;
 }
 
 .item-list h3 {
     color: #333333;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .item-list p {
@@ -245,16 +230,16 @@ p {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #dddddd;
+    padding: 15px;
+    border-bottom: 2px solid #dddddd;
 }
 
 .item img {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     object-fit: cover;
-    border-radius: 5px;
-    margin-right: 10px;
+    border-radius: 10px;
+    margin-right: 15px;
 }
 
 .item-description {
@@ -264,19 +249,19 @@ p {
 }
 
 .item-description span {
-    margin-left: 10px;
-    font-size: 16px;
+    margin-left: 15px;
+    font-size: 18px;
     color: #333333;
 }
 
 .item-remove {
     background-color: #dc3545;
-    padding: 5px 10px;
+    padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     color: #ffffff;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     transition: background-color 0.3s ease;
 }
 
@@ -288,17 +273,19 @@ p {
 .add-countertop-button {
     background-color: #28a745;
     color: white;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
-    padding: 14px 30px;
+    padding: 18px 40px;
     border-radius: 12px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 30px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 40px; /* Increased margin */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Added shadow */
 }
 
 .add-countertop-button:hover {
     background-color: #218838;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Shadow on hover */
 }
 
 /* Color Selection Styles */
@@ -306,14 +293,14 @@ p {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 20px; /* Increased gap */
+    margin-bottom: 30px; /* More margin between sections */
 }
 
 .color-square {
-    width: 80px;
-    height: 80px;
-    border: 2px solid #dddddd;
+    width: 100px; /* Larger squares */
+    height: 100px;
+    border: 3px solid #dddddd;
     border-radius: 10px;
     cursor: pointer;
     display: flex;
@@ -321,24 +308,24 @@ p {
     justify-content: center;
     position: relative;
     transition: border 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Heavier shadow */
 }
 
 .color-square.selected {
     border: 4px solid #0264D9;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Increased shadow when selected */
 }
 
 .color-square span {
     color: #333333;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: bold;
     text-align: center;
     background-color: rgba(255, 255, 255, 0.8);
-    padding: 3px;
+    padding: 5px;
     border-radius: 5px;
     position: absolute;
-    bottom: 5px;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -346,7 +333,7 @@ p {
 /* Responsive Styles */
 @media (max-width: 768px) {
     .container {
-        padding: 20px;
+        padding: 30px;
     }
 
     .image-button {
@@ -379,16 +366,16 @@ p {
     }
 
     .container h2 {
-        font-size: 20px;
+        font-size: 22px;
     }
 
     .container p, .form-group label, .form-group input, .item-description span {
-        font-size: 14px;
+        font-size: 16px;
     }
 
     .image-button .overlay {
-        font-size: 14px;
-        padding: 8px;
+        font-size: 16px;
+        padding: 10px;
     }
 }
 
@@ -397,15 +384,6 @@ p {
     font-size: 48px;
     font-weight: bold;
     color: #333333;
-}
-
-/* Form Button Container */
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
 }
 
 /* Back Button */
@@ -427,6 +405,7 @@ p {
     from { opacity: 0; }
     to { opacity: 1; }
 }
+
         `;
 
         const styleElement = document.createElement('style');
