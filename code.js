@@ -139,12 +139,13 @@ h3 {
 .button-wrapper {
     display: flex;
     justify-content: center;
-    align-items: center;  /* Ensure vertical centering */
     flex-wrap: wrap;
-    gap: 30px; /* Adjust spacing between buttons */
+    gap: 30px;
+    margin-top: 40px; /* Increased top margin */
     margin-bottom: 40px;
     width: 100%;
 }
+
 
 /* Button Styles */
 .button {
@@ -898,7 +899,7 @@ function addToQuote(container, shape) {
 
 
 function askBacksplash(container, shape) {
-    container.innerHTML = ''; // Clear the container
+       container.innerHTML = ''; // Clear the container
 
     const header = createElement('h2', null, 'Does this countertop have a backsplash?');
     container.appendChild(header);
@@ -913,14 +914,15 @@ function askBacksplash(container, shape) {
     imageDiv.appendChild(backsplashImage);
     container.appendChild(imageDiv);
 
-    const buttonGroup = createElement('div', 'button-group');
-    container.appendChild(buttonGroup);
+    // Create a button wrapper to center the buttons
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
 
     const yesBtn = createElement('button', 'button', 'Yes');
     const noBtn = createElement('button', 'button', 'No');
 
-    buttonGroup.appendChild(yesBtn);
-    buttonGroup.appendChild(noBtn);
+    buttonWrapper.appendChild(yesBtn);
+    buttonWrapper.appendChild(noBtn);
 
     yesBtn.addEventListener('click', () => {
         promptBacksplashDimensions(container, shape);
@@ -1167,6 +1169,7 @@ function calculateTotalCost() {
         ];
     }
 
+// Create Invoice Page (Only show price after the user enters their info)
 function createInvoicePage(container) {
     container.innerHTML = '';
 
@@ -1183,14 +1186,10 @@ function createInvoicePage(container) {
         container.appendChild(noItems);
     }
 
-    // Create a button wrapper for centering buttons
-    const buttonWrapper = createElement('div', 'button-wrapper');
-    container.appendChild(buttonWrapper);
-
     // Button to proceed to checkout (collect user info)
     if (items.length > 0) {
         const proceedBtn = createElement('button', 'button', 'Proceed to Checkout');
-        buttonWrapper.appendChild(proceedBtn);
+        container.appendChild(proceedBtn);
 
         proceedBtn.addEventListener('click', () => {
             previousPage = () => createInvoicePage(container);
@@ -1200,21 +1199,16 @@ function createInvoicePage(container) {
 
     // Button to add more items to the quote
     const addCountertopBtn = createElement('button', 'button green-button', 'Add More Items');
-    buttonWrapper.appendChild(addCountertopBtn);
+    container.appendChild(addCountertopBtn);
 
     addCountertopBtn.addEventListener('click', () => {
         previousPage = createInvoicePage;
         addItem(container);  // Go back to adding items
     });
 
-    // Back Button
-    const backButton = createElement('button', 'button back-button', 'Back');
-    buttonWrapper.appendChild(backButton);
-
-    backButton.addEventListener('click', () => {
-        if (previousPage) previousPage();
-    });
+    // Note: No back button here as per request
 }
+
 
 
 // Update Item List UI (This will show items without any price details)
