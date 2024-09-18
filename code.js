@@ -1177,7 +1177,6 @@ function calculateTotalCost() {
         ];
     }
 
-// Create Invoice Page (Only show price after the user enters their info)
 function createInvoicePage(container) {
     container.innerHTML = '';
 
@@ -1194,10 +1193,14 @@ function createInvoicePage(container) {
         container.appendChild(noItems);
     }
 
-    // Button to proceed to checkout (collect user info)
+    // Button wrapper for centering the buttons
+    const buttonWrapper = createElement('div', 'button-wrapper'); // Centering and spacing container
+    container.appendChild(buttonWrapper);
+
+    // Proceed to Checkout Button
     if (items.length > 0) {
         const proceedBtn = createElement('button', 'button', 'Proceed to Checkout');
-        container.appendChild(proceedBtn);
+        buttonWrapper.appendChild(proceedBtn);
 
         proceedBtn.addEventListener('click', () => {
             previousPage = () => createInvoicePage(container);
@@ -1205,16 +1208,14 @@ function createInvoicePage(container) {
         });
     }
 
-    // Button to add more items to the quote
+    // Add More Items Button
     const addCountertopBtn = createElement('button', 'button green-button', 'Add More Items');
-    container.appendChild(addCountertopBtn);
+    buttonWrapper.appendChild(addCountertopBtn);
 
     addCountertopBtn.addEventListener('click', () => {
         previousPage = createInvoicePage;
         addItem(container);  // Go back to adding items
     });
-
-    // Note: No back button here as per request
 }
 
 
