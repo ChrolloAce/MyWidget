@@ -923,7 +923,7 @@ function addToQuote(container, shape) {
 function askBacksplash(container, shape) {
        container.innerHTML = ''; // Clear the container
 
-    const header = createElement('h2', null, 'Does this countertop have a backsplash?');
+    const header = createElement('h2', null, 'Does your countertop have a backsplash?');
     container.appendChild(header);
 
     // Add the backsplash image
