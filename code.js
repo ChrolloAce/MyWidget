@@ -500,37 +500,54 @@ h3 {
         return images[type] || 'https://via.placeholder.com/250'; // Fallback image
     }
 
-    // Choose Finish Type
-    function chooseFinishType(container) {
-        container.innerHTML = '';
+   function chooseFinishType(container) {
+    container.innerHTML = '';
 
-        const header = createElement('h2', null, 'Choose Finish Type');
-        container.appendChild(header);
+    const header = createElement('h2', null, 'Choose Finish Type');
+    container.appendChild(header);
 
-        const finishContainer = createElement('div', 'button-group');
-        container.appendChild(finishContainer);
+    const finishContainer = createElement('div', 'button-wrapper'); // Using button-wrapper for centering
+    container.appendChild(finishContainer);
 
-        const finishes = ['Standard Finish', 'Crystal Top Finish'];
+    // Standard Finish Button
+    const standardFinishBtn = createImageButton('Standard Finish', getFinishImageUrl('Standard Finish'));
+    finishContainer.appendChild(standardFinishBtn);
 
-        finishes.forEach(finish => {
-            const finishBtn = createImageButton(finish, getFinishImageUrl(finish));
-            finishContainer.appendChild(finishBtn);
+    const standardDescription = createElement('p', null, 'With our standard process the customer can pick the colors and choose the pattern. Once all colors are complete, we go through with the customer and will “tweak” the pattern to their liking.');
+    standardDescription.style.marginTop = '10px'; // Adds some space above the description
+    standardDescription.style.textAlign = 'center';
+    container.appendChild(standardDescription);
 
-            finishBtn.addEventListener('click', () => {
-                designSelections.finishType = finish === 'Crystal Top Finish' ? 'crystal' : 'standard';
-                previousPage = () => chooseFinishType(container);
-                chooseMaterial(container);
-            });
-        });
+    standardFinishBtn.addEventListener('click', () => {
+        designSelections.finishType = 'standard';
+        previousPage = () => chooseFinishType(container);
+        chooseMaterial(container);
+    });
 
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
+    // Crystal Top Finish Button
+    const crystalFinishBtn = createImageButton('Crystal Top Finish', getFinishImageUrl('Crystal Top Finish'));
+    finishContainer.appendChild(crystalFinishBtn);
 
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
-        });
-    }
+    const crystalDescription = createElement('p', null, 'Our CrystalTop Pour gives a soft flowing Marble look. This process allows the colors to meld together giving nuances to the various colors chosen and very detailed subtleties. The customer can choose the general amount of the colors but cannot choose exactly how it flows out. This is always a two-day process due to the drying times and labor. On average this process is about one and a half times the amount of the Standard process.');
+    crystalDescription.style.marginTop = '10px'; // Adds some space above the description
+    crystalDescription.style.textAlign = 'center';
+    container.appendChild(crystalDescription);
+
+    crystalFinishBtn.addEventListener('click', () => {
+        designSelections.finishType = 'crystal';
+        previousPage = () => chooseFinishType(container);
+        chooseMaterial(container);
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        if (previousPage) previousPage();
+    });
+}
+
 
 
 function createColorSquare(colorName, hexCode) {
