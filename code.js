@@ -604,7 +604,7 @@ function createColorSquare(colorName, hexCode) {
         return images[material] || 'https://via.placeholder.com/250';
     }
 
- function chooseColors(container) {
+function chooseColors(container) {
     container.innerHTML = '';
 
     const header = createElement('h2', null, 'Choose Colors');
@@ -630,16 +630,18 @@ function createColorSquare(colorName, hexCode) {
         });
     });
 
-    // Mix-in Colors Selection
+    // Mix-in Colors Selection (Including base colors)
     const mixInLabel = createElement('h3', null, 'Choose up to 4 Mix-in Colors:');
     container.appendChild(mixInLabel);
 
     const mixInContainer = createElement('div', 'color-selection');
     container.appendChild(mixInContainer);
 
+    const allMixInColors = { ...mixInColors, ...baseColors }; // Restore base colors to mix-in options
+
     const selectedMixIns = [];
 
-    Object.entries(mixInColors).forEach(([colorName, hexCode]) => {
+    Object.entries(allMixInColors).forEach(([colorName, hexCode]) => {
         const colorSquare = createColorSquare(colorName, hexCode);
         mixInContainer.appendChild(colorSquare);
 
@@ -658,7 +660,7 @@ function createColorSquare(colorName, hexCode) {
         });
     });
 
-    // Create a button wrapper for centering buttons
+    // Button Wrapper for consistency
     const buttonWrapper = createElement('div', 'button-wrapper');
     container.appendChild(buttonWrapper);
 
@@ -684,7 +686,7 @@ function createColorSquare(colorName, hexCode) {
     buttonWrapper.appendChild(backButton);
 
     backButton.addEventListener('click', () => {
-        if (previousPage) previousPage();
+        previousPage && previousPage();
     });
 }
 
@@ -772,44 +774,47 @@ function addItem(container) {
     return images[subcategory] || 'https://via.placeholder.com/250';
 }
 
-    // Choose Shape
-    function chooseShape(container, subcategory) {
-        container.innerHTML = '';
+   function chooseShape(container, subcategory) {
+    container.innerHTML = '';
 
-        const header = createElement('h2', null, `Choose ${subcategory} Shape`);
-        container.appendChild(header);
+    const header = createElement('h2', null, `Choose ${subcategory} Shape`);
+    container.appendChild(header);
 
-        const shapeContainer = createElement('div', 'button-group');
-        container.appendChild(shapeContainer);
+    const shapeContainer = createElement('div', 'button-wrapper'); // Ensure button container is used for centering
+    container.appendChild(shapeContainer);
 
-        const shapes = getShapesForSubcategory(designSelections.type, subcategory);
-        shapes.forEach(shape => {
-            const shapeBtn = createImageButton(shape.name, shape.imageUrl);
-            shapeContainer.appendChild(shapeBtn);
+    const shapes = getShapesForSubcategory(designSelections.type, subcategory);
+    shapes.forEach(shape => {
+        const shapeBtn = createImageButton(shape.name, shape.imageUrl);
+        shapeContainer.appendChild(shapeBtn);
 
-            shapeBtn.addEventListener('click', () => {
-                previousPage = () => chooseShape(container, subcategory);
-                inputMeasurements(container, shape);
-            });
-        });
-
-        // View Invoice Button
-        const viewInvoiceBtn = createElement('button', 'button', 'View Invoice');
-        container.appendChild(viewInvoiceBtn);
-
-        viewInvoiceBtn.addEventListener('click', () => {
+        shapeBtn.addEventListener('click', () => {
             previousPage = () => chooseShape(container, subcategory);
-            createInvoicePage(container);
+            inputMeasurements(container, shape);
         });
+    });
 
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
+    // Button text changed from "View Quote" to "See Available Shapes"
+    const viewShapesBtn = createElement('button', 'button', 'See Available Shapes');
+    container.appendChild(viewShapesBtn);
 
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
-        });
-    }
+    viewShapesBtn.addEventListener('click', () => {
+        previousPage = () => chooseShape(container, subcategory);
+        createInvoicePage(container);
+    });
+
+    // Back Button
+    const buttonWrapper = createElement('div', 'button-wrapper'); // Ensure button wrapper for consistency
+    container.appendChild(buttonWrapper);
+
+    const backButton = createElement('button', 'button back-button', 'Back');
+    buttonWrapper.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        previousPage && previousPage();
+    });
+}
+
 
     // Get Shapes for Subcategory
     function getShapesForSubcategory(type, subcategory) {
@@ -989,7 +994,6 @@ function createQuotePage(container) {
 }
 
 
-
 function inputMeasurements(container, shape) {
     container.innerHTML = '';
 
@@ -1023,9 +1027,13 @@ function inputMeasurements(container, shape) {
         measurementInputs.push(inputField);
     });
 
-    // Next Button for measurements
+    // Button Wrapper for proper spacing and centering
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
+
+    // Next Button
     const nextBtn = createElement('button', 'button', 'Next');
-    form.appendChild(nextBtn);
+    buttonWrapper.appendChild(nextBtn);
 
     nextBtn.addEventListener('click', () => {
         const measurements = measurementInputs.map(input => parseFloat(input.value));
@@ -1034,19 +1042,16 @@ function inputMeasurements(container, shape) {
             return;
         }
 
-        // Store measurements
         shape.measurements = measurements;
-
-        // Proceed to ask about the backsplash
         askBacksplash(container, shape);
     });
 
     // Back Button
     const backButton = createElement('button', 'button back-button', 'Back');
-    form.appendChild(backButton);
+    buttonWrapper.appendChild(backButton);
 
     backButton.addEventListener('click', () => {
-        if (previousPage) previousPage();
+        previousPage && previousPage();
     });
 }
 
@@ -1080,9 +1085,12 @@ function inputMeasurements(container, shape) {
     heightInput.appendChild(heightField);
     form.appendChild(heightInput);
 
-    // Next Button
+    // Button Wrapper with spacing and centering
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
+
     const nextBtn = createElement('button', 'button', 'Next');
-    form.appendChild(nextBtn);
+    buttonWrapper.appendChild(nextBtn);
 
     nextBtn.addEventListener('click', () => {
         const width = parseFloat(widthField.value);
@@ -1102,10 +1110,10 @@ function inputMeasurements(container, shape) {
 
     // Back Button
     const backButton = createElement('button', 'button back-button', 'Back');
-    form.appendChild(backButton);
+    buttonWrapper.appendChild(backButton);
 
     backButton.addEventListener('click', () => {
-        askBacksplash(container, shape);
+        inputMeasurements(container, shape);
     });
 }
 
