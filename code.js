@@ -40,7 +40,7 @@
     // Inject CSS Styles Globally
     (function injectStyles() {
         const styles = `
-    /* General Reset */
+/* General Reset */
 * {
     margin: 0;
     padding: 0;
@@ -59,11 +59,11 @@ body {
 /* Main Container Styling */
 .container {
     width: 95%;
-    max-width: 900px; /* Increased max width */
+    max-width: 900px;
     background-color: #f9f9f9;
-    padding: 60px; /* More padding for readability */
+    padding: 60px;
     border-radius: 20px;
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2); /* Heavier shadow */
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
     text-align: center;
     margin: 60px auto;
     transition: all 0.3s ease;
@@ -73,8 +73,14 @@ body {
 .container h1,
 .container h2 {
     color: #333333;
-    margin-bottom: 40px; /* Increased margin for spacing */
-    font-family: 'Georgia', serif; /* Serif font */
+    margin-bottom: 40px; /* More spacing at the bottom */
+    font-family: 'Georgia', serif;
+}
+
+h2 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 30px;
 }
 
 .container h1 {
@@ -85,12 +91,17 @@ body {
     font-size: 28px;
 }
 
+/* Add more bottom margin to titles in the colors screen */
+h3 {
+    margin-bottom: 30px; /* Increase spacing between section titles */
+}
+
 /* Paragraphs */
 .container p {
     color: #555555;
     font-size: 18px;
-    margin-bottom: 40px; /* Increased margin for spacing */
-    line-height: 1.8; /* Improved readability */
+    margin-bottom: 40px;
+    line-height: 1.8;
 }
 
 /* Form Styles */
@@ -99,7 +110,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    margin-bottom: 30px; /* More spacing between form elements */
+    margin-bottom: 30px;
 }
 
 .form-group label {
@@ -124,35 +135,36 @@ body {
     box-shadow: 0 0 8px rgba(2, 100, 217, 0.5);
 }
 
-/* Horizontal Button Group Styling */
-.button-group {
+/* Button Wrapper */
+.button-wrapper {
     display: flex;
     justify-content: center;
-    gap: 30px; /* Increased spacing between buttons */
     flex-wrap: wrap;
-    margin-bottom: 40px; /* Increased spacing between sections */
+    gap: 30px; /* Increased spacing between buttons */
+    margin-bottom: 40px;
+    width: 100%; /* Make sure it stretches the full width */
 }
 
 /* Button Styles */
 .button {
-    padding: 18px 30px; /* More padding for larger buttons */
+    padding: 18px 30px;
     background-color: #0264D9;
     color: #ffffff;
     border: none;
-    border-radius: 15px; /* Larger border radius */
+    border-radius: 15px;
     cursor: pointer;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* More box shadow */
-    max-width: 200px; /* Limit button width */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    max-width: 200px;
 }
 
 /* Button Hover Effects */
 .button:hover {
     background-color: #004C99;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* Green Button (Alternative Styling) */
@@ -185,18 +197,18 @@ body {
     cursor: pointer;
     background-size: cover;
     background-position: center;
-    margin: 30px auto; /* More spacing */
+    margin: 30px auto;
     transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Larger shadow */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .image-button:hover {
     border: 4px solid #0264D9;
     transform: scale(1.05);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); /* Increased hover shadow */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .image-button .overlay {
@@ -209,6 +221,12 @@ body {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
+}
+
+/* Rounded corners for the backsplash image */
+.image-container img {
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Adding shadow for the backsplash image */
 }
 
 /* Item List */
@@ -263,6 +281,7 @@ body {
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s ease;
+    margin-left: 15px;
 }
 
 .item-remove:hover {
@@ -279,13 +298,13 @@ body {
     border-radius: 12px;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    margin-top: 40px; /* Increased margin */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Added shadow */
+    margin-top: 40px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .add-countertop-button:hover {
     background-color: #218838;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Shadow on hover */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* Color Selection Styles */
@@ -293,12 +312,12 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px; /* Increased gap */
-    margin-bottom: 30px; /* More margin between sections */
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
 .color-square {
-    width: 100px; /* Larger squares */
+    width: 100px;
     height: 100px;
     border: 3px solid #dddddd;
     border-radius: 10px;
@@ -308,12 +327,12 @@ body {
     justify-content: center;
     position: relative;
     transition: border 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Heavier shadow */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .color-square.selected {
     border: 4px solid #0264D9;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Increased shadow when selected */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .color-square span {
@@ -339,7 +358,13 @@ body {
     .image-button {
         width: 100%;
         max-width: 250px;
-        margin: 10px auto;
+        margin: 20px auto;
+    }
+
+    .item {
+        flex-direction: row; /* Ensure the item-remove button stays next to the item */
+        justify-content: space-between;
+        align-items: center;
     }
 
     .button-group {
@@ -352,13 +377,8 @@ body {
         width: 100%;
     }
 
-    .item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
     .item-remove {
-        margin-top: 10px;
+        margin-left: 10px;
     }
 
     .container h1 {
@@ -405,6 +425,7 @@ body {
     from { opacity: 0; }
     to { opacity: 1; }
 }
+
 
         `;
 
