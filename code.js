@@ -139,10 +139,11 @@ h3 {
 .button-wrapper {
     display: flex;
     justify-content: center;
+    align-items: center;  /* Ensure vertical centering */
     flex-wrap: wrap;
-    gap: 30px; /* Increased spacing between buttons */
+    gap: 30px; /* Adjust spacing between buttons */
     margin-bottom: 40px;
-    width: 100%; /* Make sure it stretches the full width */
+    width: 100%;
 }
 
 /* Button Styles */
@@ -593,99 +594,91 @@ h3 {
         return images[material] || 'https://via.placeholder.com/250';
     }
 
-    // Choose Colors
-    function chooseColors(container) {
-        container.innerHTML = '';
+  function chooseColors(container) {
+    container.innerHTML = '';
 
-        const header = createElement('h2', null, 'Choose Colors');
-        container.appendChild(header);
+    const header = createElement('h2', null, 'Choose Colors');
+    container.appendChild(header);
 
-        // Base Color Selection
-        const baseColorLabel = createElement('h3', null, 'Choose a Base Color:');
-        container.appendChild(baseColorLabel);
+    // Base Color Selection
+    const baseColorLabel = createElement('h3', null, 'Choose a Base Color:');
+    container.appendChild(baseColorLabel);
 
-        const baseColorContainer = createElement('div', 'color-selection');
-        container.appendChild(baseColorContainer);
+    const baseColorContainer = createElement('div', 'color-selection');
+    container.appendChild(baseColorContainer);
 
-        Object.entries(baseColors).forEach(([colorName, hexCode]) => {
-            const colorSquare = createColorSquare(colorName, hexCode);
-            baseColorContainer.appendChild(colorSquare);
+    Object.entries(baseColors).forEach(([colorName, hexCode]) => {
+        const colorSquare = createColorSquare(colorName, hexCode);
+        baseColorContainer.appendChild(colorSquare);
 
-            colorSquare.addEventListener('click', () => {
-                Array.from(baseColorContainer.children).forEach(child => {
-                    child.classList.remove('selected');
-                });
+        colorSquare.addEventListener('click', () => {
+            Array.from(baseColorContainer.children).forEach(child => {
+                child.classList.remove('selected');
+            });
+            colorSquare.classList.add('selected');
+            designSelections.baseColor = colorName;
+        });
+    });
+
+    // Mix-in Colors Selection
+    const mixInLabel = createElement('h3', null, 'Choose up to 4 Mix-in Colors:');
+    container.appendChild(mixInLabel);
+
+    const mixInContainer = createElement('div', 'color-selection');
+    container.appendChild(mixInContainer);
+
+    const selectedMixIns = [];
+
+    Object.entries(mixInColors).forEach(([colorName, hexCode]) => {
+        const colorSquare = createColorSquare(colorName, hexCode);
+        mixInContainer.appendChild(colorSquare);
+
+        colorSquare.addEventListener('click', () => {
+            if (colorSquare.classList.contains('selected')) {
+                colorSquare.classList.remove('selected');
+                const index = selectedMixIns.indexOf(colorName);
+                if (index > -1) selectedMixIns.splice(index, 1);
+            } else if (selectedMixIns.length < 4) {
                 colorSquare.classList.add('selected');
-                designSelections.baseColor = colorName;
-            });
-        });
-
-        // Mix-in Colors Selection
-        const mixInLabel = createElement('h3', null, 'Choose up to 4 Mix-in Colors:');
-        container.appendChild(mixInLabel);
-
-        const mixInContainer = createElement('div', 'color-selection');
-        container.appendChild(mixInContainer);
-
-        const allMixInColors = Object.assign({}, mixInColors, baseColors); // Including base colors if needed
-
-        const selectedMixIns = [];
-
-        Object.entries(allMixInColors).forEach(([colorName, hexCode]) => {
-            const colorSquare = createColorSquare(colorName, hexCode);
-            mixInContainer.appendChild(colorSquare);
-
-            colorSquare.addEventListener('click', () => {
-                if (colorSquare.classList.contains('selected')) {
-                    colorSquare.classList.remove('selected');
-                    const index = selectedMixIns.indexOf(colorName);
-                    if (index > -1) selectedMixIns.splice(index, 1);
-                } else if (selectedMixIns.length < 4) {
-                    colorSquare.classList.add('selected');
-                    selectedMixIns.push(colorName);
-                } else {
-                    alert('You can select up to 4 mix-in colors.');
-                }
-                designSelections.mixInColors = selectedMixIns;
-            });
-        });
-
-        // Next Button
-        const nextBtn = createElement('button', 'button', 'Next');
-        container.appendChild(nextBtn);
-
-        nextBtn.addEventListener('click', () => {
-            if (!designSelections.baseColor) {
-                alert('Please select a base color.');
-                return;
+                selectedMixIns.push(colorName);
+            } else {
+                alert('You can select up to 4 mix-in colors.');
             }
-            if (designSelections.mixInColors.length === 0) {
-                alert('Please select at least one mix-in color.');
-                return;
-            }
-            previousPage = () => chooseColors(container);
-            addItem(container);
+            designSelections.mixInColors = selectedMixIns;
         });
+    });
 
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
+    // Create a button wrapper for centering buttons
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
 
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
-        });
-    }
+    // Next Button
+    const nextBtn = createElement('button', 'button', 'Next');
+    buttonWrapper.appendChild(nextBtn);
 
-    // Create Color Square
-    function createColorSquare(colorName, hexCode) {
-        const colorDiv = createElement('div', 'color-square');
-        colorDiv.style.backgroundColor = hexCode;
+    nextBtn.addEventListener('click', () => {
+        if (!designSelections.baseColor) {
+            alert('Please select a base color.');
+            return;
+        }
+        if (designSelections.mixInColors.length === 0) {
+            alert('Please select at least one mix-in color.');
+            return;
+        }
+        previousPage = () => chooseColors(container);
+        addItem(container);
+    });
 
-        const label = createElement('span', null, colorName);
-        colorDiv.appendChild(label);
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    buttonWrapper.appendChild(backButton);
 
-        return colorDiv;
-    }
+    backButton.addEventListener('click', () => {
+        if (previousPage) previousPage();
+    });
+}
+
+
 
 function addItem(container) {
     container.innerHTML = '';  // Clear the container
@@ -733,8 +726,11 @@ function addItem(container) {
         updateItemList(itemListDiv);  // Update item list
 
         // Add "View Price Estimate for Free" button
+        const buttonWrapper = createElement('div', 'button-wrapper');
+        container.appendChild(buttonWrapper);
+
         const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
-        container.appendChild(viewInvoiceBtn);
+        buttonWrapper.appendChild(viewInvoiceBtn);
 
         viewInvoiceBtn.addEventListener('click', () => {
             previousPage = () => addItem(container);
@@ -742,9 +738,13 @@ function addItem(container) {
         });
     }
 
+    // Create a button wrapper for centering buttons
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
+
     // Back Button
     const backButton = createElement('button', 'button back-button', 'Back');
-    container.appendChild(backButton);
+    buttonWrapper.appendChild(backButton);
 
     backButton.addEventListener('click', () => {
         if (previousPage) previousPage();
@@ -934,7 +934,6 @@ function askBacksplash(container, shape) {
 
 
 
-// Create Quote Page (Total Price is rounded and shown here)
 function createQuotePage(container) {
     container.innerHTML = '';
 
@@ -947,9 +946,13 @@ function createQuotePage(container) {
     totalText.style.fontWeight = 'bold';
     container.appendChild(totalText);
 
+    // Create a button wrapper for centering buttons
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
+
     // View Price Estimate Button
     const viewEstimateBtn = createElement('button', 'button', 'View Price Estimate for Free →');
-    container.appendChild(viewEstimateBtn);
+    buttonWrapper.appendChild(viewEstimateBtn);
 
     viewEstimateBtn.addEventListener('click', () => {
         // Collect user info or proceed to finalize quote
@@ -958,13 +961,22 @@ function createQuotePage(container) {
 
     // Add New Countertop Button
     const addCountertopBtn = createElement('button', 'button green-button', 'Add New Countertop to Your Quote');
-    container.appendChild(addCountertopBtn);
+    buttonWrapper.appendChild(addCountertopBtn);
 
     addCountertopBtn.addEventListener('click', () => {
         previousPage = createQuotePage;
         addItem(container);
     });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    buttonWrapper.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        if (previousPage) previousPage();
+    });
 }
+
 
 
 function inputMeasurements(container, shape) {
@@ -1146,8 +1158,6 @@ function calculateTotalCost() {
         ];
     }
 
-  // Create Invoice Page (Only show price after the user enters their info)
-// Create Invoice Page (Only the item list is shown, no price at this point)
 function createInvoicePage(container) {
     container.innerHTML = '';
 
@@ -1164,10 +1174,14 @@ function createInvoicePage(container) {
         container.appendChild(noItems);
     }
 
+    // Create a button wrapper for centering buttons
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
+
     // Button to proceed to checkout (collect user info)
     if (items.length > 0) {
         const proceedBtn = createElement('button', 'button', 'Proceed to Checkout');
-        container.appendChild(proceedBtn);
+        buttonWrapper.appendChild(proceedBtn);
 
         proceedBtn.addEventListener('click', () => {
             previousPage = () => createInvoicePage(container);
@@ -1177,7 +1191,7 @@ function createInvoicePage(container) {
 
     // Button to add more items to the quote
     const addCountertopBtn = createElement('button', 'button green-button', 'Add More Items');
-    container.appendChild(addCountertopBtn);
+    buttonWrapper.appendChild(addCountertopBtn);
 
     addCountertopBtn.addEventListener('click', () => {
         previousPage = createInvoicePage;
@@ -1186,12 +1200,13 @@ function createInvoicePage(container) {
 
     // Back Button
     const backButton = createElement('button', 'button back-button', 'Back');
-    container.appendChild(backButton);
+    buttonWrapper.appendChild(backButton);
 
     backButton.addEventListener('click', () => {
         if (previousPage) previousPage();
     });
 }
+
 
 // Update Item List UI (This will show items without any price details)
 function updateItemList(itemListDiv) {
@@ -1298,7 +1313,6 @@ function collectUserInfo(container) {
     });
 }
 
-// Finalize Invoice Page (Show price only after collecting user info)
 function finalizeInvoice(container) {
     container.innerHTML = '';
 
@@ -1311,10 +1325,13 @@ function finalizeInvoice(container) {
     totalText.style.fontWeight = 'bold';
     container.appendChild(totalText);
 
+    // Create a button wrapper for centering buttons
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
+
     // Call Now Button
     const callBtn = createElement('button', 'button', 'Call Now');
-    callBtn.style.marginTop = '20px';
-    container.appendChild(callBtn);
+    buttonWrapper.appendChild(callBtn);
 
     callBtn.addEventListener('click', () => {
         alert('Calling...');
@@ -1322,13 +1339,13 @@ function finalizeInvoice(container) {
 
     // Visualize Quote Button
     const visualizeBtn = createElement('button', 'button', 'Visualize Your Quote');
-    visualizeBtn.style.marginTop = '20px';
-    container.appendChild(visualizeBtn);
+    buttonWrapper.appendChild(visualizeBtn);
 
     visualizeBtn.addEventListener('click', () => {
         alert('Visualizing...');
     });
 }
+
 
 
     // Create Input Field
