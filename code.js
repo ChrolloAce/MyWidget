@@ -532,6 +532,15 @@ h3 {
     }
 
 
+function createColorSquare(colorName, hexCode) {
+    const colorDiv = createElement('div', 'color-square');
+    colorDiv.style.backgroundColor = hexCode;
+
+    const label = createElement('span', null, colorName);
+    colorDiv.appendChild(label);
+
+    return colorDiv;
+}
 
 
     
@@ -594,7 +603,7 @@ h3 {
         return images[material] || 'https://via.placeholder.com/250';
     }
 
-  function chooseColors(container) {
+ function chooseColors(container) {
     container.innerHTML = '';
 
     const header = createElement('h2', null, 'Choose Colors');
