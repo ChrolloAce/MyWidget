@@ -1237,7 +1237,7 @@ function createInvoicePage(container) {
 
 
 
-// Update Item List UI (This will show items without any price details)
+// Update Item List UI (This will show items with a simplified description)
 function updateItemList(itemListDiv) {
     itemListDiv.innerHTML = '<h3>Items in Your Quote:</h3>';
 
@@ -1251,8 +1251,9 @@ function updateItemList(itemListDiv) {
         img.alt = item.shape;
         descDiv.appendChild(img);
 
-        // Description of the selected item
-        const descText = createElement('span', null, `${item.shape}`);
+        // Generate a more generic description (removing the mention of sides)
+        const description = generateItemDescription(item);
+        const descText = createElement('span', null, description);
         descDiv.appendChild(descText);
 
         // Remove button for each item
@@ -1267,6 +1268,27 @@ function updateItemList(itemListDiv) {
         itemListDiv.appendChild(itemDiv);  // Append each item to the list
     });
 }
+
+// Function to generate a more simplified description for the item
+function generateItemDescription(item) {
+    let typeDescription = '';
+
+    // Determine if it's Kitchen or Bathroom
+    if (designSelections.type === 'Kitchen') {
+        if (item.shape.includes('Bartop')) {
+            typeDescription = 'Kitchen Bartop';
+        } else if (item.shape.includes('Island')) {
+            typeDescription = 'Kitchen Island Countertop';
+        } else {
+            typeDescription = 'Kitchen Regular Countertop';
+        }
+    } else if (designSelections.type === 'Bathroom') {
+        typeDescription = 'Bathroom Countertop';
+    }
+
+    return typeDescription; // Return the simplified description
+}
+
 
 
     // Remove Item from Invoice
