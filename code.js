@@ -1199,7 +1199,7 @@ function createInvoicePage(container) {
 
     // Proceed to Checkout Button
     if (items.length > 0) {
-        const proceedBtn = createElement('button', 'button', 'Proceed to Checkout');
+        const proceedBtn = createElement('button', 'button', 'View Pricing');
         buttonWrapper.appendChild(proceedBtn);
 
         proceedBtn.addEventListener('click', () => {
@@ -1209,7 +1209,7 @@ function createInvoicePage(container) {
     }
 
     // Add More Items Button
-    const addCountertopBtn = createElement('button', 'button green-button', 'Add More Items');
+    const addCountertopBtn = createElement('button', 'button green-button', 'Add More Countertops');
     buttonWrapper.appendChild(addCountertopBtn);
 
     addCountertopBtn.addEventListener('click', () => {
