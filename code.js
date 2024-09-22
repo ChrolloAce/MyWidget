@@ -53,7 +53,7 @@ body {
     align-items: center;
     min-height: 100vh;
     background-color: #ffffff;
-    font-family: 'Georgia', serif; /* Switched to serif font */
+    font-family: 'Georgia', serif;
 }
 
 /* Main Container Styling */
@@ -73,7 +73,7 @@ body {
 .container h1,
 .container h2 {
     color: #333333;
-    margin-bottom: 40px; /* More spacing at the bottom */
+    margin-bottom: 40px;
     font-family: 'Georgia', serif;
 }
 
@@ -93,7 +93,7 @@ h2 {
 
 /* Add more bottom margin to titles in the colors screen */
 h3 {
-    margin-bottom: 30px; /* Increase spacing between section titles */
+    margin-bottom: 30px;
 }
 
 /* Paragraphs */
@@ -141,11 +141,10 @@ h3 {
     justify-content: center;
     flex-wrap: wrap;
     gap: 30px;
-    margin-top: 40px; /* Increased top margin */
+    margin-top: 40px;
     margin-bottom: 40px;
     width: 100%;
 }
-
 
 /* Button Styles */
 .button {
@@ -225,10 +224,10 @@ h3 {
     text-align: center;
 }
 
-/* Rounded corners for the backsplash image */
+/* Rounded corners for images */
 .image-container img {
     border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Adding shadow for the backsplash image */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Item List */
@@ -364,7 +363,7 @@ h3 {
     }
 
     .item {
-        flex-direction: row; /* Ensure the item-remove button stays next to the item */
+        flex-direction: row;
         justify-content: space-between;
         align-items: center;
     }
@@ -391,7 +390,10 @@ h3 {
         font-size: 22px;
     }
 
-    .container p, .form-group label, .form-group input, .item-description span {
+    .container p,
+    .form-group label,
+    .form-group input,
+    .item-description span {
         font-size: 16px;
     }
 
@@ -424,12 +426,43 @@ h3 {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
+/* Finish Options Container */
+.finish-options-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
 
-        `;
+/* Finish Option Styling */
+.finish-option {
+    width: 48%;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Adjust image-button inside finish-option */
+.finish-option .image-button {
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto 15px auto;
+}
+
+/* Responsive Styling for Finish Options */
+@media (max-width: 768px) {
+    .finish-option {
+        width: 100%;
+    }
+}
+    `;
 
         const styleElement = document.createElement('style');
         styleElement.type = 'text/css';
@@ -500,23 +533,29 @@ h3 {
         return images[type] || 'https://via.placeholder.com/250'; // Fallback image
     }
 
-   function chooseFinishType(container) {
+    
+
+  function chooseFinishType(container) {
     container.innerHTML = '';
 
     const header = createElement('h2', null, 'Choose Finish Type');
     container.appendChild(header);
 
-    const finishContainer = createElement('div', 'button-wrapper'); // Using button-wrapper for centering
-    container.appendChild(finishContainer);
+    // Create a container for the finish options
+    const finishOptionsContainer = createElement('div', 'finish-options-container');
+    container.appendChild(finishOptionsContainer);
 
-    // Standard Finish Button
+    // Standard Finish Option
+    const standardOptionDiv = createElement('div', 'finish-option');
+    finishOptionsContainer.appendChild(standardOptionDiv);
+
     const standardFinishBtn = createImageButton('Standard Finish', getFinishImageUrl('Standard Finish'));
-    finishContainer.appendChild(standardFinishBtn);
+    standardOptionDiv.appendChild(standardFinishBtn);
 
-    const standardDescription = createElement('p', null, 'With our standard process the customer can pick the colors and choose the pattern. Once all colors are complete, we go through with the customer and will “tweak” the pattern to their liking.');
-    standardDescription.style.marginTop = '10px'; // Adds some space above the description
+    const standardDescription = createElement('p', null, 'With our standard process, the customer can pick the colors and choose the pattern. Once all colors are complete, we go through with the customer and will “tweak” the pattern to their liking.');
+    standardDescription.style.marginTop = '10px';
     standardDescription.style.textAlign = 'center';
-    container.appendChild(standardDescription);
+    standardOptionDiv.appendChild(standardDescription);
 
     standardFinishBtn.addEventListener('click', () => {
         designSelections.finishType = 'standard';
@@ -524,14 +563,17 @@ h3 {
         chooseMaterial(container);
     });
 
-    // Crystal Top Finish Button
-    const crystalFinishBtn = createImageButton('Crystal Top Finish', getFinishImageUrl('Crystal Top Finish'));
-    finishContainer.appendChild(crystalFinishBtn);
+    // Crystal Top Finish Option
+    const crystalOptionDiv = createElement('div', 'finish-option');
+    finishOptionsContainer.appendChild(crystalOptionDiv);
 
-    const crystalDescription = createElement('p', null, 'Our CrystalTop Pour gives a soft flowing Marble look. This process allows the colors to meld together giving nuances to the various colors chosen and very detailed subtleties. The customer can choose the general amount of the colors but cannot choose exactly how it flows out. This is always a two-day process due to the drying times and labor. On average this process is about one and a half times the amount of the Standard process.');
-    crystalDescription.style.marginTop = '10px'; // Adds some space above the description
+    const crystalFinishBtn = createImageButton('Crystal Top Finish', getFinishImageUrl('Crystal Top Finish'));
+    crystalOptionDiv.appendChild(crystalFinishBtn);
+
+    const crystalDescription = createElement('p', null, 'Our CrystalTop Pour gives a soft flowing Marble look. This process allows the colors to meld together, giving nuances to the various colors chosen and very detailed subtleties. The customer can choose the general amount of the colors but cannot choose exactly how it flows out. This is always a two-day process due to the drying times and labor. On average, this process is about one and a half times the amount of the Standard process.');
+    crystalDescription.style.marginTop = '10px';
     crystalDescription.style.textAlign = 'center';
-    container.appendChild(crystalDescription);
+    crystalOptionDiv.appendChild(crystalDescription);
 
     crystalFinishBtn.addEventListener('click', () => {
         designSelections.finishType = 'crystal';
@@ -547,7 +589,6 @@ h3 {
         if (previousPage) previousPage();
     });
 }
-
 
 
 function createColorSquare(colorName, hexCode) {
