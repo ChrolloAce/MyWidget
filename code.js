@@ -653,7 +653,7 @@ function createColorSquare(colorName, hexCode) {
     // Helper function to get material image URLs
     function getMaterialImageUrl(material) {
         const images = {
-            'Quartz': 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg', // Original Quartz image URL
+            'Quartz': 'https://i.ibb.co/P4wKTkd/Quartz-Tornad-with-Icy-White.jpg', // Original Quartz image URL
             'Granite': 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg', // Original Granite image URL
             'Marble': 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg', // Original Marble image URL
             'Pour Swirl': 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg', // Original Pour Swirl image URL
