@@ -608,7 +608,7 @@ function createColorSquare(colorName, hexCode) {
     function getFinishImageUrl(finish) {
         const images = {
             'Standard Finish': 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg', // Original Standard Finish image URL
-            'Crystal Top Finish': 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg' // Original Crystal Top Finish image URL
+            'Crystal Top Pour': 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg' // Original Crystal Top Finish image URL
         };
         return images[finish] || 'https://via.placeholder.com/250';
     }
