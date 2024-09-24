@@ -1709,10 +1709,3 @@ function getShapesForType(type) {
     return shapes;
 }
 
-
-    // Calculate and Add Item to Invoice (Unused in streamlined flow)
-    // Removed individual item addition steps as per user request
-
-    // Finalize the Interface
-    initInterface();
-})(); 
