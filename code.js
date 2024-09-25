@@ -1201,6 +1201,7 @@ function calculateTotalCost() {
             }
             
             // Add the item's cost to the total cost
+            itemCost += 50; // Add $50 to the item cost
             totalCost += itemCost;
         }
     });
