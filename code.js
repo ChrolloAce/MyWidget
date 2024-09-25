@@ -39,7 +39,7 @@
 
     // Inject CSS Styles Globally
     (function injectStyles() {
-        const styles = 
+        const styles = `
 /* General Reset */
 * {
     margin: 0;
@@ -462,7 +462,7 @@ h3 {
         width: 100%;
     }
 }
-    ;
+    `;
 
         const styleElement = document.createElement('style');
         styleElement.type = 'text/css';
@@ -480,7 +480,7 @@ h3 {
 
     function createImageButton(text, imageUrl) {
         const button = createElement('div', 'image-button');
-        button.style.backgroundImage = url(${imageUrl});
+        button.style.backgroundImage = `url(${imageUrl})`;
 
         const overlay = createElement('div', 'overlay', text);
         button.appendChild(overlay);
@@ -653,7 +653,7 @@ function createColorSquare(colorName, hexCode) {
     // Helper function to get material image URLs
     function getMaterialImageUrl(material) {
         const images = {
-            'Quartz': 'https://i.ibb.co/P4wKTkd/Quartz-Tornad-with-Icy-White.jpg', // Original Quartz image URL
+            'Quartz': 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg', // Original Quartz image URL
             'Granite': 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg', // Original Granite image URL
             'Marble': 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg', // Original Marble image URL
             'Pour Swirl': 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg', // Original Pour Swirl image URL
@@ -835,7 +835,7 @@ function addItem(container) {
    function chooseShape(container, subcategory) {
     container.innerHTML = '';
 
-    const header = createElement('h2', null, Choose ${subcategory} Shape);
+    const header = createElement('h2', null, `Choose ${subcategory} Shape`);
     container.appendChild(header);
 
     const shapeContainer = createElement('div', 'button-wrapper'); // Ensure button container is used for centering
@@ -1015,7 +1015,7 @@ function createQuotePage(container) {
     container.appendChild(header);
 
     // Only display the total price here
-    const totalText = createElement('p', null, Total Price: $${Math.ceil(totalCost)}); // Rounded up total price
+    const totalText = createElement('p', null, `Total Price: $${Math.ceil(totalCost)}`); // Rounded up total price
     totalText.style.fontSize = '36px';  // Make price bigger
     totalText.style.fontWeight = 'bold';
     container.appendChild(totalText);
@@ -1055,7 +1055,7 @@ function createQuotePage(container) {
 function inputMeasurements(container, shape) {
     container.innerHTML = '';
 
-    const header = createElement('h2', null, Configure ${shape.name});
+    const header = createElement('h2', null, `Configure ${shape.name}`);
     container.appendChild(header);
 
     // Display the shape image
@@ -1075,7 +1075,7 @@ function inputMeasurements(container, shape) {
     const measurementInputs = [];
     shape.measurements.forEach((label, index) => {
         const formGroup = createElement('div', 'form-group');
-        const inputLabel = createElement('label', null, Measurement ${index + 1}:);
+        const inputLabel = createElement('label', null, `Measurement ${index + 1}:`);
         const inputField = createElement('input');
         inputField.type = 'number';
         inputField.min = '0';
@@ -1415,7 +1415,7 @@ function finalizeInvoice(container) {
     container.appendChild(header);
 
     // Display the total cost (rounded up) after collecting user info
-    const totalText = createElement('p', null, Total Price: $${totalCost});
+    const totalText = createElement('p', null, `Total Price: $${totalCost}`);
     totalText.style.fontSize = '36px';  // Larger font for visibility
     totalText.style.fontWeight = 'bold';
     container.appendChild(totalText);
@@ -1459,62 +1459,73 @@ function finalizeInvoice(container) {
 
   
    // Function to get shapes for subcategories
-// Function to get shapes for subcategories
 function getShapesForSubcategory(type, subcategory) {
     const shapes = {
         'Kitchen': {
             'Bartops': [
+                // Shape 1
                 {
                     name: 'Bar Top - Rectangle',
-                    measurements: ['Length (Measurement 1)', 'Width (Measurement 2)'],
+                    measurements: ['Length (Measurement 1)', 'Width (Measurement 2)'], // 1, 2
                     formula: (measurements) => {
+                        // Formula: (1 x 2) / 144
                         const area = (measurements[0] * measurements[1]);
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/4PNXrnc/1.png'
                 },
+                // Shape 2
                 {
                     name: 'Bar Top - Custom Shape 1',
-                    measurements: ['Length 1 (Measurement 1)', 'Length 2 (Measurement 2)', 'Width (Measurement 3)'],
+                    measurements: ['Length 1 (Measurement 1)', 'Length 2 (Measurement 2)', 'Width (Measurement 3)'], // 1, 2, 3
                     formula: (measurements) => {
+                        // Formula: ((1 + 2) x 3) / 144
                         const area = (measurements[0] + measurements[1]) * measurements[2];
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/bmV9twv/2.png'
                 },
+                // Shape 3
                 {
                     name: 'Bar Top - Custom Shape 2',
-                    measurements: ['Length 1 (Measurement 1)', 'Width 1 (Measurement 2)', 'Length 2 (Measurement 3)', 'Width 2 (Measurement 4)'],
+                    measurements: ['Length 1 (Measurement 1)', 'Width 1 (Measurement 2)', 'Length 2 (Measurement 3)', 'Width 2 (Measurement 4)'], // 1, 2, 3, 4
                     formula: (measurements) => {
+                        // Formula: ((1 x 2) + (3 x 4)) / 144
                         const area = (measurements[0] * measurements[1]) + (measurements[2] * measurements[3]);
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/MD63PFz/3.png'
                 },
+                // Shape 4
                 {
                     name: 'Bar Top - Custom Shape 3',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Height (Measurement 5)'],
+                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Height (Measurement 5)'], // 1, 2, 3, 4, 5
                     formula: (measurements) => {
+                        // Formula: ((1 + 2 + 3 + 4) / 2 x 5) / 144
                         const perimeter = measurements[0] + measurements[1] + measurements[2] + measurements[3];
                         const area = (perimeter / 2) * measurements[4];
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/j4TL0VK/4.png'
                 },
+                // Shape 5
                 {
                     name: 'Bar Top - Custom Shape 4',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Height (Measurement 7)'],
+                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Height (Measurement 7)'], // 1-7
                     formula: (measurements) => {
+                        // Formula: ((1 + 2 + 3 + 4 + 5 + 6) x 7) / 144
                         const perimeter = measurements.slice(0, 6).reduce((acc, cur) => acc + cur, 0);
                         const area = perimeter * measurements[6];
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/YcXnY2y/5.png'
                 },
+                // Shape 6
                 {
                     name: 'Bar Top - Custom Shape 5',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7', 'Measurement 8', 'Height (Measurement 9)'],
+                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7', 'Measurement 8', 'Height (Measurement 9)'], // 1-9
                     formula: (measurements) => {
+                        // Formula: ((1 + 2 + 3 + 4 + 5 + 6 + 7 + 8) x 9) / 144
                         const perimeter = measurements.slice(0, 8).reduce((acc, cur) => acc + cur, 0);
                         const area = perimeter * measurements[8];
                         return area / 144;
@@ -1523,28 +1534,34 @@ function getShapesForSubcategory(type, subcategory) {
                 }
             ],
             'Countertops': [
+                // Shape 1
                 {
                     name: 'Regular Counter - 1 Side',
                     measurements: ['Length (Measurement 1)'],
                     formula: (measurements) => {
+                        // Formula: (1 x 25) / 144
                         const area = measurements[0] * 25;
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/tPH5VT2/10.png'
                 },
+                // Shape 2
                 {
                     name: 'Regular Counter - 2 Sides',
                     measurements: ['Length 1 (Measurement 1)', 'Length 2 (Measurement 2)'],
                     formula: (measurements) => {
+                        // Formula: ((1 + 2) x 25) / 144
                         const area = (measurements[0] + measurements[1]) * 25;
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/Zf3JzCz/16.png'
                 },
+                // Shape 3
                 {
                     name: 'Regular Counter - 3 Sides',
                     measurements: ['Length 1 (Measurement 1)', 'Length 2 (Measurement 2)', 'Offset (Measurement 3)'],
                     formula: (measurements) => {
+                        // Formula: ((1 + 2 + (3 x 2)) x 25 + ((3 x 2) x (3 x 2) x 0.5)) / 144
                         const partA = (measurements[0] + measurements[1] + (measurements[2] * 2)) * 25;
                         const triangleArea = (measurements[2] * 2) * (measurements[2] * 2) * 0.5;
                         const totalArea = partA + triangleArea;
@@ -1552,20 +1569,24 @@ function getShapesForSubcategory(type, subcategory) {
                     },
                     imageUrl: 'https://i.ibb.co/hHSRgjk/13.png'
                 },
+                // Shape 4
                 {
                     name: 'Regular Counter - 6 Sides',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
                     formula: (measurements) => {
+                        // Formula: ((1 + 2 + 3 + 4 + 5 + 6) x 25) / 144
                         const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
                         const area = perimeter * 25;
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/b7fyPTL/14.png'
                 },
+                // Shape 5
                 {
                     name: 'Regular Counter - Custom Shape',
                     measurements: ['Length (Measurement 1)', 'Width (Measurement 2)', 'Extra Length (Measurement 3)'],
                     formula: (measurements) => {
+                        // Formula: ((1 x 2) + (3 x 25)) / 144
                         const area = (measurements[0] * measurements[1]) + (measurements[2] * 25);
                         return area / 144;
                     },
@@ -1573,19 +1594,23 @@ function getShapesForSubcategory(type, subcategory) {
                 }
             ],
             'Islands': [
+                // Shape 1
                 {
                     name: 'Island - Rectangle',
                     measurements: ['Length (Measurement 1)', 'Width (Measurement 2)'],
                     formula: (measurements) => {
+                        // Formula: (1 x 2) / 144
                         const area = measurements[0] * measurements[1];
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/2WfRSkn/islandsquare.png'
                 },
+                // Shape 2
                 {
                     name: 'Island - Custom Shape',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Height (Measurement 5)'],
                     formula: (measurements) => {
+                        // Formula: ((1 + 2 + 3 + 4) / 2 x 5) / 144
                         const perimeter = measurements[0] + measurements[1] + measurements[2] + measurements[3];
                         const area = (perimeter / 2) * measurements[4];
                         return area / 144;
@@ -1595,34 +1620,41 @@ function getShapesForSubcategory(type, subcategory) {
             ]
         },
         'Bathroom': {
+            // Bathrooms can be included here as a subcategory
             'Bathroom': [
+                // Shape 1
                 {
                     name: 'Bathroom Counter - 1 Side',
                     measurements: ['Length (Measurement 1)'],
                     formula: (measurements) => {
+                        // Formula: (1 x 22) / 144
                         const area = measurements[0] * 22;
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/KmS1PKB/recbath.png'
                 },
+                // Shape 2
                 {
                     name: 'Bathroom Counter - 2 Sides',
                     measurements: ['Length 1 (Measurement 1)', 'Length 2 (Measurement 2)'],
                     formula: (measurements) => {
+                        // Formula: ((1 + 2) x 22) / 144
                         const area = (measurements[0] + measurements[1]) * 22;
                         return area / 144;
                     },
                     imageUrl: 'https://i.ibb.co/1qLTRBc/bathsqaure.png'
                 },
+                // Shape 3
                 {
                     name: 'Bathroom Counter - 6 Sides',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
                     formula: (measurements) => {
+                        // Formula: ((1 + 2 + 3 + 4 + 5 + 6) x 22) / 144
                         const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
                         const area = perimeter * 22;
                         return area / 144;
                     },
-                    imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png' // Added imageUrl
+                    imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png'
                 }
             ]
         }
@@ -1630,7 +1662,6 @@ function getShapesForSubcategory(type, subcategory) {
 
     return shapes[type] && shapes[type][subcategory] ? shapes[type][subcategory] : [];
 }
-
 
 // Function to get shapes for types (for Bathroom if needed)
 function getShapesForType(type) {
@@ -1678,3 +1709,10 @@ function getShapesForType(type) {
     return shapes;
 }
 
+
+    // Calculate and Add Item to Invoice (Unused in streamlined flow)
+    // Removed individual item addition steps as per user request
+
+    // Finalize the Interface
+    initInterface();
+})();
