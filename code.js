@@ -567,10 +567,10 @@ h3 {
     const crystalOptionDiv = createElement('div', 'finish-option');
     finishOptionsContainer.appendChild(crystalOptionDiv);
 
-    const crystalFinishBtn = createImageButton('Crystal Top Finish', getFinishImageUrl('Crystal Top Finish'));
+    const crystalFinishBtn = createImageButton('Crystal Top Pour', getFinishImageUrl('Crystal Top Pour'));
     crystalOptionDiv.appendChild(crystalFinishBtn);
 
-    const crystalDescription = createElement('p', null, 'Our CrystalTop Pour gives a soft flowing Marble look. This process allows the colors to meld together, giving nuances to the various colors chosen and very detailed subtleties. The customer can choose the general amount of the colors but cannot choose exactly how it flows out. This is always a two-day process due to the drying times and labor. On average, this process is about one and a half times the amount of the Standard process.');
+const crystalDescription = createElement('p', null, 'Our CrystalTop Pour gives a soft flowing Marble look. This process allows the colors to meld together, giving nuances to the various colors chosen and very detailed subtleties. The customer can choose the general amount of the colors but cannot choose exactly how it flows out. This is always a two-day process due to the drying times and labor. On average, this process is about one and a half times the amount of the Standard process.');
     crystalDescription.style.marginTop = '10px';
     crystalDescription.style.textAlign = 'center';
     crystalOptionDiv.appendChild(crystalDescription);
@@ -608,7 +608,8 @@ function createColorSquare(colorName, hexCode) {
     function getFinishImageUrl(finish) {
         const images = {
             'Standard Finish': 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg', // Original Standard Finish image URL
-            'Crystal Top Finish': 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg' // Original Crystal Top Finish image URL
+               'Crystal Top Pour': 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg'
+
         };
         return images[finish] || 'https://via.placeholder.com/250';
     }
