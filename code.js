@@ -607,7 +607,7 @@ function createColorSquare(colorName, hexCode) {
     // Helper function to get finish image URLs
     function getFinishImageUrl(finish) {
         const images = {
-            'Standard Finish': 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg', // Original Standard Finish image URL
+ 'Standard Finish': 'https://i.ibb.co/tBQpf58/Marble-1.jpg',
                'Crystal Top Pour': 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg'
 
         };
@@ -653,13 +653,14 @@ function createColorSquare(colorName, hexCode) {
 
     // Helper function to get material image URLs
     function getMaterialImageUrl(material) {
-        const images = {
-            'Quartz': 'https://i.ibb.co/g4K3B0S/Flowing-Granite-1-min.jpg', // Original Quartz image URL
-            'Granite': 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg', // Original Granite image URL
-            'Marble': 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg', // Original Marble image URL
-            'Pour Swirl': 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg', // Original Pour Swirl image URL
-            'Directional Pour': 'https://i.ibb.co/K21MDPq/Pour-Directional-2.jpg' // Original Directional Pour image URL
-        };
+     const images = {
+    'Quartz': 'https://i.ibb.co/2kxvQTN/Quartz-T-Almond-with-White-Icy-White.jpg',
+    'Granite': 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg',
+    'Marble': 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg',
+    'Pour Swirl': 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg',
+    'Directional Pour': 'https://i.ibb.co/K21MDPq/Pour-Directional-2.jpg'
+};
+
         return images[material] || 'https://via.placeholder.com/250';
     }
 
