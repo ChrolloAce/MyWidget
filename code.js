@@ -1514,7 +1514,7 @@ function getShapesForSubcategory(type, subcategory) {
                     name: 'Regular Counter - 2 Sides',
                     measurements: ['Length 1', 'Length 2'],
                     formula: (measurements) => ((measurements[0] + measurements[1]) * 25) / 144, // ((1 + 2) x 25) / 144
-                    imageUrl: 'https://i.ibb.co/Zf3JzCz/16.png'
+                    imageUrl:  'https://i.ibb.co/2WfRSkn/islandsquare.png'
                 },
                 {
                     name: 'Regular Counter - 3 Sides',
@@ -1544,7 +1544,7 @@ function getShapesForSubcategory(type, subcategory) {
                     name: 'Island - Rectangle',
                     measurements: ['Length', 'Width'],
                     formula: (measurements) => (measurements[0] * measurements[1]) / 144, // (1 x 2) / 144
-                    imageUrl: 'https://i.ibb.co/2WfRSkn/islandsquare.png'
+                    imageUrl: 'https://i.ibb.co/tPH5VT2/10.png'
                 },
                 {
                     name: 'Island - Custom Shape',
