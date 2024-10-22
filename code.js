@@ -877,7 +877,7 @@ function addItem(container) {
 
 
 
-// Updated getShapesForSubcategory Function
+// Complete getShapesForSubcategory Function with Existing and New Shapes
 function getShapesForSubcategory(type, subcategory) {
     const shapes = {
         'Kitchen': {
@@ -1164,6 +1164,7 @@ function getShapesForSubcategory(type, subcategory) {
 
     return shapes[type] && shapes[type][subcategory] ? shapes[type][subcategory] : [];
 }
+
 
 
 
