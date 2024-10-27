@@ -18,24 +18,25 @@
     };
 
     const baseColors = {
-        'White': '#FFFFFF',
-        'Black': '#000000',
-        'Tornado Gray': '#4F4F4F',
-        'Charcoal Gray': '#2E2E2E',
-        'Toasted Almond': '#D2B48C',
-        'Milk Chocolate': '#8B4513',
-        'Dark Chocolate': '#5D3A1A'
-    };
+    'White': '#FFFFFF',
+    'Black': '#000000',
+    'Tornado Gray': '#e5e7e9',       // Updated hex code
+    'Charcoal Gray': '#2e4053',      // Updated hex code
+    'Toasted Almond': '#EADDCA',     // Updated hex code
+    'Milk Chocolate': '#795548',     // Updated hex code
+    'Dark Chocolate': '#3e2723'      // Updated hex code
+};
 
-    const mixInColors = {
-        'Icy White': '#F8F8FF',
-        'Silver': '#C0C0C0',
-        'Champagne Gold': '#F7E7CE',
-        'Bronze': '#CD7F32',
-        'Cobalt Blue': '#0047AB',
-        'Pewter Blue': '#8BA8B7',
-        'Copper': '#B87333'
-    };
+const mixInColors = {
+    'Icy White': '#F8F8FF',
+    'Silver': '#C0C0C0',
+    'Champagne Gold': '#d4ac0d',     // Updated hex code
+    'Bronze': '#A97142',             // Updated hex code
+    'Cobalt Blue': '#0047AB',
+    'Pewter Blue': '#8BA8B7',
+    'Copper': '#B87333'
+};
+
 
     // Inject CSS Styles Globally
     (function injectStyles() {
