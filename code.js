@@ -1425,19 +1425,16 @@ function collectUserInfo(container) {
     const form = createElement('div', 'form');
     container.appendChild(form);
 
-    // Name Input
+    // Input fields
     const nameInput = createInputField('Name', 'text');
     form.appendChild(nameInput);
 
-    // Phone Input
     const phoneInput = createInputField('Phone Number', 'tel');
     form.appendChild(phoneInput);
 
-    // Email Input
     const emailInput = createInputField('Email', 'email');
     form.appendChild(emailInput);
 
-    // Zip Code Input
     const zipCodeInput = createInputField('Zip Code', 'text');
     form.appendChild(zipCodeInput);
 
@@ -1446,7 +1443,6 @@ function collectUserInfo(container) {
     form.appendChild(submitBtn);
 
     submitBtn.addEventListener('click', () => {
-        // Retrieve user input values
         const userInfo = {
             name: nameInput.querySelector('input').value.trim(),
             phone: phoneInput.querySelector('input').value.trim(),
@@ -1454,7 +1450,6 @@ function collectUserInfo(container) {
             zipCode: zipCodeInput.querySelector('input').value.trim()
         };
 
-        // Validate inputs
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^[0-9]+$/;
         const zipCodeRegex = /^[0-9]{5}$/;
@@ -1474,7 +1469,6 @@ function collectUserInfo(container) {
             return;
         }
 
-        // Collect additional data (e.g., total price, items list, total square footage)
         calculateTotalCost();
         const totalPrice = totalCost;
         const itemsList = items.map(item => ({
@@ -1489,20 +1483,15 @@ function collectUserInfo(container) {
                 : total;
         }, 0);
 
-        // Retrieve the webhook URL
-        const scriptElement = document.querySelector('script[data-webhook-url]');
-        if (!scriptElement) {
-            console.error('No <script> tag with data-webhook-url attribute found. Verify embed code.');
-            return;
-        }
-        
-        const webhookUrl = scriptElement.getAttribute('data-webhook-url');
+        // Retrieve the webhook URL by ID
+        const scriptElement = document.getElementById('custom-widget');
+        const webhookUrl = scriptElement ? scriptElement.getAttribute('data-webhook-url') : null;
+
         if (!webhookUrl) {
-            console.error('Webhook URL is missing in the data-webhook-url attribute.');
+            console.error('Webhook URL is missing or not configured.');
             return;
         }
 
-        // Prepare payload to send to the webhook
         const payload = {
             userInfo,
             totalPrice,
@@ -1510,7 +1499,6 @@ function collectUserInfo(container) {
             items: itemsList
         };
 
-        // Send data to the webhook
         fetch(webhookUrl, {
             method: 'POST',
             headers: {
