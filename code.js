@@ -1413,7 +1413,7 @@ function generateItemDescription(item) {
         if (itemListDiv) updateItemList(itemListDiv);
     }
 
-// Collect user info for final invoice (This will only be done when the user finalizes the quote)
+// Function to collect user info and send to the webhook
 function collectUserInfo(container) {
     container.innerHTML = '';
 
@@ -1473,9 +1473,62 @@ function collectUserInfo(container) {
             return;
         }
 
+        // Collect additional data (total price, items list, total square footage)
+        calculateTotalCost();
+        const totalPrice = totalCost;
+        const itemsList = items.map(item => ({
+            shape: item.shape,
+            measurements: item.measurements,
+            backsplash: item.backsplash
+        }));
+        const totalSquareFootage = items.reduce((total, item) => {
+            const shape = getShapeByName(item.shape);
+            if (shape && typeof shape.formula === 'function') {
+                return total + shape.formula(item.measurements);
+            }
+            return total;
+        }, 0);
 
-        // Now show the final price
-        finalizeInvoice(container);
+        // Retrieve the webhook URL from the embed script's data attribute
+        const webhookUrl = document.querySelector('script[data-webhook-url]').getAttribute('data-webhook-url');
+        if (!webhookUrl) {
+            alert('Webhook URL is not configured.');
+            return;
+        }
+
+        // Prepare payload to send to the webhook
+        const payload = {
+            userInfo: {
+                name: userInfo.name,
+                phone: userInfo.phone,
+                email: userInfo.email,
+                zipCode: userInfo.zipCode
+            },
+            totalPrice,
+            totalSquareFootage: Math.ceil(totalSquareFootage), // Round up if needed
+            items: itemsList
+        };
+
+        // Send the data to the webhook using fetch
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Your quote has been submitted successfully!');
+                finalizeInvoice(container);
+            } else {
+                alert('Failed to submit the quote. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error sending data to webhook:', error);
+            alert('Failed to submit the quote due to a network error.');
+        });
     });
 }
 
