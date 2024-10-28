@@ -1473,6 +1473,7 @@ function collectUserInfo(container) {
             return;
         }
 
+
         // Now show the final price
         finalizeInvoice(container);
     });
