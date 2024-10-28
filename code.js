@@ -1490,9 +1490,12 @@ function collectUserInfo(container) {
         }, 0);
 
         // Retrieve the webhook URL from the embed script's data attribute
-        const webhookUrl = document.querySelector('script[data-webhook-url]').getAttribute('data-webhook-url');
+        const scriptElement = document.querySelector('script[data-webhook-url]');
+        const webhookUrl = scriptElement ? scriptElement.getAttribute('data-webhook-url') : null;
+
         if (!webhookUrl) {
-            alert('Webhook URL is not configured.');
+            alert('Webhook URL is not configured or is missing.');
+            console.error('Webhook URL is missing in the script tag.');
             return;
         }
 
@@ -1531,6 +1534,7 @@ function collectUserInfo(container) {
         });
     });
 }
+
 
 function finalizeInvoice(container) {
     container.innerHTML = '';
