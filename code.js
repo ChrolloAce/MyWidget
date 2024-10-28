@@ -1510,15 +1510,6 @@ function collectUserInfo(container) {
                 : total;
         }, 0);
 
-        // Retrieve the webhook URL by ID
-        const scriptElement = document.getElementById('custom-widget');
-        const webhookUrl = scriptElement ? scriptElement.getAttribute('data-webhook-url') : null;
-
-        if (!webhookUrl) {
-            console.error('Webhook URL is missing or not configured.');
-            return;
-        }
-
         const payload = {
             userInfo,
             totalPrice,
@@ -1526,7 +1517,8 @@ function collectUserInfo(container) {
             items: itemsList
         };
 
-        fetch(webhookUrl, {
+        // Use window.WEBHOOK_URL directly
+        fetch(window.WEBHOOK_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
