@@ -1447,12 +1447,14 @@ function collectUserInfo(container) {
 
     submitBtn.addEventListener('click', () => {
         // Retrieve user input values
-        userInfo.name = nameInput.querySelector('input').value.trim();
-        userInfo.phone = phoneInput.querySelector('input').value.trim();
-        userInfo.email = emailInput.querySelector('input').value.trim();
-        userInfo.zipCode = zipCodeInput.querySelector('input').value.trim();
+        const userInfo = {
+            name: nameInput.querySelector('input').value.trim(),
+            phone: phoneInput.querySelector('input').value.trim(),
+            email: emailInput.querySelector('input').value.trim(),
+            zipCode: zipCodeInput.querySelector('input').value.trim()
+        };
 
-        // Validate the inputs
+        // Validate inputs
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^[0-9]+$/;
         const zipCodeRegex = /^[0-9]{5}$/;
@@ -1472,7 +1474,7 @@ function collectUserInfo(container) {
             return;
         }
 
-        // Collect additional data (total price, items list, total square footage)
+        // Collect additional data (e.g., total price, items list, total square footage)
         calculateTotalCost();
         const totalPrice = totalCost;
         const itemsList = items.map(item => ({
@@ -1482,41 +1484,33 @@ function collectUserInfo(container) {
         }));
         const totalSquareFootage = items.reduce((total, item) => {
             const shape = getShapeByName(item.shape);
-            if (shape && typeof shape.formula === 'function') {
-                return total + shape.formula(item.measurements);
-            }
-            return total;
+            return shape && typeof shape.formula === 'function'
+                ? total + shape.formula(item.measurements)
+                : total;
         }, 0);
 
-        // Retrieve the webhook URL from the embed script's data attribute
+        // Retrieve the webhook URL
         const scriptElement = document.querySelector('script[data-webhook-url]');
         if (!scriptElement) {
-            alert('No script tag with data-webhook-url found. Check your embed code.');
-            console.error('No <script> tag with data-webhook-url attribute found in the HTML.');
+            console.error('No <script> tag with data-webhook-url attribute found. Verify embed code.');
             return;
         }
-
+        
         const webhookUrl = scriptElement.getAttribute('data-webhook-url');
         if (!webhookUrl) {
-            alert('Webhook URL is not configured or is missing.');
-            console.error('Webhook URL attribute is missing or empty in the script tag.');
+            console.error('Webhook URL is missing in the data-webhook-url attribute.');
             return;
         }
 
         // Prepare payload to send to the webhook
         const payload = {
-            userInfo: {
-                name: userInfo.name,
-                phone: userInfo.phone,
-                email: userInfo.email,
-                zipCode: userInfo.zipCode
-            },
+            userInfo,
             totalPrice,
-            totalSquareFootage: Math.ceil(totalSquareFootage), // Round up if needed
+            totalSquareFootage: Math.ceil(totalSquareFootage),
             items: itemsList
         };
 
-        // Send the data to the webhook using fetch
+        // Send data to the webhook
         fetch(webhookUrl, {
             method: 'POST',
             headers: {
@@ -1538,6 +1532,7 @@ function collectUserInfo(container) {
         });
     });
 }
+
 
 
 
