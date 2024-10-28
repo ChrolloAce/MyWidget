@@ -1540,6 +1540,7 @@ function collectUserInfo(container) {
 }
 
 
+
 function finalizeInvoice(container) {
     container.innerHTML = '';
 
