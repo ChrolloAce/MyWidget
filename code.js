@@ -1483,9 +1483,8 @@ function collectUserInfo(container) {
                 : total;
         }, 0);
 
-        // Retrieve the webhook URL by ID
-        const scriptElement = document.getElementById('custom-widget');
-        const webhookUrl = scriptElement ? scriptElement.getAttribute('data-webhook-url') : null;
+        // Access the webhook URL as a global variable
+        const webhookUrl = window.WEBHOOK_URL;
 
         if (!webhookUrl) {
             console.error('Webhook URL is missing or not configured.');
@@ -1520,6 +1519,7 @@ function collectUserInfo(container) {
         });
     });
 }
+
 
 
 
