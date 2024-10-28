@@ -656,8 +656,9 @@ function createColorSquare(colorName, hexCode) {
     function getMaterialImageUrl(material) {
      const images = {
     'Quartz': 'https://i.ibb.co/2kxvQTN/Quartz-T-Almond-with-White-Icy-White.jpg',
-    'Granite': 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg',
-    'Marble': 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg',
+    'Granite': 'https://i.ibb.co/fC1H2yj/Flowing-Granite-min.jpg',
+    'Marble': 'https://i.ibb.co/xhXzYRr/Marble-1-min.jpg',
+        
     'Pour Swirl': 'https://i.ibb.co/vH56T17/Pour-Swirl2-min.jpg',
     'Directional Pour': 'https://i.ibb.co/K21MDPq/Pour-Directional-2.jpg'
 };
@@ -665,6 +666,32 @@ function createColorSquare(colorName, hexCode) {
         return images[material] || 'https://via.placeholder.com/250';
     }
 
+
+
+let historyStack = []; // Stack to store the navigation history
+
+// Adds the back button to the container and enables infinite back navigation
+function addBackButton(container) {
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+    
+    backButton.addEventListener('click', () => {
+        if (historyStack.length > 0) {
+            const previousState = historyStack.pop(); // Retrieve the last saved state
+            document.body.innerHTML = ''; // Clear the current screen
+            document.body.appendChild(previousState); // Display the previous state
+        }
+    });
+}
+
+// Saves the current state to the history stack
+function saveCurrentState() {
+    const currentContainer = document.querySelector('.container');
+    if (currentContainer) {
+        historyStack.push(currentContainer.cloneNode(true)); // Clone and save the current state
+    }
+}
+    
 function chooseColors(container) {
     container.innerHTML = '';
 
@@ -828,9 +855,9 @@ function addItem(container) {
     
  function getSubcategoryImageUrl(subcategory) {
     const images = {
-        'Bartops': 'https://i.ibb.co/xs2zDQn/Marble-2.png',   // New Bartop image
-        'Countertops': 'https://i.ibb.co/NFwbHmk/counter.png',  // New Counter image
-        'Islands': 'https://i.ibb.co/Dt9LxBZ/Island.png'   // New Island image
+        'Bartops': 'https://i.ibb.co/ypYDVTk/1.png',   // New Bartop image
+        'Countertops': 'https://i.ibb.co/T0fnP1g/2.png',  // New Counter image
+        'Islands': 'https://i.ibb.co/BKhZY1V/3.png'   // New Island image
     };
     return images[subcategory] || 'https://via.placeholder.com/250';
 }
@@ -1002,7 +1029,7 @@ function getShapesForSubcategory(type, subcategory) {
 
 function getTypeImageUrl(type) {
     const images = {
-        'Kitchen': 'https://i.ibb.co/CwwQ0Gd/1.png', // New Kitchen image
+        'Kitchen': 'https://i.ibb.co/4phdQ5q/4.png', // New Kitchen image
         'Bathroom': 'https://i.ibb.co/RPJgsCB/2.png'  // New Bathroom image
     };
     return images[type] || 'https://via.placeholder.com/250';
@@ -1483,8 +1510,9 @@ function collectUserInfo(container) {
                 : total;
         }, 0);
 
-        // Access the webhook URL as a global variable
-        const webhookUrl = window.WEBHOOK_URL;
+        // Retrieve the webhook URL by ID
+        const scriptElement = document.getElementById('custom-widget');
+        const webhookUrl = scriptElement ? scriptElement.getAttribute('data-webhook-url') : null;
 
         if (!webhookUrl) {
             console.error('Webhook URL is missing or not configured.');
@@ -1519,7 +1547,6 @@ function collectUserInfo(container) {
         });
     });
 }
-
 
 
 
