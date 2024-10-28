@@ -666,6 +666,32 @@ function createColorSquare(colorName, hexCode) {
         return images[material] || 'https://via.placeholder.com/250';
     }
 
+
+
+let historyStack = []; // Stack to store the navigation history
+
+// Adds the back button to the container and enables infinite back navigation
+function addBackButton(container) {
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+    
+    backButton.addEventListener('click', () => {
+        if (historyStack.length > 0) {
+            const previousState = historyStack.pop(); // Retrieve the last saved state
+            document.body.innerHTML = ''; // Clear the current screen
+            document.body.appendChild(previousState); // Display the previous state
+        }
+    });
+}
+
+// Saves the current state to the history stack
+function saveCurrentState() {
+    const currentContainer = document.querySelector('.container');
+    if (currentContainer) {
+        historyStack.push(currentContainer.cloneNode(true)); // Clone and save the current state
+    }
+}
+    
 function chooseColors(container) {
     container.innerHTML = '';
 
