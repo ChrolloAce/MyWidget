@@ -1413,7 +1413,6 @@ function generateItemDescription(item) {
         if (itemListDiv) updateItemList(itemListDiv);
     }
 
-// Function to collect user info and send to the webhook
 function collectUserInfo(container) {
     container.innerHTML = '';
 
@@ -1491,11 +1490,16 @@ function collectUserInfo(container) {
 
         // Retrieve the webhook URL from the embed script's data attribute
         const scriptElement = document.querySelector('script[data-webhook-url]');
-        const webhookUrl = scriptElement ? scriptElement.getAttribute('data-webhook-url') : null;
+        if (!scriptElement) {
+            alert('No script tag with data-webhook-url found. Check your embed code.');
+            console.error('No <script> tag with data-webhook-url attribute found in the HTML.');
+            return;
+        }
 
+        const webhookUrl = scriptElement.getAttribute('data-webhook-url');
         if (!webhookUrl) {
             alert('Webhook URL is not configured or is missing.');
-            console.error('Webhook URL is missing in the script tag.');
+            console.error('Webhook URL attribute is missing or empty in the script tag.');
             return;
         }
 
