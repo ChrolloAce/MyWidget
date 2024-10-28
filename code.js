@@ -828,9 +828,9 @@ function addItem(container) {
     
  function getSubcategoryImageUrl(subcategory) {
     const images = {
-        'Bartops': 'https://i.ibb.co/xs2zDQn/Marble-2.png',   // New Bartop image
-        'Countertops': 'https://i.ibb.co/NFwbHmk/counter.png',  // New Counter image
-        'Islands': 'https://i.ibb.co/Dt9LxBZ/Island.png'   // New Island image
+        'Bartops': 'https://i.ibb.co/ypYDVTk/1.png',   // New Bartop image
+        'Countertops': 'https://i.ibb.co/T0fnP1g/2.png',  // New Counter image
+        'Islands': 'https://i.ibb.co/BKhZY1V/3.png'   // New Island image
     };
     return images[subcategory] || 'https://via.placeholder.com/250';
 }
@@ -1002,7 +1002,7 @@ function getShapesForSubcategory(type, subcategory) {
 
 function getTypeImageUrl(type) {
     const images = {
-        'Kitchen': 'https://i.ibb.co/CwwQ0Gd/1.png', // New Kitchen image
+        'Kitchen': 'https://i.ibb.co/4phdQ5q/4.png', // New Kitchen image
         'Bathroom': 'https://i.ibb.co/RPJgsCB/2.png'  // New Bathroom image
     };
     return images[type] || 'https://via.placeholder.com/250';
