@@ -60,13 +60,13 @@ body {
 /* Main Container Styling */
 .container {
     width: 95%;
-    max-width: 1200px;
+    max-width: 900px;
     background-color: #f9f9f9;
-    padding: 40px;
+    padding: 60px;
     border-radius: 20px;
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
     text-align: center;
-    margin: 40px auto;
+    margin: 60px auto;
     transition: all 0.3s ease;
 }
 
@@ -74,7 +74,7 @@ body {
 .container h1,
 .container h2 {
     color: #333333;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     font-family: 'Georgia', serif;
 }
 
@@ -92,18 +92,15 @@ h2 {
     font-size: 28px;
 }
 
-/* Add more bottom margin to titles in the colors screen */
 h3 {
-    font-size: 24px;
     margin-bottom: 30px;
-    color: #333333;
 }
 
 /* Paragraphs */
 .container p {
     color: #555555;
     font-size: 18px;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     line-height: 1.8;
 }
 
@@ -113,7 +110,7 @@ h3 {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .form-group label {
@@ -143,58 +140,54 @@ h3 {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 20px;
-    margin: 30px 0;
+    gap: 30px;
+    margin-top: 40px;
+    margin-bottom: 40px;
     width: 100%;
 }
 
 /* Button Styles */
 .button {
-    padding: 15px 30px;
+    padding: 18px 30px;
     background-color: #0264D9;
     color: #ffffff;
     border: none;
-    border-radius: 12px;
+    border-radius: 15px;
     cursor: pointer;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    min-width: 150px;
-    margin: 5px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    max-width: 200px;
 }
 
 .button:hover {
     background-color: #004C99;
-    transform: translateY(-2px);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Green Button */
 .button.green-button {
     background-color: #28a745;
+    color: #ffffff;
 }
 
 .button.green-button:hover {
     background-color: #218838;
 }
 
-/* Red Button (Back Button) */
-.button.back-button {
+.button.red-button {
     background-color: #dc3545;
-    max-width: 150px;
 }
 
-.button.back-button:hover {
+.button.red-button:hover {
     background-color: #c82333;
 }
 
-/* Image Button and Container Styles */
-.image-button {
+/* Special handling for countertop shape images */
+.button-group .image-button {
     position: relative;
-    width: 100%;
-    max-width: 400px;
+    width: 250px;
     aspect-ratio: 16/9;
     border: 2px solid #000000;
     border-radius: 15px;
@@ -204,7 +197,7 @@ h3 {
     background-position: center;
     background-repeat: no-repeat;
     background-color: #f5f5f5;
-    margin: 20px auto;
+    margin: 30px auto;
     transition: all 0.3s ease;
     display: flex;
     justify-content: center;
@@ -212,52 +205,52 @@ h3 {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
+/* Keep other image buttons squared */
+.finish-option .image-button {
+    aspect-ratio: 1/1;
+    background-size: cover;
+}
+
 .image-button:hover {
     border: 4px solid #0264D9;
-    transform: scale(1.02);
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .image-button .overlay {
+    position: absolute;
+    bottom: 0;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 12px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     text-align: center;
 }
 
-.image-container {
+/* Configuration page image */
+.form img {
     width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.image-container img {
-    width: 100%;
+    max-width: 600px;
     height: auto;
+    aspect-ratio: 16/9;
     object-fit: contain;
+    margin: 20px auto;
+    display: block;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Button Group Grid Layout */
-.button-group {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+/* Item List */
+.item-list {
+    margin-top: 40px;
+    text-align: left;
 }
 
-/* Item List Styles */
-.item-list {
-    margin-top: 30px;
-    text-align: left;
+.item-list h3 {
+    color: #333333;
+    margin-bottom: 20px;
 }
 
 .item {
@@ -266,7 +259,6 @@ h3 {
     justify-content: space-between;
     padding: 15px;
     border-bottom: 2px solid #dddddd;
-    margin-bottom: 10px;
 }
 
 .item-description {
@@ -277,193 +269,81 @@ h3 {
 
 .item img {
     width: 120px;
-    height: 68px; /* Maintains 16:9 ratio */
+    aspect-ratio: 16/9;
     object-fit: contain;
-    border-radius: 8px;
+    border-radius: 10px;
     margin-right: 15px;
 }
 
 .item-description span {
     margin-left: 15px;
-    font-size: 16px;
+    font-size: 18px;
     color: #333333;
 }
 
 .item-remove {
     background-color: #dc3545;
-    padding: 8px 15px;
+    padding: 10px 15px;
     border: none;
     border-radius: 8px;
     color: #ffffff;
     cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
     margin-left: 15px;
 }
 
 .item-remove:hover {
     background-color: #c82333;
-    transform: translateY(-1px);
 }
 
-/* Color Selection Styles */
-.color-selection {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.color-square {
-    width: 100px;
-    height: 100px;
-    border: 3px solid #dddddd;
-    border-radius: 10px;
+/* Add New Countertop Button */
+.add-countertop-button {
+    background-color: #28a745;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 18px 40px;
+    border-radius: 12px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 40px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-.color-square.selected {
-    border: 4px solid #0264D9;
-    transform: scale(1.05);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+.back-button {
+    background-color: #f44336;
+    max-width: 150px;
 }
 
-.color-square span {
-    color: #333333;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 5px;
-    border-radius: 5px;
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
+.back-button:hover {
+    background-color: #d32f2f;
 }
 
-/* Quote Price Display */
-.quote-price {
-    font-size: 48px;
-    font-weight: bold;
-    color: #333333;
-    margin: 30px 0;
-}
-
-/* Fade In Animation */
-.fade-in {
-    animation: fadeIn 0.5s forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Finish Options Container */
-.finish-options-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-top: 30px;
-    gap: 30px;
-}
-
-.finish-option {
-    flex: 1;
-    min-width: 300px;
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-/* Responsive Design */
+/* Responsive Styles */
 @media (max-width: 768px) {
     .container {
-        padding: 20px;
-        width: 100%;
+        padding: 30px;
     }
 
     .image-button {
-        max-width: 300px;
+        width: 100%;
+        max-width: 250px;
+        margin: 20px auto;
+    }
+
+    .form img {
+        max-width: 400px;
     }
 
     .button-group {
-        grid-template-columns: 1fr;
-    }
-
-    .finish-option {
-        width: 100%;
-    }
-
-    .container h1 {
-        font-size: 28px;
-    }
-
-    .container h2 {
-        font-size: 24px;
-    }
-
-    .container p,
-    .form-group label,
-    .form-group input {
-        font-size: 16px;
+        flex-direction: column;
+        align-items: center;
     }
 
     .button {
-        width: 100%;
         max-width: none;
-    }
-
-    .color-selection {
-        gap: 10px;
-    }
-
-    .color-square {
-        width: 80px;
-        height: 80px;
-    }
-
-    .item img {
-        width: 100px;
-        height: 56px;
-    }
-
-    .quote-price {
-        font-size: 36px;
-    }
-}
-
-/* Small screens */
-@media (max-width: 480px) {
-    .container {
-        padding: 15px;
-    }
-
-    .image-button {
-        max-width: 250px;
-    }
-
-    .button {
-        font-size: 16px;
-        padding: 12px 24px;
-    }
-
-    .color-square {
-        width: 70px;
-        height: 70px;
-    }
-
-    .item img {
-        width: 80px;
-        height: 45px;
+        width: 100%;
     }
 }
     `;
@@ -1047,7 +927,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/hcKgcJr/15.png'
                 },
                 {
-                    name: '3 Sides - Is3',
+                    name: 'Island 3 Sides - Is3',
                     code: 'Is3',
                     measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Height'],
                     formula: (measurements) => {
@@ -1055,7 +935,17 @@ function getShapesForSubcategory(type, subcategory) {
                         return ((perimeter / 2) * measurements[6]) / 144;
                     },
                     imageUrl: 'https://i.ibb.co/Qv8p4Bx/16.png'
-                }
+                },
+                {
+                    name: '3 Sides 2 - Is3-2',
+                    code: 'Is3-2',
+                    measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Height'],
+                    formula: (measurements) => {
+                        const perimeter = measurements.slice(0, 6).reduce((acc, cur) => acc + cur, 0);
+                        return ((perimeter / 2) * measurements[6]) / 144;
+                    },
+                    imageUrl: 'https://i.ibb.co/HtZy3kR/20.png'
+                 }
             ]
         }
     };
