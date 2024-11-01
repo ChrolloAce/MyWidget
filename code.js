@@ -188,10 +188,11 @@ h3 {
     background-color: #c82333;
 }
 
-/* Base Image Button Styles */
+/* Image Button Styles */
 .image-button {
     position: relative;
     width: 250px;
+    aspect-ratio: 1/1;
     border: 2px solid #000000;
     border-radius: 15px;
     overflow: hidden;
@@ -204,15 +205,6 @@ h3 {
     justify-content: center;
     align-items: center;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-    aspect-ratio: 1/1;
-}
-
-/* Special handling for countertop shape buttons */
-.button-group .image-button {
-    aspect-ratio: 16/9;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-color: #f5f5f5;
 }
 
 .image-button:hover {
@@ -233,19 +225,11 @@ h3 {
     text-align: center;
 }
 
-/* Base Image Container */
 .image-container img {
     width: 100%;
     max-width: 300px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* Special handling for configuration page images */
-.form .image-container img {
-    max-width: 600px;
-    aspect-ratio: 16/9;
-    object-fit: contain;
 }
 
 /* Item List */
@@ -396,7 +380,6 @@ h3 {
     width: 100%;
     max-width: 250px;
     margin: 0 auto 15px auto;
-    aspect-ratio: 1/1;
 }
 
 /* Responsive Styles */
@@ -424,6 +407,40 @@ h3 {
     .finish-option {
         width: 100%;
     }
+}
+
+/* Special handling for the 20 countertop shape diagrams */
+[class^="Standard"], [class^="Irregular"], [class^="Straight"], [class^="Bar"], [class^="Island"], [class^="Rectangle"], [class^="Broken"], [class*="3 Sides"] {
+    aspect-ratio: 16/9 !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-color: #f5f5f5 !important;
+}
+
+/* Special handling for shape diagrams in the measurements page */
+.form img[src*="1.png"],
+.form img[src*="2.png"],
+.form img[src*="3.png"],
+.form img[src*="4.png"],
+.form img[src*="5.png"],
+.form img[src*="6.png"],
+.form img[src*="7.png"],
+.form img[src*="8.png"],
+.form img[src*="9.png"],
+.form img[src*="10.png"],
+.form img[src*="11.png"],
+.form img[src*="12.png"],
+.form img[src*="13.png"],
+.form img[src*="14.png"],
+.form img[src*="15.png"],
+.form img[src*="16.png"],
+.form img[src*="17.png"],
+.form img[src*="18.png"],
+.form img[src*="19.png"],
+.form img[src*="20.png"] {
+    max-width: 600px !important;
+    aspect-ratio: 16/9 !important;
+    object-fit: contain !important;
 }
     `;
 
