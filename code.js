@@ -908,119 +908,158 @@ function addItem(container) {
 function getShapesForSubcategory(type, subcategory) {
     const shapes = {
         'Kitchen': {
-            'Bartops': [
-                {
-                    name: 'Bar Top - Rectangle',
-                    measurements: ['Length', 'Width'],
-                    formula: (measurements) => (measurements[0] * measurements[1]) / 144,
-                    imageUrl: 'https://i.ibb.co/4PNXrnc/1.png'
-                },
-                {
-                    name: 'Bar Top - Custom Shape 1',
-                    measurements: ['Length 1', 'Length 2', 'Width'],
-                    formula: (measurements) => ((measurements[0] + measurements[1]) * measurements[2]) / 144,
-                    imageUrl: 'https://i.ibb.co/bmV9twv/2.png'
-                },
-                {
-                    name: 'Bar Top - Custom Shape 2',
-                    measurements: ['Length 1', 'Width 1', 'Length 2', 'Width 2'],
-                    formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * measurements[3])) / 144,
-                    imageUrl: 'https://i.ibb.co/MD63PFz/3.png'
-                }
-            ],
             'Countertops': [
                 {
-                    name: 'Regular Counter - 1 Side',
-                    measurements: ['Length'],
+                    name: 'Standard - KS',
+                    code: 'KS',
+                    measurements: ['Length (Measurement 1)'],
                     formula: (measurements) => (measurements[0] * 25) / 144,
-                    imageUrl: 'https://i.ibb.co/2WfRSkn/islandsquare.png'
+                    imageUrl: 'https://i.ibb.co/nn8k8Bf/1.png'
                 },
                 {
-                    name: 'Regular Counter - 2 Sides',
+                    name: 'Standard L - KSL',
+                    code: 'KSL',
                     measurements: ['Length 1', 'Length 2'],
                     formula: (measurements) => ((measurements[0] + measurements[1]) * 25) / 144,
-                    imageUrl: 'https://i.ibb.co/Zf3JzCz/16.png'
+                    imageUrl: 'https://i.ibb.co/ZdMvxQK/2.png'
                 },
                 {
-                    name: 'Regular Counter - 3 Sides',
-                    measurements: ['Length 1', 'Length 2', 'Offset'],
-                    formula: (measurements) => {
-                        const partA = (measurements[0] + measurements[1] + (measurements[2] * 2)) * 25;
-                        const triangleArea = (measurements[2] * 2) * (measurements[2] * 2) * 0.5;
-                        return (partA + triangleArea) / 144;
-                    },
-                    imageUrl: 'https://i.ibb.co/gVJr2D3/18.png'
-                },
-                {
-                    name: 'Regular Counter - 6 Sides',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
-                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 25) / 144,
-                    imageUrl: 'https://i.ibb.co/b7fyPTL/14.png'
-                },
-                {
-                    name: 'Regular Counter - Custom Shape',
-                    measurements: ['Length', 'Width', 'Extra Length'],
-                    formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * 25)) / 144,
-                    imageUrl: 'https://i.ibb.co/8BsnF1W/11.png'
-                },
-                {
-                    name: 'Regular Counter - 7 Sides',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
-                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 25) / 144,
-                    imageUrl: 'https://i.ibb.co/cXgYrJ5/17.png'
-                },
-                {
-                    name: 'Regular Counter - 3 Sides (New)',
-                    measurements: ['Length 1', 'Length 2', 'Offset'],
+                    name: 'Standard 3 Sides - KS3',
+                    code: 'KS3',
+                    measurements: ['Length 1', 'Length 2', 'Length 3'],
                     formula: (measurements) => ((measurements[0] + measurements[1] + measurements[2]) * 25) / 144,
-                    imageUrl: 'https://i.ibb.co/gVJr2D3/18.png'
+                    imageUrl: 'https://i.ibb.co/B28cv3j/3.png'
+                },
+                {
+                    name: 'Standard Broken L - KSBL',
+                    code: 'KSBL',
+                    measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4'],
+                    formula: (measurements) => {
+                        const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
+                        return ((perimeter / 2) * 25) / 144;
+                    },
+                    imageUrl: 'https://i.ibb.co/5kb4k7G/4.png'
+                },
+                {
+                    name: 'Standard Wing - KSW',
+                    code: 'KSW',
+                    measurements: ['Length 1', 'Length 2', 'Length 3'],
+                    formula: (measurements) => {
+                        const perimeter = (measurements[0] + measurements[1] + (measurements[2] * 2)) * 25;
+                        const triangleArea = (measurements[2] * 2) * (measurements[2] * 2) * 0.5;
+                        return (perimeter + triangleArea) / 144;
+                    },
+                    imageUrl: 'https://i.ibb.co/qnLVKrS/5.png'
+                },
+                {
+                    name: 'Standard Wing 3 Sides - KSW3',
+                    code: 'KSW3',
+                    measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6'],
+                    formula: (measurements) => {
+                        const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
+                        return (perimeter * 25) / 144;
+                    },
+                    imageUrl: 'https://i.ibb.co/WKscbzZ/6.png'
+                },
+                {
+                    name: 'Standard 4 Sides - KS4',
+                    code: 'KS4',
+                    measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Length 7'],
+                    formula: (measurements) => {
+                        const sum = measurements.reduce((acc, cur) => acc + cur, 0);
+                        return ((sum / 2) * 25) / 144;
+                    },
+                    imageUrl: 'https://i.ibb.co/dQ4sD7Y/7.png'
+                }
+            ],
+            'Bartops': [
+                {
+                    name: 'Straight - BarS',
+                    code: 'BarS',
+                    measurements: ['Length', 'Width'],
+                    formula: (measurements) => (measurements[0] * measurements[1]) / 144,
+                    imageUrl: 'https://i.ibb.co/LhtPc1f/8.png'
+                },
+                {
+                    name: 'Standard L - BarSL',
+                    code: 'BarSL',
+                    measurements: ['Length 1', 'Length 2', 'Width'],
+                    formula: (measurements) => ((measurements[0] + measurements[1]) * measurements[2]) / 144,
+                    imageUrl: 'https://i.ibb.co/P69ZfHJ/9.png'
+                },
+                {
+                    name: 'Irregular L - BarIL',
+                    code: 'BarIL',
+                    measurements: ['Length 1', 'Width 1', 'Length 2', 'Width 2'],
+                    formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * measurements[3])) / 144,
+                    imageUrl: 'https://i.ibb.co/J55R5XS/10.png'
+                },
+                {
+                    name: 'Broken L - BarBL',
+                    code: 'BarBL',
+                    measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Height'],
+                    formula: (measurements) => {
+                        const perimeter = measurements.slice(0, 4).reduce((acc, cur) => acc + cur, 0);
+                        return ((perimeter / 2) * measurements[4]) / 144;
+                    },
+                    imageUrl: 'https://i.ibb.co/mzpQz03/11.png'
+                },
+                {
+                    name: 'Standard 3 Sides - Bar3',
+                    code: 'Bar3',
+                    measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Height'],
+                    formula: (measurements) => {
+                        const perimeter = measurements.slice(0, 6).reduce((acc, cur) => acc + cur, 0);
+                        return ((perimeter / 2) * measurements[6]) / 144;
+                    },
+                    imageUrl: 'https://i.ibb.co/cg9YBY2/12.png'
+                },
+                {
+                    name: 'Standard 4 Sides - Bar4',
+                    code: 'Bar4',
+                    measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Length 7', 'Length 8', 'Height'],
+                    formula: (measurements) => {
+                        const perimeter = measurements.slice(0, 8).reduce((acc, cur) => acc + cur, 0);
+                        return ((perimeter / 2) * measurements[8]) / 144;
+                    },
+                    imageUrl: 'https://i.ibb.co/qMpW4WB/13.png'
                 }
             ],
             'Islands': [
                 {
-                    name: 'Island - Rectangle',
+                    name: 'Rectangle - IsR',
+                    code: 'IsR',
                     measurements: ['Length', 'Width'],
                     formula: (measurements) => (measurements[0] * measurements[1]) / 144,
-                    imageUrl: 'https://i.ibb.co/tPH5VT2/10.png'
+                    imageUrl: 'https://i.ibb.co/37bbBck/14.png'
                 },
                 {
-                    name: 'Island - Custom Shape',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Height'],
-                    formula: (measurements) => (((measurements[0] + measurements[1] + measurements[2] + measurements[3]) / 2) * measurements[4]) / 144,
-                    imageUrl: 'https://i.ibb.co/M6dqLGH/islandlong.png'
+                    name: 'Broken L - IsBL',
+                    code: 'IsBL',
+                    measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Height'],
+                    formula: (measurements) => {
+                        const perimeter = measurements.slice(0, 4).reduce((acc, cur) => acc + cur, 0);
+                        return ((perimeter / 2) * measurements[4]) / 144;
+                    },
+                    imageUrl: 'https://i.ibb.co/hcKgcJr/15.png'
                 },
                 {
-                    name: 'Island - 7 Measurements',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
-                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 25) / 144,
-                    imageUrl: 'https://i.ibb.co/HXxjQzd/19.png'
+                    name: '3 Sides - Is3',
+                    code: 'Is3',
+                    measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Height'],
+                    formula: (measurements) => {
+                        const perimeter = measurements.slice(0, 6).reduce((acc, cur) => acc + cur, 0);
+                        return ((perimeter / 2) * measurements[6]) / 144;
+                    },
+                    imageUrl: 'https://i.ibb.co/Qv8p4Bx/16.png'
                 }
             ]
-        },
-        'Bathroom': [
-            {
-                name: 'Bathroom Counter - 1 Side',
-                measurements: ['Length'],
-                formula: (measurements) => (measurements[0] * 22) / 144,
-                imageUrl: 'https://i.ibb.co/KmS1PKB/recbath.png'
-            },
-            {
-                name: 'Bathroom Counter - 2 Sides',
-                measurements: ['Length 1', 'Length 2'],
-                formula: (measurements) => ((measurements[0] + measurements[1]) * 22) / 144,
-                imageUrl: 'https://i.ibb.co/1qLTRBc/bathsqaure.png'
-            },
-            {
-                name: 'Bathroom Counter - 6 Sides',
-                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
-                formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 22) / 144,
-                imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png'
-            }
-        ]
+        }
     };
 
     return shapes[type] && shapes[type][subcategory] ? shapes[type][subcategory] : [];
 }
+
 
 
 
@@ -1597,48 +1636,36 @@ function finalizeInvoice(container) {
 
 // Function to get shapes for types (for Bathroom if needed)
 function getShapesForType(type) {
-    const shapes = [];
-
-    if (type === 'Bathroom') {
-        shapes.push(
-            // Shape 1
+    const shapes = {
+        'Bathroom': [
             {
-                name: 'Bathroom Counter - 1 Side',
-                measurements: ['Length (Measurement 1)'],
-                formula: (measurements) => {
-                    // Formula: (1 x 22) / 144
-                    const area = measurements[0] * 22;
-                    return area / 144;
-                },
-                imageUrl: 'https://i.ibb.co/KmS1PKB/recbath.png'
+                name: 'Standard - BathS',
+                code: 'BathS',
+                measurements: ['Length'],
+                formula: (measurements) => (measurements[0] * 22) / 144,
+                imageUrl: 'https://i.ibb.co/47FGwJg/17.png'
             },
-            // Shape 2
             {
-                name: 'Bathroom Counter - 2 Sides',
-                measurements: ['Length 1 (Measurement 1)', 'Length 2 (Measurement 2)'],
-                formula: (measurements) => {
-                    // Formula: ((1 + 2) x 22) / 144
-                    const area = (measurements[0] + measurements[1]) * 22;
-                    return area / 144;
-                },
-                imageUrl: 'https://i.ibb.co/1qLTRBc/bathsqaure.png'
+                name: 'Standard L - BathL',
+                code: 'BathL',
+                measurements: ['Length 1', 'Length 2'],
+                formula: (measurements) => ((measurements[0] + measurements[1]) * 22) / 144,
+                imageUrl: 'https://i.ibb.co/Dwx1Rsw/18.png'
             },
-            // Shape 3
             {
-                name: 'Bathroom Counter - 6 Sides',
-                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
+                name: 'Standard 3 Sides - Bath3',
+                code: 'Bath3',
+                measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6'],
                 formula: (measurements) => {
-                    // Formula: ((1 + 2 + 3 + 4 + 5 + 6) x 22) / 144
                     const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
-                    const area = perimeter * 22;
-                    return area / 144;
+                    return ((perimeter / 2) * 22) / 144;
                 },
-                imageUrl: 'https://i.ibb.co/ScsL4gN/IN.png'
+                imageUrl: 'https://i.ibb.co/JHrP44S/19.png'
             }
-        );
-    }
+        ]
+    };
 
-    return shapes;
+    return shapes[type] || [];
 }
 
 
