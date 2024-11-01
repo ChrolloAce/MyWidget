@@ -60,13 +60,13 @@ body {
 /* Main Container Styling */
 .container {
     width: 95%;
-    max-width: 900px;
+    max-width: 1200px;
     background-color: #f9f9f9;
-    padding: 60px;
+    padding: 40px;
     border-radius: 20px;
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
     text-align: center;
-    margin: 60px auto;
+    margin: 40px auto;
     transition: all 0.3s ease;
 }
 
@@ -74,7 +74,7 @@ body {
 .container h1,
 .container h2 {
     color: #333333;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     font-family: 'Georgia', serif;
 }
 
@@ -94,14 +94,16 @@ h2 {
 
 /* Add more bottom margin to titles in the colors screen */
 h3 {
+    font-size: 24px;
     margin-bottom: 30px;
+    color: #333333;
 }
 
 /* Paragraphs */
 .container p {
     color: #555555;
     font-size: 18px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     line-height: 1.8;
 }
 
@@ -111,7 +113,7 @@ h3 {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .form-group label {
@@ -141,109 +143,121 @@ h3 {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 30px;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    gap: 20px;
+    margin: 30px 0;
     width: 100%;
 }
 
 /* Button Styles */
 .button {
-    padding: 18px 30px;
+    padding: 15px 30px;
     background-color: #0264D9;
     color: #ffffff;
     border: none;
-    border-radius: 15px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    max-width: 200px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    min-width: 150px;
+    margin: 5px;
 }
 
-/* Button Hover Effects */
 .button:hover {
     background-color: #004C99;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Green Button (Alternative Styling) */
+/* Green Button */
 .button.green-button {
     background-color: #28a745;
-    color: #ffffff;
 }
 
 .button.green-button:hover {
     background-color: #218838;
 }
 
-/* Red Button (Danger or Back Button) */
-.button.red-button {
+/* Red Button (Back Button) */
+.button.back-button {
     background-color: #dc3545;
+    max-width: 150px;
 }
 
-.button.red-button:hover {
+.button.back-button:hover {
     background-color: #c82333;
 }
 
-/* Image Button Styles */
+/* Image Button and Container Styles */
 .image-button {
     position: relative;
-    width: 250px;
-    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 16/9;
     border: 2px solid #000000;
     border-radius: 15px;
     overflow: hidden;
     cursor: pointer;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
-    margin: 30px auto;
-    transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    background-repeat: no-repeat;
+    background-color: #f5f5f5;
+    margin: 20px auto;
+    transition: all 0.3s ease;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .image-button:hover {
     border: 4px solid #0264D9;
-    transform: scale(1.05);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    transform: scale(1.02);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
 }
 
 .image-button .overlay {
-    position: absolute;
-    bottom: 0;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 12px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     text-align: center;
 }
 
-/* Rounded corners for images */
+.image-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
 .image-container img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Item List */
+/* Button Group Grid Layout */
+.button-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Item List Styles */
 .item-list {
-    margin-top: 40px;
+    margin-top: 30px;
     text-align: left;
-}
-
-.item-list h3 {
-    color: #333333;
-    margin-bottom: 20px;
-}
-
-.item-list p {
-    color: #777777;
 }
 
 .item {
@@ -252,14 +266,7 @@ h3 {
     justify-content: space-between;
     padding: 15px;
     border-bottom: 2px solid #dddddd;
-}
-
-.item img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-right: 15px;
+    margin-bottom: 10px;
 }
 
 .item-description {
@@ -268,45 +275,35 @@ h3 {
     align-items: center;
 }
 
+.item img {
+    width: 120px;
+    height: 68px; /* Maintains 16:9 ratio */
+    object-fit: contain;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+
 .item-description span {
     margin-left: 15px;
-    font-size: 18px;
+    font-size: 16px;
     color: #333333;
 }
 
 .item-remove {
     background-color: #dc3545;
-    padding: 10px 15px;
+    padding: 8px 15px;
     border: none;
     border-radius: 8px;
     color: #ffffff;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+    font-size: 14px;
+    transition: all 0.3s ease;
     margin-left: 15px;
 }
 
 .item-remove:hover {
     background-color: #c82333;
-}
-
-/* Add New Countertop Button */
-.add-countertop-button {
-    background-color: #28a745;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    padding: 18px 40px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    margin-top: 40px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.add-countertop-button:hover {
-    background-color: #218838;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
 }
 
 /* Color Selection Styles */
@@ -328,97 +325,37 @@ h3 {
     align-items: center;
     justify-content: center;
     position: relative;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .color-square.selected {
     border: 4px solid #0264D9;
+    transform: scale(1.05);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .color-square span {
     color: #333333;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 5px;
     border-radius: 5px;
     position: absolute;
-    bottom: 10px;
+    bottom: 5px;
     left: 50%;
     transform: translateX(-50%);
+    width: 90%;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .container {
-        padding: 30px;
-    }
-
-    .image-button {
-        width: 100%;
-        max-width: 250px;
-        margin: 20px auto;
-    }
-
-    .item {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .button-group {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .button {
-        max-width: none;
-        width: 100%;
-    }
-
-    .item-remove {
-        margin-left: 10px;
-    }
-
-    .container h1 {
-        font-size: 28px;
-    }
-
-    .container h2 {
-        font-size: 22px;
-    }
-
-    .container p,
-    .form-group label,
-    .form-group input,
-    .item-description span {
-        font-size: 16px;
-    }
-
-    .image-button .overlay {
-        font-size: 16px;
-        padding: 10px;
-    }
-}
-
-/* Large Quote Price */
+/* Quote Price Display */
 .quote-price {
     font-size: 48px;
     font-weight: bold;
     color: #333333;
-}
-
-/* Back Button */
-.back-button {
-    background-color: #f44336;
-    max-width: 150px;
-}
-
-.back-button:hover {
-    background-color: #d32f2f;
+    margin: 30px 0;
 }
 
 /* Fade In Animation */
@@ -427,12 +364,8 @@ h3 {
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* Finish Options Container */
@@ -441,26 +374,96 @@ h3 {
     justify-content: space-between;
     flex-wrap: wrap;
     margin-top: 30px;
+    gap: 30px;
 }
 
-/* Finish Option Styling */
 .finish-option {
-    width: 48%;
+    flex: 1;
+    min-width: 300px;
     margin-bottom: 30px;
     text-align: center;
 }
 
-/* Adjust image-button inside finish-option */
-.finish-option .image-button {
-    width: 100%;
-    max-width: 250px;
-    margin: 0 auto 15px auto;
-}
-
-/* Responsive Styling for Finish Options */
+/* Responsive Design */
 @media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        width: 100%;
+    }
+
+    .image-button {
+        max-width: 300px;
+    }
+
+    .button-group {
+        grid-template-columns: 1fr;
+    }
+
     .finish-option {
         width: 100%;
+    }
+
+    .container h1 {
+        font-size: 28px;
+    }
+
+    .container h2 {
+        font-size: 24px;
+    }
+
+    .container p,
+    .form-group label,
+    .form-group input {
+        font-size: 16px;
+    }
+
+    .button {
+        width: 100%;
+        max-width: none;
+    }
+
+    .color-selection {
+        gap: 10px;
+    }
+
+    .color-square {
+        width: 80px;
+        height: 80px;
+    }
+
+    .item img {
+        width: 100px;
+        height: 56px;
+    }
+
+    .quote-price {
+        font-size: 36px;
+    }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+
+    .image-button {
+        max-width: 250px;
+    }
+
+    .button {
+        font-size: 16px;
+        padding: 12px 24px;
+    }
+
+    .color-square {
+        width: 70px;
+        height: 70px;
+    }
+
+    .item img {
+        width: 80px;
+        height: 45px;
     }
 }
     `;
