@@ -855,8 +855,8 @@ function addItem(container) {
     
  function getSubcategoryImageUrl(subcategory) {
     const images = {
-        'Bartops': 'https://i.ibb.co/ypYDVTk/1.png',   // New Bartop image
-        'Countertops': 'https://i.ibb.co/T0fnP1g/2.png',  // New Counter image
+        'Bartops': 'https://i.ibb.co/T0fnP1g/2.png',
+        'Countertops': 'https://i.ibb.co/ypYDVTk/1.png',  // New Counter image
         'Islands': 'https://i.ibb.co/BKhZY1V/3.png'   // New Island image
     };
     return images[subcategory] || 'https://via.placeholder.com/250';
