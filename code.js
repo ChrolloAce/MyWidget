@@ -417,30 +417,39 @@ h3 {
     background-color: #f5f5f5 !important;
 }
 
-/* Special handling for shape diagrams in the measurements page */
-.form img[src*="1.png"],
-.form img[src*="2.png"],
-.form img[src*="3.png"],
-.form img[src*="4.png"],
-.form img[src*="5.png"],
-.form img[src*="6.png"],
-.form img[src*="7.png"],
-.form img[src*="8.png"],
-.form img[src*="9.png"],
-.form img[src*="10.png"],
-.form img[src*="11.png"],
-.form img[src*="12.png"],
-.form img[src*="13.png"],
-.form img[src*="14.png"],
-.form img[src*="15.png"],
-.form img[src*="16.png"],
-.form img[src*="17.png"],
-.form img[src*="18.png"],
-.form img[src*="19.png"],
-.form img[src*="20.png"] {
-    max-width: 600px !important;
-    aspect-ratio: 16/9 !important;
-    object-fit: contain !important;
+/* Target specifically the shape diagram buttons */
+.image-button[style*="1.png"],
+.image-button[style*="2.png"],
+.image-button[style*="3.png"],
+.image-button[style*="4.png"],
+.image-button[style*="5.png"],
+.image-button[style*="6.png"],
+.image-button[style*="7.png"],
+.image-button[style*="8.png"],
+.image-button[style*="9.png"],
+.image-button[style*="10.png"],
+.image-button[style*="11.png"],
+.image-button[style*="12.png"],
+.image-button[style*="13.png"],
+.image-button[style*="14.png"],
+.image-button[style*="15.png"],
+.image-button[style*="16.png"],
+.image-button[style*="17.png"],
+.image-button[style*="18.png"],
+.image-button[style*="19.png"],
+.image-button[style*="20.png"] {
+    width: 250px;
+    aspect-ratio: 16/9;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #f5f5f5;
+}
+
+/* Make measurement page diagrams larger */
+.form .image-container img[src*=".png"] {
+    max-width: 600px;
+    aspect-ratio: 16/9;
+    object-fit: contain;
 }
     `;
 
