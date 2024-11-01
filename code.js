@@ -92,6 +92,7 @@ h2 {
     font-size: 28px;
 }
 
+/* Add more bottom margin to titles in the colors screen */
 h3 {
     margin-bottom: 30px;
 }
@@ -162,11 +163,13 @@ h3 {
     max-width: 200px;
 }
 
+/* Button Hover Effects */
 .button:hover {
     background-color: #004C99;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
+/* Green Button */
 .button.green-button {
     background-color: #28a745;
     color: #ffffff;
@@ -176,6 +179,7 @@ h3 {
     background-color: #218838;
 }
 
+/* Red Button */
 .button.red-button {
     background-color: #dc3545;
 }
@@ -184,31 +188,31 @@ h3 {
     background-color: #c82333;
 }
 
-/* Special handling for countertop shape images */
-.button-group .image-button {
+/* Base Image Button Styles */
+.image-button {
     position: relative;
     width: 250px;
-    aspect-ratio: 16/9;
     border: 2px solid #000000;
     border-radius: 15px;
     overflow: hidden;
     cursor: pointer;
-    background-size: contain;
+    background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    background-color: #f5f5f5;
     margin: 30px auto;
-    transition: all 0.3s ease;
+    transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    aspect-ratio: 1/1;
 }
 
-/* Keep other image buttons squared */
-.finish-option .image-button {
-    aspect-ratio: 1/1;
-    background-size: cover;
+/* Special handling for countertop shape buttons */
+.button-group .image-button {
+    aspect-ratio: 16/9;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #f5f5f5;
 }
 
 .image-button:hover {
@@ -229,17 +233,19 @@ h3 {
     text-align: center;
 }
 
-/* Configuration page image */
-.form img {
+/* Base Image Container */
+.image-container img {
     width: 100%;
-    max-width: 600px;
-    height: auto;
-    aspect-ratio: 16/9;
-    object-fit: contain;
-    margin: 20px auto;
-    display: block;
+    max-width: 300px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Special handling for configuration page images */
+.form .image-container img {
+    max-width: 600px;
+    aspect-ratio: 16/9;
+    object-fit: contain;
 }
 
 /* Item List */
@@ -253,6 +259,10 @@ h3 {
     margin-bottom: 20px;
 }
 
+.item-list p {
+    color: #777777;
+}
+
 .item {
     display: flex;
     align-items: center;
@@ -261,18 +271,18 @@ h3 {
     border-bottom: 2px solid #dddddd;
 }
 
+.item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
 .item-description {
     flex: 1;
     display: flex;
     align-items: center;
-}
-
-.item img {
-    width: 120px;
-    aspect-ratio: 16/9;
-    object-fit: contain;
-    border-radius: 10px;
-    margin-right: 15px;
 }
 
 .item-description span {
@@ -311,6 +321,12 @@ h3 {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
+.add-countertop-button:hover {
+    background-color: #218838;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Back Button */
 .back-button {
     background-color: #f44336;
     max-width: 150px;
@@ -318,6 +334,69 @@ h3 {
 
 .back-button:hover {
     background-color: #d32f2f;
+}
+
+/* Color Selection Styles */
+.color-selection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.color-square {
+    width: 100px;
+    height: 100px;
+    border: 3px solid #dddddd;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.color-square.selected {
+    border: 4px solid #0264D9;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.color-square span {
+    color: #333333;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Finish Options Container */
+.finish-options-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.finish-option {
+    width: 48%;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.finish-option .image-button {
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto 15px auto;
+    aspect-ratio: 1/1;
 }
 
 /* Responsive Styles */
@@ -332,10 +411,6 @@ h3 {
         margin: 20px auto;
     }
 
-    .form img {
-        max-width: 400px;
-    }
-
     .button-group {
         flex-direction: column;
         align-items: center;
@@ -343,6 +418,10 @@ h3 {
 
     .button {
         max-width: none;
+        width: 100%;
+    }
+
+    .finish-option {
         width: 100%;
     }
 }
