@@ -454,11 +454,21 @@ h3 {
 
 .image-button[style*="tPH5VT2/10.png"],
 .image-button[style*="KmS1PKB/recbath.png"] {
-    width: 250px;
-    aspect-ratio: 16/9;
-    background-size: contain;
+    width: 500px;
+    height: 500px;
+    aspect-ratio: 1/1;
+    background-size: cover;
     background-repeat: no-repeat;
-    background-color: #f5f5f5;
+    background-position: center;
+}
+
+/* Make them responsive on smaller screens */
+@media (max-width: 768px) {
+    .image-button[style*="tPH5VT2/10.png"],
+    .image-button[style*="KmS1PKB/recbath.png"] {
+        width: 300px;
+        height: 300px;
+    }
 }
     `;
 
