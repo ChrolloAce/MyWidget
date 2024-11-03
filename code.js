@@ -451,6 +451,15 @@ h3 {
     aspect-ratio: 16/9;
     object-fit: contain;
 }
+
+.image-button[style*="tPH5VT2/10.png"],
+.image-button[style*="KmS1PKB/recbath.png"] {
+    width: 250px;
+    aspect-ratio: 16/9;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #f5f5f5;
+}
     `;
 
         const styleElement = document.createElement('style');
