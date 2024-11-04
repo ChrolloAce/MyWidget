@@ -876,14 +876,6 @@ function addItem(container) {
     const buttonWrapper = createElement('div', 'button-wrapper');
     container.appendChild(buttonWrapper);
 
-    // Back Button
-    const backButton = createElement('button', 'button back-button', 'Back');
-    buttonWrapper.appendChild(backButton);
-
-    backButton.addEventListener('click', () => {
-        if (previousPage) previousPage();
-    });
-}
     // Button text changed from "View Quote" to "See Available Shapes"
     const viewShapesBtn = createElement('button', 'button', 'See Available Shapes');
     container.appendChild(viewShapesBtn);
@@ -894,15 +886,13 @@ function addItem(container) {
     });
 
     // Back Button
-    const buttonWrapper = createElement('div', 'button-wrapper'); // Ensure button wrapper for consistency
-    container.appendChild(buttonWrapper);
-
     const backButton = createElement('button', 'button back-button', 'Back');
     buttonWrapper.appendChild(backButton);
 
     backButton.addEventListener('click', () => {
-        previousPage && previousPage();
+        if (previousPage) previousPage();
     });
+}
 
 
 
