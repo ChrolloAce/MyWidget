@@ -452,11 +452,11 @@ h3 {
         return element;
     }
 
-function createImageButton(text, imageUrl) {
+function createImageButton(text, imageUrl, isShapeDiagram = false) {
     const button = createElement('div', 'image-button');
     
-    // Add special class for shape diagrams
-    if(imageUrl.match(/\d+\.png$/)) {  // If URL ends with a number.png
+    // Add `shape-diagram` class only if `isShapeDiagram` is true
+    if (isShapeDiagram) {
         button.classList.add('shape-diagram');
     }
     
@@ -826,6 +826,11 @@ function addItem(container) {
     });
 }
 
+
+    function createShapeDiagramButton(text, imageUrl) {
+    return createImageButton(text, imageUrl, true);  // Pass `true` to add the shape-diagram class
+}
+
     
 function getSubcategoryImageUrl(subcategory) {
     // Remove trailing 's' if present
@@ -853,7 +858,7 @@ function getSubcategoryImageUrl(subcategory) {
 
     const shapes = getShapesForSubcategory(designSelections.type, singularSubcategory);
     shapes.forEach(shape => {
-        const shapeBtn = createImageButton(shape.name, shape.imageUrl);
+        const shapeBtn = createShapeDiagramButton(shape.name, shape.imageUrl);
         shapeContainer.appendChild(shapeBtn);
 
         shapeBtn.addEventListener('click', () => {
