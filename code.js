@@ -1022,7 +1022,7 @@ function getShapesForSubcategory(type, subcategory) {
                     code: 'IsR',
                     measurements: ['Measurement 1', 'Measurement 2'],
                     formula: (measurements) => (measurements[0] * measurements[1]) / 144,
-                    imageUrl: 'https://i.ibb.co/hcKgcJr/18.png'
+                    imageUrl: 'https://i.ibb.co/hcKgcJr/15.png'
                 },
                 {
                     name: 'Broken L',
@@ -1032,7 +1032,7 @@ function getShapesForSubcategory(type, subcategory) {
                         const perimeter = measurements.slice(0, 4).reduce((acc, cur) => acc + cur, 0);
                         return ((perimeter / 2) * measurements[4]) / 144;
                     },
-                    imageUrl: 'https://i.ibb.co/Qv8p4Bx/19.png'
+                    imageUrl: 'https://i.ibb.co/Qv8p4Bx/16.png'
                 },
                 {
                     name: '3 Sides',
@@ -1042,7 +1042,7 @@ function getShapesForSubcategory(type, subcategory) {
                         const perimeter = measurements.slice(0, 6).reduce((acc, cur) => acc + cur, 0);
                         return ((perimeter / 2) * measurements[6]) / 144;
                     },
-                    imageUrl: 'https://i.ibb.co/47FGwJg/20.png'
+                    imageUrl: 'https://i.ibb.co/47FGwJg/17.png'
                 }
             ]
         }
@@ -1636,14 +1636,14 @@ function getShapesForType(type) {
                 code: 'BathS',
                 measurements: ['Measurement 1'],
                 formula: (measurements) => (measurements[0] * 22) / 144,
-                imageUrl: 'https://i.ibb.co/Dwx1Rsw/15.png'
+                imageUrl: 'https://i.ibb.co/Dwx1Rsw/18.png'
             },
             {
                 name: 'Standard L',
                 code: 'BathL',
                 measurements: ['Measurement 1', 'Measurement 2'],
                 formula: (measurements) => ((measurements[0] + measurements[1]) * 22) / 144,
-                imageUrl: 'https://i.ibb.co/JHrP44S/16.png'
+                imageUrl: 'https://i.ibb.co/JHrP44S/19.png'
             },
             {
                 name: 'Standard 3 Sides',
@@ -1653,7 +1653,7 @@ function getShapesForType(type) {
                     const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
                     return ((perimeter / 2) * 22) / 144;
                 },
-                imageUrl: 'https://i.ibb.co/HtZy3kR/17.png'
+                imageUrl: 'https://i.ibb.co/HtZy3kR/20.png'
             }
         ]
     };
