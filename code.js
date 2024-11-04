@@ -9,6 +9,7 @@
     let previousPage = null;
     let userInfo = {};
 
+
     let designSelections = {
         type: '',         // 'Kitchen' or 'Bathroom'
         finishType: '',   // 'crystal' or 'standard'
@@ -1553,12 +1554,13 @@ function collectUserInfo(container) {
                 : total;
         }, 0);
 
-        const payload = {
-            userInfo,
-            totalPrice,
-            totalSquareFootage: Math.ceil(totalSquareFootage),
-            items: itemsList
-        };
+      const payload = {
+    userInfo,
+    totalCost,  // Use totalCost here instead of totalPrice
+    totalSquareFootage: Math.ceil(totalSquareFootage),
+    items: itemsList
+};
+
 
         fetch(window.WEBHOOK_URL, {
             method: 'POST',
