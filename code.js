@@ -464,12 +464,15 @@ h3 {
         return element;
     }
 
-   function createImageButton(text, imageUrl) {
+  function createImageButton(text, imageUrl) {
     const button = createElement('div', 'image-button');
     button.style.backgroundImage = `url(${imageUrl})`;
+
+    // Extract only the display name part before the code
+    const displayName = text.split(' - ')[0];
     
-    // Adding the text below the image instead of overlay
-    const label = createElement('div', 'image-label', text);
+    // Adding the text below the image
+    const label = createElement('div', 'image-label', displayName);
     button.appendChild(label);
     
     return button;
@@ -767,17 +770,18 @@ function chooseColors(container) {
 
 
 function addItem(container) {
-    container.innerHTML = '';  // Clear the container
+    container.innerHTML = '';
 
-    const header = createElement('h2', null, 'Add a Countertop Item');
+    const header = createElement('h2', null, 'Add a Countertop');
     container.appendChild(header);
 
-    // If Kitchen, choose subcategory
     if (designSelections.type === 'Kitchen') {
+        // Create grid container for subcategories
         const subcategoryContainer = createElement('div', 'button-group');
         container.appendChild(subcategoryContainer);
 
-        const subcategories = ['Bartops', 'Countertops', 'Islands'];
+        // Use singular forms
+        const subcategories = ['Bartop', 'Countertop', 'Island'];
 
         subcategories.forEach(subcategory => {
             const subcategoryBtn = createImageButton(subcategory, getSubcategoryImageUrl(subcategory));
@@ -785,11 +789,11 @@ function addItem(container) {
 
             subcategoryBtn.addEventListener('click', () => {
                 previousPage = () => addItem(container);
-                chooseShape(container, subcategory);  // Proceed to shape selection
+                chooseShape(container, subcategory);
             });
         });
     } else {
-        // For Bathroom, directly choose shape
+        // For Bathroom, create grid of shapes
         const shapeContainer = createElement('div', 'button-group');
         container.appendChild(shapeContainer);
 
@@ -800,18 +804,17 @@ function addItem(container) {
 
             shapeBtn.addEventListener('click', () => {
                 previousPage = () => addItem(container);
-                inputMeasurements(container, shape);  // Proceed to measurement input
+                inputMeasurements(container, shape);
             });
         });
     }
 
-    // Show Item List and Invoice button (if items exist)
+    // Show item list if items exist
     if (items.length > 0) {
         const itemListDiv = createElement('div', 'item-list');
         container.appendChild(itemListDiv);
-        updateItemList(itemListDiv);  // Update item list
+        updateItemList(itemListDiv);
 
-        // Add "View Price Estimate for Free" button
         const buttonWrapper = createElement('div', 'button-wrapper');
         container.appendChild(buttonWrapper);
 
@@ -820,15 +823,14 @@ function addItem(container) {
 
         viewInvoiceBtn.addEventListener('click', () => {
             previousPage = () => addItem(container);
-            createInvoicePage(container);  // Proceed to the invoice page
+            createInvoicePage(container);
         });
     }
 
-    // Create a button wrapper for centering buttons
+    // Navigation buttons
     const buttonWrapper = createElement('div', 'button-wrapper');
     container.appendChild(buttonWrapper);
 
-    // Back Button
     const backButton = createElement('button', 'button back-button', 'Back');
     buttonWrapper.appendChild(backButton);
 
@@ -836,7 +838,6 @@ function addItem(container) {
         if (previousPage) previousPage();
     });
 }
-
 
     
  function getSubcategoryImageUrl(subcategory) {
@@ -848,26 +849,41 @@ function addItem(container) {
     return images[subcategory] || 'https://via.placeholder.com/250';
 }
 
-   function chooseShape(container, subcategory) {
+  function chooseShape(container, subcategory) {
     container.innerHTML = '';
 
-    const header = createElement('h2', null, `Choose ${subcategory} Shape`);
+    // Remove trailing 's' from subcategory if present
+    const singularSubcategory = subcategory.replace(/s$/, '');
+    const header = createElement('h2', null, `Choose ${singularSubcategory} Shape`);
     container.appendChild(header);
 
-    const shapeContainer = createElement('div', 'button-wrapper'); // Ensure button container is used for centering
+    // Create grid container for shapes
+    const shapeContainer = createElement('div', 'button-group');
     container.appendChild(shapeContainer);
 
-    const shapes = getShapesForSubcategory(designSelections.type, subcategory);
+    const shapes = getShapesForSubcategory(designSelections.type, singularSubcategory);
     shapes.forEach(shape => {
         const shapeBtn = createImageButton(shape.name, shape.imageUrl);
         shapeContainer.appendChild(shapeBtn);
 
         shapeBtn.addEventListener('click', () => {
-            previousPage = () => chooseShape(container, subcategory);
+            previousPage = () => chooseShape(container, singularSubcategory);
             inputMeasurements(container, shape);
         });
     });
 
+    // Button wrapper for navigation buttons
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    buttonWrapper.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        if (previousPage) previousPage();
+    });
+}
     // Button text changed from "View Quote" to "See Available Shapes"
     const viewShapesBtn = createElement('button', 'button', 'See Available Shapes');
     container.appendChild(viewShapesBtn);
@@ -894,40 +910,37 @@ function addItem(container) {
 function getShapesForSubcategory(type, subcategory) {
     const shapes = {
         'Kitchen': {
-            'Countertops': [
+            'Countertop': [
                 {
-                    name: 'Standard - KS',
+                    name: 'Standard',
                     code: 'KS',
-                    measurements: ['Length (Measurement 1)'],
+                    measurements: ['Length'],
                     formula: (measurements) => (measurements[0] * 25) / 144,
                     imageUrl: 'https://i.ibb.co/nn8k8Bf/1.png'
                 },
                 {
-                    name: 'Standard L - KSL',
+                    name: 'Standard L',
                     code: 'KSL',
                     measurements: ['Length 1', 'Length 2'],
                     formula: (measurements) => ((measurements[0] + measurements[1]) * 25) / 144,
                     imageUrl: 'https://i.ibb.co/ZdMvxQK/2.png'
                 },
                 {
-                    name: 'Standard 3 Sides - KS3',
+                    name: 'Standard 3 Sides',
                     code: 'KS3',
                     measurements: ['Length 1', 'Length 2', 'Length 3'],
                     formula: (measurements) => ((measurements[0] + measurements[1] + measurements[2]) * 25) / 144,
                     imageUrl: 'https://i.ibb.co/B28cv3j/3.png'
                 },
                 {
-                    name: 'Standard Broken L - KSBL',
+                    name: 'Standard Broken L',
                     code: 'KSBL',
                     measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4'],
-                    formula: (measurements) => {
-                        const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
-                        return ((perimeter / 2) * 25) / 144;
-                    },
+                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0) / 2) * 25) / 144,
                     imageUrl: 'https://i.ibb.co/5kb4k7G/4.png'
                 },
                 {
-                    name: 'Standard Wing - KSW',
+                    name: 'Standard Wing',
                     code: 'KSW',
                     measurements: ['Length 1', 'Length 2', 'Length 3'],
                     formula: (measurements) => {
@@ -938,17 +951,14 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/qnLVKrS/5.png'
                 },
                 {
-                    name: 'Standard Wing 3 Sides - KSW3',
+                    name: 'Standard Wing 3 Sides',
                     code: 'KSW3',
                     measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6'],
-                    formula: (measurements) => {
-                        const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
-                        return (perimeter * 25) / 144;
-                    },
+                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 25) / 144,
                     imageUrl: 'https://i.ibb.co/WKscbzZ/6.png'
                 },
                 {
-                    name: 'Standard 4 Sides - KS4',
+                    name: 'Standard 4 Sides',
                     code: 'KS4',
                     measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Length 7'],
                     formula: (measurements) => {
@@ -956,32 +966,39 @@ function getShapesForSubcategory(type, subcategory) {
                         return ((sum / 2) * 25) / 144;
                     },
                     imageUrl: 'https://i.ibb.co/dQ4sD7Y/7.png'
+                },
+                {
+                    name: 'Irregular L',
+                    code: 'KIL',
+                    measurements: ['Length 1', 'Width 1', 'Length 2'],
+                    formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * 25)) / 144,
+                    imageUrl: 'https://i.ibb.co/8BsnF1W/11.png'
                 }
             ],
-            'Bartops': [
+            'Bartop': [
                 {
-                    name: 'Straight - BarS',
+                    name: 'Straight',
                     code: 'BarS',
                     measurements: ['Length', 'Width'],
                     formula: (measurements) => (measurements[0] * measurements[1]) / 144,
                     imageUrl: 'https://i.ibb.co/LhtPc1f/8.png'
                 },
                 {
-                    name: 'Standard L - BarSL',
+                    name: 'Standard L',
                     code: 'BarSL',
                     measurements: ['Length 1', 'Length 2', 'Width'],
                     formula: (measurements) => ((measurements[0] + measurements[1]) * measurements[2]) / 144,
                     imageUrl: 'https://i.ibb.co/P69ZfHJ/9.png'
                 },
                 {
-                    name: 'Irregular L - BarIL',
+                    name: 'Irregular L',
                     code: 'BarIL',
                     measurements: ['Length 1', 'Width 1', 'Length 2', 'Width 2'],
                     formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * measurements[3])) / 144,
                     imageUrl: 'https://i.ibb.co/J55R5XS/10.png'
                 },
                 {
-                    name: 'Broken L - BarBL',
+                    name: 'Broken L',
                     code: 'BarBL',
                     measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Height'],
                     formula: (measurements) => {
@@ -991,7 +1008,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/mzpQz03/11.png'
                 },
                 {
-                    name: 'Standard 3 Sides - Bar3',
+                    name: 'Standard 3 Sides',
                     code: 'Bar3',
                     measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Height'],
                     formula: (measurements) => {
@@ -1001,7 +1018,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/cg9YBY2/12.png'
                 },
                 {
-                    name: 'Standard 4 Sides - Bar4',
+                    name: 'Standard 4 Sides',
                     code: 'Bar4',
                     measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Length 7', 'Length 8', 'Height'],
                     formula: (measurements) => {
@@ -1011,16 +1028,16 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/qMpW4WB/13.png'
                 }
             ],
-            'Islands': [
+            'Island': [
                 {
-                    name: 'Rectangle - IsR',
+                    name: 'Rectangle',
                     code: 'IsR',
                     measurements: ['Length', 'Width'],
                     formula: (measurements) => (measurements[0] * measurements[1]) / 144,
                     imageUrl: 'https://i.ibb.co/37bbBck/14.png'
                 },
                 {
-                    name: 'Broken L - IsBL',
+                    name: 'Broken L',
                     code: 'IsBL',
                     measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Height'],
                     formula: (measurements) => {
@@ -1030,30 +1047,22 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/hcKgcJr/15.png'
                 },
                 {
-                    name: 'Island 3 Sides - Is3',
+                    name: '3 Sides',
                     code: 'Is3',
                     measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Height'],
                     formula: (measurements) => {
                         const perimeter = measurements.slice(0, 6).reduce((acc, cur) => acc + cur, 0);
-                        return ((perimeter / 2) * measurements[6]) / 144;
+                        return ((perimeter / 2) * measurements[7]) / 144;
                     },
                     imageUrl: 'https://i.ibb.co/Qv8p4Bx/16.png'
-                },
-                {
-                    name: '3 Sides 2 - Is3-2',
-                    code: 'Is3-2',
-                    measurements: ['Length 1', 'Length 2', 'Length 3', 'Length 4', 'Length 5', 'Length 6', 'Height'],
-                    formula: (measurements) => {
-                        const perimeter = measurements.slice(0, 6).reduce((acc, cur) => acc + cur, 0);
-                        return ((perimeter / 2) * measurements[6]) / 144;
-                    },
-                    imageUrl: 'https://i.ibb.co/HtZy3kR/20.png'
-                 }
+                }
             ]
         }
     };
 
-    return shapes[type] && shapes[type][subcategory] ? shapes[type][subcategory] : [];
+    // Convert singular forms to match potential plural inputs
+    const normalizedSubcategory = subcategory.replace(/s$/, '');
+    return shapes[type] && shapes[type][normalizedSubcategory] ? shapes[type][normalizedSubcategory] : [];
 }
 
 
@@ -1186,37 +1195,43 @@ function createQuotePage(container) {
 function inputMeasurements(container, shape) {
     container.innerHTML = '';
 
-    const header = createElement('h2', null, `Configure ${shape.name}`);
+    // Extract display name without the code
+    const displayName = shape.name.split(' - ')[0];
+    const header = createElement('h2', null, `Configure ${displayName}`);
     container.appendChild(header);
 
-    // Display the shape image
+    // Image container with proper sizing
     const imageDiv = createElement('div', 'image-container');
     const shapeImage = createElement('img');
     shapeImage.src = shape.imageUrl;
-    shapeImage.alt = shape.name;
-    shapeImage.style.width = '100%';
-    shapeImage.style.maxWidth = '300px';
+    shapeImage.alt = displayName;
     imageDiv.appendChild(shapeImage);
     container.appendChild(imageDiv);
 
     const form = createElement('div', 'form');
     container.appendChild(form);
 
-    // Measurement Inputs with dynamic labeling
+    // Create measurement grid
+    const measurementGrid = createElement('div', 'measurement-input');
+    form.appendChild(measurementGrid);
+
+    // Measurement Inputs
     const measurementInputs = [];
     shape.measurements.forEach((label, index) => {
         const formGroup = createElement('div', 'form-group');
-        const inputLabel = createElement('label', null, `Measurement ${index + 1}:`);
+        const inputLabel = createElement('label', null, label);
         const inputField = createElement('input');
         inputField.type = 'number';
         inputField.min = '0';
+        inputField.step = 'any';
+        inputField.placeholder = 'Enter measurement in inches';
         formGroup.appendChild(inputLabel);
         formGroup.appendChild(inputField);
-        form.appendChild(formGroup);
+        measurementGrid.appendChild(formGroup);
         measurementInputs.push(inputField);
     });
 
-    // Button Wrapper for proper spacing and centering
+    // Button Wrapper
     const buttonWrapper = createElement('div', 'button-wrapper');
     container.appendChild(buttonWrapper);
 
@@ -1227,7 +1242,7 @@ function inputMeasurements(container, shape) {
     nextBtn.addEventListener('click', () => {
         const measurements = measurementInputs.map(input => parseFloat(input.value));
         if (measurements.some(value => isNaN(value) || value <= 0)) {
-            alert('Please enter valid measurements.');
+            alert('Please enter valid measurements for all fields.');
             return;
         }
 
