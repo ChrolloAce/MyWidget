@@ -1315,45 +1315,48 @@ function inputMeasurements(container, shape) {
     });
 }
 
-  // Calculate Total Cost Function
 function calculateTotalCost() {
     totalCost = 0;
     items.forEach(item => {
-        // Get the shape's details using the item's shape name
         const shape = getShapeByName(item.shape);
         if (shape && typeof shape.formula === 'function') {
+            // Check that all measurements are valid numbers
+            const validMeasurements = item.measurements.every(measurement => typeof measurement === 'number' && !isNaN(measurement) && measurement > 0);
+            if (!validMeasurements) {
+                console.warn('Invalid measurements detected:', item.measurements);
+                return;
+            }
+            
             // Calculate the area using the shape's formula
             const area = shape.formula(item.measurements);
-            
+
             // Determine the price per square foot based on the finish type
             let pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
-            
+
             // Calculate the cost for the item
             let itemCost = area * pricePerSqFt;
-            
+
             // Add backsplash cost if applicable
             if (item.backsplash) {
-                // Calculate backsplash area in square feet
                 const backsplashArea = (item.backsplash.width * item.backsplash.height) / 144;
-                // Calculate backsplash cost
                 const backsplashCost = backsplashArea * pricePerSqFt;
                 itemCost += backsplashCost;
             }
-            
+
             // Add the item's cost to the total cost
-            itemCost += 50; // Add $50 to the item cost
+            itemCost += 50;
             totalCost += itemCost;
         }
     });
-    
+
     // Enforce the minimum price
     if (totalCost < MINIMUM_PRICE) {
         totalCost = MINIMUM_PRICE;
     }
-    
-    // Round up the total cost to the nearest whole number
+
     totalCost = Math.ceil(totalCost);
 }
+
 
     // Get Shape by Name
     function getShapeByName(name) {
