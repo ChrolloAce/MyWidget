@@ -196,7 +196,6 @@ h3 {
     justify-items: center;
 }
 
-/* Image Button Styles */
 .image-button {
     position: relative;
     width: 300px;
@@ -215,12 +214,12 @@ h3 {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
-/* Shape Diagram Specific Styling */
-.image-button.shape-diagram {
-    aspect-ratio: 16/9;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-color: #f5f5f5;
+/* Only shape diagrams get 16:9 */
+.shape-diagram {
+    aspect-ratio: 16/9 !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-color: #f5f5f5 !important;
 }
 
 .image-button:hover {
