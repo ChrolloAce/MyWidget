@@ -60,7 +60,7 @@ body {
 /* Main Container Styling */
 .container {
     width: 95%;
-    max-width: 900px;
+    max-width: 1200px;
     background-color: #f9f9f9;
     padding: 60px;
     border-radius: 20px;
@@ -95,6 +95,8 @@ h2 {
 /* Add more bottom margin to titles in the colors screen */
 h3 {
     margin-bottom: 30px;
+    font-size: 24px;
+    color: #333333;
 }
 
 /* Paragraphs */
@@ -191,8 +193,8 @@ h3 {
 /* Image Button Styles */
 .image-button {
     position: relative;
-    width: 250px;
-    aspect-ratio: 1/1;
+    width: 500px;
+    height: 500px;
     border: 2px solid #000000;
     border-radius: 15px;
     overflow: hidden;
@@ -202,7 +204,8 @@ h3 {
     margin: 30px auto;
     transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-end;
     align-items: center;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
@@ -213,21 +216,58 @@ h3 {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
-.image-button .overlay {
-    position: absolute;
-    bottom: 0;
+.image-label {
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
     padding: 12px;
-    font-size: 18px;
-    font-weight: bold;
+    background: white;
+    color: #333;
     text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    border-top: 1px solid #eee;
+}
+
+/* Container for multiple image buttons */
+.image-button-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 500px));
+    gap: 40px;
+    justify-content: center;
+    width: 100%;
+    margin: 20px 0;
+}
+
+/* Shape Diagrams Specific Styling */
+.shape-diagram {
+    width: 100% !important;
+    max-width: 500px !important;
+    aspect-ratio: 16/9 !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-color: #f5f5f5 !important;
+    margin: 20px auto !important;
+}
+
+/* Main Category Images */
+.category-image {
+    width: 500px !important;
+    height: 500px !important;
+    aspect-ratio: 1/1 !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+/* Image Container */
+.image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
 }
 
 .image-container img {
     width: 100%;
-    max-width: 300px;
+    max-width: 500px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
@@ -236,88 +276,61 @@ h3 {
 .item-list {
     margin-top: 40px;
     text-align: left;
-}
-
-.item-list h3 {
-    color: #333333;
-    margin-bottom: 20px;
-}
-
-.item-list p {
-    color: #777777;
+    width: 100%;
 }
 
 .item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px;
+    padding: 20px;
     border-bottom: 2px solid #dddddd;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.item img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-right: 15px;
+.item:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .item-description {
     flex: 1;
     display: flex;
     align-items: center;
+    gap: 20px;
+}
+
+.item-description img {
+    width: 100px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 8px;
+    background-color: #f5f5f5;
 }
 
 .item-description span {
-    margin-left: 15px;
     font-size: 18px;
     color: #333333;
+    font-weight: 500;
 }
 
 .item-remove {
     background-color: #dc3545;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: none;
     border-radius: 8px;
     color: #ffffff;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
-    margin-left: 15px;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .item-remove:hover {
     background-color: #c82333;
-}
-
-/* Add New Countertop Button */
-.add-countertop-button {
-    background-color: #28a745;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    padding: 18px 40px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    margin-top: 40px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.add-countertop-button:hover {
-    background-color: #218838;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-}
-
-/* Back Button */
-.back-button {
-    background-color: #f44336;
-    max-width: 150px;
-}
-
-.back-button:hover {
-    background-color: #d32f2f;
+    transform: scale(1.05);
 }
 
 /* Color Selection Styles */
@@ -326,7 +339,7 @@ h3 {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
-    margin-bottom: 30px;
+    margin: 30px 0;
 }
 
 .color-square {
@@ -336,138 +349,103 @@ h3 {
     border-radius: 10px;
     cursor: pointer;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     position: relative;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .color-square.selected {
     border: 4px solid #0264D9;
+    transform: scale(1.05);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .color-square span {
+    width: 100%;
     color: #333333;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: white;
     padding: 5px;
-    border-radius: 5px;
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
 }
 
-/* Finish Options Container */
-.finish-options-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-top: 30px;
-}
-
-.finish-option {
-    width: 48%;
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-.finish-option .image-button {
+/* Form Container */
+.form {
     width: 100%;
-    max-width: 250px;
-    margin: 0 auto 15px auto;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* Responsive Styles */
+/* Measurement Input Specific Styles */
+.measurement-input {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         padding: 30px;
+        width: 100%;
     }
 
     .image-button {
-        width: 100%;
-        max-width: 250px;
-        margin: 20px auto;
+        width: 300px;
+        height: 300px;
     }
 
-    .button-group {
+    .shape-diagram {
+        max-width: 300px !important;
+    }
+
+    .button-wrapper {
         flex-direction: column;
         align-items: center;
     }
 
     .button {
+        width: 100%;
         max-width: none;
-        width: 100%;
     }
 
-    .finish-option {
-        width: 100%;
+    .item-description img {
+        width: 80px;
+        height: 48px;
+    }
+
+    .color-selection {
+        gap: 10px;
+    }
+
+    .color-square {
+        width: 80px;
+        height: 80px;
+    }
+
+    .form {
+        padding: 10px;
     }
 }
 
-/* Special handling for the 20 countertop shape diagrams */
-[class^="Standard"], [class^="Irregular"], [class^="Straight"], [class^="Bar"], [class^="Island"], [class^="Rectangle"], [class^="Broken"], [class*="3 Sides"] {
-    aspect-ratio: 16/9 !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-color: #f5f5f5 !important;
-}
+/* Print Styles */
+@media print {
+    .container {
+        box-shadow: none;
+        margin: 0;
+        padding: 20px;
+    }
 
-/* Target specifically the shape diagram buttons */
-.image-button[style*="1.png"],
-.image-button[style*="2.png"],
-.image-button[style*="3.png"],
-.image-button[style*="4.png"],
-.image-button[style*="5.png"],
-.image-button[style*="6.png"],
-.image-button[style*="7.png"],
-.image-button[style*="8.png"],
-.image-button[style*="9.png"],
-.image-button[style*="10.png"],
-.image-button[style*="11.png"],
-.image-button[style*="12.png"],
-.image-button[style*="13.png"],
-.image-button[style*="14.png"],
-.image-button[style*="15.png"],
-.image-button[style*="16.png"],
-.image-button[style*="17.png"],
-.image-button[style*="18.png"],
-.image-button[style*="19.png"],
-.image-button[style*="20.png"] {
-    width: 250px;
-    aspect-ratio: 16/9;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-color: #f5f5f5;
-}
-
-/* Make measurement page diagrams larger */
-.form .image-container img[src*=".png"] {
-    max-width: 600px;
-    aspect-ratio: 16/9;
-    object-fit: contain;
-}
-
-.image-button[style*="tPH5VT2/10.png"],
-.image-button[style*="KmS1PKB/recbath.png"] {
-    width: 500px;
-    height: 500px;
-    aspect-ratio: 1/1;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* Make them responsive on smaller screens */
-@media (max-width: 768px) {
-    .image-button[style*="tPH5VT2/10.png"],
-    .image-button[style*="KmS1PKB/recbath.png"] {
-        width: 300px;
-        height: 300px;
+    .button-wrapper,
+    .item-remove {
+        display: none;
     }
 }
     `;
@@ -486,15 +464,16 @@ h3 {
         return element;
     }
 
-    function createImageButton(text, imageUrl) {
-        const button = createElement('div', 'image-button');
-        button.style.backgroundImage = `url(${imageUrl})`;
-
-        const overlay = createElement('div', 'overlay', text);
-        button.appendChild(overlay);
-
-        return button;
-    }
+   function createImageButton(text, imageUrl) {
+    const button = createElement('div', 'image-button');
+    button.style.backgroundImage = `url(${imageUrl})`;
+    
+    // Adding the text below the image instead of overlay
+    const label = createElement('div', 'image-label', text);
+    button.appendChild(label);
+    
+    return button;
+}
 
     function styleButton(button, additionalClasses = '') {
         button.classList.add('button');
