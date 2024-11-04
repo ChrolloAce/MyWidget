@@ -92,7 +92,6 @@ h2 {
     font-size: 28px;
 }
 
-/* Add more bottom margin to titles in the colors screen */
 h3 {
     margin-bottom: 30px;
     font-size: 24px;
@@ -160,18 +159,16 @@ h3 {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     max-width: 200px;
 }
 
-/* Button Hover Effects */
 .button:hover {
     background-color: #004C99;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Green Button */
 .button.green-button {
     background-color: #28a745;
     color: #ffffff;
@@ -181,7 +178,6 @@ h3 {
     background-color: #218838;
 }
 
-/* Red Button */
 .button.red-button {
     background-color: #dc3545;
 }
@@ -190,24 +186,41 @@ h3 {
     background-color: #c82333;
 }
 
+/* Grid Layout for Buttons/Images */
+.button-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    width: 100%;
+    padding: 20px;
+    justify-items: center;
+}
+
 /* Image Button Styles */
 .image-button {
     position: relative;
-    width: 500px;
-    height: 500px;
+    width: 300px;
+    aspect-ratio: 1/1;
     border: 2px solid #000000;
     border-radius: 15px;
     overflow: hidden;
     cursor: pointer;
     background-size: cover;
     background-position: center;
-    margin: 30px auto;
-    transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 20px auto;
+    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    align-items: center;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Shape Diagram Specific Styling */
+.image-button.shape-diagram {
+    aspect-ratio: 16/9;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #f5f5f5;
 }
 
 .image-button:hover {
@@ -227,36 +240,6 @@ h3 {
     border-top: 1px solid #eee;
 }
 
-/* Container for multiple image buttons */
-.image-button-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 500px));
-    gap: 40px;
-    justify-content: center;
-    width: 100%;
-    margin: 20px 0;
-}
-
-/* Shape Diagrams Specific Styling */
-.shape-diagram {
-    width: 100% !important;
-    max-width: 500px !important;
-    aspect-ratio: 16/9 !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-color: #f5f5f5 !important;
-    margin: 20px auto !important;
-}
-
-/* Main Category Images */
-.category-image {
-    width: 500px !important;
-    height: 500px !important;
-    aspect-ratio: 1/1 !important;
-    background-size: cover !important;
-    background-position: center !important;
-}
-
 /* Image Container */
 .image-container {
     width: 100%;
@@ -270,6 +253,13 @@ h3 {
     max-width: 500px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* For measurement page diagrams */
+.image-container img.shape-diagram {
+    max-width: 600px;
+    aspect-ratio: 16/9;
+    object-fit: contain;
 }
 
 /* Item List */
@@ -382,7 +372,7 @@ h3 {
     padding: 20px;
 }
 
-/* Measurement Input Specific Styles */
+/* Measurement Input */
 .measurement-input {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -398,12 +388,7 @@ h3 {
     }
 
     .image-button {
-        width: 300px;
-        height: 300px;
-    }
-
-    .shape-diagram {
-        max-width: 300px !important;
+        width: 250px;
     }
 
     .button-wrapper {
@@ -432,6 +417,10 @@ h3 {
 
     .form {
         padding: 10px;
+    }
+
+    .button-group {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -464,8 +453,14 @@ h3 {
         return element;
     }
 
-  function createImageButton(text, imageUrl) {
+function createImageButton(text, imageUrl) {
     const button = createElement('div', 'image-button');
+    
+    // Add special class for shape diagrams
+    if(imageUrl.match(/\d+\.png$/)) {  // If URL ends with a number.png
+        button.classList.add('shape-diagram');
+    }
+    
     button.style.backgroundImage = `url(${imageUrl})`;
 
     // Extract only the display name part before the code
@@ -477,13 +472,6 @@ h3 {
     
     return button;
 }
-
-    function styleButton(button, additionalClasses = '') {
-        button.classList.add('button');
-        if (additionalClasses) {
-            additionalClasses.split(' ').forEach(cls => button.classList.add(cls));
-        }
-    }
 
     // Initialization Function
     function initInterface() {
@@ -840,13 +828,16 @@ function addItem(container) {
 }
 
     
- function getSubcategoryImageUrl(subcategory) {
+function getSubcategoryImageUrl(subcategory) {
+    // Remove trailing 's' if present
+    const singular = subcategory.replace(/s$/, '');
+    
     const images = {
-        'Bartops': 'https://i.ibb.co/T0fnP1g/2.png',
-        'Countertops': 'https://i.ibb.co/ypYDVTk/1.png',  // New Counter image
-        'Islands': 'https://i.ibb.co/BKhZY1V/3.png'   // New Island image
+        'Bartop': 'https://i.ibb.co/T0fnP1g/2.png',
+        'Countertop': 'https://i.ibb.co/ypYDVTk/1.png',
+        'Island': 'https://i.ibb.co/BKhZY1V/3.png'
     };
-    return images[subcategory] || 'https://via.placeholder.com/250';
+    return images[singular] || 'https://via.placeholder.com/250';
 }
 
   function chooseShape(container, subcategory) {
