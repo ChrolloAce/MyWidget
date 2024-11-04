@@ -1529,12 +1529,18 @@ function collectUserInfo(container) {
         }
 
         calculateTotalCost();
-        const totalPrice = totalCost;
-        const itemsList = items.map(item => ({
-            shape: item.shape,
-            measurements: item.measurements,
-            backsplash: item.backsplash
-        }));
+        
+        // Prepare items list with codes
+        const itemsList = items.map(item => {
+            const shape = getShapeByName(item.shape);
+            return {
+                code: shape.code,
+                measurements: item.measurements,
+                backsplash: item.backsplash
+            };
+        });
+
+        // Calculate total square footage
         const totalSquareFootage = items.reduce((total, item) => {
             const shape = getShapeByName(item.shape);
             return shape && typeof shape.formula === 'function'
@@ -1549,7 +1555,6 @@ function collectUserInfo(container) {
             items: itemsList
         };
 
-        // Use window.WEBHOOK_URL directly
         fetch(window.WEBHOOK_URL, {
             method: 'POST',
             headers: {
@@ -1571,6 +1576,7 @@ function collectUserInfo(container) {
         });
     });
 }
+
 
 
 
