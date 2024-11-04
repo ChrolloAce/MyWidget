@@ -1413,38 +1413,32 @@ function createInvoicePage(container) {
 
 
 
-// Update Item List UI (This will show items with a simplified description)
 function updateItemList(itemListDiv) {
     itemListDiv.innerHTML = '<h3>Items in Your Quote:</h3>';
-
+    
     items.forEach((item, index) => {
         const itemDiv = createElement('div', 'item');
-
-        // Image of the selected item
         const descDiv = createElement('div', 'item-description');
+        
         const img = createElement('img');
-        img.src = getShapeByName(item.shape).imageUrl;
-        img.alt = item.shape;
+        const shape = getShapeByName(item.shape);
+        img.src = shape.imageUrl;
+        img.alt = shape.name;
         descDiv.appendChild(img);
 
-        // Generate a more generic description (removing the mention of sides)
-        const description = generateItemDescription(item);
-        const descText = createElement('span', null, description);
+        // Use the display name for the UI
+        const descText = createElement('span', null, shape.name);
         descDiv.appendChild(descText);
 
-        // Remove button for each item
         const removeBtn = createElement('button', 'item-remove', 'Remove');
-        removeBtn.addEventListener('click', () => {
-            removeItem(index);
-        });
+        removeBtn.addEventListener('click', () => removeItem(index));
 
         itemDiv.appendChild(descDiv);
         itemDiv.appendChild(removeBtn);
-
-        itemListDiv.appendChild(itemDiv);  // Append each item to the list
+        itemListDiv.appendChild(itemDiv);
     });
 }
-
+    
 // Function to generate a more simplified description for the item
 function generateItemDescription(item) {
     let typeDescription = '';
