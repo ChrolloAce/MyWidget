@@ -1322,7 +1322,7 @@ function inputMeasurements(container, shape) {
     });
 }
 
-unction calculateTotalCost() {
+function calculateTotalCost() {
     totalCost = 0;
     items.forEach(item => {
         // Get the shape's details using the item's shape name
