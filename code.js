@@ -1354,7 +1354,6 @@ function calculateTotalCost() {
     }
 }
 
-
     // Get Shape by Name
     function getShapeByName(name) {
         const shapes = getAllShapes();
@@ -1595,7 +1594,7 @@ function finalizeInvoice(container) {
     container.appendChild(header);
 
     // Display the total cost (rounded up) after collecting user info
-    const totalText = createElement('p', null, `Total Price: $${totalCost}`);
+const totalText = createElement('p', null, `Total Price: $${Math.ceil(totalCost)}`);
     totalText.style.fontSize = '36px';  // Larger font for visibility
     totalText.style.fontWeight = 'bold';
     container.appendChild(totalText);
