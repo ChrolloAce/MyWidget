@@ -835,8 +835,21 @@ function addItem(container) {
 }
 
 
-    function createShapeDiagramButton(text, imageUrl) {
-    return createImageButton(text, imageUrl, true);  // Pass `true` to add the shape-diagram class
+    // Update the createShapeDiagramButton function to use div with background image
+function createShapeDiagramButton(text, imageUrl) {
+    const button = createElement('div', 'shape-diagram');
+    button.style.backgroundImage = `url(${imageUrl})`;
+
+    // Add label container that sits below the shape diagram
+    const labelContainer = createElement('div', 'image-label');
+    labelContainer.textContent = text.split(' - ')[0];  // Remove code from display name
+    
+    // Create wrapper to hold both diagram and label
+    const wrapper = createElement('div', 'shape-button-wrapper');
+    wrapper.appendChild(button);
+    wrapper.appendChild(labelContainer);
+
+    return wrapper;
 }
 
     
