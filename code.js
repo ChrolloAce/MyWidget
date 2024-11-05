@@ -1324,64 +1324,48 @@ function inputMeasurements(container, shape) {
 
 function calculateTotalCost() {
     console.log('Starting calculation...');
-    console.log('Current designSelections:', designSelections);
     totalCost = 0;
     
     items.forEach((item, index) => {
-        console.log(`\nProcessing item ${index}:`, item);
+        console.log(`\nProcessing item ${index}:`);
+        console.log('Item shape name:', item.shape);
+        console.log('Item measurements:', item.measurements);
         
-        // Get the shape's details
         const shape = getShapeByName(item.shape);
-        console.log('Shape found:', shape);
+        console.log('Found shape definition:', shape);
         
-        if (shape && typeof shape.formula === 'function') {
-            // Log measurements before calculation
-            console.log('Measurements:', item.measurements);
-            
-            // Calculate the area
-            const area = shape.formula(item.measurements);
-            console.log('Calculated area:', area);
-            
-            // Get price per square foot
-            let pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
-            console.log('Price per sq ft:', pricePerSqFt);
-            
-            // Calculate item cost
-            let itemCost = area * pricePerSqFt;
-            console.log('Base item cost:', itemCost);
-            
-            // Add backsplash if present
-            if (item.backsplash) {
-                console.log('Backsplash details:', item.backsplash);
-                const backsplashArea = (item.backsplash.width * item.backsplash.height) / 144;
-                const backsplashCost = backsplashArea * pricePerSqFt;
-                console.log('Backsplash area:', backsplashArea);
-                console.log('Backsplash cost:', backsplashCost);
-                itemCost += backsplashCost;
-            }
-            
-            // Add base cost
-            itemCost += 50;
-            console.log('Final item cost with $50 base:', itemCost);
-            
-            totalCost += itemCost;
-            console.log('Running total:', totalCost);
-        } else {
-            console.error('Invalid shape or missing formula for item:', item);
+        if (!shape) {
+            console.error('Shape not found');
+            return;
         }
+        
+        if (item.measurements.length !== shape.measurements.length) {
+            console.error(`Measurement count mismatch. Expected ${shape.measurements.length}, got ${item.measurements.length}`);
+            return;
+        }
+        
+        const area = shape.formula(item.measurements);
+        console.log('Calculated area:', area);
+        
+        const pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
+        let itemCost = area * pricePerSqFt;
+        
+        if (item.backsplash) {
+            const backsplashArea = (item.backsplash.width * item.backsplash.height) / 144;
+            itemCost += backsplashArea * pricePerSqFt;
+        }
+        
+        itemCost += 50; // Add base cost
+        console.log('Item total cost:', itemCost);
+        
+        totalCost += itemCost;
     });
     
-    // Enforce minimum price
-    if (totalCost < MINIMUM_PRICE) {
-        console.log(`Total below minimum, setting to ${MINIMUM_PRICE}`);
-        totalCost = MINIMUM_PRICE;
-    }
-    
-    // Round up
+    totalCost = Math.max(totalCost, MINIMUM_PRICE);
     totalCost = Math.ceil(totalCost);
-    console.log('Final total (rounded up):', totalCost);
     
-    return totalCost; // Explicitly return the total
+    console.log('Final total cost:', totalCost);
+    return totalCost;
 }
 
 
@@ -1404,12 +1388,31 @@ function debugPricing(item) {
         } : 'none'
     })};
 
-    // Get Shape by Name
-    function getShapeByName(name) {
-        const shapes = getAllShapes();
-        return shapes.find(shape => shape.name === name);
-    }
+ function getShapeByName(name) {
+    // First, determine what type of item we're looking for based on the current selection
+    const subcategory = {
+        'Standard': 'Countertop',
+        'Bar': 'Bartop',
+        'Island': 'Island'
+    }[name.split(' ')[0]] || 'Countertop';  // Default to Countertop if unknown
 
+    // Get shapes for the current type and subcategory
+    const shapes = getShapesForSubcategory('Kitchen', subcategory);
+    
+    // Look for exact name match first
+    let shape = shapes.find(s => s.name === name);
+    
+    // If no exact match, try matching just the name without the code
+    if (!shape) {
+        shape = shapes.find(s => s.name.split(' - ')[0] === name);
+    }
+    
+    console.log(`Looking for shape: ${name}`);
+    console.log(`In subcategory: ${subcategory}`);
+    console.log(`Found shape:`, shape);
+    
+    return shape;
+}
     // Get All Shapes
     function getAllShapes() {
         const kitchenShapes = {
