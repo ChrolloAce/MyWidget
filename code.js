@@ -929,50 +929,35 @@ function getShapesForSubcategory(type, subcategory) {
                     name: 'Standard Broken L',
                     code: 'KSBL',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
-                    formula: (measurements) => {
-                        const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
-                        return ((perimeter / 2) * 25) / 144;
-                    },
+                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 25) / 144,
                     imageUrl: 'https://i.ibb.co/5kb4k7G/4.png'
                 },
                 {
                     name: 'Standard Wing',
                     code: 'KSW',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
-                    formula: (measurements) => {
-                        const perimeter = (measurements[0] + measurements[1] + (measurements[2] * 2));
-                        const triangleArea = (measurements[2] * 2) * (measurements[2] * 2) * 0.5;
-                        return ((perimeter * 25) + triangleArea) / 144;
-                    },
+                    formula: (measurements) => ((measurements[0] + measurements[1] + (measurements[2] * 2)) * 25) / 144,
                     imageUrl: 'https://i.ibb.co/qnLVKrS/5.png'
                 },
                 {
                     name: 'Standard Wing 3 Sides',
                     code: 'KSW3',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
-                    formula: (measurements) => {
-                        const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
-                        return (perimeter * 25) / 144;
-                    },
+                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 25) / 144,
                     imageUrl: 'https://i.ibb.co/WKscbzZ/6.png'
                 },
                 {
                     name: 'Standard 4 Sides',
                     code: 'KS4',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
-                    formula: (measurements) => {
-                        const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
-                        return ((perimeter / 2) * 25) / 144;
-                    },
+                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 25) / 144,
                     imageUrl: 'https://i.ibb.co/dQ4sD7Y/7.png'
                 },
                 {
                     name: 'Irregular L',
                     code: 'KIL',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
-                    formula: (measurements) => {
-                        return ((measurements[0] * measurements[1]) + (measurements[2] * 25)) / 144;
-                    },
+                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
+                    formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * measurements[3])) / 144,
                     imageUrl: 'https://i.ibb.co/LhtPc1f/8.png'
                 }
             ],
@@ -1086,18 +1071,16 @@ function getTypeImageUrl(type) {
     function chooseShapeBathroom(container) {
         // Not needed as Bathroom doesn't have subcategories
     }
-// Ensure this function is defined before it's used
 function addToQuote(container, shape) {
-    // Add item to the quote and calculate cost
-    items.push({
+    const itemToAdd = {
         shape: shape.name,
         measurements: shape.measurements,
         backsplash: shape.hasBacksplash ? { width: shape.backsplashWidth, height: shape.backsplashHeight } : null
-    });
+    };
+    
+    items.push(itemToAdd);
     calculateTotalCost();
-
-    // Now go back to the item list instead of the quote screen
-    createInvoicePage(container);  // Directly go to the item list
+    createInvoicePage(container);
 }
 
 
@@ -1327,47 +1310,45 @@ function calculateTotalCost() {
     totalCost = 0;
     
     items.forEach((item, index) => {
-        console.log(`\nProcessing item ${index}:`);
-        console.log('Item shape name:', item.shape);
-        console.log('Item measurements:', item.measurements);
+        console.log(`\nProcessing item ${index}:`, item);
         
         const shape = getShapeByName(item.shape);
-        console.log('Found shape definition:', shape);
-        
         if (!shape) {
-            console.error('Shape not found');
+            console.error('Shape not found:', item.shape);
             return;
         }
-        
-        if (item.measurements.length !== shape.measurements.length) {
-            console.error(`Measurement count mismatch. Expected ${shape.measurements.length}, got ${item.measurements.length}`);
-            return;
-        }
-        
+
+        // Calculate base area
         const area = shape.formula(item.measurements);
-        console.log('Calculated area:', area);
-        
+        console.log('Area calculated:', area);
+
+        // Calculate base cost
         const pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
         let itemCost = area * pricePerSqFt;
-        
+        console.log('Base cost:', itemCost);
+
+        // Add backsplash if present
         if (item.backsplash) {
             const backsplashArea = (item.backsplash.width * item.backsplash.height) / 144;
-            itemCost += backsplashArea * pricePerSqFt;
+            const backsplashCost = backsplashArea * pricePerSqFt;
+            itemCost += backsplashCost;
+            console.log('Added backsplash cost:', backsplashCost);
         }
-        
-        itemCost += 50; // Add base cost
-        console.log('Item total cost:', itemCost);
+
+        // Add base price
+        itemCost += 50;
+        console.log('Final item cost with base price:', itemCost);
         
         totalCost += itemCost;
     });
     
+    // Apply minimum price
     totalCost = Math.max(totalCost, MINIMUM_PRICE);
     totalCost = Math.ceil(totalCost);
     
     console.log('Final total cost:', totalCost);
     return totalCost;
 }
-
 
 // Helper function to debug pricing
 function debugPricing(item) {
@@ -1389,30 +1370,30 @@ function debugPricing(item) {
     })};
 
  function getShapeByName(name) {
-    // First, determine what type of item we're looking for based on the current selection
-    const subcategory = {
-        'Standard': 'Countertop',
-        'Bar': 'Bartop',
-        'Island': 'Island'
-    }[name.split(' ')[0]] || 'Countertop';  // Default to Countertop if unknown
+    let shape;
+    
+    // Try each subcategory to find the shape
+    const subcategories = ['Countertop', 'Bartop', 'Island'];
+    
+    for (const subcategory of subcategories) {
+        const shapes = getShapesForSubcategory('Kitchen', subcategory);
+        shape = shapes.find(s => s.name === name);
+        if (shape) break;
+    }
 
-    // Get shapes for the current type and subcategory
-    const shapes = getShapesForSubcategory('Kitchen', subcategory);
-    
-    // Look for exact name match first
-    let shape = shapes.find(s => s.name === name);
-    
-    // If no exact match, try matching just the name without the code
+    // If not found in kitchen shapes, try bathroom shapes
     if (!shape) {
-        shape = shapes.find(s => s.name.split(' - ')[0] === name);
+        const bathroomShapes = getShapesForType('Bathroom');
+        shape = bathroomShapes.find(s => s.name === name);
     }
     
     console.log(`Looking for shape: ${name}`);
-    console.log(`In subcategory: ${subcategory}`);
     console.log(`Found shape:`, shape);
     
     return shape;
 }
+
+    
     // Get All Shapes
     function getAllShapes() {
         const kitchenShapes = {
