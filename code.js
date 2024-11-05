@@ -1315,11 +1315,6 @@ function inputMeasurements(container, shape) {
     });
 }
 
-// Constants for pricing
-const PRICE_REGULAR = 26;  // Price per square foot for standard finish
-const PRICE_CRYSTAL = 39;  // Price per square foot for crystal finish
-const MINIMUM_PRICE = 400; // Minimum total price
-
 function calculateTotalCost() {
     let totalCost = 0;
     
