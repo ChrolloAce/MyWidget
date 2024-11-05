@@ -1315,44 +1315,68 @@ function inputMeasurements(container, shape) {
     });
 }
 
+// Constants for pricing
+const PRICE_REGULAR = 26;  // Price per square foot for standard finish
+const PRICE_CRYSTAL = 39;  // Price per square foot for crystal finish
+const MINIMUM_PRICE = 400; // Minimum total price
+
 function calculateTotalCost() {
-    totalCost = 0;
+    let totalCost = 0;
+    
     items.forEach(item => {
         const shape = getShapeByName(item.shape);
-        if (shape && typeof shape.formula === 'function') {
-            // Check that all measurements are valid numbers
-            const validMeasurements = item.measurements.every(measurement => typeof measurement === 'number' && !isNaN(measurement) && measurement > 0);
-            if (!validMeasurements) {
-                console.warn('Invalid measurements detected:', item.measurements);
-                return;
-            }
-            
-            // Calculate the area using the shape's formula
-            const area = shape.formula(item.measurements);
-
-            // Determine the price per square foot based on the finish type
-            let pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
-
-            // Calculate the cost for the item
-            let itemCost = area * pricePerSqFt;
-
-            // Add backsplash cost if applicable
-            if (item.backsplash) {
-                const backsplashArea = (item.backsplash.width * item.backsplash.height) / 144;
-                const backsplashCost = backsplashArea * pricePerSqFt;
-                itemCost += backsplashCost;
-            }
-
-            // Add the item's cost to the total cost
-            totalCost += itemCost;
+        if (!shape || typeof shape.formula !== 'function') {
+            console.warn('Invalid shape or missing formula:', item.shape);
+            return;
         }
+
+        // Validate measurements
+        if (!item.measurements?.every(m => typeof m === 'number' && !isNaN(m) && m > 0)) {
+            console.warn('Invalid measurements:', item.measurements);
+            return;
+        }
+
+        // Calculate base area using shape's formula
+        const baseArea = shape.formula(item.measurements);
+        
+        // Get price per square foot based on finish type
+        const pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
+        
+        // Calculate base cost
+        let itemCost = baseArea * pricePerSqFt;
+
+        // Add backsplash if present
+        if (item.backsplash) {
+            const backsplashArea = (item.backsplash.width * item.backsplash.height) / 144; // Convert to sq ft
+            itemCost += backsplashArea * pricePerSqFt;
+        }
+
+        // Add to total
+        totalCost += itemCost;
     });
 
-    // Enforce the minimum price
-    if (totalCost < MINIMUM_PRICE) {
-        totalCost = MINIMUM_PRICE;
-    }
+    // Apply minimum price if needed
+    return Math.max(totalCost, MINIMUM_PRICE);
 }
+
+// Helper function to debug pricing
+function debugPricing(item) {
+    const shape = getShapeByName(item.shape);
+    const baseArea = shape.formula(item.measurements);
+    const pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
+    const baseCost = baseArea * pricePerSqFt;
+    
+    console.log({
+        shape: item.shape,
+        measurements: item.measurements,
+        baseArea: baseArea.toFixed(2) + ' sq ft',
+        pricePerSqFt: '$' + pricePerSqFt,
+        baseCost: '$' + baseCost.toFixed(2),
+        backsplash: item.backsplash ? {
+            area: ((item.backsplash.width * item.backsplash.height) / 144).toFixed(2) + ' sq ft',
+            cost: '$' + ((item.backsplash.width * item.backsplash.height) / 144 * pricePerSqFt).toFixed(2)
+        } : 'none'
+    });
 
     // Get Shape by Name
     function getShapeByName(name) {
