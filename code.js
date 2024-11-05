@@ -1323,22 +1323,32 @@ function inputMeasurements(container, shape) {
 }
 
 function calculateTotalCost() {
-    totalCost = 0; // Update the global totalCost variable instead of creating a new one
+    totalCost = 0; // Ensure we're updating the global totalCost variable
     
     items.forEach(item => {
         const shape = getShapeByName(item.shape);
-        if (!shape || !shape.formula) return;
+        if (!shape || typeof shape.formula !== 'function') return;
+
+        // Parse measurements as numbers and validate them
+        const measurements = item.measurements.map(m => parseFloat(m) || 0);
 
         // Calculate base area in square feet
-        const baseArea = shape.formula(item.measurements);
+        const baseArea = shape.formula(measurements);
         
+        if (isNaN(baseArea)) {
+            console.error('Invalid base area calculation for item:', item, 'with measurements:', measurements);
+            return; // Skip this item if area calculation fails
+        }
+
         // Apply pricing based on finish type
         const pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
         let itemCost = baseArea * pricePerSqFt;
 
-        // Add backsplash if present
+        // Add backsplash if present and calculate its area
         if (item.backsplash) {
-            const backsplashArea = (item.backsplash.width * item.backsplash.height) / 144;
+            const backsplashWidth = parseFloat(item.backsplash.width) || 0;
+            const backsplashHeight = parseFloat(item.backsplash.height) || 0;
+            const backsplashArea = (backsplashWidth * backsplashHeight) / 144;
             itemCost += backsplashArea * pricePerSqFt;
         }
 
@@ -1348,6 +1358,7 @@ function calculateTotalCost() {
     // Apply minimum price
     totalCost = Math.max(totalCost, MINIMUM_PRICE);
 }
+
 
 
 // Helper function to debug pricing
