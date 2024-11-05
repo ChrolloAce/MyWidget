@@ -1344,7 +1344,6 @@ function calculateTotalCost() {
             }
 
             // Add the item's cost to the total cost
-            itemCost += 50;
             totalCost += itemCost;
         }
     });
@@ -1353,8 +1352,6 @@ function calculateTotalCost() {
     if (totalCost < MINIMUM_PRICE) {
         totalCost = MINIMUM_PRICE;
     }
-
-    totalCost = Math.ceil(totalCost);
 }
 
 
