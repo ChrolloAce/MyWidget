@@ -1371,7 +1371,7 @@ function debugPricing(item) {
             area: ((item.backsplash.width * item.backsplash.height) / 144).toFixed(2) + ' sq ft',
             cost: '$' + ((item.backsplash.width * item.backsplash.height) / 144 * pricePerSqFt).toFixed(2)
         } : 'none'
-    });
+    })};
 
     // Get Shape by Name
     function getShapeByName(name) {
