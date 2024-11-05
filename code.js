@@ -1323,42 +1323,65 @@ function inputMeasurements(container, shape) {
 }
 
 function calculateTotalCost() {
+    console.log('Starting calculation...');
+    console.log('Current designSelections:', designSelections);
     totalCost = 0;
-    items.forEach(item => {
-        // Get the shape's details using the item's shape name
+    
+    items.forEach((item, index) => {
+        console.log(`\nProcessing item ${index}:`, item);
+        
+        // Get the shape's details
         const shape = getShapeByName(item.shape);
+        console.log('Shape found:', shape);
+        
         if (shape && typeof shape.formula === 'function') {
-            // Calculate the area using the shape's formula
+            // Log measurements before calculation
+            console.log('Measurements:', item.measurements);
+            
+            // Calculate the area
             const area = shape.formula(item.measurements);
+            console.log('Calculated area:', area);
             
-            // Determine the price per square foot based on the finish type
+            // Get price per square foot
             let pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
+            console.log('Price per sq ft:', pricePerSqFt);
             
-            // Calculate the cost for the item
+            // Calculate item cost
             let itemCost = area * pricePerSqFt;
+            console.log('Base item cost:', itemCost);
             
-            // Add backsplash cost if applicable
+            // Add backsplash if present
             if (item.backsplash) {
-                // Calculate backsplash area in square feet
+                console.log('Backsplash details:', item.backsplash);
                 const backsplashArea = (item.backsplash.width * item.backsplash.height) / 144;
-                // Calculate backsplash cost
                 const backsplashCost = backsplashArea * pricePerSqFt;
+                console.log('Backsplash area:', backsplashArea);
+                console.log('Backsplash cost:', backsplashCost);
                 itemCost += backsplashCost;
             }
             
-            // Add the item's cost to the total cost
-            itemCost += 50; // Add $50 to the item cost
+            // Add base cost
+            itemCost += 50;
+            console.log('Final item cost with $50 base:', itemCost);
+            
             totalCost += itemCost;
+            console.log('Running total:', totalCost);
+        } else {
+            console.error('Invalid shape or missing formula for item:', item);
         }
     });
     
-    // Enforce the minimum price
+    // Enforce minimum price
     if (totalCost < MINIMUM_PRICE) {
+        console.log(`Total below minimum, setting to ${MINIMUM_PRICE}`);
         totalCost = MINIMUM_PRICE;
     }
     
-    // Round up the total cost to the nearest whole number
+    // Round up
     totalCost = Math.ceil(totalCost);
+    console.log('Final total (rounded up):', totalCost);
+    
+    return totalCost; // Explicitly return the total
 }
 
 
