@@ -1316,7 +1316,7 @@ function inputMeasurements(container, shape) {
 }
 
 function calculateTotalCost() {
-    let totalCost = 0;
+    totalCost = 0; // Update the global totalCost variable instead of creating a new one
     
     items.forEach(item => {
         const shape = getShapeByName(item.shape);
@@ -1339,8 +1339,9 @@ function calculateTotalCost() {
     });
 
     // Apply minimum price
-    return Math.max(totalCost, MINIMUM_PRICE);
+    totalCost = Math.max(totalCost, MINIMUM_PRICE);
 }
+
 
 // Helper function to debug pricing
 function debugPricing(item) {
