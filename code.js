@@ -1320,37 +1320,25 @@ function calculateTotalCost() {
     
     items.forEach(item => {
         const shape = getShapeByName(item.shape);
-        if (!shape || typeof shape.formula !== 'function') {
-            console.warn('Invalid shape or missing formula:', item.shape);
-            return;
-        }
+        if (!shape || !shape.formula) return;
 
-        // Validate measurements
-        if (!item.measurements?.every(m => typeof m === 'number' && !isNaN(m) && m > 0)) {
-            console.warn('Invalid measurements:', item.measurements);
-            return;
-        }
-
-        // Calculate base area using shape's formula
+        // Calculate base area in square feet
         const baseArea = shape.formula(item.measurements);
         
-        // Get price per square foot based on finish type
+        // Apply pricing based on finish type
         const pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
-        
-        // Calculate base cost
         let itemCost = baseArea * pricePerSqFt;
 
         // Add backsplash if present
         if (item.backsplash) {
-            const backsplashArea = (item.backsplash.width * item.backsplash.height) / 144; // Convert to sq ft
+            const backsplashArea = (item.backsplash.width * item.backsplash.height) / 144;
             itemCost += backsplashArea * pricePerSqFt;
         }
 
-        // Add to total
         totalCost += itemCost;
     });
 
-    // Apply minimum price if needed
+    // Apply minimum price
     return Math.max(totalCost, MINIMUM_PRICE);
 }
 
