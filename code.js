@@ -215,13 +215,20 @@ h3 {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
-/* Only shape diagrams get 16:9 */
 .shape-diagram {
-    aspect-ratio: 16/9 !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-color: #f5f5f5 !important;
+    width: 100%;
+    max-width: 800px;                       /* Controls the maximum width */
+    padding-top: 56.25%;                    /* 16:9 ratio (height = 9/16 * width) */
+    background-size: cover;                 /* Fills the container with the image */
+    background-position: center;            /* Centers the image */
+    background-repeat: no-repeat;           /* Prevents repeating */
+    background-color: #f5f5f5;              /* Adds a background color for contrast */
+    border-radius: 10px;                    /* Adds rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
+    overflow: hidden;                       /* Keeps content within rounded corners */
+    margin: 0 auto;                         /* Centers horizontally */
 }
+
 
 .image-button:hover {
     border: 4px solid #0264D9;
