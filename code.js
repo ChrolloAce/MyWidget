@@ -187,42 +187,32 @@ h3 {
     background-color: #c82333;
 }
 
-
-
-.image-button, .shape-diagram {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 15px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-/* Consistent Sizing for Button Group Grid Cells */
+/* Grid Layout for Buttons/Images */
 .button-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
     width: 100%;
+    padding: 20px;
+    justify-items: center;
 }
 
-/* Label Positioning for Images */
-.image-label {
-    width: 100%;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    font-weight: bold;
-    font-size: 18px;
-    color: #333;
-    position: absolute;
-    bottom: 0;
+.image-button {
+    position: relative;
+    width: 300px;
+    aspect-ratio: 1/1;
+    border: 2px solid #000000;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    margin: 20px auto;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .shape-diagram {
@@ -244,6 +234,17 @@ h3 {
     border: 4px solid #0264D9;
     transform: scale(1.05);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.image-label {
+    width: 100%;
+    padding: 12px;
+    background: white;
+    color: #333;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    border-top: 1px solid #eee;
 }
 
 /* Image Container */
