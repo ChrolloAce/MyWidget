@@ -1643,7 +1643,6 @@ function collectUserInfo(container) {
 
 
 
-
 function finalizeInvoice(container) {
     container.innerHTML = '';
 
@@ -1651,7 +1650,7 @@ function finalizeInvoice(container) {
     container.appendChild(header);
 
     // Display the total cost (rounded up) after collecting user info
-const totalText = createElement('p', null, `Total Price: $${Math.ceil(totalCost)}`);
+    const totalText = createElement('p', null, `Total Price: $${Math.ceil(totalCost)}`);
     totalText.style.fontSize = '36px';  // Larger font for visibility
     totalText.style.fontWeight = 'bold';
     container.appendChild(totalText);
@@ -1660,22 +1659,39 @@ const totalText = createElement('p', null, `Total Price: $${Math.ceil(totalCost)
     const buttonWrapper = createElement('div', 'button-wrapper');
     container.appendChild(buttonWrapper);
 
-    // Call Now Button
-    const callBtn = createElement('button', 'button', 'Call Now');
-    buttonWrapper.appendChild(callBtn);
+    // "I'm Interested" Button
+    const interestedBtn = createElement('button', 'button', "I'm Interested");
+    buttonWrapper.appendChild(interestedBtn);
 
-    callBtn.addEventListener('click', () => {
-        alert('Calling...');
+    interestedBtn.addEventListener('click', () => {
+        showInterestedScreen(container);  // Function to show the interested response screen
     });
 
-    // Visualize Quote Button
-    const visualizeBtn = createElement('button', 'button', 'Visualize Your Quote');
-    buttonWrapper.appendChild(visualizeBtn);
+    // "Not Interested At This Time" Button
+    const notInterestedBtn = createElement('button', 'button', 'Not Interested At This Time');
+    buttonWrapper.appendChild(notInterestedBtn);
 
-    visualizeBtn.addEventListener('click', () => {
-        alert('Visualizing...');
+    notInterestedBtn.addEventListener('click', () => {
+        showNotInterestedScreen(container);  // Function to show the not interested response screen
     });
 }
+
+// Show the "Interested" response screen
+function showInterestedScreen(container) {
+    container.innerHTML = '';  // Clear the screen
+    const message = createElement('h2', null, 'Perfect! One of our agents will be with you shortly.');
+    message.style.textAlign = 'center';
+    container.appendChild(message);
+}
+
+// Show the "Not Interested" response screen
+function showNotInterestedScreen(container) {
+    container.innerHTML = '';  // Clear the screen
+    const message = createElement('h2', null, "We're sorry to hear that. You can still give us a call, and we can work something out.");
+    message.style.textAlign = 'center';
+    container.appendChild(message);
+}
+
 
 
 
