@@ -1677,18 +1677,53 @@ function finalizeInvoice(container) {
 // Show the "Interested" response screen
 function showInterestedScreen(container) {
     container.innerHTML = '';  // Clear the screen
-    const message = createElement('h2', null, 'Perfect! One of our agents will be with you shortly.');
+    
+    const message = createElement('h2', null, 'Thank you for your interest!');
     message.style.textAlign = 'center';
     container.appendChild(message);
+
+    const description = createElement('p', null, "One of our agents will reach out to you shortly to discuss your quote in detail. We appreciate your consideration and look forward to assisting with your project!");
+    description.style.textAlign = 'center';
+    container.appendChild(description);
+
+    addFinalScreenButtons(container);
 }
 
 // Show the "Not Interested" response screen
 function showNotInterestedScreen(container) {
     container.innerHTML = '';  // Clear the screen
-    const message = createElement('h2', null, "We're sorry to hear that. You can still give us a call, and we can work something out.");
+    
+    const message = createElement('h2', null, "We're sorry to hear that.");
     message.style.textAlign = 'center';
     container.appendChild(message);
+
+    const description = createElement('p', null, "Feel free to give us a call to discuss any questions you may have about your quote. Our team is here to help you explore all your options.");
+    description.style.textAlign = 'center';
+    container.appendChild(description);
+
+    addFinalScreenButtons(container);
 }
+
+// Add "Call Us" and "Get Another Quote" buttons to the final screens
+function addFinalScreenButtons(container) {
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
+
+    // "Call Us" Button
+    const callUsBtn = createElement('button', 'button green-button', 'Call Us Now');
+    callUsBtn.addEventListener('click', () => {
+        window.location.href = 'tel:+1234567890';  // Replace with your actual contact number
+    });
+    buttonWrapper.appendChild(callUsBtn);
+
+    // "Get Another Quote" Button
+    const newQuoteBtn = createElement('button', 'button', 'Get Another Quote');
+    newQuoteBtn.addEventListener('click', () => {
+        initInterface();  // Restart the quote process
+    });
+    buttonWrapper.appendChild(newQuoteBtn);
+}
+
 
 
 
