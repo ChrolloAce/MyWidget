@@ -1712,7 +1712,7 @@ function addFinalScreenButtons(container) {
     // "Call Us" Button
     const callUsBtn = createElement('button', 'button green-button', 'Call Us Now');
     callUsBtn.addEventListener('click', () => {
-        window.location.href = 'tel:+1234567890';  // Replace with your actual contact number
+        window.location.href = 'tel:+13523063106';  // Replace with your actual contact number
     });
     buttonWrapper.appendChild(callUsBtn);
 
