@@ -921,56 +921,66 @@ function getShapesForSubcategory(type, subcategory) {
                     name: 'Standard',
                     code: 'KS',
                     measurements: ['Measurement 1'],
-                    formula: (measurements) => (measurements[0] * 25) / 144,
+                    formula: (measurements) => ((measurements[0] * 25) / 144),
                     imageUrl: 'https://i.ibb.co/nn8k8Bf/1.png'
                 },
                 {
                     name: 'Standard L',
                     code: 'KSL',
                     measurements: ['Measurement 1', 'Measurement 2'],
-                    formula: (measurements) => ((measurements[0] + measurements[1]) * 25) / 144,
+                    formula: (measurements) => (((measurements[0] + measurements[1]) / 2 * 25) / 144),
                     imageUrl: 'https://i.ibb.co/ZdMvxQK/2.png'
                 },
                 {
                     name: 'Standard 3 Sides',
                     code: 'KS3',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
-                    formula: (measurements) => ((measurements[0] + measurements[1] + measurements[2]) * 25) / 144,
+                    formula: (measurements) => (((measurements[0] + measurements[1] + measurements[2]) / 2 * 25) / 144),
                     imageUrl: 'https://i.ibb.co/B28cv3j/3.png'
                 },
                 {
                     name: 'Standard Broken L',
                     code: 'KSBL',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
-                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 25) / 144,
+                    formula: (measurements) => (((measurements[0] + measurements[1] + measurements[2] + measurements[3]) / 2 * 25) / 144),
                     imageUrl: 'https://i.ibb.co/5kb4k7G/4.png'
                 },
                 {
                     name: 'Standard Wing',
                     code: 'KSW',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
-                    formula: (measurements) => ((measurements[0] + measurements[1] + (measurements[2] * 2)) * 25) / 144,
+                    formula: (measurements) => {
+                        const part1 = ((measurements[0] + measurements[1] + (measurements[2] / 2)) * 25);
+                        const part2 = ((measurements[2] / 2) * (measurements[2] / 2) * 0.5);
+                        return (part1 + part2) / 144;
+                    },
                     imageUrl: 'https://i.ibb.co/qnLVKrS/5.png'
                 },
                 {
                     name: 'Standard Wing 3 Sides',
                     code: 'KSW3',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
-                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 25) / 144,
+                    formula: (measurements) => {
+                        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
+                        return ((perimeter * 25) / 144);
+                    },
                     imageUrl: 'https://i.ibb.co/WKscbzZ/6.png'
                 },
                 {
                     name: 'Standard 4 Sides',
                     code: 'KS4',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
-                    formula: (measurements) => ((measurements.reduce((acc, cur) => acc + cur, 0)) * 25) / 144,
+                    formula: (measurements) => {
+                        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
+                        return ((perimeter * 25) + (measurements[6] * 25)) / 144;
+                    },
                     imageUrl: 'https://i.ibb.co/dQ4sD7Y/7.png'
                 },
                 {
                     name: 'Irregular L',
                     code: 'KIL',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
-                    formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * measurements[3])) / 144,
+                    formula: (measurements) => (((measurements[0] * measurements[1]) + (measurements[2] * measurements[3])) / 144),
                     imageUrl: 'https://i.ibb.co/LhtPc1f/8.png'
                 }
             ],
@@ -979,21 +989,21 @@ function getShapesForSubcategory(type, subcategory) {
                     name: 'Straight',
                     code: 'BarS',
                     measurements: ['Measurement 1', 'Measurement 2'],
-                    formula: (measurements) => (measurements[0] * measurements[1]) / 144,
+                    formula: (measurements) => ((measurements[0] * measurements[1]) / 144),
                     imageUrl: 'https://i.ibb.co/P69ZfHJ/9.png'
                 },
                 {
                     name: 'Standard L',
                     code: 'BarSL',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
-                    formula: (measurements) => ((measurements[0] + measurements[1]) * measurements[2]) / 144,
+                    formula: (measurements) => (((measurements[0] + measurements[1]) / 2 * measurements[2]) / 144),
                     imageUrl: 'https://i.ibb.co/J55R5XS/10.png'
                 },
                 {
                     name: 'Irregular L',
                     code: 'BarIL',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
-                    formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * measurements[3])) / 144,
+                    formula: (measurements) => (((measurements[0] * measurements[1]) + (measurements[2] * measurements[3])) / 144),
                     imageUrl: 'https://i.ibb.co/mzpQz03/11.png'
                 },
                 {
@@ -1001,8 +1011,8 @@ function getShapesForSubcategory(type, subcategory) {
                     code: 'BarBL',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5'],
                     formula: (measurements) => {
-                        const perimeter = measurements.slice(0, 4).reduce((acc, cur) => acc + cur, 0);
-                        return ((perimeter / 2) * measurements[4]) / 144;
+                        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3]) / 2;
+                        return ((perimeter * measurements[4]) / 144);
                     },
                     imageUrl: 'https://i.ibb.co/cg9YBY2/12.png'
                 },
@@ -1011,8 +1021,8 @@ function getShapesForSubcategory(type, subcategory) {
                     code: 'Bar3',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
                     formula: (measurements) => {
-                        const perimeter = measurements.slice(0, 6).reduce((acc, cur) => acc + cur, 0);
-                        return ((perimeter / 2) * measurements[6]) / 144;
+                        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
+                        return ((perimeter * measurements[6]) / 144);
                     },
                     imageUrl: 'https://i.ibb.co/qMpW4WB/13.png'
                 },
@@ -1021,8 +1031,8 @@ function getShapesForSubcategory(type, subcategory) {
                     code: 'Bar4',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7', 'Measurement 8', 'Measurement 9'],
                     formula: (measurements) => {
-                        const perimeter = measurements.slice(0, 8).reduce((acc, cur) => acc + cur, 0);
-                        return ((perimeter / 2) * measurements[8]) / 144;
+                        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5] + measurements[6] + measurements[7]) / 2;
+                        return ((perimeter * measurements[8]) / 144);
                     },
                     imageUrl: 'https://i.ibb.co/37bbBck/14.png'
                 }
@@ -1032,7 +1042,7 @@ function getShapesForSubcategory(type, subcategory) {
                     name: 'Rectangle',
                     code: 'IsR',
                     measurements: ['Measurement 1', 'Measurement 2'],
-                    formula: (measurements) => (measurements[0] * measurements[1]) / 144,
+                    formula: (measurements) => ((measurements[0] * measurements[1]) / 144),
                     imageUrl: 'https://i.ibb.co/Dwx1Rsw/18.png'
                 },
                 {
@@ -1040,8 +1050,8 @@ function getShapesForSubcategory(type, subcategory) {
                     code: 'IsBL',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5'],
                     formula: (measurements) => {
-                        const perimeter = measurements.slice(0, 4).reduce((acc, cur) => acc + cur, 0);
-                        return ((perimeter / 2) * measurements[4]) / 144;
+                        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3]) / 2;
+                        return ((perimeter * measurements[4]) / 144);
                     },
                     imageUrl: 'https://i.ibb.co/JHrP44S/19.png'
                 },
@@ -1050,8 +1060,8 @@ function getShapesForSubcategory(type, subcategory) {
                     code: 'Is3',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
                     formula: (measurements) => {
-                        const perimeter = measurements.slice(0, 6).reduce((acc, cur) => acc + cur, 0);
-                        return ((perimeter / 2) * measurements[6]) / 144;
+                        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
+                        return ((perimeter * measurements[6]) / 144);
                     },
                     imageUrl: 'https://i.ibb.co/HtZy3kR/20.png'
                 }
@@ -1059,7 +1069,6 @@ function getShapesForSubcategory(type, subcategory) {
         }
     };
 
-    // Convert singular forms to match potential plural inputs
     const normalizedSubcategory = subcategory.replace(/s$/, '');
     return shapes[type] && shapes[type][normalizedSubcategory] ? shapes[type][normalizedSubcategory] : [];
 }
@@ -1687,6 +1696,7 @@ const totalText = createElement('p', null, `Total Price: $${Math.ceil(totalCost)
 
 
 // Function to get shapes for types (for Bathroom if needed)
+// Bathroom Shapes
 function getShapesForType(type) {
     const shapes = {
         'Bathroom': [
@@ -1694,14 +1704,14 @@ function getShapesForType(type) {
                 name: 'Standard',
                 code: 'BathS',
                 measurements: ['Measurement 1'],
-                formula: (measurements) => (measurements[0] * 22) / 144,
+                formula: (measurements) => ((measurements[0] * 22) / 144),
                 imageUrl: 'https://i.ibb.co/hcKgcJr/15.png'
             },
             {
                 name: 'Standard L',
                 code: 'BathL',
                 measurements: ['Measurement 1', 'Measurement 2'],
-                formula: (measurements) => ((measurements[0] + measurements[1]) * 22) / 144,
+                formula: (measurements) => (((measurements[0] + measurements[1]) / 2 * 22) / 144),
                 imageUrl: 'https://i.ibb.co/Qv8p4Bx/16.png'
             },
             {
@@ -1709,8 +1719,8 @@ function getShapesForType(type) {
                 code: 'Bath3',
                 measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
                 formula: (measurements) => {
-                    const perimeter = measurements.reduce((acc, cur) => acc + cur, 0);
-                    return ((perimeter / 2) * 22) / 144;
+                    const perimeter = (measurements.reduce((acc, cur) => acc + cur, 0)) / 2;
+                    return ((perimeter * 22) / 144);
                 },
                 imageUrl: 'https://i.ibb.co/47FGwJg/17.png'
             }
