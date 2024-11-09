@@ -1330,10 +1330,10 @@ function inputMeasurements(container, shape) {
 function calculateTotalCost() {
     console.log('Starting calculation...');
     totalCost = 0;
-    
+
     items.forEach((item, index) => {
         console.log(`\nProcessing item ${index}:`, item);
-        
+
         const shape = getShapeByName(item.shape);
         if (!shape) {
             console.error('Shape not found:', item.shape);
@@ -1357,20 +1357,21 @@ function calculateTotalCost() {
             console.log('Added backsplash cost:', backsplashCost);
         }
 
-        // Add base price
-        itemCost += 50;
-        console.log('Final item cost with base price:', itemCost);
-        
         totalCost += itemCost;
     });
-    
-    // Apply minimum price
+
+    // Apply the $50 fee once to the final total
+    totalCost += 50;
+    console.log('Added $50 base fee to final total cost.');
+
+    // Apply minimum price if necessary
     totalCost = Math.max(totalCost, MINIMUM_PRICE);
     totalCost = Math.ceil(totalCost);
-    
+
     console.log('Final total cost:', totalCost);
     return totalCost;
 }
+
 
 // Helper function to debug pricing
 function debugPricing(item) {
