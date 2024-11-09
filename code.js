@@ -1627,7 +1627,6 @@ function collectUserInfo(container) {
         })
         .then(response => {
             if (response.ok) {
-                alert('Your quote has been submitted successfully!');
                 finalizeInvoice(container);
             } else {
                 alert('Failed to submit the quote. Please try again.');
@@ -1635,7 +1634,6 @@ function collectUserInfo(container) {
         })
         .catch(error => {
             console.error('Error sending data to webhook:', error);
-            alert('Failed to submit the quote due to a network error.');
         });
     });
 }
@@ -1691,6 +1689,7 @@ function showNotInterestedScreen(container) {
     message.style.textAlign = 'center';
     container.appendChild(message);
 }
+
 
 
 
