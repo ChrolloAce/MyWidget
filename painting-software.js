@@ -1,45 +1,23 @@
 (function () {
-    // Constants and Configuration
-    const PRICE_PER_SQFT_WALLS = 1.5;
-    const PRICE_PER_SQFT_CEILING = 1.2;
-    const PRICE_PER_LIN_FOOT_BASEBOARDS = 0.5;
-    const MINIMUM_PRICE = 150;
+    const pricingOptions = {
+        option1: { pricePerSqFt: 2.3, includes: ['Walls', 'Ceilings', 'Baseboards'] },
+        option2: { pricePerSqFt: 2.0, includes: ['Walls', 'Ceilings'] },
+        option3: { pricePerSqFt: 1.3, includes: ['Walls'] }
+    };
+    const additionalCosts = {
+        door: 80,
+        crackRepair: 50,
+        wallHoleFix: 10,
+        extraSqFtRate: 2.7
+    };
 
-    let items = [];
     let totalCost = 0;
-    let previousPage = null;
-    let userInfo = {};
+    let selectedOption = null;
+    let squareFootage = 0;
+    let additionalItems = { doors: 0, cracks: 0, wallHoles: 0 };
 
-    let paintingSelections = {
-        roomType: '',
-        wallsIncluded: false,
-        ceilingIncluded: false,
-        baseboardsIncluded: false,
-        wallColor: '',
-        ceilingColor: '',
-        extraServices: [],
-        numWalls: 4
-    };
-
-    const roomTypes = ['Kitchen', 'Bathroom', 'Bedroom', 'Living Room', 'Office'];
-    const extraServices = {
-        popcornRemoval: 100,
-        patching: 50,
-        primer: 30
-    };
-    const colors = {
-        'White': '#FFFFFF',
-        'Gray': '#D3D3D3',
-        'Charcoal': '#333333',
-        'Beige': '#F5F5DC',
-        'Blue': '#1E90FF',
-        'Green': '#32CD32'
-    };
-
-    // Inject CSS Styles
     (function injectStyles() {
         const styles = `
-            /* General Reset */
             * {
                 margin: 0;
                 padding: 0;
@@ -51,14 +29,13 @@
                 align-items: center;
                 justify-content: center;
                 min-height: 100vh;
-                background-color: #f9f9f9;
+                background-color: #f4f4f4;
                 font-family: 'Montserrat', sans-serif;
                 color: #333;
             }
 
-            /* Main Container Styling */
             .container {
-                width: 100%;
+                width: 90%;
                 max-width: 700px;
                 background-color: #ffffff;
                 padding: 40px;
@@ -67,75 +44,42 @@
                 text-align: center;
             }
 
-            /* Logo Styling */
             .logo {
                 max-width: 180px;
                 margin-bottom: 30px;
             }
 
-            /* Header Styles */
             h1, h2 {
                 color: #333;
                 font-weight: bold;
             }
 
             h1 {
-                font-size: 32px;
+                font-size: 28px;
                 margin-bottom: 10px;
             }
 
             h2 {
-                font-size: 24px;
+                font-size: 22px;
                 margin: 20px 0;
             }
 
-            /* Paragraph Styling */
             p {
-                font-size: 18px;
+                font-size: 16px;
                 margin: 20px 0;
                 line-height: 1.6;
                 color: #666;
             }
 
-            /* Button Group Styling */
-            .button-group {
+            .button-group, .extra-services {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 20px;
-                margin-top: 30px;
-            }
-
-            /* Form Styling */
-            .form-group {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                width: 100%;
-                margin-bottom: 25px;
-            }
-
-            label {
-                font-size: 16px;
-                color: #333;
-                margin-bottom: 5px;
-            }
-
-            select, input[type="checkbox"], .extra-services label {
-                font-size: 16px;
-            }
-
-            /* Extra Services Grid */
-            .extra-services {
-                display: grid;
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                 gap: 15px;
-                text-align: left;
                 margin-top: 20px;
             }
 
-            /* Button Styling */
             .button {
-                padding: 14px 20px;
+                padding: 12px;
                 background-color: #00D0FF;
                 color: #FFFFFF;
                 border: none;
@@ -150,7 +94,6 @@
                 background-color: #00a8c3;
             }
 
-            /* Back Button */
             .back-button {
                 background-color: #666;
                 color: #FFFFFF;
@@ -160,37 +103,30 @@
                 background-color: #555;
             }
 
-            /* Centering Content */
-            .centered {
+            .form-group {
                 display: flex;
                 flex-direction: column;
-                align-items: center;
-                justify-content: center;
+                align-items: flex-start;
+                width: 100%;
+                margin-bottom: 25px;
             }
 
-            /* Checkbox Styling */
-            .extra-services label {
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
+            label {
                 font-size: 16px;
                 color: #333;
+                margin-bottom: 5px;
             }
 
-            /* Responsive Design */
-            @media (max-width: 768px) {
-                .container {
-                    padding: 20px;
-                }
-                h1 {
-                    font-size: 28px;
-                }
-                h2 {
-                    font-size: 20px;
-                }
-                .button-group {
-                    grid-template-columns: 1fr;
-                }
+            input[type="number"], select {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+
+            .summary p {
+                text-align: left;
             }
         `;
 
@@ -200,7 +136,6 @@
         document.head.appendChild(styleElement);
     })();
 
-    // Helper Functions
     function createElement(tag, className, textContent) {
         const element = document.createElement(tag);
         if (className) element.className = className;
@@ -208,9 +143,8 @@
         return element;
     }
 
-    // Initialization Function
     function initInterface() {
-        const container = createElement('div', 'container centered');
+        const container = createElement('div', 'container');
         document.body.innerHTML = '';
         document.body.appendChild(container);
 
@@ -219,109 +153,67 @@
         logo.alt = 'Company Logo';
         container.appendChild(logo);
 
-        const header = createElement('h1', null, 'Get a Painting Quote');
+        const header = createElement('h1', null, 'Get Your Painting Quote');
         container.appendChild(header);
 
-        const description = createElement('p', null, 'Choose the type of room you need painted.');
+        const description = createElement('p', null, 'Choose a package for the best pricing. Selecting multiple options is recommended for maximum value!');
         container.appendChild(description);
 
-        const typeContainer = createElement('div', 'button-group');
-        container.appendChild(typeContainer);
+        const optionsGroup = createElement('div', 'button-group');
+        container.appendChild(optionsGroup);
 
-        roomTypes.forEach(type => {
-            const typeBtn = createElement('button', 'button', type);
-            typeContainer.appendChild(typeBtn);
+        Object.entries(pricingOptions).forEach(([key, option], index) => {
+            const button = createElement('button', 'button', `Option ${index + 1} - $${option.pricePerSqFt} per sq ft`);
+            optionsGroup.appendChild(button);
 
-            typeBtn.addEventListener('click', () => {
-                paintingSelections.roomType = type;
-                previousPage = initInterface;
-                selectRoomOptions(container);
+            button.addEventListener('click', () => {
+                selectedOption = option;
+                selectAdditionalOptions(container);
             });
         });
     }
 
-    function selectRoomOptions(container) {
+    function selectAdditionalOptions(container) {
         container.innerHTML = '';
-
-        const logo = createElement('img', 'logo');
-        logo.src = 'https://i.ibb.co/jLhmxkV/66c3ffee32324b40f8096a84-Untitled-26.png';
-        logo.alt = 'Company Logo';
-        container.appendChild(logo);
-
-        const header = createElement('h2', null, `Customize Your ${paintingSelections.roomType}`);
+        
+        const header = createElement('h2', null, 'Add Additional Options');
         container.appendChild(header);
 
-        const options = [
-            { label: 'Include Walls', key: 'wallsIncluded' },
-            { label: 'Include Ceiling', key: 'ceilingIncluded' },
-            { label: 'Include Baseboards', key: 'baseboardsIncluded' }
+        const sqFtGroup = createElement('div', 'form-group');
+        const sqFtLabel = createElement('label', null, 'Enter Square Footage:');
+        const sqFtInput = createElement('input');
+        sqFtInput.type = 'number';
+        sqFtInput.placeholder = 'e.g., 1500';
+        sqFtGroup.appendChild(sqFtLabel);
+        sqFtGroup.appendChild(sqFtInput);
+        container.appendChild(sqFtGroup);
+
+        const addItemSection = createElement('div', 'extra-services');
+        const items = [
+            { label: 'Doors', key: 'doors', cost: additionalCosts.door },
+            { label: 'Cracks', key: 'cracks', cost: additionalCosts.crackRepair },
+            { label: 'Wall Holes', key: 'wallHoles', cost: additionalCosts.wallHoleFix }
         ];
+        items.forEach(item => {
+            const label = createElement('label', null, `${item.label} ($${item.cost} each):`);
+            const input = createElement('input');
+            input.type = 'number';
+            input.placeholder = '0';
+            input.style.width = '60px';
+            addItemSection.appendChild(label);
+            addItemSection.appendChild(input);
 
-        options.forEach(option => {
-            const checkBox = document.createElement('input');
-            checkBox.type = 'checkbox';
-            checkBox.id = option.key;
-            checkBox.checked = paintingSelections[option.key];
-
-            const label = createElement('label', null, option.label);
-            label.htmlFor = option.key;
-
-            container.appendChild(checkBox);
-            container.appendChild(label);
-            container.appendChild(document.createElement('br'));
-
-            checkBox.addEventListener('change', () => {
-                paintingSelections[option.key] = checkBox.checked;
+            input.addEventListener('input', () => {
+                additionalItems[item.key] = parseInt(input.value) || 0;
             });
         });
+        container.appendChild(addItemSection);
 
-        const colorSection = createElement('div', 'color-section');
-        container.appendChild(colorSection);
-
-        const wallColorLabel = createElement('label', null, 'Wall Color:');
-        colorSection.appendChild(wallColorLabel);
-
-        const wallColorSelect = createElement('select');
-        Object.entries(colors).forEach(([colorName, hex]) => {
-            const option = createElement('option', null, colorName);
-            option.value = colorName;
-            wallColorSelect.appendChild(option);
-        });
-        colorSection.appendChild(wallColorSelect);
-
-        wallColorSelect.addEventListener('change', () => {
-            paintingSelections.wallColor = wallColorSelect.value;
-        });
-
-        const extraServicesContainer = createElement('div', 'extra-services');
-        container.appendChild(extraServicesContainer);
-
-        Object.entries(extraServices).forEach(([service, price]) => {
-            const checkBox = document.createElement('input');
-            checkBox.type = 'checkbox';
-            checkBox.id = service;
-
-            const label = createElement('label', null, `${service} (+$${price})`);
-            label.htmlFor = service;
-
-            extraServicesContainer.appendChild(checkBox);
-            extraServicesContainer.appendChild(label);
-
-            checkBox.addEventListener('change', () => {
-                if (checkBox.checked) {
-                    paintingSelections.extraServices.push(service);
-                } else {
-                    paintingSelections.extraServices = paintingSelections.extraServices.filter(
-                        s => s !== service
-                    );
-                }
-            });
-        });
-
-        const calculateBtn = createElement('button', 'button', 'Calculate Cost');
+        const calculateBtn = createElement('button', 'button', 'Calculate Quote');
         container.appendChild(calculateBtn);
 
         calculateBtn.addEventListener('click', () => {
+            squareFootage = parseInt(sqFtInput.value) || 0;
             calculateTotalCost();
             showQuote(container);
         });
@@ -329,54 +221,37 @@
         const backButton = createElement('button', 'button back-button', 'Back');
         container.appendChild(backButton);
 
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
-        });
+        backButton.addEventListener('click', initInterface);
     }
 
     function calculateTotalCost() {
-        totalCost = 0;
-
-        if (paintingSelections.wallsIncluded) {
-            totalCost += PRICE_PER_SQFT_WALLS * paintingSelections.numWalls * 100;
-        }
-        if (paintingSelections.ceilingIncluded) {
-            totalCost += PRICE_PER_SQFT_CEILING * 100;
-        }
-        if (paintingSelections.baseboardsIncluded) {
-            totalCost += PRICE_PER_LIN_FOOT_BASEBOARDS * 40;
-        }
-
-        paintingSelections.extraServices.forEach(service => {
-            totalCost += extraServices[service];
-        });
-
-        totalCost = Math.max(totalCost, MINIMUM_PRICE);
-        totalCost = Math.ceil(totalCost);
+        totalCost = squareFootage * selectedOption.pricePerSqFt;
+        totalCost += additionalItems.doors * additionalCosts.door;
+        totalCost += additionalItems.cracks * additionalCosts.crackRepair;
+        totalCost += additionalItems.wallHoles * additionalCosts.wallHoleFix;
+        totalCost = Math.max(totalCost, 150);  // Enforce minimum price of $150
     }
 
     function showQuote(container) {
         container.innerHTML = '';
-
-        const logo = createElement('img', 'logo');
-        logo.src = 'https://i.ibb.co/jLhmxkV/66c3ffee32324b40f8096a84-Untitled-26.png';
-        logo.alt = 'Company Logo';
-        container.appendChild(logo);
-
-        const header = createElement('h2', null, 'Your Quote');
+        
+        const header = createElement('h2', null, 'Your Painting Quote');
         container.appendChild(header);
 
-        const totalText = createElement('p', null, `Total Price: $${Math.ceil(totalCost)}`);
-        totalText.style.fontSize = '32px';
-        totalText.style.fontWeight = 'bold';
-        container.appendChild(totalText);
+        const summary = createElement('div', 'summary');
+        summary.innerHTML = `
+            <p><strong>Square Footage:</strong> ${squareFootage} sq ft</p>
+            <p><strong>Selected Package:</strong> $${selectedOption.pricePerSqFt} per sq ft</p>
+            <p><strong>Doors:</strong> ${additionalItems.doors} ($${additionalItems.doors * additionalCosts.door})</p>
+            <p><strong>Cracks:</strong> ${additionalItems.cracks} ($${additionalItems.cracks * additionalCosts.crackRepair})</p>
+            <p><strong>Wall Holes:</strong> ${additionalItems.wallHoles} ($${additionalItems.wallHoles * additionalCosts.wallHoleFix})</p>
+            <p><strong>Total Cost:</strong> $${Math.ceil(totalCost)}</p>
+        `;
+        container.appendChild(summary);
 
         const backButton = createElement('button', 'button back-button', 'Back');
         container.appendChild(backButton);
-
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
-        });
+        backButton.addEventListener('click', initInterface);
     }
 
     initInterface();
