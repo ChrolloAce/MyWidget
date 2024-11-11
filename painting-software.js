@@ -1,9 +1,9 @@
 (function () {
     // Constants and Configuration
-    const PRICE_PER_SQFT_WALLS = 2;
-    const PRICE_PER_SQFT_CEILING = 1.5;
-    const PRICE_PER_SQFT_BASEBOARDS = 0.5;
-    const MINIMUM_PRICE = 200;
+    const PRICE_PER_SQFT_WALLS = 1.5;
+    const PRICE_PER_SQFT_CEILING = 1.2;
+    const PRICE_PER_LIN_FOOT_BASEBOARDS = 0.5;
+    const MINIMUM_PRICE = 150;
 
     let items = [];
     let totalCost = 0;
@@ -11,7 +11,7 @@
     let userInfo = {};
 
     let paintingSelections = {
-        roomType: '',            // 'Kitchen', 'Bathroom', 'Bedroom', etc.
+        roomType: '', // 'Kitchen', 'Bathroom', etc.
         wallsIncluded: false,
         ceilingIncluded: false,
         baseboardsIncluded: false,
@@ -22,26 +22,153 @@
     };
 
     const roomTypes = ['Kitchen', 'Bathroom', 'Bedroom', 'Living Room', 'Office'];
-
     const extraServices = {
-        popcornRemoval: 150,   // Flat fee for removing popcorn ceiling
-        patching: 100,         // Flat fee for patching holes
-        primer: 50,            // Flat fee for applying primer
+        popcornRemoval: 100,
+        patching: 50,
+        primer: 30
     };
-
     const colors = {
         'White': '#FFFFFF',
-        'Light Gray': '#D3D3D3',
+        'Gray': '#D3D3D3',
         'Charcoal': '#333333',
         'Beige': '#F5F5DC',
         'Blue': '#1E90FF',
         'Green': '#32CD32'
     };
 
-    // Inject CSS Styles Globally
+    // Inject CSS Styles
     (function injectStyles() {
         const styles = `
-        /* Add the styling details here similar to the previous example */
+            /* General Reset */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                background-color: #000000;
+                font-family: Arial, sans-serif;
+                color: #FFFFFF;
+            }
+
+            /* Main Container Styling */
+            .container {
+                width: 90%;
+                max-width: 600px;
+                background-color: #1e1e1e;
+                padding: 40px;
+                border-radius: 20px;
+                box-shadow: 0 16px 32px rgba(0, 208, 255, 0.4);
+                text-align: center;
+            }
+
+            /* Logo Styling */
+            .logo {
+                max-width: 200px;
+                margin-bottom: 20px;
+            }
+
+            /* Header Styles */
+            h1, h2 {
+                color: #00D0FF;
+                font-weight: bold;
+            }
+
+            h2 {
+                font-size: 24px;
+                margin: 20px 0;
+            }
+
+            /* Paragraph Styling */
+            p {
+                font-size: 18px;
+                margin: 20px 0;
+                line-height: 1.6;
+                color: #CCCCCC;
+            }
+
+            /* Form Control Styling */
+            .color-section, .extra-services {
+                margin: 20px 0;
+                text-align: left;
+            }
+
+            label {
+                color: #00D0FF;
+                font-size: 16px;
+                margin-right: 10px;
+            }
+
+            select, input[type="checkbox"] {
+                margin-bottom: 15px;
+            }
+
+            /* Button Wrapper */
+            .button-wrapper {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 30px;
+            }
+
+            /* Button Styling */
+            .button {
+                background-color: #00D0FF;
+                color: #FFFFFF;
+                padding: 12px 24px;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 16px;
+                transition: all 0.3s ease;
+                box-shadow: 0 8px 16px rgba(0, 208, 255, 0.2);
+            }
+
+            .button:hover {
+                background-color: #008fb8;
+                box-shadow: 0 12px 24px rgba(0, 208, 255, 0.4);
+            }
+
+            /* Back Button */
+            .back-button {
+                background-color: #333333;
+                color: #FFFFFF;
+            }
+
+            .back-button:hover {
+                background-color: #555555;
+            }
+
+            /* Centering Content */
+            .centered {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Custom Checkbox Styling */
+            .extra-services label {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .container {
+                    padding: 20px;
+                    width: 100%;
+                }
+                .button-wrapper {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+            }
         `;
 
         const styleElement = document.createElement('style');
@@ -60,9 +187,14 @@
 
     // Initialization Function
     function initInterface() {
-        const container = createElement('div', 'container');
+        const container = createElement('div', 'container centered');
         document.body.innerHTML = '';
         document.body.appendChild(container);
+
+        const logo = createElement('img', 'logo');
+        logo.src = 'https://i.ibb.co/jLhmxkV/66c3ffee32324b40f8096a84-Untitled-26.png';
+        logo.alt = 'Company Logo';
+        container.appendChild(logo);
 
         const header = createElement('h1', null, 'Get a Painting Quote');
         container.appendChild(header);
@@ -70,7 +202,7 @@
         const description = createElement('p', null, 'Choose the type of room you need painted.');
         container.appendChild(description);
 
-        const typeContainer = createElement('div', 'button-group');
+        const typeContainer = createElement('div', 'button-group centered');
         container.appendChild(typeContainer);
 
         roomTypes.forEach(type => {
@@ -88,10 +220,15 @@
     function selectRoomOptions(container) {
         container.innerHTML = '';
 
+        const logo = createElement('img', 'logo');
+        logo.src = 'https://i.ibb.co/jLhmxkV/66c3ffee32324b40f8096a84-Untitled-26.png';
+        logo.alt = 'Company Logo';
+        container.appendChild(logo);
+
         const header = createElement('h2', null, `Customize Your ${paintingSelections.roomType}`);
         container.appendChild(header);
 
-        // Select walls, ceiling, baseboards
+        // Include walls, ceiling, baseboards
         const options = [
             { label: 'Include Walls', key: 'wallsIncluded' },
             { label: 'Include Ceiling', key: 'ceilingIncluded' },
@@ -162,7 +299,7 @@
             });
         });
 
-        // Button to calculate cost
+        // Calculate Cost Button
         const calculateBtn = createElement('button', 'button', 'Calculate Cost');
         container.appendChild(calculateBtn);
 
@@ -184,13 +321,13 @@
         totalCost = 0;
 
         if (paintingSelections.wallsIncluded) {
-            totalCost += PRICE_PER_SQFT_WALLS * paintingSelections.numWalls * 100; // 100 sq ft per wall example
+            totalCost += PRICE_PER_SQFT_WALLS * paintingSelections.numWalls * 100; // Example: 100 sq ft per wall
         }
         if (paintingSelections.ceilingIncluded) {
             totalCost += PRICE_PER_SQFT_CEILING * 100; // Fixed size ceiling example
         }
         if (paintingSelections.baseboardsIncluded) {
-            totalCost += PRICE_PER_SQFT_BASEBOARDS * 40; // 40 linear feet example
+            totalCost += PRICE_PER_LIN_FOOT_BASEBOARDS * 40; // Example: 40 linear feet of baseboards
         }
 
         // Additional services cost
@@ -204,6 +341,11 @@
 
     function showQuote(container) {
         container.innerHTML = '';
+
+        const logo = createElement('img', 'logo');
+        logo.src = 'https://i.ibb.co/jLhmxkV/66c3ffee32324b40f8096a84-Untitled-26.png';
+        logo.alt = 'Company Logo';
+        container.appendChild(logo);
 
         const header = createElement('h2', null, 'Your Quote');
         container.appendChild(header);
