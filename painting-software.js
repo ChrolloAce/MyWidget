@@ -11,7 +11,7 @@
     let userInfo = {};
 
     let paintingSelections = {
-        roomType: '', // 'Kitchen', 'Bathroom', etc.
+        roomType: '',
         wallsIncluded: false,
         ceilingIncluded: false,
         baseboardsIncluded: false,
@@ -51,32 +51,37 @@
                 align-items: center;
                 justify-content: center;
                 min-height: 100vh;
-                background-color: #000000;
-                font-family: Arial, sans-serif;
-                color: #FFFFFF;
+                background-color: #f9f9f9;
+                font-family: 'Montserrat', sans-serif;
+                color: #333;
             }
 
             /* Main Container Styling */
             .container {
-                width: 90%;
-                max-width: 600px;
-                background-color: #1e1e1e;
+                width: 100%;
+                max-width: 700px;
+                background-color: #ffffff;
                 padding: 40px;
-                border-radius: 20px;
-                box-shadow: 0 16px 32px rgba(0, 208, 255, 0.4);
+                border-radius: 12px;
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
                 text-align: center;
             }
 
             /* Logo Styling */
             .logo {
-                max-width: 200px;
-                margin-bottom: 20px;
+                max-width: 180px;
+                margin-bottom: 30px;
             }
 
             /* Header Styles */
             h1, h2 {
-                color: #00D0FF;
+                color: #333;
                 font-weight: bold;
+            }
+
+            h1 {
+                font-size: 32px;
+                margin-bottom: 10px;
             }
 
             h2 {
@@ -89,58 +94,70 @@
                 font-size: 18px;
                 margin: 20px 0;
                 line-height: 1.6;
-                color: #CCCCCC;
+                color: #666;
             }
 
-            /* Form Control Styling */
-            .color-section, .extra-services {
-                margin: 20px 0;
-                text-align: left;
+            /* Button Group Styling */
+            .button-group {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 20px;
+                margin-top: 30px;
+            }
+
+            /* Form Styling */
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                margin-bottom: 25px;
             }
 
             label {
-                color: #00D0FF;
                 font-size: 16px;
-                margin-right: 10px;
+                color: #333;
+                margin-bottom: 5px;
             }
 
-            select, input[type="checkbox"] {
-                margin-bottom: 15px;
+            select, input[type="checkbox"], .extra-services label {
+                font-size: 16px;
             }
 
-            /* Button Wrapper */
-            .button-wrapper {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 30px;
+            /* Extra Services Grid */
+            .extra-services {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 15px;
+                text-align: left;
+                margin-top: 20px;
             }
 
             /* Button Styling */
             .button {
+                padding: 14px 20px;
                 background-color: #00D0FF;
                 color: #FFFFFF;
-                padding: 12px 24px;
                 border: none;
-                border-radius: 10px;
+                border-radius: 8px;
                 cursor: pointer;
                 font-size: 16px;
+                font-weight: bold;
                 transition: all 0.3s ease;
-                box-shadow: 0 8px 16px rgba(0, 208, 255, 0.2);
             }
 
             .button:hover {
-                background-color: #008fb8;
-                box-shadow: 0 12px 24px rgba(0, 208, 255, 0.4);
+                background-color: #00a8c3;
             }
 
             /* Back Button */
             .back-button {
-                background-color: #333333;
+                background-color: #666;
                 color: #FFFFFF;
             }
 
             .back-button:hover {
-                background-color: #555555;
+                background-color: #555;
             }
 
             /* Centering Content */
@@ -151,22 +168,28 @@
                 justify-content: center;
             }
 
-            /* Custom Checkbox Styling */
+            /* Checkbox Styling */
             .extra-services label {
                 display: inline-flex;
                 align-items: center;
                 gap: 10px;
+                font-size: 16px;
+                color: #333;
             }
 
             /* Responsive Design */
             @media (max-width: 768px) {
                 .container {
                     padding: 20px;
-                    width: 100%;
                 }
-                .button-wrapper {
-                    flex-direction: column;
-                    gap: 10px;
+                h1 {
+                    font-size: 28px;
+                }
+                h2 {
+                    font-size: 20px;
+                }
+                .button-group {
+                    grid-template-columns: 1fr;
                 }
             }
         `;
@@ -202,7 +225,7 @@
         const description = createElement('p', null, 'Choose the type of room you need painted.');
         container.appendChild(description);
 
-        const typeContainer = createElement('div', 'button-group centered');
+        const typeContainer = createElement('div', 'button-group');
         container.appendChild(typeContainer);
 
         roomTypes.forEach(type => {
@@ -228,7 +251,6 @@
         const header = createElement('h2', null, `Customize Your ${paintingSelections.roomType}`);
         container.appendChild(header);
 
-        // Include walls, ceiling, baseboards
         const options = [
             { label: 'Include Walls', key: 'wallsIncluded' },
             { label: 'Include Ceiling', key: 'ceilingIncluded' },
@@ -253,7 +275,6 @@
             });
         });
 
-        // Wall and Ceiling Color Selection
         const colorSection = createElement('div', 'color-section');
         container.appendChild(colorSection);
 
@@ -272,7 +293,6 @@
             paintingSelections.wallColor = wallColorSelect.value;
         });
 
-        // Extra Services
         const extraServicesContainer = createElement('div', 'extra-services');
         container.appendChild(extraServicesContainer);
 
@@ -286,7 +306,6 @@
 
             extraServicesContainer.appendChild(checkBox);
             extraServicesContainer.appendChild(label);
-            extraServicesContainer.appendChild(document.createElement('br'));
 
             checkBox.addEventListener('change', () => {
                 if (checkBox.checked) {
@@ -299,7 +318,6 @@
             });
         });
 
-        // Calculate Cost Button
         const calculateBtn = createElement('button', 'button', 'Calculate Cost');
         container.appendChild(calculateBtn);
 
@@ -308,7 +326,6 @@
             showQuote(container);
         });
 
-        // Back Button
         const backButton = createElement('button', 'button back-button', 'Back');
         container.appendChild(backButton);
 
@@ -321,16 +338,15 @@
         totalCost = 0;
 
         if (paintingSelections.wallsIncluded) {
-            totalCost += PRICE_PER_SQFT_WALLS * paintingSelections.numWalls * 100; // Example: 100 sq ft per wall
+            totalCost += PRICE_PER_SQFT_WALLS * paintingSelections.numWalls * 100;
         }
         if (paintingSelections.ceilingIncluded) {
-            totalCost += PRICE_PER_SQFT_CEILING * 100; // Fixed size ceiling example
+            totalCost += PRICE_PER_SQFT_CEILING * 100;
         }
         if (paintingSelections.baseboardsIncluded) {
-            totalCost += PRICE_PER_LIN_FOOT_BASEBOARDS * 40; // Example: 40 linear feet of baseboards
+            totalCost += PRICE_PER_LIN_FOOT_BASEBOARDS * 40;
         }
 
-        // Additional services cost
         paintingSelections.extraServices.forEach(service => {
             totalCost += extraServices[service];
         });
@@ -351,7 +367,7 @@
         container.appendChild(header);
 
         const totalText = createElement('p', null, `Total Price: $${Math.ceil(totalCost)}`);
-        totalText.style.fontSize = '36px';
+        totalText.style.fontSize = '32px';
         totalText.style.fontWeight = 'bold';
         container.appendChild(totalText);
 
