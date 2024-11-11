@@ -11,10 +11,8 @@
         extraSqFtRate: 2.7
     };
 
+    let rooms = [];
     let totalCost = 0;
-    let selectedOption = null;
-    let squareFootage = 0;
-    let additionalItems = { doors: 0, cracks: 0, wallHoles: 0 };
 
     (function injectStyles() {
         const styles = `
@@ -35,8 +33,8 @@
             }
 
             .container {
-                width: 90%;
-                max-width: 700px;
+                width: 100%;
+                max-width: 800px;
                 background-color: #ffffff;
                 padding: 40px;
                 border-radius: 12px;
@@ -56,7 +54,7 @@
 
             h1 {
                 font-size: 28px;
-                margin-bottom: 10px;
+                margin-bottom: 20px;
             }
 
             h2 {
@@ -108,7 +106,7 @@
                 flex-direction: column;
                 align-items: flex-start;
                 width: 100%;
-                margin-bottom: 25px;
+                margin-bottom: 20px;
             }
 
             label {
@@ -125,8 +123,39 @@
                 font-size: 16px;
             }
 
-            .summary p {
+            .room-summary {
                 text-align: left;
+                background-color: #f8f8f8;
+                border-radius: 8px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            }
+
+            .room-summary h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+                color: #333;
+            }
+
+            .room-summary p {
+                margin-bottom: 5px;
+                color: #555;
+            }
+
+            .add-room-btn {
+                margin-top: 20px;
+                background-color: #28a745;
+            }
+
+            .add-room-btn:hover {
+                background-color: #218838;
+            }
+
+            .summary-total {
+                margin-top: 20px;
+                font-size: 24px;
+                font-weight: bold;
             }
         `;
 
@@ -153,32 +182,47 @@
         logo.alt = 'Company Logo';
         container.appendChild(logo);
 
-        const header = createElement('h1', null, 'Get Your Painting Quote');
+        const header = createElement('h1', null, 'Room Painting Quote Tool');
         container.appendChild(header);
 
-        const description = createElement('p', null, 'Choose a package for the best pricing. Selecting multiple options is recommended for maximum value!');
-        container.appendChild(description);
+        const addRoomBtn = createElement('button', 'button add-room-btn', 'Add a Room');
+        container.appendChild(addRoomBtn);
 
-        const optionsGroup = createElement('div', 'button-group');
-        container.appendChild(optionsGroup);
+        addRoomBtn.addEventListener('click', () => addRoom(container));
+
+        if (rooms.length > 0) {
+            rooms.forEach((room, index) => displayRoomSummary(container, room, index));
+            displayTotalCost(container);
+        }
+    }
+
+    function addRoom(container) {
+        container.innerHTML = '';
+
+        const header = createElement('h2', null, 'Add a Room');
+        container.appendChild(header);
+
+        const room = {
+            id: rooms.length + 1,
+            package: null,
+            squareFootage: 0,
+            additionalItems: { doors: 0, cracks: 0, wallHoles: 0 }
+        };
+
+        // Package Selection
+        const packageGroup = createElement('div', 'button-group');
+        container.appendChild(packageGroup);
 
         Object.entries(pricingOptions).forEach(([key, option], index) => {
             const button = createElement('button', 'button', `Option ${index + 1} - $${option.pricePerSqFt} per sq ft`);
-            optionsGroup.appendChild(button);
+            packageGroup.appendChild(button);
 
             button.addEventListener('click', () => {
-                selectedOption = option;
-                selectAdditionalOptions(container);
+                room.package = option;
             });
         });
-    }
 
-    function selectAdditionalOptions(container) {
-        container.innerHTML = '';
-        
-        const header = createElement('h2', null, 'Add Additional Options');
-        container.appendChild(header);
-
+        // Square Footage
         const sqFtGroup = createElement('div', 'form-group');
         const sqFtLabel = createElement('label', null, 'Enter Square Footage:');
         const sqFtInput = createElement('input');
@@ -188,34 +232,40 @@
         sqFtGroup.appendChild(sqFtInput);
         container.appendChild(sqFtGroup);
 
-        const addItemSection = createElement('div', 'extra-services');
+        sqFtInput.addEventListener('input', () => {
+            room.squareFootage = parseInt(sqFtInput.value) || 0;
+        });
+
+        // Additional Items
+        const additionalItemsGroup = createElement('div', 'extra-services');
         const items = [
             { label: 'Doors', key: 'doors', cost: additionalCosts.door },
             { label: 'Cracks', key: 'cracks', cost: additionalCosts.crackRepair },
             { label: 'Wall Holes', key: 'wallHoles', cost: additionalCosts.wallHoleFix }
         ];
+
         items.forEach(item => {
             const label = createElement('label', null, `${item.label} ($${item.cost} each):`);
             const input = createElement('input');
             input.type = 'number';
             input.placeholder = '0';
             input.style.width = '60px';
-            addItemSection.appendChild(label);
-            addItemSection.appendChild(input);
+            additionalItemsGroup.appendChild(label);
+            additionalItemsGroup.appendChild(input);
 
             input.addEventListener('input', () => {
-                additionalItems[item.key] = parseInt(input.value) || 0;
+                room.additionalItems[item.key] = parseInt(input.value) || 0;
             });
         });
-        container.appendChild(addItemSection);
+        container.appendChild(additionalItemsGroup);
 
-        const calculateBtn = createElement('button', 'button', 'Calculate Quote');
-        container.appendChild(calculateBtn);
+        // Save Room Button
+        const saveRoomBtn = createElement('button', 'button add-room-btn', 'Save Room');
+        container.appendChild(saveRoomBtn);
 
-        calculateBtn.addEventListener('click', () => {
-            squareFootage = parseInt(sqFtInput.value) || 0;
-            calculateTotalCost();
-            showQuote(container);
+        saveRoomBtn.addEventListener('click', () => {
+            rooms.push(room);
+            initInterface();
         });
 
         const backButton = createElement('button', 'button back-button', 'Back');
@@ -224,34 +274,32 @@
         backButton.addEventListener('click', initInterface);
     }
 
-    function calculateTotalCost() {
-        totalCost = squareFootage * selectedOption.pricePerSqFt;
-        totalCost += additionalItems.doors * additionalCosts.door;
-        totalCost += additionalItems.cracks * additionalCosts.crackRepair;
-        totalCost += additionalItems.wallHoles * additionalCosts.wallHoleFix;
-        totalCost = Math.max(totalCost, 150);  // Enforce minimum price of $150
+    function calculateRoomCost(room) {
+        let cost = room.squareFootage * room.package.pricePerSqFt;
+        cost += room.additionalItems.doors * additionalCosts.door;
+        cost += room.additionalItems.cracks * additionalCosts.crackRepair;
+        cost += room.additionalItems.wallHoles * additionalCosts.wallHoleFix;
+        return Math.max(cost, 150); // Minimum price per room
     }
 
-    function showQuote(container) {
-        container.innerHTML = '';
-        
-        const header = createElement('h2', null, 'Your Painting Quote');
-        container.appendChild(header);
-
-        const summary = createElement('div', 'summary');
-        summary.innerHTML = `
-            <p><strong>Square Footage:</strong> ${squareFootage} sq ft</p>
-            <p><strong>Selected Package:</strong> $${selectedOption.pricePerSqFt} per sq ft</p>
-            <p><strong>Doors:</strong> ${additionalItems.doors} ($${additionalItems.doors * additionalCosts.door})</p>
-            <p><strong>Cracks:</strong> ${additionalItems.cracks} ($${additionalItems.cracks * additionalCosts.crackRepair})</p>
-            <p><strong>Wall Holes:</strong> ${additionalItems.wallHoles} ($${additionalItems.wallHoles * additionalCosts.wallHoleFix})</p>
-            <p><strong>Total Cost:</strong> $${Math.ceil(totalCost)}</p>
+    function displayRoomSummary(container, room, index) {
+        const roomDiv = createElement('div', 'room-summary');
+        roomDiv.innerHTML = `
+            <h3>Room ${index + 1}</h3>
+            <p><strong>Package:</strong> $${room.package.pricePerSqFt} per sq ft</p>
+            <p><strong>Square Footage:</strong> ${room.squareFootage} sq ft</p>
+            <p><strong>Doors:</strong> ${room.additionalItems.doors}</p>
+            <p><strong>Cracks:</strong> ${room.additionalItems.cracks}</p>
+            <p><strong>Wall Holes:</strong> ${room.additionalItems.wallHoles}</p>
+            <p><strong>Cost:</strong> $${Math.ceil(calculateRoomCost(room))}</p>
         `;
-        container.appendChild(summary);
+        container.appendChild(roomDiv);
+    }
 
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
-        backButton.addEventListener('click', initInterface);
+    function displayTotalCost(container) {
+        totalCost = rooms.reduce((total, room) => total + calculateRoomCost(room), 0);
+        const totalDiv = createElement('div', 'summary-total', `Total Cost: $${Math.ceil(totalCost)}`);
+        container.appendChild(totalDiv);
     }
 
     initInterface();
