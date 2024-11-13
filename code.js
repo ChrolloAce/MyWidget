@@ -216,18 +216,20 @@ h3 {
 }
 
 .shape-diagram {
-    width: 100%;
-    max-width: 800px;                       /* Controls the maximum width */
-    padding-top: 56.25%;                    /* 16:9 ratio (height = 9/16 * width) */
-    background-size: cover;                 /* Fills the container with the image */
-    background-position: center;            /* Centers the image */
-    background-repeat: no-repeat;           /* Prevents repeating */
+    width: 100%;                            /* Takes up full width of grid cell */
+    height: 100%;                           /* Takes up full height of grid cell */
+    background-size: contain;               /* Ensures the entire image fits within */
+    background-position: center;            /* Centers the image within the element */
+    background-repeat: no-repeat;           /* Prevents image repetition */
     background-color: #f5f5f5;              /* Adds a background color for contrast */
     border-radius: 10px;                    /* Adds rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
     overflow: hidden;                       /* Keeps content within rounded corners */
-    margin: 0 auto;                         /* Centers horizontally */
+    display: flex;                          /* Enables flexible layout */
+    align-items: center;                    /* Vertically centers content */
+    justify-content: center;                /* Horizontally centers content */
 }
+
 
 
 .image-button:hover {
@@ -835,9 +837,8 @@ function addItem(container) {
 }
 
 
-    // Update the createShapeDiagramButton function to use div with background image
 function createShapeDiagramButton(text, imageUrl) {
-    const button = createElement('div', 'shape-diagram');
+    const button = createElement('div', 'shape-diagram'); // Applies 'shape-diagram' class universally
     button.style.backgroundImage = `url(${imageUrl})`;
 
     // Add label container that sits below the shape diagram
@@ -851,6 +852,7 @@ function createShapeDiagramButton(text, imageUrl) {
 
     return wrapper;
 }
+
 
     
 function getSubcategoryImageUrl(subcategory) {
