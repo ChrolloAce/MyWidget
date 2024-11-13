@@ -1481,6 +1481,7 @@ function createInvoicePage(container) {
 
 
 
+// Update the updateItemList function to use generateItemDescription
 function updateItemList(itemListDiv) {
     itemListDiv.innerHTML = '<h3>Items in Your Quote:</h3>';
     
@@ -1494,8 +1495,8 @@ function updateItemList(itemListDiv) {
         img.alt = shape.name;
         descDiv.appendChild(img);
 
-        // Use the display name for the UI
-        const descText = createElement('span', null, shape.name);
+        // Use the updated description for the UI, which includes the category
+        const descText = createElement('span', null, generateItemDescription(item));
         descDiv.appendChild(descText);
 
         const removeBtn = createElement('button', 'item-remove', 'Remove');
@@ -1507,24 +1508,25 @@ function updateItemList(itemListDiv) {
     });
 }
     
-// Function to generate a more simplified description for the item
+// Modify the generateItemDescription function
 function generateItemDescription(item) {
     let typeDescription = '';
 
-    // Determine if it's Kitchen or Bathroom
+    // Determine the type based on designSelections.type and item shape
     if (designSelections.type === 'Kitchen') {
         if (item.shape.includes('Bartop')) {
             typeDescription = 'Kitchen Bartop';
         } else if (item.shape.includes('Island')) {
-            typeDescription = 'Kitchen Island Countertop';
+            typeDescription = 'Kitchen Island';
         } else {
-            typeDescription = 'Kitchen Regular Countertop';
+            typeDescription = 'Kitchen Countertop';
         }
     } else if (designSelections.type === 'Bathroom') {
         typeDescription = 'Bathroom Countertop';
     }
 
-    return typeDescription; // Return the simplified description
+    // Return the type description followed by the item's shape name
+    return `${typeDescription} - ${item.shape}`;
 }
 
 
