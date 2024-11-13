@@ -935,14 +935,14 @@ function getShapesForSubcategory(type, subcategory) {
                     name: 'Standard 3 Sides',
                     code: 'KS3',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
-                    formula: (measurements) => (((measurements[0] + measurements[1] + measurements[2]) / 2 * 25) / 144),
+                    formula: (measurements) => (((measurements[0] + measurements[1] + measurements[2]) * 25) / 144),
                     imageUrl: 'https://i.ibb.co/B28cv3j/3.png'
                 },
                 {
                     name: 'Standard Broken L',
                     code: 'KSBL',
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
-                    formula: (measurements) => (((measurements[0] + measurements[1] + measurements[2] + measurements[3]) / 2 * 25) / 144),
+                    formula: (measurements) => (((measurements[0] + measurements[1] + measurements[2] + measurements[3])) / 2 * 25/ 144),
                     imageUrl: 'https://i.ibb.co/5kb4k7G/4.png'
                 },
                 {
@@ -976,14 +976,14 @@ function getShapesForSubcategory(type, subcategory) {
                     },
                     imageUrl: 'https://i.ibb.co/dQ4sD7Y/7.png'
                 },
-                {
-                    name: 'Irregular L',
-                    code: 'KIL',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
-                    formula: (measurements) => (((measurements[0] * measurements[1]) + (measurements[2] * measurements[3])) / 144),
-                    imageUrl: 'https://i.ibb.co/LhtPc1f/8.png'
-                }
-            ],
+         {
+                name: 'Irregular L',
+                code: 'KIL',
+                measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
+                formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * 25)) / 144,
+                imageUrl: 'https://i.ibb.co/LhtPc1f/8.png'
+          }
+                ],
             'Bartop': [
                 {
                     name: 'Straight',
@@ -1016,26 +1016,27 @@ function getShapesForSubcategory(type, subcategory) {
                     },
                     imageUrl: 'https://i.ibb.co/cg9YBY2/12.png'
                 },
-                {
-                    name: 'Standard 3 Sides',
-                    code: 'Bar3',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
-                    formula: (measurements) => {
-                        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
-                        return ((perimeter * measurements[6]) / 144);
-                    },
-                    imageUrl: 'https://i.ibb.co/qMpW4WB/13.png'
-                },
-                {
-                    name: 'Standard 4 Sides',
-                    code: 'Bar4',
-                    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7', 'Measurement 8', 'Measurement 9'],
-                    formula: (measurements) => {
-                        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5] + measurements[6] + measurements[7]) / 2;
-                        return ((perimeter * measurements[8]) / 144);
-                    },
-                    imageUrl: 'https://i.ibb.co/37bbBck/14.png'
-                }
+               {
+    name: 'Standard 3 Sides',
+    code: 'Bar3',
+    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
+    formula: (measurements) => {
+        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
+        return ((perimeter * measurements[6]) / 144);
+    },
+    imageUrl: 'https://i.ibb.co/qMpW4WB/13.png'
+},
+{
+    name: 'Standard 4 Sides',
+    code: 'Bar4',
+    measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7', 'Measurement 8', 'Measurement 9'],
+    formula: (measurements) => {
+        const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5] + measurements[6] + measurements[7]) / 2;
+        return ((perimeter * measurements[8]) / 144);
+    },
+    imageUrl: 'https://i.ibb.co/37bbBck/14.png'
+}
+
             ],
             'Island': [
                 {
@@ -1762,7 +1763,7 @@ function getShapesForType(type) {
                 name: 'Standard L',
                 code: 'BathL',
                 measurements: ['Measurement 1', 'Measurement 2'],
-                formula: (measurements) => (((measurements[0] + measurements[1]) / 2 * 22) / 144),
+                formula: (measurements) => (((measurements[0] + measurements[1]) * 22) / 144),
                 imageUrl: 'https://i.ibb.co/Qv8p4Bx/16.png'
             },
             {
@@ -1770,7 +1771,7 @@ function getShapesForType(type) {
                 code: 'Bath3',
                 measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
                 formula: (measurements) => {
-                    const perimeter = (measurements.reduce((acc, cur) => acc + cur, 0)) / 2;
+                    const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
                     return ((perimeter * 22) / 144);
                 },
                 imageUrl: 'https://i.ibb.co/47FGwJg/17.png'
@@ -1780,6 +1781,7 @@ function getShapesForType(type) {
 
     return shapes[type] || [];
 }
+
 
 
     // Calculate and Add Item to Invoice (Unused in streamlined flow)
