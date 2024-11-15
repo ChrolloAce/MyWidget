@@ -77,6 +77,31 @@
                 margin-bottom: 20px;
             }
 
+
+            .logo-section {
+    margin-bottom: 20px;
+}
+
+.logo {
+    display: block;
+    margin: 0 auto;
+}
+
+.room-summary {
+    background-color: #f8f8f8;
+    padding: 15px;
+    margin: 10px 0;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    text-align: left;
+}
+
+            
             .button {
                 display: inline-block;
                 padding: 12px 20px;
@@ -193,12 +218,20 @@
     }
 
 function addLogo(container) {
-    const logo = document.createElement('img');
+    const logoSection = createElement('div', 'logo-section');
+    logoSection.style.textAlign = 'center';
+    logoSection.style.marginBottom = '20px';
+
+    const logo = createElement('img', 'logo');
     logo.src = 'https://i.ibb.co/jLhmxkV/66c3ffee32324b40f8096a84-Untitled-26.png';
     logo.alt = 'Company Logo';
-    logo.className = 'logo';
-    container.appendChild(logo);
+    logo.style.width = '150px'; // Adjust size
+    logo.style.height = 'auto';
+
+    logoSection.appendChild(logo);
+    container.appendChild(logoSection);
 }
+
 
     
     function createElement(tag, className, textContent) {
@@ -442,31 +475,83 @@ function addLogo(container) {
     document.body.appendChild(modal);
 }
 
-
-
-    function viewSummary() {
-        const app = document.getElementById('app');
-        app.innerHTML = '<h2>Summary</h2>';
-
-        rooms.forEach((room, index) => {
-    const roomSummary = createElement('div', 'room-summary');
-    roomSummary.innerHTML = `
-        <h3>Room ${index + 1}</h3>
-        <p><strong>Square Footage:</strong> ${room.sqft}</p>
-        <p><strong>Painting Option:</strong> ${room.paintingOption ? room.paintingOption.key : 'Not selected'}</p>
-        <p><strong>Items:</strong></p>
-        <ul>
-            ${room.items.map(item => `<li>${item.name} - ${JSON.stringify(item)}</li>`).join('')}
-        </ul>
-    `;
-    app.appendChild(roomSummary);
-});
-
-
-        const backButton = createElement('button', 'button', 'Back');
-        backButton.addEventListener('click', setupRoomQuestions);
-        app.appendChild(backButton);
+function editRoom(index) {
+    const roomToEdit = rooms[index];
+    if (!roomToEdit) {
+        alert('Invalid room selection.');
+        return;
     }
+
+    // Set the room as the last edited room to reuse `addRoom` logic
+    rooms.splice(index, 1);
+    rooms.push(roomToEdit);
+
+    addRoom();
+}
+
+
+   function viewSummary() {
+    const app = document.getElementById('app');
+    app.innerHTML = '';
+
+    // Add Logo
+    addLogo(app);
+
+    // Page Header
+    const header = createElement('h2', null, 'Summary');
+    app.appendChild(header);
+
+    rooms.forEach((room, index) => {
+        const roomSummary = createElement('div', 'room-summary');
+        roomSummary.style.border = '2px solid black';
+        roomSummary.style.padding = '15px';
+        roomSummary.style.margin = '10px 0';
+        roomSummary.style.borderRadius = '10px';
+
+        roomSummary.innerHTML = `
+            <h3>Room ${index + 1}</h3>
+            <p><strong>Square Footage:</strong> ${room.sqft}</p>
+            <p><strong>Painting Option:</strong> ${
+                room.paintingOption ? room.paintingOption.key : 'Not selected'
+            }</p>
+            <p><strong>Items:</strong></p>
+            <ul>
+                ${room.items
+                    .map(
+                        item =>
+                            `<li>${item.name} ${
+                                item.quantity ? ` - Quantity: ${item.quantity}` : ''
+                            } ${
+                                item.height
+                                    ? ` | Dimensions: ${item.height}x${item.width}x${item.depth}`
+                                    : ''
+                            }</li>`
+                    )
+                    .join('')}
+            </ul>
+        `;
+
+        // Edit Button
+        const editButton = createElement('button', 'button', 'Edit Room');
+        editButton.addEventListener('click', () => editRoom(index));
+        roomSummary.appendChild(editButton);
+
+        // Remove Button
+        const removeButton = createElement('button', 'button', 'Remove Room');
+        removeButton.addEventListener('click', () => {
+            rooms.splice(index, 1);
+            viewSummary();
+        });
+        roomSummary.appendChild(removeButton);
+
+        app.appendChild(roomSummary);
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button', 'Back');
+    backButton.addEventListener('click', setupRoomQuestions);
+    app.appendChild(backButton);
+}
 
     injectStyles();
     initInterface();
