@@ -222,115 +222,159 @@
         buttonGroup.appendChild(viewSummaryButton);
     }
 
-    function addRoom() {
-        const app = document.getElementById('app');
-        app.innerHTML = '<h2>Add Room</h2>';
+   function addRoom() {
+    const app = document.getElementById('app');
+    app.innerHTML = '<h2>Add Room</h2>';
 
-        const form = document.createElement('div');
-        form.className = 'form-group';
-        form.innerHTML = `
-            <label>Enter Square Footage:</label>
-            <input type="number" id="sqft" placeholder="e.g., 500">
-        `;
-        app.appendChild(form);
+    // Painting Options
+    const header = createElement('h3', null, 'Select a Painting Option');
+    app.appendChild(header);
 
-        const buttonGroup = createElement('div', 'button-group');
-        app.appendChild(buttonGroup);
-
-        const addItemButton = createElement('button', 'button', 'Add Items');
-        addItemButton.addEventListener('click', () => showItemModal());
-        buttonGroup.appendChild(addItemButton);
-
-        const saveButton = createElement('button', 'button', 'Save Room');
-        saveButton.addEventListener('click', () => {
-            const sqft = parseFloat(document.getElementById('sqft').value) || 0;
-            rooms.push({ sqft, items: [] });
-            setupRoomQuestions();
+    const buttonGroup = createElement('div', 'button-group');
+    Object.entries(pricingOptions).forEach(([key, price]) => {
+        const button = createElement('button', 'button', `${key.charAt(0).toUpperCase() + key.slice(1)} - $${price} per sq ft`);
+        button.addEventListener('click', () => {
+            rooms[rooms.length - 1] = { ...rooms[rooms.length - 1], paintingOption: { key, price } };
         });
-        buttonGroup.appendChild(saveButton);
+        buttonGroup.appendChild(button);
+    });
+    app.appendChild(buttonGroup);
 
-        const backButton = createElement('button', 'button', 'Back');
-        backButton.addEventListener('click', setupRoomQuestions);
-        buttonGroup.appendChild(backButton);
-    }
+    // Square Footage Input
+    const form = document.createElement('div');
+    form.className = 'form-group';
+    form.innerHTML = `
+        <label>Enter Square Footage:</label>
+        <input type="number" id="sqft" placeholder="e.g., 500">
+    `;
+    app.appendChild(form);
 
-    function showItemModal() {
-        const modal = createElement('div', 'modal');
-        const modalContent = createElement('div', 'modal-content');
-        modal.appendChild(modalContent);
+    // Add Items Button
+    const addItemButton = createElement('button', 'button', 'Add Items');
+    addItemButton.addEventListener('click', showItemModal);
+    app.appendChild(addItemButton);
 
-        const closeButton = createElement('button', 'close-btn', '×');
-        closeButton.addEventListener('click', () => document.body.removeChild(modal));
-        modalContent.appendChild(closeButton);
+    // Save Room Button
+    const saveButton = createElement('button', 'button', 'Save Room');
+    saveButton.addEventListener('click', () => {
+        const sqft = parseFloat(document.getElementById('sqft').value) || 0;
+        rooms.push({ sqft, items: [], paintingOption: rooms[rooms.length - 1]?.paintingOption });
+        setupRoomQuestions();
+    });
+    app.appendChild(saveButton);
 
-        const header = createElement('h2', null, 'Add an Item');
-        modalContent.appendChild(header);
+    // Back Button
+    const backButton = createElement('button', 'button', 'Back');
+    backButton.addEventListener('click', setupRoomQuestions);
+    app.appendChild(backButton);
+}
 
-        modalItems.forEach(item => {
-            const itemImage = createElement('img');
-            itemImage.src = item.imageUrl;
-            itemImage.alt = item.name;
-            itemImage.title = item.name;
-            itemImage.addEventListener('click', () => {
-                document.body.removeChild(modal);
-                handleItemSelection(item);
-            });
-            modalContent.appendChild(itemImage);
-        });
+   function showItemModal() {
+    const modal = createElement('div', 'modal');
+    const modalContent = createElement('div', 'modal-content');
+    modal.appendChild(modalContent);
 
-        document.body.appendChild(modal);
-    }
+    const closeButton = createElement('button', 'close-btn', '×');
+    closeButton.addEventListener('click', () => document.body.removeChild(modal));
+    modalContent.appendChild(closeButton);
 
-    function handleItemSelection(item) {
-        if (!item.requiresInput) {
-            rooms[rooms.length - 1].items.push({ name: item.name, cost: additionalCosts[item.key] || 0 });
-            return addRoom(); // Return to room setup
-        }
+    const header = createElement('h2', null, 'Add an Item');
+    modalContent.appendChild(header);
 
-        const modal = createElement('div', 'modal');
-        const modalContent = createElement('div', 'modal-content');
-        modal.appendChild(modalContent);
+    const itemContainer = createElement('div', 'item-container'); // For styling
+    modalContent.appendChild(itemContainer);
 
-        const closeButton = createElement('button', 'close-btn', '×');
-        closeButton.addEventListener('click', () => document.body.removeChild(modal));
-        modalContent.appendChild(closeButton);
+    modalItems.forEach(item => {
+        const itemDiv = createElement('div', 'item-div');
+        itemDiv.style.border = '3px solid black';
+        itemDiv.style.margin = '10px';
+        itemDiv.style.padding = '5px';
+        itemDiv.style.display = 'inline-block';
+        itemDiv.style.textAlign = 'center';
 
-        const form = document.createElement('div');
-        form.className = 'form-group';
-        modalContent.appendChild(form);
+        const itemImage = createElement('img');
+        itemImage.src = item.imageUrl;
+        itemImage.alt = item.name;
+        itemImage.style.width = '100px';
+        itemImage.style.height = '100px';
+        itemImage.style.cursor = 'pointer';
 
-        item.inputFields.forEach(field => {
-            const label = createElement('label', null, field.label);
-            form.appendChild(label);
+        const itemName = createElement('div', null, item.name);
+        itemName.style.marginTop = '5px';
+        itemName.style.fontWeight = 'bold';
 
-            const input = createElement(field.type === 'select' ? 'select' : 'input');
-            if (field.type === 'number') {
-                input.type = 'number';
-                input.placeholder = 'Enter value';
-            } else if (field.type === 'select') {
-                field.options.forEach(option => {
-                    const opt = createElement('option', null, option);
-                    input.appendChild(opt);
-                });
-            }
-            input.id = field.key;
-            form.appendChild(input);
-        });
+        itemDiv.appendChild(itemImage);
+        itemDiv.appendChild(itemName);
 
-        const saveButton = createElement('button', 'button', 'Save Item');
-        saveButton.addEventListener('click', () => {
-            const itemData = { name: item.name };
-            item.inputFields.forEach(field => {
-                itemData[field.key] = document.getElementById(field.key).value || 0;
-            });
-            rooms[rooms.length - 1].items.push(itemData);
+        itemDiv.addEventListener('click', () => {
             document.body.removeChild(modal);
-            addRoom();
+            handleItemSelection(item);
         });
-        modalContent.appendChild(saveButton);
 
-        document.body.appendChild(modal);
+        itemContainer.appendChild(itemDiv);
+    });
+
+    document.body.appendChild(modal);
+}
+
+   function handleItemSelection(item) {
+    if (!item.requiresInput) {
+        // Directly add items without inputs (like Bathtub)
+        rooms[rooms.length - 1].items.push({ name: item.name, cost: additionalCosts[item.key] || 0, quantity: 1 });
+        addRoom(); // Return to room setup
+        return;
     }
+
+    const modal = createElement('div', 'modal');
+    const modalContent = createElement('div', 'modal-content');
+    modal.appendChild(modalContent);
+
+    const closeButton = createElement('button', 'close-btn', '×');
+    closeButton.addEventListener('click', () => document.body.removeChild(modal));
+    modalContent.appendChild(closeButton);
+
+    const header = createElement('h2', null, `Add Details for ${item.name}`);
+    modalContent.appendChild(header);
+
+    const form = createElement('div', 'form-group');
+    modalContent.appendChild(form);
+
+    const inputs = {};
+    item.inputFields.forEach(field => {
+        const label = createElement('label', null, field.label);
+        form.appendChild(label);
+
+        const input = createElement(field.type === 'select' ? 'select' : 'input');
+        if (field.type === 'number') {
+            input.type = 'number';
+            input.placeholder = 'Enter value';
+        } else if (field.type === 'select') {
+            field.options.forEach(option => {
+                const opt = createElement('option', null, option);
+                input.appendChild(opt);
+            });
+        }
+        input.id = field.key;
+        form.appendChild(input);
+
+        inputs[field.key] = input; // Store references to inputs for later
+    });
+
+    const saveButton = createElement('button', 'button', 'Save Item');
+    saveButton.addEventListener('click', () => {
+        const itemData = { name: item.name, quantity: 1 };
+        item.inputFields.forEach(field => {
+            itemData[field.key] = inputs[field.key].value || 0;
+        });
+        rooms[rooms.length - 1].items.push(itemData);
+        document.body.removeChild(modal);
+        addRoom();
+    });
+    modalContent.appendChild(saveButton);
+
+    document.body.appendChild(modal);
+}
+
 
     function viewSummary() {
         const app = document.getElementById('app');
