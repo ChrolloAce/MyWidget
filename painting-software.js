@@ -1,15 +1,3 @@
-Here’s the implementation of the updated functionality with a **pop-up for adding items**, including the behavior you described:
-
-1. **Pop-up for Adding Items:** A modal will appear when "Add Items" is clicked, showing the three item options with their respective images.
-2. **Cabinets:** Clicking on "Cabinets" will open another modal for inputting height, width, depth, and painting options (inside, outside, or both).
-3. **Bathtub:** Directly adds the standard fee of $250 without further interaction.
-4. **Stair Steps and Other Items:** Includes quantity and other inputs, ensuring no duplicate items can be added.
-5. **Modify Items:** Existing items can be edited after being added.
-6. **Dark Walls and Holes:** Includes inputs for measurements and quantities.
-
-Here’s the full updated code:
-
-```javascript
 (function () {
     const pricingOptions = {
         economical: 1.5,
@@ -281,9 +269,7 @@ Here’s the full updated code:
         modalItems.forEach(item => {
             const itemImage = createElement('img');
             itemImage.src = item.imageUrl;
-            itemImage.alt =
-
- item.name;
+            itemImage.alt = item.name;
             itemImage.title = item.name;
             itemImage.addEventListener('click', () => {
                 document.body.removeChild(modal);
@@ -371,4 +357,3 @@ Here’s the full updated code:
     injectStyles();
     initInterface();
 })();
-```
