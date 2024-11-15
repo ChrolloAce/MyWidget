@@ -47,6 +47,7 @@
                 padding: 40px;
                 border-radius: 10px;
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                text-align: center;
             }
 
             h1, h2 {
@@ -57,7 +58,7 @@
             .button {
                 display: inline-block;
                 padding: 12px 20px;
-                margin: 10px 5px;
+                margin: 10px;
                 background-color: #00D0FF;
                 color: #fff;
                 border: none;
@@ -73,12 +74,20 @@
                 background-color: #0078a6;
             }
 
+            .button-group {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
             .back-button {
                 background-color: #666;
             }
 
             .form-group {
                 margin: 20px 0;
+                text-align: left;
             }
 
             .form-group label {
@@ -101,6 +110,7 @@
                 padding: 20px;
                 border-radius: 8px;
                 border: 1px solid #ddd;
+                text-align: left;
             }
 
             .room-summary h3 {
@@ -140,7 +150,7 @@
         app.appendChild(header);
 
         const startButton = createElement('button', 'button', 'Begin Quote');
-        startButton.addEventListener('click', () => startGeneralQuestions());
+        startButton.addEventListener('click', startGeneralQuestions);
         app.appendChild(startButton);
     }
 
@@ -159,17 +169,20 @@
         `;
         app.appendChild(form);
 
+        const buttonGroup = createElement('div', 'button-group');
+        app.appendChild(buttonGroup);
+
         const nextButton = createElement('button', 'button', 'Next');
         nextButton.addEventListener('click', () => {
             const jobType = document.getElementById('jobType').value;
             if (jobType === 'residential') askResidentialDetails();
             else askCommercialDetails();
         });
-        app.appendChild(nextButton);
+        buttonGroup.appendChild(nextButton);
 
         const backButton = createElement('button', 'button back-button', 'Back');
         backButton.addEventListener('click', initInterface);
-        app.appendChild(backButton);
+        buttonGroup.appendChild(backButton);
     }
 
     function askResidentialDetails() {
@@ -187,13 +200,16 @@
         `;
         app.appendChild(form);
 
+        const buttonGroup = createElement('div', 'button-group');
+        app.appendChild(buttonGroup);
+
         const nextButton = createElement('button', 'button', 'Next');
         nextButton.addEventListener('click', () => {
             const residentialFloors = document.getElementById('residentialFloors').value;
             if (residentialFloors === 'over2') totalCost += additionalCosts.insuranceFee;
             setupRoomQuestions();
         });
-        app.appendChild(nextButton);
+        buttonGroup.appendChild(nextButton);
     }
 
     function askCommercialDetails() {
@@ -211,22 +227,28 @@
         `;
         app.appendChild(form);
 
+        const buttonGroup = createElement('div', 'button-group');
+        app.appendChild(buttonGroup);
+
         const nextButton = createElement('button', 'button', 'Next');
         nextButton.addEventListener('click', setupRoomQuestions);
-        app.appendChild(nextButton);
+        buttonGroup.appendChild(nextButton);
     }
 
     function setupRoomQuestions() {
         const app = document.getElementById('app');
         app.innerHTML = '<h2>Room Setup</h2>';
 
+        const buttonGroup = createElement('div', 'button-group');
+        app.appendChild(buttonGroup);
+
         const addRoomButton = createElement('button', 'button', 'Add Room');
         addRoomButton.addEventListener('click', addRoom);
-        app.appendChild(addRoomButton);
+        buttonGroup.appendChild(addRoomButton);
 
         const viewSummaryButton = createElement('button', 'button', 'View Summary');
         viewSummaryButton.addEventListener('click', viewSummary);
-        app.appendChild(viewSummaryButton);
+        buttonGroup.appendChild(viewSummaryButton);
     }
 
     function addRoom() {
@@ -247,36 +269,58 @@
         `;
         app.appendChild(form);
 
+        const buttonGroup = createElement('div', 'button-group');
+        app.appendChild(buttonGroup);
+
+        const addItemButton = createElement('button', 'button', 'Add Items');
+        addItemButton.addEventListener('click', () => addRoomItems(form));
+        buttonGroup.appendChild(addItemButton);
+
         const saveButton = createElement('button', 'button', 'Save Room');
         saveButton.addEventListener('click', () => {
             const packageType = document.getElementById('package').value;
-            const sqft = parseInt(document.getElementById('sqft').value) || 0;
+            const sqft = parseFloat(document.getElementById('sqft').value) || 0;
             const cost = sqft * pricingOptions[packageType];
-            rooms.push({ package: packageType, sqft, cost });
+            rooms.push({ packageType, sqft, cost });
             setupRoomQuestions();
         });
-        app.appendChild(saveButton);
+        buttonGroup.appendChild(saveButton);
+
+        const backButton = createElement('button', 'button back-button', 'Back');
+        backButton.addEventListener('click', setupRoomQuestions);
+        buttonGroup.appendChild(backButton);
+    }
+
+    function addRoomItems(form) {
+        const itemDiv = document.createElement('div');
+        itemDiv.innerHTML = `
+            <label>Add Items to Room:</label>
+            <select id="roomItems">
+                <option value="bathtub">Bathtub ($250)</option>
+                <option value="stairSteps">Stair Steps ($50 per step)</option>
+                <option value="cabinetHandles">Cabinet Handles ($10 each)</option>
+            </select>
+        `;
+        form.appendChild(itemDiv);
     }
 
     function viewSummary() {
         const app = document.getElementById('app');
-        app.innerHTML = '<h2>Summary</h2>';
-        const summary = document.createElement('div');
-        summary.className = 'room-summary';
-        let total = 0;
+        app.innerHTML = '<h2>Quote Summary</h2>';
 
         rooms.forEach((room, index) => {
-            summary.innerHTML += `
+            const roomDiv = createElement('div', 'room-summary');
+            roomDiv.innerHTML = `
                 <h3>Room ${index + 1}</h3>
-                <p>Package: ${room.package}</p>
-                <p>Square Footage: ${room.sqft} sq ft</p>
+                <p>Package: ${room.packageType}</p>
+                <p>Square Footage: ${room.sqft}</p>
                 <p>Cost: $${room.cost.toFixed(2)}</p>
             `;
-            total += room.cost;
+            app.appendChild(roomDiv);
         });
 
-        summary.innerHTML += `<p class="summary-total">Total: $${total.toFixed(2)}</p>`;
-        app.appendChild(summary);
+        const totalDiv = createElement('p', 'summary-total', `Total: $${totalCost.toFixed(2)}`);
+        app.appendChild(totalDiv);
 
         const finishButton = createElement('button', 'button', 'Finish');
         finishButton.addEventListener('click', initInterface);
