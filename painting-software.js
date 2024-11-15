@@ -249,7 +249,11 @@
             'button painting-option-btn',
             `${key.charAt(0).toUpperCase() + key.slice(1)} - $${option.pricePerSqFt}/sqft`
         );
-        button.innerHTML += `<br><small>Includes: ${option.includes.join(', ')}</small>`;
+
+        // Safely access the `includes` array
+        const includesText = option.includes ? option.includes.join(', ') : 'No details available';
+        button.innerHTML += `<br><small>Includes: ${includesText}</small>`;
+
         button.addEventListener('click', () => {
             // Update selected option and visually highlight
             rooms[rooms.length - 1].paintingOption = { key, ...option };
@@ -288,6 +292,7 @@
     backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
 }
+
 
 
    function showItemModal() {
