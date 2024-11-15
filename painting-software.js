@@ -138,13 +138,14 @@
                 cursor: pointer;
                 transition: transform 0.3s ease;
             }
-            .painted-option-btn.selected {
+      .painted-option-btn.selected {
     background-color: #00D0FF;
     color: white;
     font-weight: bold;
     border: 2px solid #004C99;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
 
             .modal-content img:hover {
                 transform: scale(1.1);
@@ -191,6 +192,15 @@
         document.head.appendChild(styleElement);
     }
 
+function addLogo(container) {
+    const logo = document.createElement('img');
+    logo.src = 'https://i.ibb.co/jLhmxkV/66c3ffee32324b40f8096a84-Untitled-26.png';
+    logo.alt = 'Company Logo';
+    logo.className = 'logo';
+    container.appendChild(logo);
+}
+
+    
     function createElement(tag, className, textContent) {
         const element = document.createElement(tag);
         if (className) element.className = className;
@@ -231,7 +241,14 @@
 
    function addRoom() {
     const app = document.getElementById('app');
-    app.innerHTML = '<h2>Add Room</h2>';
+    app.innerHTML = '';
+
+    // Add Logo
+    addLogo(app);
+
+    // Page Header
+    const header = createElement('h2', null, 'Add Room');
+    app.appendChild(header);
 
     // Ensure a new room is initialized if none exists
     if (!rooms[rooms.length - 1] || !rooms[rooms.length - 1].sqft) {
@@ -239,39 +256,54 @@
     }
 
     // Painting Options
-    const header = createElement('h3', null, 'Select a Painting Option');
-    app.appendChild(header);
+    const paintingHeader = createElement('h3', null, 'Select a Painting Option');
+    app.appendChild(paintingHeader);
 
     const buttonGroup = createElement('div', 'button-group');
-    Object.entries(pricingOptions).forEach(([key, option]) => {
+    Object.entries(pricingOptions).forEach(([key, price]) => {
         const button = createElement(
             'button',
             'button painting-option-btn',
-            `${key.charAt(0).toUpperCase() + key.slice(1)} - $${option.pricePerSqFt}/sqft`
+            `${key.charAt(0).toUpperCase() + key.slice(1)} - $${price}/sqft`
         );
 
-        // Safely access the `includes` array
-        const includesText = option.includes ? option.includes.join(', ') : 'No details available';
+        // Include details for each option
+        const includesText = key === 'economical'
+            ? 'Walls only'
+            : key === 'standard'
+            ? 'Walls and Ceilings'
+            : 'Walls, Ceilings, and Baseboards';
         button.innerHTML += `<br><small>Includes: ${includesText}</small>`;
 
+        // Button click handler for selecting a painting option
         button.addEventListener('click', () => {
-            // Update selected option and visually highlight
-            rooms[rooms.length - 1].paintingOption = { key, ...option };
+            rooms[rooms.length - 1].paintingOption = { key, price };
             document.querySelectorAll('.painting-option-btn').forEach(btn => btn.classList.remove('selected'));
             button.classList.add('selected');
         });
+
+        // Highlight the currently selected option
+        if (rooms[rooms.length - 1].paintingOption?.key === key) {
+            button.classList.add('selected');
+        }
+
         buttonGroup.appendChild(button);
     });
     app.appendChild(buttonGroup);
 
     // Square Footage Input
-    const form = document.createElement('div');
-    form.className = 'form-group';
+    const form = createElement('div', 'form-group');
     form.innerHTML = `
-        <label>Enter Square Footage:</label>
-        <input type="number" id="sqft" placeholder="e.g., 500">
+        <label for="sqft">Enter Square Footage:</label>
+        <input type="number" id="sqft" placeholder="e.g., 500" value="${rooms[rooms.length - 1]?.sqft || ''}">
     `;
     app.appendChild(form);
+
+    // Update square footage value
+    const sqftInput = document.getElementById('sqft');
+    sqftInput.addEventListener('input', () => {
+        rooms[rooms.length - 1].sqft = parseFloat(sqftInput.value) || 0;
+    });
 
     // Add Items Button
     const addItemButton = createElement('button', 'button', 'Add Items');
@@ -281,7 +313,11 @@
     // Save Room Button
     const saveButton = createElement('button', 'button', 'Save Room');
     saveButton.addEventListener('click', () => {
-        const sqft = parseFloat(document.getElementById('sqft').value) || 0;
+        const sqft = parseFloat(sqftInput.value) || 0;
+        if (sqft <= 0) {
+            alert('Please enter a valid square footage.');
+            return;
+        }
         rooms[rooms.length - 1].sqft = sqft;
         setupRoomQuestions();
     });
@@ -292,6 +328,7 @@
     backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
 }
+
 
 
 
@@ -310,35 +347,34 @@
     const itemContainer = createElement('div', 'item-container'); // For styling
     modalContent.appendChild(itemContainer);
 
-    modalItems.forEach(item => {
-        const itemDiv = createElement('div', 'item-div');
-        itemDiv.style.border = '3px solid black';
-        itemDiv.style.margin = '10px';
-        itemDiv.style.padding = '5px';
-        itemDiv.style.display = 'inline-block';
-        itemDiv.style.textAlign = 'center';
+   modalItems.forEach(item => {
+    const itemDiv = createElement('div', 'item-div');
+    itemDiv.style.border = '3px solid black';
+    itemDiv.style.margin = '10px';
+    itemDiv.style.padding = '5px';
+    itemDiv.style.display = 'inline-block';
+    itemDiv.style.textAlign = 'center';
 
-        const itemImage = createElement('img');
-        itemImage.src = item.imageUrl;
-        itemImage.alt = item.name;
-        itemImage.style.width = '100px';
-        itemImage.style.height = '100px';
-        itemImage.style.cursor = 'pointer';
+    const itemImage = createElement('img');
+    itemImage.src = item.imageUrl;
+    itemImage.alt = item.name;
+    itemImage.style.width = '100px';
+    itemImage.style.height = '100px';
 
-        const itemName = createElement('div', null, item.name);
-        itemName.style.marginTop = '5px';
-        itemName.style.fontWeight = 'bold';
+    const itemName = createElement('div', null, item.name);
+    itemName.style.marginTop = '5px';
 
-        itemDiv.appendChild(itemImage);
-        itemDiv.appendChild(itemName);
+    itemDiv.appendChild(itemImage);
+    itemDiv.appendChild(itemName);
 
-        itemDiv.addEventListener('click', () => {
-            document.body.removeChild(modal);
-            handleItemSelection(item);
-        });
-
-        itemContainer.appendChild(itemDiv);
+    itemDiv.addEventListener('click', () => {
+        document.body.removeChild(modal);
+        handleItemSelection(item);
     });
+
+    itemContainer.appendChild(itemDiv);
+});
+
 
     document.body.appendChild(modal);
 }
@@ -413,17 +449,19 @@
         app.innerHTML = '<h2>Summary</h2>';
 
         rooms.forEach((room, index) => {
-            const roomSummary = createElement('div', 'room-summary');
-            roomSummary.innerHTML = `
-                <h3>Room ${index + 1}</h3>
-                <p>Square Footage: ${room.sqft}</p>
-                <p>Items:</p>
-                <ul>
-                    ${room.items.map(item => `<li>${item.name} (${JSON.stringify(item)})</li>`).join('')}
-                </ul>
-            `;
-            app.appendChild(roomSummary);
-        });
+    const roomSummary = createElement('div', 'room-summary');
+    roomSummary.innerHTML = `
+        <h3>Room ${index + 1}</h3>
+        <p><strong>Square Footage:</strong> ${room.sqft}</p>
+        <p><strong>Painting Option:</strong> ${room.paintingOption ? room.paintingOption.key : 'Not selected'}</p>
+        <p><strong>Items:</strong></p>
+        <ul>
+            ${room.items.map(item => `<li>${item.name} - ${JSON.stringify(item)}</li>`).join('')}
+        </ul>
+    `;
+    app.appendChild(roomSummary);
+});
+
 
         const backButton = createElement('button', 'button', 'Back');
         backButton.addEventListener('click', setupRoomQuestions);
