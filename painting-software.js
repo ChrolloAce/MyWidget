@@ -62,6 +62,18 @@
                 min-height: 100vh;
             }
 
+            @media (max-width: 767px) {
+    .container {
+        border-radius: 0;
+        padding: 20px;
+    }
+
+    .room-summary, .material-summary {
+        border-radius: 10px;
+    }
+}
+
+
             .container {
                 width: 100%;
                 max-width: 900px;
@@ -275,7 +287,7 @@ function initInterface() {
         buttonGroup.appendChild(viewSummaryButton);
     }
 
-  function addRoom() {
+function addRoom() {
     const app = document.getElementById('app');
     app.innerHTML = '';
 
@@ -285,12 +297,14 @@ function initInterface() {
     const header = createElement('h2', null, 'Add Room');
     app.appendChild(header);
 
-    // Retain last room if no square footage is assigned
     let currentRoom = rooms[rooms.length - 1];
     if (!currentRoom || currentRoom.sqft === 0) {
         currentRoom = { sqft: 0, items: [], paintingOption: null };
         rooms[rooms.length - 1] = currentRoom;
     }
+
+    // Responsive adjustments
+    app.classList.add('responsive-container');
 
     // Package Selection
     const packageHeader = createElement('h3', null, 'Select a Painting Option');
@@ -299,7 +313,6 @@ function initInterface() {
     const packageContainer = createElement('div', 'package-container');
     app.appendChild(packageContainer);
 
-    // Packages with descriptions and styling
     const packageOptions = {
         economical: {
             price: 1.5,
@@ -318,7 +331,6 @@ function initInterface() {
     Object.entries(packageOptions).forEach(([key, option]) => {
         const packageCard = createElement('div', 'package-card');
         packageCard.style.border = '2px solid black';
-        packageCard.style.borderRadius = '8px';
         packageCard.style.margin = '10px';
         packageCard.style.padding = '15px';
         packageCard.style.backgroundColor = 'white';
@@ -334,8 +346,14 @@ function initInterface() {
         selectButton.addEventListener('click', () => {
             currentRoom.paintingOption = { key, ...option };
 
-            // Update styling for selected package
-            document.querySelectorAll('.package-card').forEach(card => card.classList.remove('selected-package'));
+            // Hide other packages and show a change button
+            document.querySelectorAll('.package-card').forEach(card => card.classList.add('hidden-package'));
+            packageCard.classList.remove('hidden-package');
+            selectButton.classList.add('hidden');
+            const changeButton = createElement('button', 'button change-package-button', 'Change Package');
+            changeButton.addEventListener('click', () => addRoom());
+            packageCard.appendChild(changeButton);
+
             packageCard.classList.add('selected-package');
         });
         packageCard.appendChild(selectButton);
@@ -343,13 +361,26 @@ function initInterface() {
         packageContainer.appendChild(packageCard);
     });
 
-    // Styling for selected package
     const style = document.createElement('style');
     style.innerHTML = `
         .selected-package {
             border-color: #00D0FF;
             background-color: #f0faff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .hidden-package {
+            display: none;
+        }
+        .responsive-container {
+            max-width: 95%;
+            margin: auto;
+            border-radius: 0; /* for mobile sharp corners */
+        }
+        @media (min-width: 768px) {
+            .responsive-container {
+                max-width: 800px;
+                border-radius: 10px;
+            }
         }
     `;
     document.head.appendChild(style);
@@ -619,6 +650,9 @@ function viewSummary() {
             const sqftText = createElement('p', null, `Square Footage: ${room.sqft}`);
             roomSummary.appendChild(sqftText);
 
+            const paintingOption = createElement('p', null, `Painting Option: ${room.paintingOption?.key || "None"}`);
+            roomSummary.appendChild(paintingOption);
+
             const itemsHeader = createElement('p', null, 'Items:');
             itemsHeader.style.fontWeight = 'bold';
             roomSummary.appendChild(itemsHeader);
@@ -645,6 +679,7 @@ function viewSummary() {
     backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
 }
+
 
 
     injectStyles();
