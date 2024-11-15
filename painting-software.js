@@ -275,92 +275,118 @@ function initInterface() {
         buttonGroup.appendChild(viewSummaryButton);
     }
 
-  function addRoom(callback) {
+  function addRoom() {
     const app = document.getElementById('app');
     app.innerHTML = '';
 
-    // Add Logo
+    // Logo
     addLogo(app);
 
-    // Add Room Header
     const header = createElement('h2', null, 'Add Room');
     app.appendChild(header);
 
-    // Ensure a new room is initialized if none exists
-    if (!rooms[rooms.length - 1] || !rooms[rooms.length - 1].sqft) {
-        rooms.push({ sqft: 0, items: [], paintingOption: null });
+    // Retain last room if no square footage is assigned
+    let currentRoom = rooms[rooms.length - 1];
+    if (!currentRoom || currentRoom.sqft === 0) {
+        currentRoom = { sqft: 0, items: [], paintingOption: null };
+        rooms[rooms.length - 1] = currentRoom;
     }
 
-    // Painting Options
-    const headerOptions = createElement('h3', null, 'Select a Painting Option');
-    app.appendChild(headerOptions);
+    // Package Selection
+    const packageHeader = createElement('h3', null, 'Select a Painting Option');
+    app.appendChild(packageHeader);
 
-    const buttonGroup = createElement('div', 'button-group');
-    Object.entries(pricingOptions).forEach(([key, price]) => {
-        const button = createElement(
-            'button',
-            'button painting-option-btn',
-            `${key.charAt(0).toUpperCase() + key.slice(1)} - $${price.toFixed(2)}/sqft`
-        );
+    const packageContainer = createElement('div', 'package-container');
+    app.appendChild(packageContainer);
 
-        button.addEventListener('click', () => {
-            // Update selected option and visually highlight
-            rooms[rooms.length - 1].paintingOption = { key, price };
-            document.querySelectorAll('.painting-option-btn').forEach(btn => btn.classList.remove('selected'));
-            button.classList.add('selected');
+    // Packages with descriptions and styling
+    const packageOptions = {
+        economical: {
+            price: 1.5,
+            description: 'Includes: Walls only',
+        },
+        standard: {
+            price: 2.0,
+            description: 'Includes: Walls and Ceilings',
+        },
+        premium: {
+            price: 3.0,
+            description: 'Includes: Walls, Ceilings, and Baseboards',
+        },
+    };
+
+    Object.entries(packageOptions).forEach(([key, option]) => {
+        const packageCard = createElement('div', 'package-card');
+        packageCard.style.border = '2px solid black';
+        packageCard.style.borderRadius = '8px';
+        packageCard.style.margin = '10px';
+        packageCard.style.padding = '15px';
+        packageCard.style.backgroundColor = 'white';
+        packageCard.style.textAlign = 'center';
+
+        const title = createElement('h4', null, `${key.charAt(0).toUpperCase() + key.slice(1)} - $${option.price}/sqft`);
+        packageCard.appendChild(title);
+
+        const description = createElement('p', null, option.description);
+        packageCard.appendChild(description);
+
+        const selectButton = createElement('button', 'button', 'Select Package');
+        selectButton.addEventListener('click', () => {
+            currentRoom.paintingOption = { key, ...option };
+
+            // Update styling for selected package
+            document.querySelectorAll('.package-card').forEach(card => card.classList.remove('selected-package'));
+            packageCard.classList.add('selected-package');
         });
+        packageCard.appendChild(selectButton);
 
-        buttonGroup.appendChild(button);
+        packageContainer.appendChild(packageCard);
     });
-    app.appendChild(buttonGroup);
+
+    // Styling for selected package
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .selected-package {
+            border-color: #00D0FF;
+            background-color: #f0faff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    `;
+    document.head.appendChild(style);
 
     // Square Footage Input
-    const form = createElement('div', 'form-group');
-    form.innerHTML = `
-        <label for="sqft">Enter Square Footage:</label>
-        <input type="number" id="sqft" placeholder="e.g., 500" value="${rooms[rooms.length - 1].sqft || ''}">
-    `;
-    app.appendChild(form);
+    const sqftGroup = createElement('div', 'form-group');
+    const sqftLabel = createElement('label', null, 'Enter Square Footage:');
+    const sqftInput = createElement('input');
+    sqftInput.type = 'number';
+    sqftInput.placeholder = 'e.g., 1500';
+    sqftInput.value = currentRoom.sqft || ''; // Retain sqft value
+    sqftGroup.appendChild(sqftLabel);
+    sqftGroup.appendChild(sqftInput);
+    app.appendChild(sqftGroup);
+
+    sqftInput.addEventListener('input', () => {
+        currentRoom.sqft = parseInt(sqftInput.value) || 0;
+    });
 
     // Add Items Button
     const addItemButton = createElement('button', 'button', 'Add Items');
-    addItemButton.addEventListener('click', showItemModal);
+    addItemButton.addEventListener('click', () => showItemModal(currentRoom));
     app.appendChild(addItemButton);
-
-    // List of Current Items
-    if (rooms[rooms.length - 1].items.length > 0) {
-        const itemsHeader = createElement('h3', null, 'Current Items');
-        app.appendChild(itemsHeader);
-
-        const itemList = createElement('ul', null);
-        rooms[rooms.length - 1].items.forEach(item => {
-            const itemElement = createElement(
-                'li',
-                null,
-                `${item.name} - ${
-                    item.quantity ? `Quantity: ${item.quantity}` : 'No quantity specified'
-                } ${item.height ? `| Dimensions: ${item.height}x${item.width}x${item.depth}` : ''}`
-            );
-            itemList.appendChild(itemElement);
-        });
-        app.appendChild(itemList);
-    }
 
     // Save Room Button
     const saveButton = createElement('button', 'button', 'Save Room');
     saveButton.addEventListener('click', () => {
-        const sqft = parseFloat(document.getElementById('sqft').value) || 0;
-        rooms[rooms.length - 1].sqft = sqft;
-        callback ? callback() : setupRoomQuestions();
+        currentRoom.sqft = parseFloat(sqftInput.value) || 0;
+        viewSummary();
     });
     app.appendChild(saveButton);
 
     // Back Button
     const backButton = createElement('button', 'button', 'Back');
-    backButton.addEventListener('click', callback || setupRoomQuestions);
+    backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
 }
-
 
 
 
@@ -510,79 +536,7 @@ function calculateFinalPrice() {
     }, 0);
 }
 
-
-
-function viewSummary() {
-    const app = document.getElementById('app');
-    app.innerHTML = '';
-
-    // Add Logo
-    addLogo(app);
-
-    const header = createElement('h2', null, 'Summary');
-    app.appendChild(header);
-
-    // Check if rooms exist
-    if (rooms.length === 0) {
-        const emptyMessage = createElement('p', null, 'No rooms added yet.');
-        app.appendChild(emptyMessage);
-    }
-
-    // Display each room with rounded borders and a toolbar for actions
-    rooms.forEach((room, index) => {
-        const roomSummary = createElement('div', 'room-summary');
-        roomSummary.style.borderRadius = '10px';
-        roomSummary.style.border = '2px solid #000';
-        roomSummary.style.margin = '10px';
-        roomSummary.style.padding = '10px';
-        roomSummary.style.position = 'relative';
-
-        // Toolbar with edit and delete icons
-        const toolbar = createElement('div', 'room-toolbar');
-        toolbar.style.position = 'absolute';
-        toolbar.style.top = '10px';
-        toolbar.style.right = '10px';
-
-        const removeButton = createElement('button', 'button remove-button');
-        removeButton.innerHTML = '<i class="fas fa-times" style="color:red"></i>';  // Font Awesome X icon
-        removeButton.addEventListener('click', () => {
-            rooms.splice(index, 1);
-            viewSummary(); // Refresh summary view
-        });
-        toolbar.appendChild(removeButton);
-
-        const editButton = createElement('button', 'button edit-button');
-        editButton.innerHTML = '<i class="fas fa-pencil-alt" style="color:green"></i>'; // Font Awesome pencil icon
-        editButton.addEventListener('click', () => editRoom(index));
-        toolbar.appendChild(editButton);
-
-        roomSummary.appendChild(toolbar);
-
-        // Room Details
-        const roomHeader = createElement('h3', null, `Room ${index + 1}`);
-        roomSummary.appendChild(roomHeader);
-
-        const sqftText = createElement('p', null, `Square Footage: ${room.sqft}`);
-        roomSummary.appendChild(sqftText);
-
-        const itemsHeader = createElement('p', null, 'Items:');
-        itemsHeader.style.fontWeight = 'bold';
-        roomSummary.appendChild(itemsHeader);
-
-        const itemList = createElement('ul', 'item-list');
-        room.items.forEach(item => {
-            if (item && item.name) { // Ensure item exists and has a name
-                const itemText = `${item.name} - Quantity: ${item.quantity || 1}`;
-                const itemElement = createElement('li', null, itemText);
-                itemList.appendChild(itemElement);
-            }
-        });
-        roomSummary.appendChild(itemList);
-
-        app.appendChild(roomSummary);
-    });
-
-    // Display Materials Section with rounded corners and a dashed border
+function displayMaterialsAndFinalPrice(app) {
     const materialsSection = createElement('div', 'materials-summary');
     materialsSection.style.borderRadius = '10px';
     materialsSection.style.border = '2px dashed #000';
@@ -594,7 +548,6 @@ function viewSummary() {
     materialsHeader.style.fontWeight = 'bold';
     materialsSection.appendChild(materialsHeader);
 
-    // Calculate materials needed for walls, ceiling, cabinets, etc.
     const wallsGallons = calculateGallons('walls');
     const ceilingGallons = calculateGallons('ceiling');
     const cabinetsGallons = calculateGallons('cabinets');
@@ -608,18 +561,90 @@ function viewSummary() {
     materialsSection.appendChild(cabinetsText);
     app.appendChild(materialsSection);
 
-    // Display Final Price with bold styling
+    // Final Price
     const finalPrice = calculateFinalPrice();
     const finalPriceText = createElement('p', 'final-price', `Final Price: $${finalPrice.toFixed(2)}`);
     finalPriceText.style.fontWeight = 'bold';
     app.appendChild(finalPriceText);
+}
+
+
+function viewSummary() {
+    const app = document.getElementById('app');
+    app.innerHTML = '';
+
+    // Logo
+    addLogo(app);
+
+    const header = createElement('h2', null, 'Summary');
+    app.appendChild(header);
+
+    // Check if rooms exist
+    if (rooms.length === 0) {
+        const emptyMessage = createElement('p', null, 'No rooms added yet.');
+        app.appendChild(emptyMessage);
+    } else {
+        rooms.forEach((room, index) => {
+            const roomSummary = createElement('div', 'room-summary');
+            roomSummary.style.borderRadius = '10px';
+            roomSummary.style.border = '2px solid #000';
+            roomSummary.style.margin = '10px';
+            roomSummary.style.padding = '10px';
+            roomSummary.style.position = 'relative';
+
+            // Toolbar with edit and delete icons
+            const toolbar = createElement('div', 'room-toolbar');
+            toolbar.style.position = 'absolute';
+            toolbar.style.top = '10px';
+            toolbar.style.right = '10px';
+
+            const removeButton = createElement('button', 'button remove-button');
+            removeButton.innerHTML = '<i class="fas fa-times" style="color:red"></i>';
+            removeButton.addEventListener('click', () => {
+                rooms.splice(index, 1);
+                viewSummary(); // Refresh summary view
+            });
+            toolbar.appendChild(removeButton);
+
+            const editButton = createElement('button', 'button edit-button');
+            editButton.innerHTML = '<i class="fas fa-pencil-alt" style="color:green"></i>';
+            editButton.addEventListener('click', () => editRoom(index));
+            toolbar.appendChild(editButton);
+
+            roomSummary.appendChild(toolbar);
+
+            const roomHeader = createElement('h3', null, `Room ${index + 1}`);
+            roomSummary.appendChild(roomHeader);
+
+            const sqftText = createElement('p', null, `Square Footage: ${room.sqft}`);
+            roomSummary.appendChild(sqftText);
+
+            const itemsHeader = createElement('p', null, 'Items:');
+            itemsHeader.style.fontWeight = 'bold';
+            roomSummary.appendChild(itemsHeader);
+
+            const itemList = createElement('ul', 'item-list');
+            room.items.forEach(item => {
+                if (item && item.name) {
+                    const itemText = `${item.name} - Quantity: ${item.quantity || 1}`;
+                    const itemElement = createElement('li', null, itemText);
+                    itemList.appendChild(itemElement);
+                }
+            });
+            roomSummary.appendChild(itemList);
+
+            app.appendChild(roomSummary);
+        });
+    }
+
+    // Display Final Price and Materials Calculation
+    displayMaterialsAndFinalPrice(app);
 
     // Back Button
     const backButton = createElement('button', 'button', 'Back');
     backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
 }
-
 
 
     injectStyles();
