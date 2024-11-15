@@ -1,170 +1,107 @@
 (function () {
-    const pricingOptions = {
-        option1: { pricePerSqFt: 2.3, includes: ['Walls', 'Ceilings', 'Baseboards'] },
-        option2: { pricePerSqFt: 2.0, includes: ['Walls', 'Ceilings'] },
-        option3: { pricePerSqFt: 1.3, includes: ['Walls'] }
+    // Constants for Pricing
+    const PRICING_OPTIONS = {
+        economical: 1.5,
+        standard: 2.0,
+        premium: 3.0,
     };
-    const additionalCosts = {
-        door: 80,
-        crackRepair: 50,
-        wallHoleFix: 10,
-        extraSqFtRate: 2.7
+
+    const EXTRA_COSTS = {
+        darkWalls: 0.5,
+        texturedWalls: 0.75,
+        insurance: 200,
+        furnitureCoverage: {
+            standard: 50,
+            complex: 100,
+        },
     };
 
     let rooms = [];
     let totalCost = 0;
 
+    // Inject CSS Styles Globally
     (function injectStyles() {
         const styles = `
-            * {
+            body {
+                font-family: 'Montserrat', sans-serif;
+                background-color: #f9f9f9;
                 margin: 0;
                 padding: 0;
-                box-sizing: border-box;
-            }
-
-            body {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                min-height: 100vh;
-                background-color: #f4f4f4;
-                font-family: 'Montserrat', sans-serif;
-                color: #333;
-            }
-
-            .container {
-                width: 100%;
-                max-width: 800px;
-                background-color: #ffffff;
-                padding: 40px;
-                border-radius: 12px;
-                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-                text-align: center;
-            }
-
-            .logo {
-                max-width: 180px;
-                margin-bottom: 30px;
-            }
-
-            h1, h2 {
-                color: #333;
-                font-weight: bold;
-            }
-
-            h1 {
-                font-size: 28px;
-                margin-bottom: 20px;
-            }
-
-            h2 {
-                font-size: 22px;
-                margin: 20px 0;
-            }
-
-            p {
-                font-size: 16px;
-                margin: 20px 0;
-                line-height: 1.6;
-                color: #666;
-            }
-
-            .button-group, .extra-services {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 15px;
-                margin-top: 20px;
-            }
-
-            .button {
-                padding: 12px;
-                background-color: #00D0FF;
-                color: #FFFFFF;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 16px;
-                font-weight: bold;
-                transition: all 0.3s ease;
-            }
-
-            .button:hover {
-                background-color: #00a8c3;
-            }
-
-            .back-button {
-                background-color: #666;
-                color: #FFFFFF;
-            }
-
-            .back-button:hover {
-                background-color: #555;
-            }
-
-            .form-group {
                 display: flex;
                 flex-direction: column;
-                align-items: flex-start;
-                width: 100%;
-                margin-bottom: 20px;
+                align-items: center;
             }
-
-            label {
-                font-size: 16px;
+            .container {
+                width: 95%;
+                max-width: 1200px;
+                background: #fff;
+                padding: 40px;
+                border-radius: 10px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                margin: 20px;
+            }
+            h1, h2 {
                 color: #333;
-                margin-bottom: 5px;
+                text-align: center;
             }
-
-            input[type="number"], select {
-                width: 100%;
-                padding: 8px;
-                border: 1px solid #ddd;
+            .button {
+                padding: 10px 20px;
+                border: none;
                 border-radius: 5px;
+                cursor: pointer;
+                background: #00D0FF;
+                color: #fff;
                 font-size: 16px;
+                margin: 10px;
             }
-
-            .room-summary {
-                text-align: left;
-                background-color: #f8f8f8;
-                border-radius: 8px;
-                padding: 20px;
+            .button:hover {
+                background: #007ACC;
+            }
+            .form-group {
                 margin-bottom: 20px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             }
-
-            .room-summary h3 {
-                font-size: 18px;
-                margin-bottom: 10px;
-                color: #333;
-            }
-
-            .room-summary p {
+            .form-group label {
+                font-size: 14px;
                 margin-bottom: 5px;
+                display: block;
                 color: #555;
             }
-
-            .add-room-btn {
-                margin-top: 20px;
-                background-color: #28a745;
+            .form-group input, .form-group select {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
             }
-
-            .add-room-btn:hover {
-                background-color: #218838;
-            }
-
-            .summary-total {
+            .room-list {
                 margin-top: 20px;
-                font-size: 24px;
-                font-weight: bold;
+            }
+            .room {
+                background: #f0f0f0;
+                padding: 10px;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .room .remove-button {
+                background: #ff5555;
+                padding: 5px 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                color: #fff;
+                font-size: 12px;
             }
         `;
-
         const styleElement = document.createElement('style');
         styleElement.type = 'text/css';
         styleElement.appendChild(document.createTextNode(styles));
         document.head.appendChild(styleElement);
     })();
 
+    // Helper Function to Create Elements
     function createElement(tag, className, textContent) {
         const element = document.createElement(tag);
         if (className) element.className = className;
@@ -172,135 +109,133 @@
         return element;
     }
 
+    // Initialize Main Interface
     function initInterface() {
         const container = createElement('div', 'container');
         document.body.innerHTML = '';
         document.body.appendChild(container);
 
-        const logo = createElement('img', 'logo');
-        logo.src = 'https://i.ibb.co/jLhmxkV/66c3ffee32324b40f8096a84-Untitled-26.png';
-        logo.alt = 'Company Logo';
-        container.appendChild(logo);
-
-        const header = createElement('h1', null, 'Room Painting Quote Tool');
+        const header = createElement('h1', null, 'Painting Service Quote');
         container.appendChild(header);
 
-        const addRoomBtn = createElement('button', 'button add-room-btn', 'Add a Room');
-        container.appendChild(addRoomBtn);
+        const description = createElement('p', null, 'Add rooms and select options to calculate your painting quote.');
+        container.appendChild(description);
 
-        addRoomBtn.addEventListener('click', () => addRoom(container));
+        const addRoomButton = createElement('button', 'button', 'Add Room');
+        container.appendChild(addRoomButton);
+
+        addRoomButton.addEventListener('click', () => addRoom(container));
 
         if (rooms.length > 0) {
-            rooms.forEach((room, index) => displayRoomSummary(container, room, index));
-            displayTotalCost(container);
+            const roomList = createElement('div', 'room-list');
+            container.appendChild(roomList);
+
+            rooms.forEach((room, index) => {
+                const roomDiv = createElement('div', 'room');
+                roomDiv.textContent = `Room ${index + 1}: ${room.size} sq. ft. - ${room.package} package`;
+                const removeButton = createElement('button', 'remove-button', 'Remove');
+                roomDiv.appendChild(removeButton);
+                roomList.appendChild(roomDiv);
+
+                removeButton.addEventListener('click', () => {
+                    rooms.splice(index, 1);
+                    calculateTotalCost();
+                    initInterface();
+                });
+            });
+
+            const totalCostText = createElement('p', null, `Total Estimated Cost: $${totalCost.toFixed(2)}`);
+            container.appendChild(totalCostText);
+
+            const getQuoteButton = createElement('button', 'button', 'Get Final Quote');
+            container.appendChild(getQuoteButton);
+
+            getQuoteButton.addEventListener('click', () => finalizeQuote(container));
         }
     }
 
+    // Add Room Flow
     function addRoom(container) {
         container.innerHTML = '';
-
         const header = createElement('h2', null, 'Add a Room');
         container.appendChild(header);
 
-        const room = {
-            id: rooms.length + 1,
-            package: null,
-            squareFootage: 0,
-            additionalItems: { doors: 0, cracks: 0, wallHoles: 0 }
-        };
+        const form = createElement('div', null);
+        container.appendChild(form);
 
-        // Package Selection
-        const packageGroup = createElement('div', 'button-group');
-        container.appendChild(packageGroup);
+        const sizeInput = createFormInput(form, 'Room Size (sq. ft.)', 'number');
+        const packageInput = createFormSelect(form, 'Package', ['Economical', 'Standard', 'Premium']);
 
-        Object.entries(pricingOptions).forEach(([key, option], index) => {
-            const button = createElement('button', 'button', `Option ${index + 1} - $${option.pricePerSqFt} per sq ft`);
-            packageGroup.appendChild(button);
+        const nextButton = createElement('button', 'button', 'Add Room');
+        container.appendChild(nextButton);
 
-            button.addEventListener('click', () => {
-                room.package = option;
-            });
-        });
+        nextButton.addEventListener('click', () => {
+            const size = parseFloat(sizeInput.value);
+            const packageType = packageInput.value.toLowerCase();
+            if (isNaN(size) || size <= 0) {
+                alert('Please enter a valid room size.');
+                return;
+            }
 
-        // Square Footage
-        const sqFtGroup = createElement('div', 'form-group');
-        const sqFtLabel = createElement('label', null, 'Enter Square Footage:');
-        const sqFtInput = createElement('input');
-        sqFtInput.type = 'number';
-        sqFtInput.placeholder = 'e.g., 1500';
-        sqFtGroup.appendChild(sqFtLabel);
-        sqFtGroup.appendChild(sqFtInput);
-        container.appendChild(sqFtGroup);
-
-        sqFtInput.addEventListener('input', () => {
-            room.squareFootage = parseInt(sqFtInput.value) || 0;
-        });
-
-        // Additional Items
-        const additionalItemsGroup = createElement('div', 'extra-services');
-        const items = [
-            { label: 'Doors', key: 'doors', cost: additionalCosts.door },
-            { label: 'Cracks', key: 'cracks', cost: additionalCosts.crackRepair },
-            { label: 'Wall Holes', key: 'wallHoles', cost: additionalCosts.wallHoleFix }
-        ];
-
-        items.forEach(item => {
-            const label = createElement('label', null, `${item.label} ($${item.cost} each):`);
-            const input = createElement('input');
-            input.type = 'number';
-            input.placeholder = '0';
-            input.style.width = '60px';
-            additionalItemsGroup.appendChild(label);
-            additionalItemsGroup.appendChild(input);
-
-            input.addEventListener('input', () => {
-                room.additionalItems[item.key] = parseInt(input.value) || 0;
-            });
-        });
-        container.appendChild(additionalItemsGroup);
-
-        // Save Room Button
-        const saveRoomBtn = createElement('button', 'button add-room-btn', 'Save Room');
-        container.appendChild(saveRoomBtn);
-
-        saveRoomBtn.addEventListener('click', () => {
-            rooms.push(room);
+            const cost = size * PRICING_OPTIONS[packageType];
+            rooms.push({ size, package: packageType, cost });
+            calculateTotalCost();
             initInterface();
         });
 
-        const backButton = createElement('button', 'button back-button', 'Back');
+        const backButton = createElement('button', 'button', 'Back');
         container.appendChild(backButton);
 
-        backButton.addEventListener('click', initInterface);
+        backButton.addEventListener('click', () => initInterface());
     }
 
-    function calculateRoomCost(room) {
-        let cost = room.squareFootage * room.package.pricePerSqFt;
-        cost += room.additionalItems.doors * additionalCosts.door;
-        cost += room.additionalItems.cracks * additionalCosts.crackRepair;
-        cost += room.additionalItems.wallHoles * additionalCosts.wallHoleFix;
-        return Math.max(cost, 150); // Minimum price per room
+    // Create Form Input
+    function createFormInput(container, label, type) {
+        const formGroup = createElement('div', 'form-group');
+        const formLabel = createElement('label', null, label);
+        const input = createElement('input');
+        input.type = type;
+        formGroup.appendChild(formLabel);
+        formGroup.appendChild(input);
+        container.appendChild(formGroup);
+        return input;
     }
 
-    function displayRoomSummary(container, room, index) {
-        const roomDiv = createElement('div', 'room-summary');
-        roomDiv.innerHTML = `
-            <h3>Room ${index + 1}</h3>
-            <p><strong>Package:</strong> $${room.package.pricePerSqFt} per sq ft</p>
-            <p><strong>Square Footage:</strong> ${room.squareFootage} sq ft</p>
-            <p><strong>Doors:</strong> ${room.additionalItems.doors}</p>
-            <p><strong>Cracks:</strong> ${room.additionalItems.cracks}</p>
-            <p><strong>Wall Holes:</strong> ${room.additionalItems.wallHoles}</p>
-            <p><strong>Cost:</strong> $${Math.ceil(calculateRoomCost(room))}</p>
-        `;
-        container.appendChild(roomDiv);
+    // Create Form Select
+    function createFormSelect(container, label, options) {
+        const formGroup = createElement('div', 'form-group');
+        const formLabel = createElement('label', null, label);
+        const select = createElement('select');
+        options.forEach(option => {
+            const optionElement = createElement('option', null, option);
+            select.appendChild(optionElement);
+        });
+        formGroup.appendChild(formLabel);
+        formGroup.appendChild(select);
+        container.appendChild(formGroup);
+        return select;
     }
 
-    function displayTotalCost(container) {
-        totalCost = rooms.reduce((total, room) => total + calculateRoomCost(room), 0);
-        const totalDiv = createElement('div', 'summary-total', `Total Cost: $${Math.ceil(totalCost)}`);
-        container.appendChild(totalDiv);
+    // Calculate Total Cost
+    function calculateTotalCost() {
+        totalCost = rooms.reduce((total, room) => total + room.cost, 0);
     }
 
+    // Finalize Quote
+    function finalizeQuote(container) {
+        container.innerHTML = '';
+        const header = createElement('h2', null, 'Final Quote');
+        container.appendChild(header);
+
+        const summary = createElement('p', null, `Your final estimated cost is $${totalCost.toFixed(2)}.`);
+        container.appendChild(summary);
+
+        const backButton = createElement('button', 'button', 'Back to Home');
+        container.appendChild(backButton);
+
+        backButton.addEventListener('click', () => initInterface());
+    }
+
+    // Initialize the Interface
     initInterface();
 })();
