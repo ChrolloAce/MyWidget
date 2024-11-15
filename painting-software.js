@@ -486,7 +486,8 @@ function editRoom(index) {
 
     addRoom(() => viewSummary());
 }
-function calculatePaintGallons(type) {
+// Helper Functions
+function calculateGallons(type) {
     let totalSqFt = rooms.reduce((total, room) => {
         if (room.paintingOption && room.paintingOption.key === type) {
             return total + room.sqft;
@@ -521,19 +522,43 @@ function viewSummary() {
     const header = createElement('h2', null, 'Summary');
     app.appendChild(header);
 
-    // Ensure rooms array is not empty
+    // Check if rooms exist
     if (rooms.length === 0) {
         const emptyMessage = createElement('p', null, 'No rooms added yet.');
         app.appendChild(emptyMessage);
     }
 
-    // Display each room
+    // Display each room with rounded borders and a toolbar for actions
     rooms.forEach((room, index) => {
         const roomSummary = createElement('div', 'room-summary');
-        roomSummary.style.border = '2px solid black';
+        roomSummary.style.borderRadius = '10px';
+        roomSummary.style.border = '2px solid #000';
         roomSummary.style.margin = '10px';
         roomSummary.style.padding = '10px';
+        roomSummary.style.position = 'relative';
 
+        // Toolbar with edit and delete icons
+        const toolbar = createElement('div', 'room-toolbar');
+        toolbar.style.position = 'absolute';
+        toolbar.style.top = '10px';
+        toolbar.style.right = '10px';
+
+        const removeButton = createElement('button', 'button remove-button');
+        removeButton.innerHTML = '<i class="fas fa-times" style="color:red"></i>';  // Font Awesome X icon
+        removeButton.addEventListener('click', () => {
+            rooms.splice(index, 1);
+            viewSummary(); // Refresh summary view
+        });
+        toolbar.appendChild(removeButton);
+
+        const editButton = createElement('button', 'button edit-button');
+        editButton.innerHTML = '<i class="fas fa-pencil-alt" style="color:green"></i>'; // Font Awesome pencil icon
+        editButton.addEventListener('click', () => editRoom(index));
+        toolbar.appendChild(editButton);
+
+        roomSummary.appendChild(toolbar);
+
+        // Room Details
         const roomHeader = createElement('h3', null, `Room ${index + 1}`);
         roomSummary.appendChild(roomHeader);
 
@@ -541,64 +566,52 @@ function viewSummary() {
         roomSummary.appendChild(sqftText);
 
         const itemsHeader = createElement('p', null, 'Items:');
+        itemsHeader.style.fontWeight = 'bold';
         roomSummary.appendChild(itemsHeader);
 
-        const itemList = createElement('ul', null);
+        const itemList = createElement('ul', 'item-list');
         room.items.forEach(item => {
-            if (item && item.name) {  // Check if item is defined and has a name
-                const itemText = `${item.name} - ${item.quantity || 1}`;
+            if (item && item.name) { // Ensure item exists and has a name
+                const itemText = `${item.name} - Quantity: ${item.quantity || 1}`;
                 const itemElement = createElement('li', null, itemText);
                 itemList.appendChild(itemElement);
             }
         });
         roomSummary.appendChild(itemList);
 
-        // Add Edit and Remove Buttons
-        const editButton = createElement('button', 'button edit-button', 'Edit');
-        editButton.style.backgroundColor = 'green';
-        editButton.addEventListener('click', () => editRoom(index));
-        roomSummary.appendChild(editButton);
-
-        const removeButton = createElement('button', 'button remove-button', '✖');
-        removeButton.style.color = 'red';
-        removeButton.style.fontWeight = 'bold';
-        removeButton.style.position = 'absolute';
-        removeButton.style.top = '10px';
-        removeButton.style.right = '10px';
-        removeButton.addEventListener('click', () => {
-            rooms.splice(index, 1);
-            viewSummary();  // Refresh the summary view
-        });
-        roomSummary.appendChild(removeButton);
-
         app.appendChild(roomSummary);
     });
 
-    // Display Materials Section
+    // Display Materials Section with rounded corners and a dashed border
     const materialsSection = createElement('div', 'materials-summary');
-    materialsSection.style.border = '1px dashed black';
-    materialsSection.style.padding = '10px';
+    materialsSection.style.borderRadius = '10px';
+    materialsSection.style.border = '2px dashed #000';
+    materialsSection.style.padding = '15px';
     materialsSection.style.marginTop = '20px';
+    materialsSection.style.backgroundColor = '#f0f0f0';
 
     const materialsHeader = createElement('h3', null, 'Materials');
+    materialsHeader.style.fontWeight = 'bold';
     materialsSection.appendChild(materialsHeader);
 
-    const economicalPaint = calculatePaintGallons('economical');
-    const standardPaint = calculatePaintGallons('standard');
-    const premiumPaint = calculatePaintGallons('premium');
+    // Calculate materials needed for walls, ceiling, cabinets, etc.
+    const wallsGallons = calculateGallons('walls');
+    const ceilingGallons = calculateGallons('ceiling');
+    const cabinetsGallons = calculateGallons('cabinets');
 
-    const economicalPaintText = createElement('p', null, `Economical Paint: ${economicalPaint} gallons`);
-    const standardPaintText = createElement('p', null, `Standard Paint: ${standardPaint} gallons`);
-    const premiumPaintText = createElement('p', null, `Premium Paint: ${premiumPaint} gallons`);
+    const wallsText = createElement('p', null, `Walls (Economical Paint): ${wallsGallons} gallons needed`);
+    const ceilingText = createElement('p', null, `Ceiling (Standard Paint): ${ceilingGallons} gallons needed`);
+    const cabinetsText = createElement('p', null, `Cabinets (Premium Paint): ${cabinetsGallons} gallons needed`);
 
-    materialsSection.appendChild(economicalPaintText);
-    materialsSection.appendChild(standardPaintText);
-    materialsSection.appendChild(premiumPaintText);
+    materialsSection.appendChild(wallsText);
+    materialsSection.appendChild(ceilingText);
+    materialsSection.appendChild(cabinetsText);
     app.appendChild(materialsSection);
 
-    // Display Final Price
+    // Display Final Price with bold styling
     const finalPrice = calculateFinalPrice();
     const finalPriceText = createElement('p', 'final-price', `Final Price: $${finalPrice.toFixed(2)}`);
+    finalPriceText.style.fontWeight = 'bold';
     app.appendChild(finalPriceText);
 
     // Back Button
