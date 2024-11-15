@@ -138,6 +138,13 @@
                 cursor: pointer;
                 transition: transform 0.3s ease;
             }
+            .painted-option-btn.selected {
+    background-color: #00D0FF;
+    color: white;
+    font-weight: bold;
+    border: 2px solid #004C99;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
             .modal-content img:hover {
                 transform: scale(1.1);
@@ -226,15 +233,28 @@
     const app = document.getElementById('app');
     app.innerHTML = '<h2>Add Room</h2>';
 
+    // Ensure a new room is initialized if none exists
+    if (!rooms[rooms.length - 1] || !rooms[rooms.length - 1].sqft) {
+        rooms.push({ sqft: 0, items: [], paintingOption: null });
+    }
+
     // Painting Options
     const header = createElement('h3', null, 'Select a Painting Option');
     app.appendChild(header);
 
     const buttonGroup = createElement('div', 'button-group');
-    Object.entries(pricingOptions).forEach(([key, price]) => {
-        const button = createElement('button', 'button', `${key.charAt(0).toUpperCase() + key.slice(1)} - $${price} per sq ft`);
+    Object.entries(pricingOptions).forEach(([key, option]) => {
+        const button = createElement(
+            'button',
+            'button painting-option-btn',
+            `${key.charAt(0).toUpperCase() + key.slice(1)} - $${option.pricePerSqFt}/sqft`
+        );
+        button.innerHTML += `<br><small>Includes: ${option.includes.join(', ')}</small>`;
         button.addEventListener('click', () => {
-            rooms[rooms.length - 1] = { ...rooms[rooms.length - 1], paintingOption: { key, price } };
+            // Update selected option and visually highlight
+            rooms[rooms.length - 1].paintingOption = { key, ...option };
+            document.querySelectorAll('.painting-option-btn').forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
         });
         buttonGroup.appendChild(button);
     });
@@ -258,7 +278,7 @@
     const saveButton = createElement('button', 'button', 'Save Room');
     saveButton.addEventListener('click', () => {
         const sqft = parseFloat(document.getElementById('sqft').value) || 0;
-        rooms.push({ sqft, items: [], paintingOption: rooms[rooms.length - 1]?.paintingOption });
+        rooms[rooms.length - 1].sqft = sqft;
         setupRoomQuestions();
     });
     app.appendChild(saveButton);
@@ -268,6 +288,7 @@
     backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
 }
+
 
    function showItemModal() {
     const modal = createElement('div', 'modal');
@@ -317,10 +338,12 @@
     document.body.appendChild(modal);
 }
 
-   function handleItemSelection(item) {
+ function handleItemSelection(item) {
     if (!item.requiresInput) {
         // Directly add items without inputs (like Bathtub)
-        rooms[rooms.length - 1].items.push({ name: item.name, cost: additionalCosts[item.key] || 0, quantity: 1 });
+        const currentRoom = rooms[rooms.length - 1];
+        if (!currentRoom) return alert('Please create a room first.');
+        currentRoom.items.push({ name: item.name, cost: additionalCosts[item.key] || 0, quantity: 1 });
         addRoom(); // Return to room setup
         return;
     }
@@ -366,7 +389,10 @@
         item.inputFields.forEach(field => {
             itemData[field.key] = inputs[field.key].value || 0;
         });
-        rooms[rooms.length - 1].items.push(itemData);
+
+        const currentRoom = rooms[rooms.length - 1];
+        if (!currentRoom) return alert('Please create a room first.');
+        currentRoom.items.push(itemData);
         document.body.removeChild(modal);
         addRoom();
     });
@@ -374,6 +400,7 @@
 
     document.body.appendChild(modal);
 }
+
 
 
     function viewSummary() {
