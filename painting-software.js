@@ -486,116 +486,127 @@ function editRoom(index) {
 
     addRoom(() => viewSummary());
 }
+function calculatePaintGallons(type) {
+    let totalSqFt = rooms.reduce((total, room) => {
+        if (room.paintingOption && room.paintingOption.key === type) {
+            return total + room.sqft;
+        }
+        return total;
+    }, 0);
+    return Math.ceil(totalSqFt / 350);  // Assuming 1 gallon covers 350 sq ft
+}
+
+function calculateFinalPrice() {
+    return rooms.reduce((total, room) => {
+        let roomCost = 0;
+        if (room.paintingOption) {
+            roomCost += room.sqft * room.paintingOption.price;
+        }
+        room.items.forEach(item => {
+            roomCost += item.cost * (item.quantity || 1);
+        });
+        return total + roomCost;
+    }, 0);
+}
 
 
 
- function viewSummary() {
+function viewSummary() {
     const app = document.getElementById('app');
     app.innerHTML = '';
 
     // Add Logo
     addLogo(app);
 
-    // Page Header
     const header = createElement('h2', null, 'Summary');
     app.appendChild(header);
 
-    let finalPrice = 0;
-    const materialRequirements = { economical: 0, standard: 0, premium: 0 };
+    // Ensure rooms array is not empty
+    if (rooms.length === 0) {
+        const emptyMessage = createElement('p', null, 'No rooms added yet.');
+        app.appendChild(emptyMessage);
+    }
 
+    // Display each room
     rooms.forEach((room, index) => {
         const roomSummary = createElement('div', 'room-summary');
         roomSummary.style.border = '2px solid black';
-        roomSummary.style.padding = '15px';
-        roomSummary.style.margin = '10px 0';
-        roomSummary.style.borderRadius = '10px';
-        roomSummary.style.position = 'relative';
+        roomSummary.style.margin = '10px';
+        roomSummary.style.padding = '10px';
 
-        const removeButton = createElement('button', 'button', 'X');
-        removeButton.style.backgroundColor = 'red';
-        removeButton.style.color = 'white';
+        const roomHeader = createElement('h3', null, `Room ${index + 1}`);
+        roomSummary.appendChild(roomHeader);
+
+        const sqftText = createElement('p', null, `Square Footage: ${room.sqft}`);
+        roomSummary.appendChild(sqftText);
+
+        const itemsHeader = createElement('p', null, 'Items:');
+        roomSummary.appendChild(itemsHeader);
+
+        const itemList = createElement('ul', null);
+        room.items.forEach(item => {
+            if (item && item.name) {  // Check if item is defined and has a name
+                const itemText = `${item.name} - ${item.quantity || 1}`;
+                const itemElement = createElement('li', null, itemText);
+                itemList.appendChild(itemElement);
+            }
+        });
+        roomSummary.appendChild(itemList);
+
+        // Add Edit and Remove Buttons
+        const editButton = createElement('button', 'button edit-button', 'Edit');
+        editButton.style.backgroundColor = 'green';
+        editButton.addEventListener('click', () => editRoom(index));
+        roomSummary.appendChild(editButton);
+
+        const removeButton = createElement('button', 'button remove-button', '✖');
+        removeButton.style.color = 'red';
+        removeButton.style.fontWeight = 'bold';
         removeButton.style.position = 'absolute';
         removeButton.style.top = '10px';
         removeButton.style.right = '10px';
-        removeButton.style.border = 'none';
-        removeButton.style.borderRadius = '50%';
-        removeButton.style.width = '30px';
-        removeButton.style.height = '30px';
-        removeButton.style.fontWeight = 'bold';
         removeButton.addEventListener('click', () => {
             rooms.splice(index, 1);
-            viewSummary();
+            viewSummary();  // Refresh the summary view
         });
         roomSummary.appendChild(removeButton);
-
-        const roomCost = room.sqft * (pricingOptions[room.paintingOption.key] || 0);
-        finalPrice += roomCost;
-
-        if (room.paintingOption) {
-            materialRequirements[room.paintingOption.key] += room.sqft;
-        }
-
-        roomSummary.innerHTML = `
-            <h3>Room ${index + 1}</h3>
-            <p><strong>Square Footage:</strong> ${room.sqft}</p>
-            <p><strong>Painting Option:</strong> ${
-                room.paintingOption ? room.paintingOption.key : 'Not selected'
-            }</p>
-            <p><strong>Items:</strong></p>
-            <ul style="text-align: left; list-style-type: disc; margin-left: 20px;">
-                ${room.items
-                    .map(
-                        item =>
-                            `<li>${item.name}${
-                                item.quantity ? ` - Quantity: ${item.quantity}` : ''
-                            } ${
-                                item.height
-                                    ? ` | Dimensions: ${item.height}x${item.width}x${item.depth}`
-                                    : ''
-                            }</li>`
-                    )
-                    .join('')}
-            </ul>
-        `;
-
-        const editButton = createElement('button', 'button', 'Edit Room');
-        editButton.style.backgroundColor = 'green';
-        editButton.style.color = 'white';
-        editButton.style.marginTop = '10px';
-        editButton.addEventListener('click', () => editRoom(index));
-        roomSummary.appendChild(editButton);
 
         app.appendChild(roomSummary);
     });
 
-    // Add Materials Section
+    // Display Materials Section
     const materialsSection = createElement('div', 'materials-summary');
-    materialsSection.style.backgroundColor = '#f1f1f1';
-    materialsSection.style.border = '2px dashed black';
-    materialsSection.style.padding = '15px';
-    materialsSection.style.margin = '20px 0';
-    materialsSection.style.borderRadius = '10px';
+    materialsSection.style.border = '1px dashed black';
+    materialsSection.style.padding = '10px';
+    materialsSection.style.marginTop = '20px';
 
-    materialsSection.innerHTML = `
-        <h3>Materials</h3>
-        <p><strong>Economical Paint:</strong> ${Math.ceil(materialRequirements.economical / 350)} gallons</p>
-        <p><strong>Standard Paint:</strong> ${Math.ceil(materialRequirements.standard / 350)} gallons</p>
-        <p><strong>Premium Paint:</strong> ${Math.ceil(materialRequirements.premium / 350)} gallons</p>
-    `;
+    const materialsHeader = createElement('h3', null, 'Materials');
+    materialsSection.appendChild(materialsHeader);
+
+    const economicalPaint = calculatePaintGallons('economical');
+    const standardPaint = calculatePaintGallons('standard');
+    const premiumPaint = calculatePaintGallons('premium');
+
+    const economicalPaintText = createElement('p', null, `Economical Paint: ${economicalPaint} gallons`);
+    const standardPaintText = createElement('p', null, `Standard Paint: ${standardPaint} gallons`);
+    const premiumPaintText = createElement('p', null, `Premium Paint: ${premiumPaint} gallons`);
+
+    materialsSection.appendChild(economicalPaintText);
+    materialsSection.appendChild(standardPaintText);
+    materialsSection.appendChild(premiumPaintText);
     app.appendChild(materialsSection);
 
-    // Add Final Price
-    const finalPriceDiv = createElement('div', 'final-price', `Final Price: $${finalPrice.toFixed(2)}`);
-    finalPriceDiv.style.fontSize = '20px';
-    finalPriceDiv.style.fontWeight = 'bold';
-    finalPriceDiv.style.marginTop = '20px';
-    app.appendChild(finalPriceDiv);
+    // Display Final Price
+    const finalPrice = calculateFinalPrice();
+    const finalPriceText = createElement('p', 'final-price', `Final Price: $${finalPrice.toFixed(2)}`);
+    app.appendChild(finalPriceText);
 
     // Back Button
     const backButton = createElement('button', 'button', 'Back');
     backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
 }
+
 
 
     injectStyles();
