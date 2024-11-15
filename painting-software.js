@@ -1,107 +1,126 @@
 (function () {
-    // Constants for Pricing
-    const PRICING_OPTIONS = {
+    const pricingOptions = {
         economical: 1.5,
         standard: 2.0,
-        premium: 3.0,
+        premium: 3.0
     };
 
-    const EXTRA_COSTS = {
-        darkWalls: 0.5,
-        texturedWalls: 0.75,
-        insurance: 200,
-        furnitureCoverage: {
-            standard: 50,
-            complex: 100,
-        },
+    const additionalCosts = {
+        insuranceFee: 200,
+        occupiedFee: 0.25,
+        darkWallFee: 0.5,
+        texturedWallFee: 0.75,
+        wallpaperRemoval: 1.5,
+        furnitureCoverage: { standard: 50, complex: 100 },
+        bathtubFee: 250,
+        stairStepFee: 50,
+        stairRailingFee: 5,
+        cabinetHandleFee: 10,
+        metalWallFee: 2.0
     };
 
     let rooms = [];
     let totalCost = 0;
 
-    // Inject CSS Styles Globally
-    (function injectStyles() {
+    // Function to create and append CSS styles dynamically
+    function injectStyles() {
         const styles = `
-            body {
-                font-family: 'Montserrat', sans-serif;
-                background-color: #f9f9f9;
+            * {
                 margin: 0;
                 padding: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+                box-sizing: border-box;
             }
+
+            body {
+                font-family: 'Montserrat', sans-serif;
+                background-color: #f4f4f4;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+            }
+
             .container {
-                width: 95%;
-                max-width: 1200px;
+                width: 100%;
+                max-width: 900px;
                 background: #fff;
                 padding: 40px;
                 border-radius: 10px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                margin: 20px;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             }
+
             h1, h2 {
-                color: #333;
                 text-align: center;
-            }
-            .button {
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                background: #00D0FF;
-                color: #fff;
-                font-size: 16px;
-                margin: 10px;
-            }
-            .button:hover {
-                background: #007ACC;
-            }
-            .form-group {
                 margin-bottom: 20px;
             }
-            .form-group label {
-                font-size: 14px;
-                margin-bottom: 5px;
-                display: block;
-                color: #555;
+
+            .button {
+                display: inline-block;
+                padding: 12px 20px;
+                margin: 10px 5px;
+                background-color: #00D0FF;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 16px;
+                text-align: center;
+                transition: 0.3s ease-in-out;
             }
-            .form-group input, .form-group select {
+
+            .button:hover {
+                background-color: #0078a6;
+            }
+
+            .back-button {
+                background-color: #666;
+            }
+
+            .form-group {
+                margin: 20px 0;
+            }
+
+            .form-group label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .form-group input,
+            .form-group select {
                 width: 100%;
                 padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 14px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
             }
-            .room-list {
-                margin-top: 20px;
+
+            .room-summary {
+                margin: 20px 0;
+                background: #f9f9f9;
+                padding: 20px;
+                border-radius: 8px;
+                border: 1px solid #ddd;
             }
-            .room {
-                background: #f0f0f0;
-                padding: 10px;
-                border-radius: 5px;
+
+            .room-summary h3 {
                 margin-bottom: 10px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
             }
-            .room .remove-button {
-                background: #ff5555;
-                padding: 5px 10px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                color: #fff;
-                font-size: 12px;
+
+            .summary-total {
+                text-align: right;
+                font-size: 20px;
+                font-weight: bold;
+                margin-top: 20px;
             }
         `;
         const styleElement = document.createElement('style');
         styleElement.type = 'text/css';
-        styleElement.appendChild(document.createTextNode(styles));
+        styleElement.textContent = styles;
         document.head.appendChild(styleElement);
-    })();
+    }
 
-    // Helper Function to Create Elements
+    // Create reusable element creation function
     function createElement(tag, className, textContent) {
         const element = document.createElement(tag);
         if (className) element.className = className;
@@ -109,133 +128,161 @@
         return element;
     }
 
-    // Initialize Main Interface
+    // Initialize the interface
     function initInterface() {
-        const container = createElement('div', 'container');
+        const app = document.createElement('div');
+        app.className = 'container';
+        app.id = 'app';
         document.body.innerHTML = '';
-        document.body.appendChild(container);
+        document.body.appendChild(app);
 
-        const header = createElement('h1', null, 'Painting Service Quote');
-        container.appendChild(header);
+        const header = createElement('h1', null, 'Painting Quote Software');
+        app.appendChild(header);
 
-        const description = createElement('p', null, 'Add rooms and select options to calculate your painting quote.');
-        container.appendChild(description);
+        const startButton = createElement('button', 'button', 'Begin Quote');
+        startButton.addEventListener('click', () => startGeneralQuestions());
+        app.appendChild(startButton);
+    }
+
+    function startGeneralQuestions() {
+        const app = document.getElementById('app');
+        app.innerHTML = '<h2>General Questions</h2>';
+
+        const form = document.createElement('div');
+        form.className = 'form-group';
+        form.innerHTML = `
+            <label>Is this a residential or commercial property?</label>
+            <select id="jobType">
+                <option value="residential">Residential</option>
+                <option value="commercial">Commercial</option>
+            </select>
+        `;
+        app.appendChild(form);
+
+        const nextButton = createElement('button', 'button', 'Next');
+        nextButton.addEventListener('click', () => {
+            const jobType = document.getElementById('jobType').value;
+            if (jobType === 'residential') askResidentialDetails();
+            else askCommercialDetails();
+        });
+        app.appendChild(nextButton);
+
+        const backButton = createElement('button', 'button back-button', 'Back');
+        backButton.addEventListener('click', initInterface);
+        app.appendChild(backButton);
+    }
+
+    function askResidentialDetails() {
+        const app = document.getElementById('app');
+        app.innerHTML = '<h2>Residential Details</h2>';
+
+        const form = document.createElement('div');
+        form.className = 'form-group';
+        form.innerHTML = `
+            <label>Is the property over 2 floors?</label>
+            <select id="residentialFloors">
+                <option value="under2">Under 2 Floors</option>
+                <option value="over2">Over 2 Floors</option>
+            </select>
+        `;
+        app.appendChild(form);
+
+        const nextButton = createElement('button', 'button', 'Next');
+        nextButton.addEventListener('click', () => {
+            const residentialFloors = document.getElementById('residentialFloors').value;
+            if (residentialFloors === 'over2') totalCost += additionalCosts.insuranceFee;
+            setupRoomQuestions();
+        });
+        app.appendChild(nextButton);
+    }
+
+    function askCommercialDetails() {
+        const app = document.getElementById('app');
+        app.innerHTML = '<h2>Commercial Details</h2>';
+
+        const form = document.createElement('div');
+        form.className = 'form-group';
+        form.innerHTML = `
+            <label>Is the property over X height? (Requires additional equipment)</label>
+            <select id="commercialHeight">
+                <option value="under">Under X Height</option>
+                <option value="over">Over X Height</option>
+            </select>
+        `;
+        app.appendChild(form);
+
+        const nextButton = createElement('button', 'button', 'Next');
+        nextButton.addEventListener('click', setupRoomQuestions);
+        app.appendChild(nextButton);
+    }
+
+    function setupRoomQuestions() {
+        const app = document.getElementById('app');
+        app.innerHTML = '<h2>Room Setup</h2>';
 
         const addRoomButton = createElement('button', 'button', 'Add Room');
-        container.appendChild(addRoomButton);
+        addRoomButton.addEventListener('click', addRoom);
+        app.appendChild(addRoomButton);
 
-        addRoomButton.addEventListener('click', () => addRoom(container));
-
-        if (rooms.length > 0) {
-            const roomList = createElement('div', 'room-list');
-            container.appendChild(roomList);
-
-            rooms.forEach((room, index) => {
-                const roomDiv = createElement('div', 'room');
-                roomDiv.textContent = `Room ${index + 1}: ${room.size} sq. ft. - ${room.package} package`;
-                const removeButton = createElement('button', 'remove-button', 'Remove');
-                roomDiv.appendChild(removeButton);
-                roomList.appendChild(roomDiv);
-
-                removeButton.addEventListener('click', () => {
-                    rooms.splice(index, 1);
-                    calculateTotalCost();
-                    initInterface();
-                });
-            });
-
-            const totalCostText = createElement('p', null, `Total Estimated Cost: $${totalCost.toFixed(2)}`);
-            container.appendChild(totalCostText);
-
-            const getQuoteButton = createElement('button', 'button', 'Get Final Quote');
-            container.appendChild(getQuoteButton);
-
-            getQuoteButton.addEventListener('click', () => finalizeQuote(container));
-        }
+        const viewSummaryButton = createElement('button', 'button', 'View Summary');
+        viewSummaryButton.addEventListener('click', viewSummary);
+        app.appendChild(viewSummaryButton);
     }
 
-    // Add Room Flow
-    function addRoom(container) {
-        container.innerHTML = '';
-        const header = createElement('h2', null, 'Add a Room');
-        container.appendChild(header);
+    function addRoom() {
+        const app = document.getElementById('app');
+        app.innerHTML = '<h2>Add Room</h2>';
 
-        const form = createElement('div', null);
-        container.appendChild(form);
+        const form = document.createElement('div');
+        form.className = 'form-group';
+        form.innerHTML = `
+            <label>Select Package:</label>
+            <select id="package">
+                <option value="economical">Economical ($1.50 per sq. ft.)</option>
+                <option value="standard">Standard ($2.00 per sq. ft.)</option>
+                <option value="premium">Premium ($3.00 per sq. ft.)</option>
+            </select>
+            <label>Enter Square Footage:</label>
+            <input type="number" id="sqft" placeholder="e.g., 500">
+        `;
+        app.appendChild(form);
 
-        const sizeInput = createFormInput(form, 'Room Size (sq. ft.)', 'number');
-        const packageInput = createFormSelect(form, 'Package', ['Economical', 'Standard', 'Premium']);
+        const saveButton = createElement('button', 'button', 'Save Room');
+        saveButton.addEventListener('click', () => {
+            const packageType = document.getElementById('package').value;
+            const sqft = parseInt(document.getElementById('sqft').value) || 0;
+            const cost = sqft * pricingOptions[packageType];
+            rooms.push({ package: packageType, sqft, cost });
+            setupRoomQuestions();
+        });
+        app.appendChild(saveButton);
+    }
 
-        const nextButton = createElement('button', 'button', 'Add Room');
-        container.appendChild(nextButton);
+    function viewSummary() {
+        const app = document.getElementById('app');
+        app.innerHTML = '<h2>Summary</h2>';
+        const summary = document.createElement('div');
+        summary.className = 'room-summary';
+        let total = 0;
 
-        nextButton.addEventListener('click', () => {
-            const size = parseFloat(sizeInput.value);
-            const packageType = packageInput.value.toLowerCase();
-            if (isNaN(size) || size <= 0) {
-                alert('Please enter a valid room size.');
-                return;
-            }
-
-            const cost = size * PRICING_OPTIONS[packageType];
-            rooms.push({ size, package: packageType, cost });
-            calculateTotalCost();
-            initInterface();
+        rooms.forEach((room, index) => {
+            summary.innerHTML += `
+                <h3>Room ${index + 1}</h3>
+                <p>Package: ${room.package}</p>
+                <p>Square Footage: ${room.sqft} sq ft</p>
+                <p>Cost: $${room.cost.toFixed(2)}</p>
+            `;
+            total += room.cost;
         });
 
-        const backButton = createElement('button', 'button', 'Back');
-        container.appendChild(backButton);
+        summary.innerHTML += `<p class="summary-total">Total: $${total.toFixed(2)}</p>`;
+        app.appendChild(summary);
 
-        backButton.addEventListener('click', () => initInterface());
+        const finishButton = createElement('button', 'button', 'Finish');
+        finishButton.addEventListener('click', initInterface);
+        app.appendChild(finishButton);
     }
 
-    // Create Form Input
-    function createFormInput(container, label, type) {
-        const formGroup = createElement('div', 'form-group');
-        const formLabel = createElement('label', null, label);
-        const input = createElement('input');
-        input.type = type;
-        formGroup.appendChild(formLabel);
-        formGroup.appendChild(input);
-        container.appendChild(formGroup);
-        return input;
-    }
-
-    // Create Form Select
-    function createFormSelect(container, label, options) {
-        const formGroup = createElement('div', 'form-group');
-        const formLabel = createElement('label', null, label);
-        const select = createElement('select');
-        options.forEach(option => {
-            const optionElement = createElement('option', null, option);
-            select.appendChild(optionElement);
-        });
-        formGroup.appendChild(formLabel);
-        formGroup.appendChild(select);
-        container.appendChild(formGroup);
-        return select;
-    }
-
-    // Calculate Total Cost
-    function calculateTotalCost() {
-        totalCost = rooms.reduce((total, room) => total + room.cost, 0);
-    }
-
-    // Finalize Quote
-    function finalizeQuote(container) {
-        container.innerHTML = '';
-        const header = createElement('h2', null, 'Final Quote');
-        container.appendChild(header);
-
-        const summary = createElement('p', null, `Your final estimated cost is $${totalCost.toFixed(2)}.`);
-        container.appendChild(summary);
-
-        const backButton = createElement('button', 'button', 'Back to Home');
-        container.appendChild(backButton);
-
-        backButton.addEventListener('click', () => initInterface());
-    }
-
-    // Initialize the Interface
+    injectStyles();
     initInterface();
 })();
