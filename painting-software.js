@@ -558,26 +558,28 @@ function calculateFinalPrice() {
     return rooms.reduce((total, room) => {
         let roomCost = 0;
         if (room.paintingOption) {
-            roomCost += room.sqft * room.paintingOption.price;
+            roomCost += (room.sqft || 0) * (room.paintingOption.price || 0);
         }
         room.items.forEach(item => {
-            roomCost += item.cost * (item.quantity || 1);
+            roomCost += (item.cost || 0) * (item.quantity || 1);
         });
         return total + roomCost;
     }, 0);
 }
 
 
+
 function displayMaterialsAndFinalPrice(app) {
     const materialsSection = createElement('div', 'materials-summary');
+    materialsSection.style.border = '2px dotted #000';
     materialsSection.style.borderRadius = '10px';
-    materialsSection.style.border = '2px dashed #000';
     materialsSection.style.padding = '15px';
     materialsSection.style.marginTop = '20px';
-    materialsSection.style.backgroundColor = '#f0f0f0';
+    materialsSection.style.backgroundColor = '#f9f9f9'; // Slightly greyish-white
 
     const materialsHeader = createElement('h3', null, 'Materials');
     materialsHeader.style.fontWeight = 'bold';
+    materialsHeader.style.textAlign = 'center';
     materialsSection.appendChild(materialsHeader);
 
     const wallsGallons = calculateGallons('walls');
@@ -599,6 +601,7 @@ function displayMaterialsAndFinalPrice(app) {
     finalPriceText.style.fontWeight = 'bold';
     app.appendChild(finalPriceText);
 }
+
 function calculateMaterialUsage() {
     const materialUsage = {
         walls: 0,
@@ -624,6 +627,9 @@ function viewSummary() {
     const app = document.getElementById('app');
     app.innerHTML = '';
 
+    // Logo
+    addLogo(app);
+
     const header = createElement('h2', null, 'Summary');
     app.appendChild(header);
 
@@ -631,45 +637,71 @@ function viewSummary() {
         const emptyMessage = createElement('p', null, 'No rooms added yet.');
         app.appendChild(emptyMessage);
     } else {
+        let totalCost = 0;
         rooms.forEach((room, index) => {
             const roomSummary = createElement('div', 'room-summary');
-            roomSummary.style.marginBottom = '20px';
-            roomSummary.innerHTML = `
-                <h3>Room ${index + 1}</h3>
-                <p>Square Footage: ${room.sqft}</p>
-                <p>Painting Option: ${room.paintingOption?.key || 'None'}</p>
-                <ul>${room.items.map(item => `<li>${item.name} - Quantity: ${item.quantity || 1}</li>`).join('')}</ul>
-            `;
+            roomSummary.style.border = '2px solid #000';
+            roomSummary.style.borderRadius = '10px';
+            roomSummary.style.margin = '10px';
+            roomSummary.style.padding = '10px';
+            roomSummary.style.position = 'relative';
 
             const toolbar = createElement('div', 'room-toolbar');
-            const removeButton = createElement('button', 'button', 'Remove');
+            toolbar.style.position = 'absolute';
+            toolbar.style.top = '10px';
+            toolbar.style.right = '10px';
+
+            const removeButton = createElement('button', 'button remove-button');
+            removeButton.innerHTML = '<i class="fas fa-times" style="color:red"></i>';
             removeButton.addEventListener('click', () => {
                 rooms.splice(index, 1);
                 viewSummary();
             });
             toolbar.appendChild(removeButton);
 
-            const editButton = createElement('button', 'button', 'Edit');
+            const editButton = createElement('button', 'button edit-button');
+            editButton.innerHTML = '<i class="fas fa-pencil-alt" style="color:green"></i>';
             editButton.addEventListener('click', () => editRoom(index));
             toolbar.appendChild(editButton);
 
             roomSummary.appendChild(toolbar);
+
+            const roomHeader = createElement('h3', null, `Room ${index + 1}`);
+            roomSummary.appendChild(roomHeader);
+
+            const sqftText = createElement('p', null, `Square Footage: ${room.sqft}`);
+            roomSummary.appendChild(sqftText);
+
+            const paintingOption = createElement('p', null, `Painting Option: ${room.paintingOption?.key || "None"}`);
+            roomSummary.appendChild(paintingOption);
+
+            const itemsHeader = createElement('p', null, 'Items:');
+            roomSummary.appendChild(itemsHeader);
+
+            const itemList = createElement('ul');
+            room.items.forEach(item => {
+                const itemLi = createElement('li', null, `${item.name} - Quantity: ${item.quantity}`);
+                itemList.appendChild(itemLi);
+            });
+            roomSummary.appendChild(itemList);
+
+            totalCost += calculateRoomCost(room);
             app.appendChild(roomSummary);
         });
 
-        const materialsSummary = createElement('div', 'materials-summary');
-        materialsSummary.innerHTML = calculateMaterialUsage();
-        app.appendChild(materialsSummary);
-
-        const totalCost = calculateFinalPrice();
-        const finalPriceText = createElement('h3', null, `Final Price: $${totalCost.toFixed(2)}`);
-        app.appendChild(finalPriceText);
+        displayMaterialsAndFinalPrice(app); // Show materials and final price
     }
+
+    const addRoomButton = createElement('button', 'button', 'Add Another Room');
+    addRoomButton.style.backgroundColor = '#28a745';
+    addRoomButton.addEventListener('click', () => addRoom());
+    app.appendChild(addRoomButton);
 
     const backButton = createElement('button', 'button', 'Back');
     backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
 }
+
 
 
 
