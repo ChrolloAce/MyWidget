@@ -127,88 +127,90 @@
         container.appendChild(logoSection);
     }
 
-    // General Questions
-    function generalQuestions() {
-        const app = document.getElementById('app');
-        app.innerHTML = '';
+  function generalQuestions() {
+    const app = document.getElementById('app');
+    app.innerHTML = '';
 
-        addLogo(app);
-        const header = createElement('h2', null, 'General Questions');
-        app.appendChild(header);
+    // Add Logo
+    addLogo(app);
 
-        const formContainer = createElement('div', 'form-container');
-        app.appendChild(formContainer);
+    const header = createElement('h2', null, 'General Questions');
+    app.appendChild(header);
 
-        // Job Type Dropdown
-        const jobTypeGroup = createElement('div', 'form-group');
-        const jobTypeLabel = createElement('label', null, 'Is this a commercial or residential job?');
-        const jobTypeSelect = createElement('select');
-        ['Select', 'Residential', 'Commercial'].forEach((option) => {
-            const opt = createElement('option', null, option);
-            opt.value = option.toLowerCase();
-            jobTypeSelect.appendChild(opt);
-        });
-        jobTypeSelect.addEventListener('change', () => {
-            quoteDetails.jobType = jobTypeSelect.value;
-            showJobSpecificQuestions(formContainer);
-        });
+    const formContainer = createElement('div', 'form-container');
+    formContainer.style.position = 'relative';
+    formContainer.style.paddingBottom = '80px'; // To avoid overlap with the button
+    formContainer.style.marginTop = '20px'; // Extra space at the top
+    formContainer.style.gap = '20px'; // Gap between elements
+    app.appendChild(formContainer);
 
-        jobTypeGroup.appendChild(jobTypeLabel);
-        jobTypeGroup.appendChild(jobTypeSelect);
-        formContainer.appendChild(jobTypeGroup);
+    // Add Job Type Question
+    const jobTypeGroup = createElement('div', 'form-group');
+    const jobTypeLabel = createElement('label', null, 'Is this a commercial or residential job?');
+    const jobTypeSelect = createElement('select');
+    ['Select', 'Residential', 'Commercial'].forEach(option => {
+        const opt = createElement('option', null, option);
+        opt.value = option.toLowerCase();
+        jobTypeSelect.appendChild(opt);
+    });
 
-        const continueButton = createElement('button', 'button', 'Continue');
-        continueButton.disabled = true;
-        continueButton.addEventListener('click', setupRoomQuestions);
-        app.appendChild(continueButton);
+    jobTypeGroup.appendChild(jobTypeLabel);
+    jobTypeGroup.appendChild(jobTypeSelect);
+    formContainer.appendChild(jobTypeGroup);
 
-        function showJobSpecificQuestions(parent) {
-            const existingQuestions = document.getElementById('job-specific-questions');
-            if (existingQuestions) existingQuestions.remove();
+    // Call the insurance checkbox generation
+    addInsuranceCheckbox(formContainer);
 
-            const jobSpecificQuestions = createElement('div', 'form-group');
-            jobSpecificQuestions.id = 'job-specific-questions';
-            parent.appendChild(jobSpecificQuestions);
+    const continueButton = createElement('button', 'button', 'Continue');
+    continueButton.style.position = 'absolute';
+    continueButton.style.bottom = '10px';
+    continueButton.style.left = '50%';
+    continueButton.style.transform = 'translateX(-50%)';
+    continueButton.disabled = true;
 
-            // Residential or Commercial Specific Questions
-            if (quoteDetails.jobType === 'residential') {
-                const floorsLabel = createElement('label', null, 'Is it over 2 floors or under?');
-                const floorsSelect = createElement('select');
-                ['Select', 'Over 2 Floors', 'Under 2 Floors'].forEach((option) => {
-                    const opt = createElement('option', null, option);
-                    opt.value = option.toLowerCase();
-                    floorsSelect.appendChild(opt);
-                });
-                floorsSelect.addEventListener('change', () => {
-                    quoteDetails.floors = floorsSelect.value;
-                    validateQuestions();
-                });
+    continueButton.addEventListener('click', setupRoomQuestions);
+    app.appendChild(continueButton);
 
-                jobSpecificQuestions.appendChild(floorsLabel);
-                jobSpecificQuestions.appendChild(floorsSelect);
-            } else if (quoteDetails.jobType === 'commercial') {
-                const heightLabel = createElement('label', null, 'Is it over 10 feet height?');
-                const heightSelect = createElement('select');
-                ['Select', 'Yes', 'No'].forEach((option) => {
-                    const opt = createElement('option', null, option);
-                    opt.value = option.toLowerCase();
-                    heightSelect.appendChild(opt);
-                });
-                heightSelect.addEventListener('change', () => {
-                    quoteDetails.floors = heightSelect.value === 'yes' ? 'Over 10 Feet' : 'Under 10 Feet';
-                    validateQuestions();
-                });
+    // Enable or disable continue button based on selections
+    jobTypeSelect.addEventListener('change', () => {
+        quoteDetails.jobType = jobTypeSelect.value;
+        continueButton.disabled = jobTypeSelect.value === 'select';
+    });
+}
 
-                jobSpecificQuestions.appendChild(heightLabel);
-                jobSpecificQuestions.appendChild(heightSelect);
-            }
+function addInsuranceCheckbox(parent) {
+    const insuranceGroup = createElement('div', 'form-group insurance-checkbox-container');
 
-            function validateQuestions() {
-                continueButton.disabled = !(quoteDetails.jobType && quoteDetails.floors);
-            }
-        }
-    }
+    const checkboxWrapper = createElement('div', 'checkbox-wrapper-31');
+    const insuranceCheckbox = createElement('input', null, null, { type: 'checkbox', id: 'insurance-checkbox' });
+    checkboxWrapper.appendChild(insuranceCheckbox);
 
+    // Add SVG for the checkbox
+    checkboxWrapper.innerHTML += `
+        <svg viewBox="0 0 35.6 35.6">
+            <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+            <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+            <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+        </svg>
+    `;
+
+    const insuranceLabel = createElement('label', null, 'Does the job require insurance?', { for: 'insurance-checkbox' });
+
+    // Append checkbox and label to the parent container
+    insuranceGroup.appendChild(checkboxWrapper);
+    insuranceGroup.appendChild(insuranceLabel);
+    parent.appendChild(insuranceGroup);
+
+    // Event listener for the checkbox
+    insuranceCheckbox.addEventListener('change', () => {
+        quoteDetails.requiresInsurance = insuranceCheckbox.checked;
+        console.log(`Requires Insurance: ${quoteDetails.requiresInsurance}`);
+    });
+}
+
+
+
+    
     // Setup Room Questions
     function setupRoomQuestions() {
         const app = document.getElementById('app');
