@@ -437,6 +437,7 @@ let quoteDetails = {
     requiresInsurance: false,
     propertyStatus: null, // vacant or occupied
     additionalCosts: 0
+}
 function generalQuestions() {
     const app = document.getElementById('app');
     app.innerHTML = '';
