@@ -335,40 +335,32 @@ function addRoom() {
     const header = createElement('h2', null, 'Add Room');
     app.appendChild(header);
 
-    // Use a temporary object to hold room details
-    let tempRoom = {
+    // Temporary room object to hold room data
+    let currentRoom = {
         sqft: 0,
         items: [],
         paintingOption: null
     };
 
-    // Painting Package Selection
+    // Painting Package Selection with Collapsible Behavior
     const packageContainer = createElement('div', 'package-container');
     app.appendChild(packageContainer);
-    Object.entries(pricingOptions).forEach(([key, option]) => {
-        const packageCard = createElement('div', 'package-card');
-        packageCard.style.border = '2px solid black';
-        packageCard.style.margin = '10px';
-        packageCard.style.padding = '15px';
 
-        const title = createElement('h4', null, `${key.charAt(0).toUpperCase() + key.slice(1)} - $${option.price}/sqft`);
-        packageCard.appendChild(title);
+    const packageOptions = {
+        economical: { price: 1.5, description: 'Includes: Walls only' },
+        standard: { price: 2.0, description: 'Includes: Walls and Ceilings' },
+        premium: { price: 3.0, description: 'Includes: Walls, Ceilings, and Baseboards' }
+    };
 
-        const description = createElement('p', null, option.description);
-        packageCard.appendChild(description);
-
-        const selectButton = createElement('button', 'button', 'Select Package');
-        selectButton.addEventListener('click', () => {
-            tempRoom.paintingOption = { key, ...option };
-            packageContainer.querySelectorAll('.package-card').forEach(card => {
-                card.style.opacity = 0.5;
-            });
-            packageCard.style.opacity = 1;
+    if (currentRoom.paintingOption) {
+        // If a package is already selected, show only the selected package
+        renderSelectedPackage(packageContainer, currentRoom.paintingOption, packageOptions, () => {
+            renderPackageSelection(packageContainer, packageOptions, currentRoom);
         });
-        packageCard.appendChild(selectButton);
-
-        packageContainer.appendChild(packageCard);
-    });
+    } else {
+        // Show all packages for initial selection
+        renderPackageSelection(packageContainer, packageOptions, currentRoom);
+    }
 
     // Square Footage Input
     const sqftGroup = createElement('div', 'form-group');
@@ -377,7 +369,7 @@ function addRoom() {
     sqftInput.type = 'number';
     sqftInput.placeholder = 'e.g., 1500';
     sqftInput.addEventListener('input', () => {
-        tempRoom.sqft = parseInt(sqftInput.value) || 0;
+        currentRoom.sqft = parseInt(sqftInput.value) || 0;
     });
     sqftGroup.appendChild(sqftLabel);
     sqftGroup.appendChild(sqftInput);
@@ -385,14 +377,22 @@ function addRoom() {
 
     // Add Items Button
     const addItemButton = createElement('button', 'button', 'Add Items');
-    addItemButton.addEventListener('click', () => showItemModal(tempRoom));
+    addItemButton.addEventListener('click', () => showItemModal(currentRoom));
     app.appendChild(addItemButton);
 
     // Save Room Button
     const saveButton = createElement('button', 'button', 'Save Room');
     saveButton.addEventListener('click', () => {
-        rooms.push(tempRoom);
-        viewSummary();
+        if (!currentRoom.paintingOption) {
+            alert('Please select a painting package.');
+            return;
+        }
+        if (currentRoom.sqft === 0) {
+            alert('Please enter the square footage.');
+            return;
+        }
+        rooms.push(currentRoom); // Finalize the room
+        viewSummary(); // Navigate to the summary
     });
     app.appendChild(saveButton);
 
@@ -403,52 +403,14 @@ function addRoom() {
 }
 
 
-function renderPackage(container, key, option, isSelected) {
-    const packageCard = createElement('div', 'package-card');
-    packageCard.style.border = '2px solid black';
-    packageCard.style.margin = '10px';
-    packageCard.style.padding = '15px';
-    packageCard.style.backgroundColor = 'white';
-    packageCard.style.textAlign = 'center';
 
-    const title = createElement('h4', null, `${key.charAt(0).toUpperCase() + key.slice(1)} - $${option.price}/sqft`);
-    packageCard.appendChild(title);
-
-    const description = createElement('p', null, option.description);
-    packageCard.appendChild(description);
-
-    if (isSelected) {
-        const changeButton = createElement('button', 'button change-package-button', 'Change Package');
-        changeButton.addEventListener('click', () => {
-            container.innerHTML = ''; // Clear and show all packages to reselect
-            Object.entries({
-                economical: { price: 1.5, description: 'Includes: Walls only' },
-                standard: { price: 2.0, description: 'Includes: Walls and Ceilings' },
-                premium: { price: 3.0, description: 'Includes: Walls, Ceilings, and Baseboards' },
-            }).forEach(([newKey, newOption]) => renderPackage(container, newKey, newOption, false));
-        });
-        packageCard.appendChild(changeButton);
-    } else {
-        const selectButton = createElement('button', 'button', 'Select Package');
-        selectButton.addEventListener('click', () => {
-            rooms[rooms.length - 1].paintingOption = { key, ...option };
-            container.innerHTML = ''; // Clear and render only selected package
-            renderPackage(container, key, option, true);
-        });
-        packageCard.appendChild(selectButton);
-    }
-
-    container.appendChild(packageCard);
-}
-
-function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
-    packageContainer.innerHTML = '';
+function renderPackageSelection(container, packageOptions, currentRoom) {
+    container.innerHTML = ''; // Clear existing content
     Object.entries(packageOptions).forEach(([key, option]) => {
         const packageCard = createElement('div', 'package-card');
         packageCard.style.border = '2px solid black';
         packageCard.style.margin = '10px';
         packageCard.style.padding = '15px';
-        packageCard.style.backgroundColor = 'white';
 
         const title = createElement('h4', null, `${key.charAt(0).toUpperCase() + key.slice(1)} - $${option.price}/sqft`);
         packageCard.appendChild(title);
@@ -456,34 +418,40 @@ function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
         const description = createElement('p', null, option.description);
         packageCard.appendChild(description);
 
-        if (currentRoom.paintingOption && currentRoom.paintingOption.key === key) {
-            // Display "Change Package" button for selected package
-            const changeButton = createElement('button', 'button change-package-button', 'Change Package');
-            changeButton.addEventListener('click', () => {
-                currentRoom.paintingOption = null; // Reset painting option
-                renderPackageSelection(currentRoom, packageOptions, packageContainer); // Rerender all options
+        const selectButton = createElement('button', 'button', 'Select Package');
+        selectButton.addEventListener('click', () => {
+            currentRoom.paintingOption = { key, ...option };
+            renderSelectedPackage(container, currentRoom.paintingOption, packageOptions, () => {
+                renderPackageSelection(container, packageOptions, currentRoom);
             });
-            packageCard.appendChild(changeButton);
-        } else {
-            // Display "Select Package" button for non-selected packages
-            const selectButton = createElement('button', 'button', 'Select Package');
-            selectButton.addEventListener('click', () => {
-                currentRoom.paintingOption = { key, ...option };
-                packageContainer.innerHTML = ''; // Clear container and display only the selected package
-                renderPackageSelection(currentRoom, packageOptions, packageContainer);
-            });
-            packageCard.appendChild(selectButton);
-        }
+        });
+        packageCard.appendChild(selectButton);
 
-        // Append only the selected package or all packages if none is selected
-        if (!currentRoom.paintingOption || currentRoom.paintingOption.key === key) {
-            packageContainer.appendChild(packageCard);
-        }
+        container.appendChild(packageCard);
     });
 }
 
+function renderSelectedPackage(container, selectedPackage, packageOptions, changeCallback) {
+    container.innerHTML = ''; // Clear existing content
 
+    const packageCard = createElement('div', 'package-card');
+    packageCard.style.border = '2px solid black';
+    packageCard.style.margin = '10px';
+    packageCard.style.padding = '15px';
+    packageCard.style.backgroundColor = '#e0f7fa'; // Highlight selected package
 
+    const title = createElement('h4', null, `${selectedPackage.key.charAt(0).toUpperCase() + selectedPackage.key.slice(1)} - $${selectedPackage.price}/sqft`);
+    packageCard.appendChild(title);
+
+    const description = createElement('p', null, selectedPackage.description);
+    packageCard.appendChild(description);
+
+    const changeButton = createElement('button', 'button', 'Change Package');
+    changeButton.addEventListener('click', changeCallback);
+    packageCard.appendChild(changeButton);
+
+    container.appendChild(packageCard);
+}
 
 function showItemModal(currentRoom) {
     const modal = createElement('div', 'modal');
@@ -527,67 +495,39 @@ function showItemModal(currentRoom) {
 
 
 
-function handleItemSelection(item) {
-    const currentRoom = rooms[rooms.length - 1];
-    if (!currentRoom) return alert('Please create a room first.');
-
+function handleItemSelection(item, currentRoom) {
     if (!item.requiresInput) {
-        currentRoom.items.push({ name: item.name, cost: item.costPerItem, quantity: 1 });
-        addRoom(); // Return to room setup
-        return;
+        currentRoom.items.push({ name: item.name, cost: item.costPerItem || 0, quantity: 1 });
+        return; // Close modal
     }
 
-    const modal = createElement('div', 'modal');
-    const modalContent = createElement('div', 'modal-content');
-    modal.appendChild(modalContent);
-
-    const closeButton = createElement('button', 'close-btn', '×');
-    closeButton.addEventListener('click', () => document.body.removeChild(modal));
-    modalContent.appendChild(closeButton);
-
-    const header = createElement('h2', null, `Add Details for ${item.name}`);
-    modalContent.appendChild(header);
-
+    const modal = document.querySelector('.modal-content');
+    modal.innerHTML = `<h2>Add Details for ${item.name}</h2>`;
     const form = createElement('div', 'form-group');
-    modalContent.appendChild(form);
+    modal.appendChild(form);
 
     const inputs = {};
     item.inputFields.forEach(field => {
         const label = createElement('label', null, field.label);
-        form.appendChild(label);
-
         const input = createElement(field.type === 'select' ? 'select' : 'input');
-        if (field.type === 'number') {
-            input.type = 'number';
-            input.placeholder = 'Enter value';
-        } else if (field.type === 'select') {
-            field.options.forEach(option => {
-                const opt = createElement('option', null, option);
-                input.appendChild(opt);
-            });
-        }
-        input.id = field.key;
-        form.appendChild(input);
-
+        if (field.type === 'number') input.type = 'number';
+        if (field.type === 'select') field.options.forEach(opt => input.appendChild(createElement('option', null, opt)));
         inputs[field.key] = input;
+        form.appendChild(label);
+        form.appendChild(input);
     });
 
     const saveButton = createElement('button', 'button', 'Save Item');
     saveButton.addEventListener('click', () => {
-        const itemData = { name: item.name, cost: item.costPerItem };
+        const newItem = { name: item.name, cost: item.costPerItem || 0 };
         item.inputFields.forEach(field => {
-            itemData[field.key] = parseInt(inputs[field.key].value) || 0;
+            newItem[field.key] = inputs[field.key].value || '';
         });
-
-        currentRoom.items.push(itemData);
-        document.body.removeChild(modal);
-        addRoom();
+        currentRoom.items.push(newItem);
+        document.body.removeChild(document.querySelector('.modal'));
     });
-    modalContent.appendChild(saveButton);
-
-    document.body.appendChild(modal);
+    modal.appendChild(saveButton);
 }
-
 
 
 function editRoom(index) {
