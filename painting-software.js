@@ -151,31 +151,30 @@
             }
         }
 
-        button {
-            display: inline-block;
-            padding: 12px 20px;
-            background-color: var(--primary-color);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all var(--transition-speed) ease-in-out;
-        }
-
-        button:hover {
-            background-color: var(--secondary-color);
-            transform: scale(1.05);
-        }
-
         .button-group {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 20px;
-        }
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allows buttons to wrap on smaller screens */
+    gap: 20px; /* Space between buttons */
+    margin-top: 30px;
+}
+
+button {
+    padding: 12px 20px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+}
 
      .form-group {
     margin-bottom: 30px;
@@ -303,83 +302,80 @@
     display: none;
 }
 
+.insurance-checkbox-container {
+  position: relative; /* Contain the absolute positioning */
+  display: flex;
+  align-items: center; /* Align label and checkbox horizontally */
+  gap: 15px; /* Add spacing between label and checkbox */
+  margin-bottom: 20px; /* Space from other fields */
+}
+
+#_checkbox {
+  display: none;
+}
+
 label {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    margin: 0 auto;
-    background-color: #f72414;
-    transform: translateY(0%);
-    border-radius: 50%;
-    box-shadow: 0 7px 10px #ffbeb8;
-    cursor: pointer;
-    transition: 0.2s ease transform, 0.2s ease background-color, 0.2s ease box-shadow;
-    overflow: hidden;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: relative; /* Ensure label is positioned within the container */
+  width: 40px;
+  height: 40px;
+  background-color: #f72414;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 label:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 0;
-    left: 0;
-    width: 70px;
-    height: 70px;
-    margin: 0 auto;
-    background-color: #fff;
-    transform: translateY(-50%);
-    border-radius: 50%;
-    box-shadow: inset 0 7px 10px #ffbeb8;
-    transition: 0.2s ease width, 0.2s ease height;
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: all 0.2s ease;
 }
 
-label:hover:before {
-    width: 55px;
-    height: 55px;
-    box-shadow: inset 0 7px 10px #ff9d96;
+#_checkbox:checked + label {
+  background-color: #07d410;
 }
 
-label:active {
-    transform: translateY(0%) scale(0.9);
+#_checkbox:checked + label:before {
+  width: 0;
+  height: 0;
 }
 
-#tick_mark {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    margin: 0 auto;
-    transform: rotateZ(-40deg);
+label #tick_mark {
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: rotateZ(-40deg);
+  opacity: 0;
 }
 
 #tick_mark:before,
 #tick_mark:after {
-    content: "";
-    position: absolute;
-    background-color: #fff;
-    border-radius: 2px;
-    opacity: 0;
-    transition: 0.2s ease transform, 0.2s ease opacity;
+  content: "";
+  position: absolute;
+  background-color: white;
+  transition: all 0.2s ease;
 }
 
 #tick_mark:before {
-    left: 0;
-    bottom: 0;
-    width: 10px;
-    height: 30px;
-    transform: translateY(-68px);
+  width: 5px;
+  height: 15px;
+  left: 5px;
 }
 
 #tick_mark:after {
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 10px;
-    transform: translateX(78px);
+  width: 15px;
+  height: 5px;
+  top: 10px;
 }
+
 
 #_checkbox:checked + label {
     background-color: #07d410;
@@ -542,17 +538,17 @@ function generalQuestions() {
             jobSpecificQuestions.appendChild(heightSelect);
         }
 
-        // Insurance Requirement with Custom Checkbox
-       const insuranceGroup = createElement('div', 'form-group');
-insuranceGroup.style.position = 'relative';
-insuranceGroup.style.marginBottom = '40px';
+      const insuranceGroup = createElement('div', 'form-group');
+insuranceGroup.style.display = 'flex'; // Horizontal layout
+insuranceGroup.style.alignItems = 'center';
+insuranceGroup.style.gap = '15px'; // Space between checkbox and label
 
 insuranceGroup.innerHTML = `
     <input type="checkbox" id="_checkbox" />
     <label for="_checkbox">
         <div id="tick_mark"></div>
     </label>
-    <span style="margin-left: 120px; position: relative; top: -60px; font-weight: bold; color: var(--text-color);">
+    <span style="font-weight: bold; color: var(--text-color);">
         Does the job require insurance?
     </span>
 `;
@@ -563,9 +559,6 @@ insuranceCheckbox.addEventListener('change', () => {
     validateQuestions();
 });
 jobSpecificQuestions.appendChild(insuranceGroup);
-
-        validateQuestions();
-    }
 
     function validateQuestions() {
         continueButton.disabled = !(quoteDetails.jobType && quoteDetails.floors);
@@ -625,19 +618,20 @@ function initInterface() {
     app.innerHTML = '<h2>Room Setup</h2>';
 
     const buttonGroup = createElement('div', 'button-group');
-    app.appendChild(buttonGroup);
+    app.appendChild(buttonGroup); // Add button group to the app
 
     const addRoomButton = createElement('button', 'button', 'Add Room');
     addRoomButton.addEventListener('click', () => addRoom());
-    buttonGroup.appendChild(addRoomButton);
+    buttonGroup.appendChild(addRoomButton); // Append buttons to the group
 
     const viewSummaryButton = createElement('button', 'button', 'View Summary');
     viewSummaryButton.addEventListener('click', viewSummary);
-    buttonGroup.appendChild(viewSummaryButton);
+    buttonGroup.appendChild(viewSummaryButton); // Append buttons to the group
 
     app.style.overflowY = 'auto'; // Enable scrolling for rooms
     app.style.paddingBottom = '50px'; // Ensure proper padding
 }
+
 
 
 function addRoom() {
