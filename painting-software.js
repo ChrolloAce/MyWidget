@@ -102,26 +102,25 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--background-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
+       body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--background-color);
+    min-height: 100vh;
+    margin: 0;
+    overflow-y: auto; /* Enable scrolling */
+}
 
-        .container {
-            width: 90%;
-            max-width: 900px;
-            background: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            animation: fadeIn var(--transition-speed) ease-in-out;
-        }
+.container {
+    width: 90%;
+    max-width: 900px;
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin: 20px auto; /* Center and add margin for scrolling */
+    position: relative;
+}
 
         @keyframes fadeIn {
             from {
@@ -291,11 +290,154 @@
             color: var(--danger-color);
         }
 
+
+        
+
         .selected-package {
             border: 3px solid var(--highlight-color);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             transform: scale(1.03);
         }
+
+       #_checkbox {
+    display: none;
+}
+
+label {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    background-color: #f72414;
+    transform: translateY(0%);
+    border-radius: 50%;
+    box-shadow: 0 7px 10px #ffbeb8;
+    cursor: pointer;
+    transition: 0.2s ease transform, 0.2s ease background-color, 0.2s ease box-shadow;
+    overflow: hidden;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+label:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+    background-color: #fff;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    box-shadow: inset 0 7px 10px #ffbeb8;
+    transition: 0.2s ease width, 0.2s ease height;
+}
+
+label:hover:before {
+    width: 55px;
+    height: 55px;
+    box-shadow: inset 0 7px 10px #ff9d96;
+}
+
+label:active {
+    transform: translateY(0%) scale(0.9);
+}
+
+#tick_mark {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    transform: rotateZ(-40deg);
+}
+
+#tick_mark:before,
+#tick_mark:after {
+    content: "";
+    position: absolute;
+    background-color: #fff;
+    border-radius: 2px;
+    opacity: 0;
+    transition: 0.2s ease transform, 0.2s ease opacity;
+}
+
+#tick_mark:before {
+    left: 0;
+    bottom: 0;
+    width: 10px;
+    height: 30px;
+    transform: translateY(-68px);
+}
+
+#tick_mark:after {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 10px;
+    transform: translateX(78px);
+}
+
+#_checkbox:checked + label {
+    background-color: #07d410;
+    box-shadow: 0 7px 10px #92ff97;
+}
+
+#_checkbox:checked + label:before {
+    width: 0;
+    height: 0;
+}
+
+#_checkbox:checked + label #tick_mark:before,
+#_checkbox:checked + label #tick_mark:after {
+    transform: translate(0);
+    opacity: 1;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between buttons */
+    margin-top: 30px; /* Ensure proper spacing */
+}
+
+button {
+    padding: 12px 20px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.item-card:hover {
+    background-color: #f4f4f4;
+    transform: scale(1.05);
+    transition: 0.3s ease;
+}
+
+
+
+        
     `;
     const styleElement = document.createElement('style');
     styleElement.type = 'text/css';
@@ -401,20 +543,26 @@ function generalQuestions() {
         }
 
         // Insurance Requirement with Custom Checkbox
-        const insuranceGroup = createElement('div', 'form-group');
-        insuranceGroup.innerHTML = `
-            <input type="checkbox" id="_checkbox">
-            <label for="_checkbox">
-                <div id="tick_mark"></div>
-            </label>
-            <span style="margin-left: 120px; position: relative; top: -60px;">Does the job require insurance?</span>
-        `;
-        const insuranceCheckbox = insuranceGroup.querySelector('#_checkbox');
-        insuranceCheckbox.addEventListener('change', () => {
-            quoteDetails.requiresInsurance = insuranceCheckbox.checked;
-            validateQuestions();
-        });
-        jobSpecificQuestions.appendChild(insuranceGroup);
+       const insuranceGroup = createElement('div', 'form-group');
+insuranceGroup.style.position = 'relative';
+insuranceGroup.style.marginBottom = '40px';
+
+insuranceGroup.innerHTML = `
+    <input type="checkbox" id="_checkbox" />
+    <label for="_checkbox">
+        <div id="tick_mark"></div>
+    </label>
+    <span style="margin-left: 120px; position: relative; top: -60px; font-weight: bold; color: var(--text-color);">
+        Does the job require insurance?
+    </span>
+`;
+
+const insuranceCheckbox = insuranceGroup.querySelector('#_checkbox');
+insuranceCheckbox.addEventListener('change', () => {
+    quoteDetails.requiresInsurance = insuranceCheckbox.checked;
+    validateQuestions();
+});
+jobSpecificQuestions.appendChild(insuranceGroup);
 
         validateQuestions();
     }
@@ -632,21 +780,24 @@ function showItemModal(currentRoom) {
     const header = createElement('h2', null, 'Add an Item');
     modalContent.appendChild(header);
 
-    const damagesSection = createElement('div', 'item-section');
-    damagesSection.style.marginBottom = '20px';
     const damagesHeader = createElement('h3', null, 'Damages');
-    damagesSection.appendChild(damagesHeader);
+    modalContent.appendChild(damagesHeader);
 
-    const extrasSection = createElement('div', 'item-section');
-    extrasSection.style.marginBottom = '20px';
+    const damagesGrid = createElement('div', 'grid-container');
+    modalContent.appendChild(damagesGrid);
+
     const extrasHeader = createElement('h3', null, 'Extras');
-    extrasSection.appendChild(extrasHeader);
+    modalContent.appendChild(extrasHeader);
+
+    const extrasGrid = createElement('div', 'grid-container');
+    modalContent.appendChild(extrasGrid);
 
     modalItems.forEach(item => {
-        const itemDiv = createElement('div', 'item-div');
-        itemDiv.style.border = '3px solid black';
-        itemDiv.style.margin = '10px';
-        itemDiv.style.padding = '5px';
+        const itemCard = createElement('div', 'item-card');
+        itemCard.style.border = '2px solid #ddd';
+        itemCard.style.borderRadius = '8px';
+        itemCard.style.padding = '10px';
+        itemCard.style.textAlign = 'center';
 
         const itemImage = createElement('img');
         itemImage.src = item.imageUrl;
@@ -655,23 +806,21 @@ function showItemModal(currentRoom) {
         itemImage.style.height = '100px';
 
         const itemName = createElement('p', null, item.name);
-        itemDiv.appendChild(itemImage);
-        itemDiv.appendChild(itemName);
 
-        itemDiv.addEventListener('click', () => handleItemSelection(item, currentRoom));
+        itemCard.appendChild(itemImage);
+        itemCard.appendChild(itemName);
+        itemCard.addEventListener('click', () => handleItemSelection(item, currentRoom));
 
-        if (['doors', 'crackRepairs', 'wallHoles', 'wallpaper', 'darkWalls'].includes(item.key)) {
-            damagesSection.appendChild(itemDiv);
+        if (['crackRepairs', 'wallHoles', 'darkWalls'].includes(item.key)) {
+            damagesGrid.appendChild(itemCard);
         } else {
-            extrasSection.appendChild(itemDiv);
+            extrasGrid.appendChild(itemCard);
         }
     });
 
-    modalContent.appendChild(damagesSection);
-    modalContent.appendChild(extrasSection);
-
     document.body.appendChild(modal);
 }
+
 
 
 
