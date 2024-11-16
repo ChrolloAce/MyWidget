@@ -1,9 +1,10 @@
 (function () {
-    const pricingOptions = {
-        economical: 1.5,
-        standard: 2.0,
-        premium: 3.0
-    };
+ const pricingOptions = {
+    economical: { price: 1.4, description: 'Includes: Walls only' },
+    standard: { price: 2.0, description: 'Includes: Walls and Ceilings' },
+    premium: { price: 2.3, description: 'Includes: Walls, Ceilings, and Baseboards' }
+};
+
 
     const additionalCosts = {
         bathtubFee: 250,
@@ -16,33 +17,49 @@
     let rooms = [];
     let totalCost = 0;
 
-    const modalItems = [
-        {
-            name: 'Stair Steps',
-            imageUrl: 'https://i.ibb.co/0CwdQP2/stairs.png',
-            key: 'stairs',
-            requiresInput: true,
-            inputFields: [{ label: 'Quantity', type: 'number', key: 'quantity' }]
-        },
-        {
-            name: 'Bathtub',
-            imageUrl: 'https://i.ibb.co/Lv2R1ys/bathrub.png',
-            key: 'bathtub',
-            requiresInput: false
-        },
-        {
-            name: 'Cabinets',
-            imageUrl: 'https://i.ibb.co/8K4BLS1/cabinets.png',
-            key: 'cabinets',
-            requiresInput: true,
-            inputFields: [
-                { label: 'Height (in inches)', type: 'number', key: 'height' },
-                { label: 'Width (in inches)', type: 'number', key: 'width' },
-                { label: 'Depth (in inches)', type: 'number', key: 'depth' },
-                { label: 'Paint Option', type: 'select', key: 'paint', options: ['Inside', 'Outside', 'Both'] }
-            ]
-        }
-    ];
+  const modalItems = [
+    {
+        name: 'Doors & Trims',
+        imageUrl: 'https://i.ibb.co/example-image.png', // Add appropriate image
+        key: 'doors',
+        requiresInput: true,
+        inputFields: [{ label: 'Number of Doors', type: 'number', key: 'quantity' }],
+        costPerItem: 80
+    },
+    {
+        name: 'Crack Repairs',
+        imageUrl: 'https://i.ibb.co/example-image.png', // Add appropriate image
+        key: 'crackRepairs',
+        requiresInput: true,
+        inputFields: [{ label: 'Number of Cracks', type: 'number', key: 'quantity' }],
+        costPerItem: 50
+    },
+    {
+        name: 'Wall Holes Fix',
+        imageUrl: 'https://i.ibb.co/example-image.png', // Add appropriate image
+        key: 'wallHoles',
+        requiresInput: true,
+        inputFields: [{ label: 'Number of Wall Holes', type: 'number', key: 'quantity' }],
+        costPerItem: 10
+    },
+    {
+        name: 'Wallpaper Removal',
+        imageUrl: 'https://i.ibb.co/example-image.png', // Add appropriate image
+        key: 'wallpaper',
+        requiresInput: true,
+        inputFields: [{ label: 'Number of Walls', type: 'number', key: 'quantity' }],
+        costPerItem: 25 // Example cost
+    },
+    {
+        name: 'Dark Walls',
+        imageUrl: 'https://i.ibb.co/example-image.png', // Add appropriate image
+        key: 'darkWalls',
+        requiresInput: true,
+        inputFields: [{ label: 'Number of Dark Walls', type: 'number', key: 'quantity' }],
+        costPerItem: 15 // Example cost
+    }
+];
+
 
     // Create CSS styles dynamically
     function injectStyles() {
@@ -473,10 +490,13 @@ function showItemModal(currentRoom) {
 
 
 
- function handleItemSelection(item, currentRoom) {
+function handleItemSelection(item) {
+    const currentRoom = rooms[rooms.length - 1];
+    if (!currentRoom) return alert('Please create a room first.');
+
     if (!item.requiresInput) {
-        // Add items without inputs (like Bathtub)
-        currentRoom.items.push({ name: item.name, cost: additionalCosts[item.key] || 0, quantity: 1 });
+        currentRoom.items.push({ name: item.name, cost: item.costPerItem, quantity: 1 });
+        addRoom(); // Return to room setup
         return;
     }
 
@@ -517,18 +537,20 @@ function showItemModal(currentRoom) {
 
     const saveButton = createElement('button', 'button', 'Save Item');
     saveButton.addEventListener('click', () => {
-        const itemData = { name: item.name, quantity: 1 };
+        const itemData = { name: item.name, cost: item.costPerItem };
         item.inputFields.forEach(field => {
-            itemData[field.key] = inputs[field.key].value || 0;
+            itemData[field.key] = parseInt(inputs[field.key].value) || 0;
         });
 
-        currentRoom.items.push(itemData); // Update the current room's items
+        currentRoom.items.push(itemData);
         document.body.removeChild(modal);
+        addRoom();
     });
     modalContent.appendChild(saveButton);
 
     document.body.appendChild(modal);
 }
+
 
 
 function editRoom(index) {
@@ -621,13 +643,26 @@ function calculateMaterialUsage() {
         <p>Walls (Economical Paint): ${Math.ceil(materialUsage.walls / 350)} gallons</p>
     `;
 }
+function calculateRoomCost(room) {
+    let roomCost = 0;
 
+    // Calculate cost for painting
+    if (room.paintingOption) {
+        roomCost += (room.sqft || 0) * (room.paintingOption.price || 0);
+    }
+
+    // Calculate cost for items
+    room.items.forEach(item => {
+        roomCost += (item.cost || 0) * (item.quantity || 1);
+    });
+
+    return roomCost;
+}
 
 function viewSummary() {
     const app = document.getElementById('app');
     app.innerHTML = '';
 
-    // Logo
     addLogo(app);
 
     const header = createElement('h2', null, 'Summary');
@@ -637,34 +672,12 @@ function viewSummary() {
         const emptyMessage = createElement('p', null, 'No rooms added yet.');
         app.appendChild(emptyMessage);
     } else {
-        let totalCost = 0;
         rooms.forEach((room, index) => {
             const roomSummary = createElement('div', 'room-summary');
             roomSummary.style.border = '2px solid #000';
             roomSummary.style.borderRadius = '10px';
             roomSummary.style.margin = '10px';
             roomSummary.style.padding = '10px';
-            roomSummary.style.position = 'relative';
-
-            const toolbar = createElement('div', 'room-toolbar');
-            toolbar.style.position = 'absolute';
-            toolbar.style.top = '10px';
-            toolbar.style.right = '10px';
-
-            const removeButton = createElement('button', 'button remove-button');
-            removeButton.innerHTML = '<i class="fas fa-times" style="color:red"></i>';
-            removeButton.addEventListener('click', () => {
-                rooms.splice(index, 1);
-                viewSummary();
-            });
-            toolbar.appendChild(removeButton);
-
-            const editButton = createElement('button', 'button edit-button');
-            editButton.innerHTML = '<i class="fas fa-pencil-alt" style="color:green"></i>';
-            editButton.addEventListener('click', () => editRoom(index));
-            toolbar.appendChild(editButton);
-
-            roomSummary.appendChild(toolbar);
 
             const roomHeader = createElement('h3', null, `Room ${index + 1}`);
             roomSummary.appendChild(roomHeader);
@@ -685,22 +698,17 @@ function viewSummary() {
             });
             roomSummary.appendChild(itemList);
 
-            totalCost += calculateRoomCost(room);
             app.appendChild(roomSummary);
         });
 
-        displayMaterialsAndFinalPrice(app); // Show materials and final price
+        displayMaterialsAndFinalPrice(app);
     }
 
     const addRoomButton = createElement('button', 'button', 'Add Another Room');
-    addRoomButton.style.backgroundColor = '#28a745';
     addRoomButton.addEventListener('click', () => addRoom());
     app.appendChild(addRoomButton);
-
-    const backButton = createElement('button', 'button', 'Back');
-    backButton.addEventListener('click', setupRoomQuestions);
-    app.appendChild(backButton);
 }
+
 
 
 
