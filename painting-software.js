@@ -303,48 +303,51 @@ button:hover {
 }
 
 .insurance-checkbox-container {
-  position: relative; /* Contain the absolute positioning */
   display: flex;
-  align-items: center; /* Align label and checkbox horizontally */
-  gap: 15px; /* Add spacing between label and checkbox */
-  margin-bottom: 20px; /* Space from other fields */
+  align-items: center;
+  gap: 10px; /* Spacing between checkbox and label */
+  margin-bottom: 20px;
+}
+.insurance-checkbox-container span {
+  font-weight: bold;
+  color: var(--text-color);
 }
 
 #_checkbox {
-  display: none;
+  display: none; /* Hide the default checkbox */
 }
 
 label {
-  position: relative; /* Ensure label is positioned within the container */
-  width: 40px;
-  height: 40px;
-  background-color: #f72414;
-  border-radius: 50%;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  background-color: #f72414; /* Red for unchecked */
+  border-radius: 4px; /* Square with rounded edges */
   cursor: pointer;
-  transition: all 0.3s ease;
-  overflow: hidden;
+  transition: background-color 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+
 label:before {
-  content: "";
+  content: '';
   position: absolute;
-  width: 70%;
-  height: 70%;
+  width: 10px;
+  height: 10px;
   background-color: #fff;
-  border-radius: 50%;
-  transition: all 0.2s ease;
+  border-radius: 2px;
+  transform: scale(0); /* Hidden by default */
+  transition: transform 0.2s ease-in-out;
 }
 
 #_checkbox:checked + label {
-  background-color: #07d410;
+  background-color: #07d410; /* Green for checked */
 }
 
 #_checkbox:checked + label:before {
-  width: 0;
-  height: 0;
+  transform: scale(1); /* Show checkmark */
 }
 
 label #tick_mark {
@@ -463,7 +466,7 @@ function generalQuestions() {
 
     const formContainer = createElement('div', 'form-container');
     formContainer.style.position = 'relative';
-    formContainer.style.paddingBottom = '80px'; // To avoid overlap with the button
+    formContainer.style.paddingBottom = '80px'; // Avoid overlap with the button
     app.appendChild(formContainer);
 
     // Job Type
@@ -539,17 +542,13 @@ function generalQuestions() {
             jobSpecificQuestions.appendChild(heightSelect);
         }
 
-        // Insurance Group
-        const insuranceGroup = createElement('div', 'form-group');
-        insuranceGroup.style.display = 'flex';
-        insuranceGroup.style.alignItems = 'center';
-        insuranceGroup.style.gap = '15px';
+        // Insurance Checkbox Section
+        const insuranceSection = createElement('div', 'insurance-section');
+        const insuranceGroup = createElement('div', 'insurance-checkbox-container');
 
         insuranceGroup.innerHTML = `
             <input type="checkbox" id="_checkbox" />
-            <label for="_checkbox">
-                <div id="tick_mark"></div>
-            </label>
+            <label for="_checkbox"></label>
             <span style="font-weight: bold; color: var(--text-color);">
                 Does the job require insurance?
             </span>
@@ -561,7 +560,8 @@ function generalQuestions() {
             validateQuestions();
         });
 
-        jobSpecificQuestions.appendChild(insuranceGroup);
+        insuranceSection.appendChild(insuranceGroup);
+        jobSpecificQuestions.appendChild(insuranceSection);
 
         function validateQuestions() {
             continueButton.disabled = !(quoteDetails.jobType && quoteDetails.floors);
