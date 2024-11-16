@@ -347,6 +347,21 @@ function calculateFinalPrice() {
 }
 
 
+function calculateRoomCost(room) {
+    let roomCost = 0;
+
+    // Calculate cost for painting
+    if (room.paintingOption) {
+        roomCost += (room.sqft || 0) * (room.paintingOption.price || 0);
+    }
+
+    // Calculate cost for items
+    room.items.forEach(item => {
+        roomCost += (item.cost || 0) * (item.quantity || 1);
+    });
+
+    return roomCost;
+}
 
 
 
