@@ -453,7 +453,6 @@ let quoteDetails = {
     propertyStatus: null, // vacant or occupied
     additionalCosts: 0
 };
-
 function generalQuestions() {
     const app = document.getElementById('app');
     app.innerHTML = '';
@@ -543,31 +542,29 @@ function generalQuestions() {
         }
 
         // Insurance Checkbox Section
-        const insuranceSection = createElement('div', 'insurance-section');
-        const insuranceGroup = createElement('div', 'insurance-checkbox-container');
+        const insuranceGroup = createElement('div', 'form-group');
+        insuranceGroup.style.display = 'flex';
+        insuranceGroup.style.alignItems = 'center';
+        insuranceGroup.style.gap = '10px';
 
-        insuranceGroup.innerHTML = `
-            <input type="checkbox" id="_checkbox" />
-            <label for="_checkbox"></label>
-            <span style="font-weight: bold; color: var(--text-color);">
-                Does the job require insurance?
-            </span>
-        `;
-
-        const insuranceCheckbox = insuranceGroup.querySelector('#_checkbox');
+        const insuranceCheckbox = createElement('input', null, null, { type: 'checkbox', id: 'insurance-checkbox' });
         insuranceCheckbox.addEventListener('change', () => {
             quoteDetails.requiresInsurance = insuranceCheckbox.checked;
             validateQuestions();
         });
 
-        insuranceSection.appendChild(insuranceGroup);
-        jobSpecificQuestions.appendChild(insuranceSection);
+        const insuranceLabel = createElement('label', null, 'Does the job require insurance?', { for: 'insurance-checkbox' });
+
+        insuranceGroup.appendChild(insuranceCheckbox);
+        insuranceGroup.appendChild(insuranceLabel);
+        jobSpecificQuestions.appendChild(insuranceGroup);
 
         function validateQuestions() {
             continueButton.disabled = !(quoteDetails.jobType && quoteDetails.floors);
         }
     }
 }
+
 
 
 
