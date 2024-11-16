@@ -334,8 +334,8 @@ label {
 label:before {
   content: '';
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 100%;
+  height: auto;
   background-color: #fff;
   border-radius: 2px;
   transform: scale(0); /* Hidden by default */
@@ -353,8 +353,8 @@ label:before {
 label #tick_mark {
   display: block;
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 100%;
+  height: auto;
   transform: rotateZ(-40deg);
   opacity: 0;
 }
