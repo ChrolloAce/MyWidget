@@ -1,4 +1,9 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+
+
 (function () {
+ 
  const pricingOptions = {
     economical: { price: 1.4, description: 'Includes: Walls only' },
     standard: { price: 2.0, description: 'Includes: Walls and Ceilings' },
@@ -673,50 +678,104 @@ const clientDetails = {
     email: "johndoe@example.com",
 };
 
-// Function to Generate Invoice
-function generateInvoice() {
-    const invoiceData = {
-        from: `${companyDetails.name}\n${companyDetails.owner}\n${companyDetails.phone}\n${companyDetails.email}`,
-        to: `${clientDetails.name}\n${clientDetails.address}\n${clientDetails.phone}\n${clientDetails.email}`,
-        items: rooms.map(room => ({
-            name: `Room (${room.paintingOption.key})`,
-            quantity: 1,
-            unit_cost: calculateRoomCost(room),
-        })),
-        notes: "Thank you for choosing Paint Mana Jireh!",
-        currency: "USD",
-        number: Math.floor(Math.random() * 100000), // Random invoice number
+// Generate Invoice with PDFMake
+function generateInvoiceWithPdfMake() {
+    // Prepare the content for the invoice
+    const invoiceItems = rooms.map((room, index) => [
+        `Room ${index + 1} (${room.paintingOption.key})`,
+        `${room.sqft} sqft`,
+        `${room.paintingOption.description}`,
+        `$${calculateRoomCost(room).toFixed(2)}`
+    ]);
+
+    const totalCost = calculateFinalPrice();
+
+    // PDFMake document definition
+    const dd = {
+        content: [
+            {
+                columns: [
+                    {
+                        image: 'logo',
+                        width: 100
+                    },
+                    {
+                        text: [
+                            { text: 'Paint Mana Jireh\n', style: 'header' },
+                            { text: 'INVOICE\n', style: 'header' },
+                            { text: `Date: ${new Date().toLocaleDateString()}`, style: 'subheader' }
+                        ],
+                        alignment: 'right'
+                    }
+                ]
+            },
+            { text: '\n' },
+            {
+                columns: [
+                    {
+                        text: [
+                            { text: 'From:\n', style: 'subheader' },
+                            `${companyDetails.name}\n`,
+                            `Owner: ${companyDetails.owner}\n`,
+                            `Phone: ${companyDetails.phone}\n`,
+                            `Email: ${companyDetails.email}\n`
+                        ]
+                    },
+                    {
+                        text: [
+                            { text: 'To:\n', style: 'subheader' },
+                            `${clientDetails.name}\n`,
+                            `${clientDetails.address}\n`,
+                            `Phone: ${clientDetails.phone}\n`,
+                            `Email: ${clientDetails.email}\n`
+                        ],
+                        alignment: 'right'
+                    }
+                ]
+            },
+            { text: '\n' },
+            {
+                table: {
+                    headerRows: 1,
+                    widths: ['*', 'auto', 'auto', 'auto'],
+                    body: [
+                        [
+                            { text: 'Room', style: 'tableHeader' },
+                            { text: 'Square Footage', style: 'tableHeader' },
+                            { text: 'Painting Option', style: 'tableHeader' },
+                            { text: 'Cost', style: 'tableHeader' }
+                        ],
+                        ...invoiceItems,
+                        [{ text: 'Total', colSpan: 3, alignment: 'right', bold: true }, {}, {}, `$${totalCost.toFixed(2)}`]
+                    ]
+                },
+                layout: {
+                    fillColor: function (rowIndex) {
+                        return rowIndex === 0 ? '#f3f3f3' : null;
+                    }
+                }
+            },
+            { text: '\n' },
+            { text: 'Thank you for your business!', style: 'footer' }
+        ],
+        images: {
+            logo: 'https://i.ibb.co/twrVpYV/66c3ffee32324b40f8096a84-Untitled-26.png'
+        },
+        styles: {
+            header: { fontSize: 20, bold: true },
+            subheader: { fontSize: 14, bold: true },
+            tableHeader: { bold: true, fontSize: 12, color: '#333' },
+            footer: { fontSize: 12, italics: true }
+        }
     };
 
-    // Post data to the Invoice Generator API
-    const url = "https://invoice-generator.com"; // Replace with their endpoint
-
-    fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(invoiceData),
-    })
-        .then(response => response.blob())
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.style.display = "none";
-            a.href = url;
-            a.download = `invoice-${invoiceData.number}.pdf`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            alert("Invoice generated and downloaded!");
-        })
-        .catch(err => console.error("Error generating invoice:", err));
+    // Generate the PDF and open it
+    pdfMake.createPdf(dd).download('invoice.pdf');
 }
 
-// Add Button to Summary Page
 function addInvoiceButton(app) {
     const invoiceButton = createElement('button', 'button', 'Convert to Invoice');
-    invoiceButton.addEventListener('click', generateInvoice);
+    invoiceButton.addEventListener('click', generateInvoiceWithPdfMake);
     app.appendChild(invoiceButton);
 }
 
