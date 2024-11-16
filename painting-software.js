@@ -401,7 +401,7 @@ label #tick_mark {
     margin-top: 30px; /* Ensure proper spacing */
 }
 
-button {
+.button {
     padding: 12px 20px;
     background-color: var(--primary-color);
     color: #fff;
@@ -413,7 +413,7 @@ button {
     transition: all 0.3s ease-in-out;
 }
 
-button:hover {
+.button:hover {
     background-color: var(--secondary-color);
     transform: scale(1.05);
 }
