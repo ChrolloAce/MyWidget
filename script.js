@@ -298,6 +298,121 @@
         app.appendChild(backButton);
     }
 
+
+// Company and Client Details
+const companyDetails = {
+    name: "Paint Mana Jireh",
+    owner: "Penelope Lopez",
+    phone: "786-663-5210",
+    email: "office@paintmanajireh.com",
+};
+
+const clientDetails = {
+    name: "John Doe",
+    address: "123 Main Street, Anywhere, USA",
+    phone: "555-555-5555",
+    email: "johndoe@example.com",
+};
+
+// Generate Invoice with PDFMake
+function generateInvoiceWithPdfMake() {
+    const invoiceItems = rooms.map((room, index) => [
+        `Room ${index + 1} (${room.paintingOption.key})`,
+        `${room.sqft} sqft`,
+        `${room.paintingOption.description}`,
+        `$${calculateRoomCost(room).toFixed(2)}`
+    ]);
+
+    const totalCost = calculateFinalPrice();
+
+    const dd = {
+        content: [
+            {
+                columns: [
+                    {
+                        image: 'logo',
+                        width: 100
+                    },
+                    {
+                        text: [
+                            { text: 'Paint Mana Jireh\n', style: 'header' },
+                            { text: 'INVOICE\n', style: 'header' },
+                            { text: `Date: ${new Date().toLocaleDateString()}`, style: 'subheader' }
+                        ],
+                        alignment: 'right'
+                    }
+                ]
+            },
+            { text: '\n' },
+            {
+                columns: [
+                    {
+                        text: [
+                            { text: 'From:\n', style: 'subheader' },
+                            `${companyDetails.name}\n`,
+                            `Owner: ${companyDetails.owner}\n`,
+                            `Phone: ${companyDetails.phone}\n`,
+                            `Email: ${companyDetails.email}\n`
+                        ]
+                    },
+                    {
+                        text: [
+                            { text: 'To:\n', style: 'subheader' },
+                            `${clientDetails.name}\n`,
+                            `${clientDetails.address}\n`,
+                            `Phone: ${clientDetails.phone}\n`,
+                            `Email: ${clientDetails.email}\n`
+                        ],
+                        alignment: 'right'
+                    }
+                ]
+            },
+            { text: '\n' },
+            {
+                table: {
+                    headerRows: 1,
+                    widths: ['*', 'auto', 'auto', 'auto'],
+                    body: [
+                        [
+                            { text: 'Room', style: 'tableHeader' },
+                            { text: 'Square Footage', style: 'tableHeader' },
+                            { text: 'Painting Option', style: 'tableHeader' },
+                            { text: 'Cost', style: 'tableHeader' }
+                        ],
+                        ...invoiceItems,
+                        [{ text: 'Total', colSpan: 3, alignment: 'right', bold: true }, {}, {}, `$${totalCost.toFixed(2)}`]
+                    ]
+                },
+                layout: {
+                    fillColor: function (rowIndex) {
+                        return rowIndex === 0 ? '#f3f3f3' : null;
+                    }
+                }
+            },
+            { text: '\n' },
+            { text: 'Thank you for your business!', style: 'footer' }
+        ],
+        images: {
+            logo: 'https://i.ibb.co/twrVpYV/66c3ffee32324b40f8096a84-Untitled-26.png'
+        },
+        styles: {
+            header: { fontSize: 20, bold: true },
+            subheader: { fontSize: 14, bold: true },
+            tableHeader: { bold: true, fontSize: 12, color: '#333' },
+            footer: { fontSize: 12, italics: true }
+        }
+    };
+
+    pdfMake.createPdf(dd).download('invoice.pdf');
+}
+
+function addInvoiceButton(app) {
+    const invoiceButton = createElement('button', 'button', 'Generate Invoice');
+    invoiceButton.addEventListener('click', generateInvoiceWithPdfMake);
+    app.appendChild(invoiceButton);
+}
+
+    
     // Render Package Selection
     function renderPackageSelection(container, packageOptions, currentRoom) {
         container.innerHTML = ''; // Clear existing content
@@ -417,47 +532,51 @@
         modal.appendChild(saveButton);
     }
 
-    // View Summary
-    function viewSummary() {
-        const app = document.getElementById('app');
-        app.innerHTML = '';
+  // Example of adding the button to your Summary page:
+function viewSummary() {
+    const app = document.getElementById('app');
+    app.innerHTML = '';
+    app.style.overflowY = 'auto';
+    app.style.paddingBottom = '20px';
 
-        addLogo(app);
+    addLogo(app);
 
-        const header = createElement('h2', null, 'Summary');
-        app.appendChild(header);
+    const header = createElement('h2', null, 'Summary');
+    app.appendChild(header);
 
-        if (rooms.length === 0) {
-            const emptyMessage = createElement('p', null, 'No rooms added yet.');
-            app.appendChild(emptyMessage);
-        } else {
-            rooms.forEach((room, index) => {
-                const roomSummary = createElement('div', 'room-summary');
-                const roomHeader = createElement('h3', null, `Room ${index + 1}`);
-                const sqftText = createElement('p', null, `Square Footage: ${room.sqft}`);
-                const paintingOption = createElement('p', null, `Painting Option: ${room.paintingOption?.key || 'None'}`);
-                const itemsHeader = createElement('p', null, 'Items:');
-                const itemList = createElement('ul');
+    // Check if rooms are available
+    if (rooms.length === 0) {
+        const emptyMessage = createElement('p', null, 'No rooms added yet.');
+        app.appendChild(emptyMessage);
+    } else {
+        rooms.forEach((room, index) => {
+            const roomSummary = createElement('div', 'room-summary');
+            roomSummary.style.border = '2px solid #000';
+            roomSummary.style.borderRadius = '10px';
+            roomSummary.style.margin = '10px';
+            roomSummary.style.padding = '10px';
 
-                room.items.forEach((item) => {
-                    const itemLi = createElement('li', null, `${item.name} - Quantity: ${item.quantity}`);
-                    itemList.appendChild(itemLi);
-                });
+            const roomHeader = createElement('h3', null, `Room ${index + 1}`);
+            roomSummary.appendChild(roomHeader);
 
-                roomSummary.appendChild(roomHeader);
-                roomSummary.appendChild(sqftText);
-                roomSummary.appendChild(paintingOption);
-                roomSummary.appendChild(itemsHeader);
-                roomSummary.appendChild(itemList);
-                app.appendChild(roomSummary);
-            });
-        }
+            const sqftText = createElement('p', null, `Square Footage: ${room.sqft}`);
+            roomSummary.appendChild(sqftText);
 
-        const addRoomButton = createElement('button', 'button', 'Add Another Room');
-        addRoomButton.addEventListener('click', addRoom);
-        app.appendChild(addRoomButton);
+            const paintingOption = createElement('p', null, `Painting Option: ${room.paintingOption?.key || 'None'}`);
+            roomSummary.appendChild(paintingOption);
+
+            app.appendChild(roomSummary);
+        });
+
+        displayMaterialsAndFinalPrice(app);
     }
 
+    addInvoiceButton(app); // Add the invoice button here
+
+    const addRoomButton = createElement('button', 'button', 'Add Another Room');
+    addRoomButton.addEventListener('click', () => addRoom());
+    app.appendChild(addRoomButton);
+}
     // Initialize the application
     initInterface();
 })();
