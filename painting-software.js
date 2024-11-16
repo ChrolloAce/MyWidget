@@ -303,52 +303,24 @@ function addRoom() {
         rooms[rooms.length - 1] = currentRoom;
     }
 
-    // Painting Options Container
-    const packageHeader = createElement('h3', null, 'Select a Painting Option');
-    app.appendChild(packageHeader);
-
     const packageContainer = createElement('div', 'package-container');
     app.appendChild(packageContainer);
 
-    // Painting Options Data
     const packageOptions = {
         economical: { price: 1.5, description: 'Includes: Walls only' },
         standard: { price: 2.0, description: 'Includes: Walls and Ceilings' },
         premium: { price: 3.0, description: 'Includes: Walls, Ceilings, and Baseboards' },
     };
 
-    Object.entries(packageOptions).forEach(([key, option]) => {
-        const packageCard = createElement('div', 'package-card');
-        packageCard.style.border = '2px solid black';
-        packageCard.style.margin = '10px';
-        packageCard.style.padding = '15px';
-        packageCard.style.backgroundColor = 'white';
-        packageCard.style.textAlign = 'center';
-
-        const title = createElement('h4', null, `${key.charAt(0).toUpperCase() + key.slice(1)} - $${option.price}/sqft`);
-        packageCard.appendChild(title);
-
-        const description = createElement('p', null, option.description);
-        packageCard.appendChild(description);
-
-        if (currentRoom.paintingOption && currentRoom.paintingOption.key === key) {
-            // Selected package
-            packageCard.classList.add('selected-package');
-            const changeButton = createElement('button', 'button change-package-button', 'Change Package');
-            changeButton.addEventListener('click', () => selectPackage(currentRoom, packageOptions, packageContainer));
-            packageCard.appendChild(changeButton);
-        } else {
-            // Non-selected package
-            const selectButton = createElement('button', 'button', 'Select Package');
-            selectButton.addEventListener('click', () => {
-                currentRoom.paintingOption = { key, ...option };
-                renderPackageSelection(currentRoom, packageOptions, packageContainer); // Rerender package selection
-            });
-            packageCard.appendChild(selectButton);
-        }
-
-        packageContainer.appendChild(packageCard);
-    });
+    // Render only the selected package or show all if none is selected
+    if (currentRoom.paintingOption) {
+        const selectedPackage = packageOptions[currentRoom.paintingOption.key];
+        renderPackage(packageContainer, currentRoom.paintingOption.key, selectedPackage, true);
+    } else {
+        Object.entries(packageOptions).forEach(([key, option]) => {
+            renderPackage(packageContainer, key, option, false);
+        });
+    }
 
     // Square Footage Input
     const sqftGroup = createElement('div', 'form-group');
@@ -356,7 +328,7 @@ function addRoom() {
     const sqftInput = createElement('input');
     sqftInput.type = 'number';
     sqftInput.placeholder = 'e.g., 1500';
-    sqftInput.value = currentRoom.sqft || ''; // Retain square footage
+    sqftInput.value = currentRoom.sqft || '';
     sqftGroup.appendChild(sqftLabel);
     sqftGroup.appendChild(sqftInput);
     app.appendChild(sqftGroup);
@@ -382,6 +354,44 @@ function addRoom() {
     const backButton = createElement('button', 'button', 'Back');
     backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
+}
+
+function renderPackage(container, key, option, isSelected) {
+    const packageCard = createElement('div', 'package-card');
+    packageCard.style.border = '2px solid black';
+    packageCard.style.margin = '10px';
+    packageCard.style.padding = '15px';
+    packageCard.style.backgroundColor = 'white';
+    packageCard.style.textAlign = 'center';
+
+    const title = createElement('h4', null, `${key.charAt(0).toUpperCase() + key.slice(1)} - $${option.price}/sqft`);
+    packageCard.appendChild(title);
+
+    const description = createElement('p', null, option.description);
+    packageCard.appendChild(description);
+
+    if (isSelected) {
+        const changeButton = createElement('button', 'button change-package-button', 'Change Package');
+        changeButton.addEventListener('click', () => {
+            container.innerHTML = ''; // Clear and show all packages to reselect
+            Object.entries({
+                economical: { price: 1.5, description: 'Includes: Walls only' },
+                standard: { price: 2.0, description: 'Includes: Walls and Ceilings' },
+                premium: { price: 3.0, description: 'Includes: Walls, Ceilings, and Baseboards' },
+            }).forEach(([newKey, newOption]) => renderPackage(container, newKey, newOption, false));
+        });
+        packageCard.appendChild(changeButton);
+    } else {
+        const selectButton = createElement('button', 'button', 'Select Package');
+        selectButton.addEventListener('click', () => {
+            rooms[rooms.length - 1].paintingOption = { key, ...option };
+            container.innerHTML = ''; // Clear and render only selected package
+            renderPackage(container, key, option, true);
+        });
+        packageCard.appendChild(selectButton);
+    }
+
+    container.appendChild(packageCard);
 }
 
 function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
@@ -616,6 +626,7 @@ function viewSummary() {
         const emptyMessage = createElement('p', null, 'No rooms added yet.');
         app.appendChild(emptyMessage);
     } else {
+        let totalCost = 0;
         rooms.forEach((room, index) => {
             const roomSummary = createElement('div', 'room-summary');
             roomSummary.style.border = '2px solid #000';
@@ -624,7 +635,6 @@ function viewSummary() {
             roomSummary.style.padding = '10px';
             roomSummary.style.position = 'relative';
 
-            // Toolbar for edit and delete
             const toolbar = createElement('div', 'room-toolbar');
             toolbar.style.position = 'absolute';
             toolbar.style.top = '10px';
@@ -664,6 +674,7 @@ function viewSummary() {
             });
             roomSummary.appendChild(itemList);
 
+            totalCost += calculateRoomCost(room);
             app.appendChild(roomSummary);
         });
 
@@ -673,12 +684,16 @@ function viewSummary() {
         materialSummary.style.border = '2px dashed #000';
         materialSummary.innerHTML = calculateMaterialUsage(); // Function to calculate and show materials
         app.appendChild(materialSummary);
+
+        const finalPrice = createElement('h3', null, `Final Price: $${totalCost.toFixed(2)}`);
+        app.appendChild(finalPrice);
     }
 
     const backButton = createElement('button', 'button', 'Back');
     backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
 }
+
 
 
 
