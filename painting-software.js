@@ -330,22 +330,25 @@ function generalQuestions() {
         opt.value = option.toLowerCase();
         jobTypeSelect.appendChild(opt);
     });
+
     jobTypeSelect.addEventListener('change', () => {
         quoteDetails.jobType = jobTypeSelect.value;
         showJobSpecificQuestions(app);
     });
+
     jobTypeGroup.appendChild(jobTypeLabel);
     jobTypeGroup.appendChild(jobTypeSelect);
     app.appendChild(jobTypeGroup);
 
-    // Continue Button (disabled until all questions are answered)
     const continueButton = createElement('button', 'button', 'Continue');
+    continueButton.style.marginTop = '20px';
+    continueButton.style.display = 'block';
     continueButton.disabled = true;
-    continueButton.addEventListener('click', () => setupRoomQuestions());
+
+    continueButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(continueButton);
 
     function showJobSpecificQuestions(parent) {
-        // Remove existing questions
         const existingQuestions = document.getElementById('job-specific-questions');
         if (existingQuestions) existingQuestions.remove();
 
@@ -356,9 +359,9 @@ function generalQuestions() {
 
         const jobSpecificQuestions = createElement('div', 'form-group');
         jobSpecificQuestions.id = 'job-specific-questions';
+        jobSpecificQuestions.style.animation = 'fadeIn 0.3s ease-in-out'; // Smooth animation
         parent.appendChild(jobSpecificQuestions);
 
-        // Add job-specific questions
         if (quoteDetails.jobType === 'residential') {
             const floorsLabel = createElement('label', null, 'Is it over 2 floors or under?');
             const floorsSelect = createElement('select');
@@ -367,10 +370,12 @@ function generalQuestions() {
                 opt.value = option.toLowerCase();
                 floorsSelect.appendChild(opt);
             });
+
             floorsSelect.addEventListener('change', () => {
                 quoteDetails.floors = floorsSelect.value;
                 validateQuestions();
             });
+
             jobSpecificQuestions.appendChild(floorsLabel);
             jobSpecificQuestions.appendChild(floorsSelect);
         } else if (quoteDetails.jobType === 'commercial') {
@@ -381,10 +386,12 @@ function generalQuestions() {
                 opt.value = option.toLowerCase();
                 heightSelect.appendChild(opt);
             });
+
             heightSelect.addEventListener('change', () => {
                 quoteDetails.floors = heightSelect.value === 'yes' ? 'Over 10 Feet' : 'Under 10 Feet';
                 validateQuestions();
             });
+
             jobSpecificQuestions.appendChild(heightLabel);
             jobSpecificQuestions.appendChild(heightSelect);
         }
@@ -394,36 +401,24 @@ function generalQuestions() {
         const insuranceLabel = createElement('label', null, 'Does the job require insurance?');
         const insuranceCheckbox = createElement('input');
         insuranceCheckbox.type = 'checkbox';
+
         insuranceCheckbox.addEventListener('change', () => {
             quoteDetails.requiresInsurance = insuranceCheckbox.checked;
             validateQuestions();
         });
+
         insuranceGroup.appendChild(insuranceLabel);
         insuranceGroup.appendChild(insuranceCheckbox);
         jobSpecificQuestions.appendChild(insuranceGroup);
-
-        // Property Status
-        const propertyStatusLabel = createElement('label', null, 'Is the property vacant or occupied?');
-        const propertyStatusSelect = createElement('select');
-        ['Select', 'Vacant', 'Occupied'].forEach(option => {
-            const opt = createElement('option', null, option);
-            opt.value = option.toLowerCase();
-            propertyStatusSelect.appendChild(opt);
-        });
-        propertyStatusSelect.addEventListener('change', () => {
-            quoteDetails.propertyStatus = propertyStatusSelect.value;
-            validateQuestions();
-        });
-        jobSpecificQuestions.appendChild(propertyStatusLabel);
-        jobSpecificQuestions.appendChild(propertyStatusSelect);
 
         validateQuestions();
     }
 
     function validateQuestions() {
-        continueButton.disabled = !(quoteDetails.jobType && quoteDetails.floors && quoteDetails.propertyStatus);
+        continueButton.disabled = !(quoteDetails.jobType && quoteDetails.floors);
     }
 }
+
 
  
 function addLogo(container) {
@@ -443,12 +438,14 @@ function addLogo(container) {
 
 
     
-    function createElement(tag, className, textContent) {
-        const element = document.createElement(tag);
-        if (className) element.className = className;
-        if (textContent) element.textContent = textContent;
-        return element;
-    }
+   function createElement(tag, className, textContent, attributes = {}) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (textContent) element.textContent = textContent;
+    Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+    return element;
+}
+
 function initInterface() {
     const app = document.createElement('div');
     app.className = 'container';
@@ -468,21 +465,25 @@ function initInterface() {
 
 
 
-    function setupRoomQuestions() {
-        const app = document.getElementById('app');
-        app.innerHTML = '<h2>Room Setup</h2>';
+  function setupRoomQuestions() {
+    const app = document.getElementById('app');
+    app.innerHTML = '<h2>Room Setup</h2>';
 
-        const buttonGroup = createElement('div', 'button-group');
-        app.appendChild(buttonGroup);
+    const buttonGroup = createElement('div', 'button-group');
+    app.appendChild(buttonGroup);
 
-        const addRoomButton = createElement('button', 'button', 'Add Room');
-        addRoomButton.addEventListener('click', () => addRoom());
-        buttonGroup.appendChild(addRoomButton);
+    const addRoomButton = createElement('button', 'button', 'Add Room');
+    addRoomButton.addEventListener('click', () => addRoom());
+    buttonGroup.appendChild(addRoomButton);
 
-        const viewSummaryButton = createElement('button', 'button', 'View Summary');
-        viewSummaryButton.addEventListener('click', viewSummary);
-        buttonGroup.appendChild(viewSummaryButton);
-    }
+    const viewSummaryButton = createElement('button', 'button', 'View Summary');
+    viewSummaryButton.addEventListener('click', viewSummary);
+    buttonGroup.appendChild(viewSummaryButton);
+
+    app.style.overflowY = 'auto'; // Enable scrolling for rooms
+    app.style.paddingBottom = '50px'; // Ensure proper padding
+}
+
 
 function addRoom() {
     const app = document.getElementById('app');
