@@ -267,6 +267,130 @@ ul {
         document.head.appendChild(styleElement);
     }
 
+
+let quoteDetails = {
+    jobType: null, // residential or commercial
+    floors: null, // over or under 2 floors (residential) or over 10 feet height (commercial)
+    requiresInsurance: false,
+    propertyStatus: null, // vacant or occupied
+    additionalCosts: 0
+};
+
+function generalQuestions() {
+    const app = document.getElementById('app');
+    app.innerHTML = '';
+
+    // Logo
+    addLogo(app);
+
+    const header = createElement('h2', null, 'General Questions');
+    app.appendChild(header);
+
+    // Job Type
+    const jobTypeGroup = createElement('div', 'form-group');
+    const jobTypeLabel = createElement('label', null, 'Is this a commercial or residential job?');
+    const jobTypeSelect = createElement('select');
+    ['Select', 'Residential', 'Commercial'].forEach(option => {
+        const opt = createElement('option', null, option);
+        opt.value = option.toLowerCase();
+        jobTypeSelect.appendChild(opt);
+    });
+    jobTypeSelect.addEventListener('change', () => {
+        quoteDetails.jobType = jobTypeSelect.value;
+        showJobSpecificQuestions(app);
+    });
+    jobTypeGroup.appendChild(jobTypeLabel);
+    jobTypeGroup.appendChild(jobTypeSelect);
+    app.appendChild(jobTypeGroup);
+
+    // Continue Button (disabled until all questions are answered)
+    const continueButton = createElement('button', 'button', 'Continue');
+    continueButton.disabled = true;
+    continueButton.addEventListener('click', () => setupRoomQuestions());
+    app.appendChild(continueButton);
+
+    function showJobSpecificQuestions(parent) {
+        // Remove existing questions
+        const existingQuestions = document.getElementById('job-specific-questions');
+        if (existingQuestions) existingQuestions.remove();
+
+        if (quoteDetails.jobType === 'select') {
+            continueButton.disabled = true;
+            return;
+        }
+
+        const jobSpecificQuestions = createElement('div', 'form-group');
+        jobSpecificQuestions.id = 'job-specific-questions';
+        parent.appendChild(jobSpecificQuestions);
+
+        // Add job-specific questions
+        if (quoteDetails.jobType === 'residential') {
+            const floorsLabel = createElement('label', null, 'Is it over 2 floors or under?');
+            const floorsSelect = createElement('select');
+            ['Select', 'Over 2 Floors', 'Under 2 Floors'].forEach(option => {
+                const opt = createElement('option', null, option);
+                opt.value = option.toLowerCase();
+                floorsSelect.appendChild(opt);
+            });
+            floorsSelect.addEventListener('change', () => {
+                quoteDetails.floors = floorsSelect.value;
+                validateQuestions();
+            });
+            jobSpecificQuestions.appendChild(floorsLabel);
+            jobSpecificQuestions.appendChild(floorsSelect);
+        } else if (quoteDetails.jobType === 'commercial') {
+            const heightLabel = createElement('label', null, 'Is it over 10 feet height?');
+            const heightSelect = createElement('select');
+            ['Select', 'Yes', 'No'].forEach(option => {
+                const opt = createElement('option', null, option);
+                opt.value = option.toLowerCase();
+                heightSelect.appendChild(opt);
+            });
+            heightSelect.addEventListener('change', () => {
+                quoteDetails.floors = heightSelect.value === 'yes' ? 'Over 10 Feet' : 'Under 10 Feet';
+                validateQuestions();
+            });
+            jobSpecificQuestions.appendChild(heightLabel);
+            jobSpecificQuestions.appendChild(heightSelect);
+        }
+
+        // Insurance Requirement
+        const insuranceGroup = createElement('div', 'form-group');
+        const insuranceLabel = createElement('label', null, 'Does the job require insurance?');
+        const insuranceCheckbox = createElement('input');
+        insuranceCheckbox.type = 'checkbox';
+        insuranceCheckbox.addEventListener('change', () => {
+            quoteDetails.requiresInsurance = insuranceCheckbox.checked;
+            validateQuestions();
+        });
+        insuranceGroup.appendChild(insuranceLabel);
+        insuranceGroup.appendChild(insuranceCheckbox);
+        jobSpecificQuestions.appendChild(insuranceGroup);
+
+        // Property Status
+        const propertyStatusLabel = createElement('label', null, 'Is the property vacant or occupied?');
+        const propertyStatusSelect = createElement('select');
+        ['Select', 'Vacant', 'Occupied'].forEach(option => {
+            const opt = createElement('option', null, option);
+            opt.value = option.toLowerCase();
+            propertyStatusSelect.appendChild(opt);
+        });
+        propertyStatusSelect.addEventListener('change', () => {
+            quoteDetails.propertyStatus = propertyStatusSelect.value;
+            validateQuestions();
+        });
+        jobSpecificQuestions.appendChild(propertyStatusLabel);
+        jobSpecificQuestions.appendChild(propertyStatusSelect);
+
+        validateQuestions();
+    }
+
+    function validateQuestions() {
+        continueButton.disabled = !(quoteDetails.jobType && quoteDetails.floors && quoteDetails.propertyStatus);
+    }
+}
+
+ 
 function addLogo(container) {
     const logoSection = createElement('div', 'logo-section');
     logoSection.style.textAlign = 'center';
@@ -556,16 +680,33 @@ function calculateGallons(type) {
 function calculateFinalPrice() {
     return rooms.reduce((total, room) => {
         let roomCost = 0;
+
         if (room.paintingOption) {
-            roomCost += (room.sqft || 0) * (room.paintingOption.price || 0);
+            roomCost += room.sqft * room.paintingOption.price;
         }
+
         room.items.forEach(item => {
-            roomCost += (item.cost || 0) * (item.quantity || 1);
+            roomCost += item.cost * (item.quantity || 1);
         });
+
         return total + roomCost;
-    }, 0);
+    }, quoteDetails.additionalCosts);
 }
 
+function calculateAdditionalCosts() {
+    let additionalCosts = 0;
+
+    if (quoteDetails.requiresInsurance) {
+        additionalCosts += 200; // Insurance Fee
+    }
+
+    if (quoteDetails.propertyStatus === 'occupied') {
+        const totalSqFt = rooms.reduce((total, room) => total + room.sqft, 0);
+        additionalCosts += totalSqFt * 0.25; // Extra fee per sqft for occupied property
+    }
+
+    quoteDetails.additionalCosts = additionalCosts;
+}
 
 
 function displayMaterialsAndFinalPrice(app) {
