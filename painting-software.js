@@ -658,7 +658,67 @@ function initInterface() {
     app.style.paddingBottom = '50px';
 }
 
+// Company and Client Details
+const companyDetails = {
+    name: "Paint Mana Jireh",
+    owner: "Penelope Lopez",
+    phone: "786-663-5210",
+    email: "office@paintmanajireh.com",
+};
 
+const clientDetails = {
+    name: "John Doe",
+    address: "123 Main Street, Anywhere, USA",
+    phone: "555-555-5555",
+    email: "johndoe@example.com",
+};
+
+// Function to Generate Invoice
+function generateInvoice() {
+    const invoiceData = {
+        from: `${companyDetails.name}\n${companyDetails.owner}\n${companyDetails.phone}\n${companyDetails.email}`,
+        to: `${clientDetails.name}\n${clientDetails.address}\n${clientDetails.phone}\n${clientDetails.email}`,
+        items: rooms.map(room => ({
+            name: `Room (${room.paintingOption.key})`,
+            quantity: 1,
+            unit_cost: calculateRoomCost(room),
+        })),
+        notes: "Thank you for choosing Paint Mana Jireh!",
+        currency: "USD",
+        number: Math.floor(Math.random() * 100000), // Random invoice number
+    };
+
+    // Post data to the Invoice Generator API
+    const url = "https://invoice-generator.com"; // Replace with their endpoint
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(invoiceData),
+    })
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            a.download = `invoice-${invoiceData.number}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            alert("Invoice generated and downloaded!");
+        })
+        .catch(err => console.error("Error generating invoice:", err));
+}
+
+// Add Button to Summary Page
+function addInvoiceButton(app) {
+    const invoiceButton = createElement('button', 'button', 'Convert to Invoice');
+    invoiceButton.addEventListener('click', generateInvoice);
+    app.appendChild(invoiceButton);
+}
 
 
 function addRoom() {
@@ -1006,9 +1066,12 @@ function calculateRoomCost(room) {
     return roomCost;
 }
 
+// Update Summary Page
 function viewSummary() {
     const app = document.getElementById('app');
     app.innerHTML = '';
+    app.style.overflowY = 'auto'; // Enable scrolling
+    app.style.paddingBottom = '20px'; // Extra padding for the bottom
 
     addLogo(app);
 
@@ -1021,20 +1084,37 @@ function viewSummary() {
     } else {
         rooms.forEach((room, index) => {
             const roomSummary = createElement('div', 'room-summary');
+            roomSummary.style.border = '2px solid #000';
+            roomSummary.style.borderRadius = '10px';
+            roomSummary.style.margin = '10px';
+            roomSummary.style.padding = '10px';
+
             const roomHeader = createElement('h3', null, `Room ${index + 1}`);
             roomSummary.appendChild(roomHeader);
 
             const sqftText = createElement('p', null, `Square Footage: ${room.sqft}`);
             roomSummary.appendChild(sqftText);
 
-            const paintingOption = createElement('p', null, `Painting Option: ${room.paintingOption?.key || 'None'}`);
+            const paintingOption = createElement('p', null, `Painting Option: ${room.paintingOption?.key || "None"}`);
             roomSummary.appendChild(paintingOption);
+
+            const itemsHeader = createElement('p', null, 'Items:');
+            roomSummary.appendChild(itemsHeader);
+
+            const itemList = createElement('ul');
+            room.items.forEach(item => {
+                const itemLi = createElement('li', null, `${item.name} - Quantity: ${item.quantity}`);
+                itemList.appendChild(itemLi);
+            });
+            roomSummary.appendChild(itemList);
 
             app.appendChild(roomSummary);
         });
 
         displayMaterialsAndFinalPrice(app);
     }
+
+    addInvoiceButton(app); // Add the invoice button
 
     const addRoomButton = createElement('button', 'button', 'Add Another Room');
     addRoomButton.addEventListener('click', () => addRoom());
