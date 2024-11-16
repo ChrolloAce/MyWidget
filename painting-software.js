@@ -423,7 +423,8 @@ label #tick_mark {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 20px;
     margin: 20px 0;
-}
+} // Ensure no missing or extra braces
+
 
 .item-card:hover {
     background-color: #f4f4f4;
@@ -538,30 +539,33 @@ function generalQuestions() {
             jobSpecificQuestions.appendChild(heightSelect);
         }
 
-      const insuranceGroup = createElement('div', 'form-group');
-insuranceGroup.style.display = 'flex'; // Horizontal layout
-insuranceGroup.style.alignItems = 'center';
-insuranceGroup.style.gap = '15px'; // Space between checkbox and label
+        // Insurance Group
+        const insuranceGroup = createElement('div', 'form-group');
+        insuranceGroup.style.display = 'flex';
+        insuranceGroup.style.alignItems = 'center';
+        insuranceGroup.style.gap = '15px';
 
-insuranceGroup.innerHTML = `
-    <input type="checkbox" id="_checkbox" />
-    <label for="_checkbox">
-        <div id="tick_mark"></div>
-    </label>
-    <span style="font-weight: bold; color: var(--text-color);">
-        Does the job require insurance?
-    </span>
-`;
+        insuranceGroup.innerHTML = `
+            <input type="checkbox" id="_checkbox" />
+            <label for="_checkbox">
+                <div id="tick_mark"></div>
+            </label>
+            <span style="font-weight: bold; color: var(--text-color);">
+                Does the job require insurance?
+            </span>
+        `;
 
-const insuranceCheckbox = insuranceGroup.querySelector('#_checkbox');
-insuranceCheckbox.addEventListener('change', () => {
-    quoteDetails.requiresInsurance = insuranceCheckbox.checked;
-    validateQuestions();
-});
-jobSpecificQuestions.appendChild(insuranceGroup);
+        const insuranceCheckbox = insuranceGroup.querySelector('#_checkbox');
+        insuranceCheckbox.addEventListener('change', () => {
+            quoteDetails.requiresInsurance = insuranceCheckbox.checked;
+            validateQuestions();
+        });
 
-    function validateQuestions() {
-        continueButton.disabled = !(quoteDetails.jobType && quoteDetails.floors);
+        jobSpecificQuestions.appendChild(insuranceGroup);
+
+        function validateQuestions() {
+            continueButton.disabled = !(quoteDetails.jobType && quoteDetails.floors);
+        }
     }
 }
 
