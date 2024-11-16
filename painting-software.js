@@ -317,85 +317,70 @@ button:hover {
   display: none; /* Hide the default checkbox */
 }
 
-label {
+.checkbox-wrapper-31:hover .check {
+  stroke-dashoffset: 0;
+}
+
+.checkbox-wrapper-31 {
   position: relative;
-  width: 100%;
-  height: auto;
-  background-color: #f72414; /* Red for unchecked */
-  border-radius: 4px; /* Square with rounded edges */
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
 }
 
+.checkbox-wrapper-31 .background {
+  fill: #ccc;
+  transition: ease all 0.6s;
+}
 
-label:before {
-  content: '';
+.checkbox-wrapper-31 .stroke {
+  fill: none;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  stroke-width: 2px;
+  stroke-dashoffset: 100;
+  stroke-dasharray: 100;
+  transition: ease all 0.6s;
+}
+
+.checkbox-wrapper-31 .check {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2px;
+  stroke-dashoffset: 22;
+  stroke-dasharray: 22;
+  transition: ease all 0.6s;
+}
+
+.checkbox-wrapper-31 input[type='checkbox'] {
   position: absolute;
   width: 100%;
-  height: auto;
-  background-color: #fff;
-  border-radius: 2px;
-  transform: scale(0); /* Hidden by default */
-  transition: transform 0.2s ease-in-out;
-}
-
-#_checkbox:checked + label {
-  background-color: #07d410; /* Green for checked */
-}
-
-#_checkbox:checked + label:before {
-  transform: scale(1); /* Show checkmark */
-}
-
-label #tick_mark {
-  display: block;
-  position: absolute;
-  width: 100%;
-  height: auto;
-  transform: rotateZ(-40deg);
+  height: 100%;
+  left: 0;
+  top: 0;
+  margin: 0;
   opacity: 0;
+  appearance: none;
 }
 
-#tick_mark:before,
-#tick_mark:after {
-  content: "";
-  position: absolute;
-  background-color: white;
-  transition: all 0.2s ease;
+.checkbox-wrapper-31 input[type='checkbox']:hover {
+  cursor: pointer;
 }
 
-#tick_mark:before {
-  width: 5px;
-  height: 15px;
-  left: 5px;
+.checkbox-wrapper-31 input[type='checkbox']:checked + svg .background {
+  fill: #6cbe45;
 }
 
-#tick_mark:after {
-  width: 15px;
-  height: 5px;
-  top: 10px;
+.checkbox-wrapper-31 input[type='checkbox']:checked + svg .stroke {
+  stroke-dashoffset: 0;
 }
 
-
-#_checkbox:checked + label {
-    background-color: #07d410;
-    box-shadow: 0 7px 10px #92ff97;
+.checkbox-wrapper-31 input[type='checkbox']:checked + svg .check {
+  stroke-dashoffset: 0;
 }
-
-#_checkbox:checked + label:before {
-    width: 0;
-    height: 0;
-}
-
-#_checkbox:checked + label #tick_mark:before,
-#_checkbox:checked + label #tick_mark:after {
-    transform: translate(0);
-    opacity: 1;
-}
-
+ 
 .button-group {
     display: flex;
     justify-content: center;
@@ -547,15 +532,29 @@ function generalQuestions() {
         insuranceGroup.style.alignItems = 'center';
         insuranceGroup.style.gap = '10px';
 
+        const checkboxWrapper = document.createElement('div');
+        checkboxWrapper.className = 'checkbox-wrapper-31';
+
         const insuranceCheckbox = createElement('input', null, null, { type: 'checkbox', id: 'insurance-checkbox' });
         insuranceCheckbox.addEventListener('change', () => {
             quoteDetails.requiresInsurance = insuranceCheckbox.checked;
             validateQuestions();
         });
 
+        checkboxWrapper.appendChild(insuranceCheckbox);
+
+        // Add the SVG for the checkbox styling
+        checkboxWrapper.innerHTML += `
+            <svg viewBox="0 0 35.6 35.6">
+                <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+                <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+                <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+            </svg>
+        `;
+
         const insuranceLabel = createElement('label', null, 'Does the job require insurance?', { for: 'insurance-checkbox' });
 
-        insuranceGroup.appendChild(insuranceCheckbox);
+        insuranceGroup.appendChild(checkboxWrapper);
         insuranceGroup.appendChild(insuranceLabel);
         jobSpecificQuestions.appendChild(insuranceGroup);
 
