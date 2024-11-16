@@ -20,7 +20,7 @@
   const modalItems = [
     {
         name: 'Doors & Trims',
-        imageUrl: 'https://i.ibb.co/example-image.png', // Add appropriate image
+        imageUrl: 'https://i.ibb.co/xF22Yn3/dioor.png',
         key: 'doors',
         requiresInput: true,
         inputFields: [{ label: 'Number of Doors', type: 'number', key: 'quantity' }],
@@ -28,7 +28,7 @@
     },
     {
         name: 'Crack Repairs',
-        imageUrl: 'https://i.ibb.co/example-image.png', // Add appropriate image
+        imageUrl: 'https://i.ibb.co/xF22Yn3/wallcrack.png',
         key: 'crackRepairs',
         requiresInput: true,
         inputFields: [{ label: 'Number of Cracks', type: 'number', key: 'quantity' }],
@@ -36,7 +36,7 @@
     },
     {
         name: 'Wall Holes Fix',
-        imageUrl: 'https://i.ibb.co/example-image.png', // Add appropriate image
+        imageUrl: 'https://i.ibb.co/bKtQCs3/wallhole.png',
         key: 'wallHoles',
         requiresInput: true,
         inputFields: [{ label: 'Number of Wall Holes', type: 'number', key: 'quantity' }],
@@ -44,21 +44,42 @@
     },
     {
         name: 'Wallpaper Removal',
-        imageUrl: 'https://i.ibb.co/example-image.png', // Add appropriate image
+        imageUrl: 'https://i.ibb.co/3WJgncJ/Wallpaper-removal.png',
         key: 'wallpaper',
         requiresInput: true,
         inputFields: [{ label: 'Number of Walls', type: 'number', key: 'quantity' }],
-        costPerItem: 25 // Example cost
+        costPerItem: 25
     },
     {
         name: 'Dark Walls',
-        imageUrl: 'https://i.ibb.co/example-image.png', // Add appropriate image
+        imageUrl: 'https://i.ibb.co/1fYxFbm/DarkWall.png',
         key: 'darkWalls',
         requiresInput: true,
         inputFields: [{ label: 'Number of Dark Walls', type: 'number', key: 'quantity' }],
-        costPerItem: 15 // Example cost
+        costPerItem: 15
+    },
+    {
+        name: 'Bathtub',
+        imageUrl: 'https://i.ibb.co/Lv2R1ys/bathrub.png',
+        key: 'bathtub',
+        requiresInput: false,
+        costPerItem: 250
+    },
+    {
+        name: 'Cabinets',
+        imageUrl: 'https://i.ibb.co/8K4BLS1/cabinets.png',
+        key: 'cabinets',
+        requiresInput: true,
+        inputFields: [
+            { label: 'Height (in inches)', type: 'number', key: 'height' },
+            { label: 'Width (in inches)', type: 'number', key: 'width' },
+            { label: 'Depth (in inches)', type: 'number', key: 'depth' },
+            { label: 'Paint Option', type: 'select', key: 'paint', options: ['Inside', 'Outside', 'Both'] }
+        ],
+        costPerItem: 200
     }
 ];
+
 
 
     // Create CSS styles dynamically
@@ -308,16 +329,46 @@ function addRoom() {
     const app = document.getElementById('app');
     app.innerHTML = '';
 
+    // Logo
+    addLogo(app);
+
     const header = createElement('h2', null, 'Add Room');
     app.appendChild(header);
 
-    let currentRoom = rooms[rooms.length - 1] || { sqft: 0, items: [], paintingOption: null };
+    // Use a temporary object to hold room details
+    let tempRoom = {
+        sqft: 0,
+        items: [],
+        paintingOption: null
+    };
 
+    // Painting Package Selection
     const packageContainer = createElement('div', 'package-container');
     app.appendChild(packageContainer);
+    Object.entries(pricingOptions).forEach(([key, option]) => {
+        const packageCard = createElement('div', 'package-card');
+        packageCard.style.border = '2px solid black';
+        packageCard.style.margin = '10px';
+        packageCard.style.padding = '15px';
 
-    // Render Package Selection
-    renderPackageSelection(currentRoom, pricingOptions, packageContainer);
+        const title = createElement('h4', null, `${key.charAt(0).toUpperCase() + key.slice(1)} - $${option.price}/sqft`);
+        packageCard.appendChild(title);
+
+        const description = createElement('p', null, option.description);
+        packageCard.appendChild(description);
+
+        const selectButton = createElement('button', 'button', 'Select Package');
+        selectButton.addEventListener('click', () => {
+            tempRoom.paintingOption = { key, ...option };
+            packageContainer.querySelectorAll('.package-card').forEach(card => {
+                card.style.opacity = 0.5;
+            });
+            packageCard.style.opacity = 1;
+        });
+        packageCard.appendChild(selectButton);
+
+        packageContainer.appendChild(packageCard);
+    });
 
     // Square Footage Input
     const sqftGroup = createElement('div', 'form-group');
@@ -325,31 +376,23 @@ function addRoom() {
     const sqftInput = createElement('input');
     sqftInput.type = 'number';
     sqftInput.placeholder = 'e.g., 1500';
-    sqftInput.value = currentRoom.sqft || '';
+    sqftInput.addEventListener('input', () => {
+        tempRoom.sqft = parseInt(sqftInput.value) || 0;
+    });
     sqftGroup.appendChild(sqftLabel);
     sqftGroup.appendChild(sqftInput);
     app.appendChild(sqftGroup);
 
-    sqftInput.addEventListener('input', () => {
-        currentRoom.sqft = parseInt(sqftInput.value) || 0;
-    });
-
     // Add Items Button
     const addItemButton = createElement('button', 'button', 'Add Items');
-    addItemButton.addEventListener('click', () => showItemModal(currentRoom));
+    addItemButton.addEventListener('click', () => showItemModal(tempRoom));
     app.appendChild(addItemButton);
 
     // Save Room Button
     const saveButton = createElement('button', 'button', 'Save Room');
     saveButton.addEventListener('click', () => {
-        if (!currentRoom.paintingOption) {
-            alert('Please select a painting package.');
-            return;
-        }
-        if (!rooms.includes(currentRoom)) {
-            rooms.push(currentRoom); // Add the room only once when saved
-        }
-        setupRoomQuestions();
+        rooms.push(tempRoom);
+        viewSummary();
     });
     app.appendChild(saveButton);
 
@@ -463,7 +506,6 @@ function showItemModal(currentRoom) {
         itemDiv.style.margin = '10px';
         itemDiv.style.padding = '5px';
         itemDiv.style.display = 'inline-block';
-        itemDiv.style.textAlign = 'center';
 
         const itemImage = createElement('img');
         itemImage.src = item.imageUrl;
@@ -472,21 +514,16 @@ function showItemModal(currentRoom) {
         itemImage.style.height = '100px';
 
         const itemName = createElement('div', null, item.name);
-        itemName.style.marginTop = '5px';
-
         itemDiv.appendChild(itemImage);
         itemDiv.appendChild(itemName);
 
-        itemDiv.addEventListener('click', () => {
-            document.body.removeChild(modal);
-            handleItemSelection(item, currentRoom); // Update the current room's items
-        });
-
+        itemDiv.addEventListener('click', () => handleItemSelection(item, currentRoom));
         itemContainer.appendChild(itemDiv);
     });
 
     document.body.appendChild(modal);
 }
+
 
 
 
