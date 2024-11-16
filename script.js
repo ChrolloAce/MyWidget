@@ -314,6 +314,44 @@ const clientDetails = {
     email: "johndoe@example.com",
 };
 
+
+
+function calculateGallons(type) {
+    let totalSqFt = rooms.reduce((total, room) => {
+        if (room.paintingOption && room.paintingOption.key === type) {
+            return total + room.sqft;
+        }
+        return total;
+    }, 0);
+    return Math.ceil(totalSqFt / 350); // 1 gallon covers 350 sq ft
+}
+
+
+
+function calculateFinalPrice() {
+    return rooms.reduce((total, room) => {
+        let roomCost = 0;
+
+        // Add cost for painting
+        if (room.paintingOption) {
+            roomCost += (room.sqft || 0) * (room.paintingOption.price || 0);
+        }
+
+        // Add cost for items in the room
+        room.items.forEach(item => {
+            roomCost += (item.cost || 0) * (item.quantity || 1);
+        });
+
+        return total + roomCost;
+    }, quoteDetails.additionalCosts);
+}
+
+
+
+
+
+
+    
 // Generate Invoice with PDFMake
 function generateInvoiceWithPdfMake() {
     const invoiceItems = rooms.map((room, index) => [
@@ -532,6 +570,41 @@ function addInvoiceButton(app) {
         modal.appendChild(saveButton);
     }
 
+function displayMaterialsAndFinalPrice(app) {
+    const materialsSection = createElement('div', 'materials-summary');
+    materialsSection.style.border = '2px dotted #000';
+    materialsSection.style.borderRadius = '10px';
+    materialsSection.style.padding = '15px';
+    materialsSection.style.marginTop = '20px';
+    materialsSection.style.backgroundColor = '#f9f9f9';
+
+    const materialsHeader = createElement('h3', null, 'Materials');
+    materialsHeader.style.fontWeight = 'bold';
+    materialsHeader.style.textAlign = 'center';
+    materialsSection.appendChild(materialsHeader);
+
+    const wallsGallons = calculateGallons('walls');
+    const ceilingGallons = calculateGallons('ceiling');
+    const cabinetsGallons = calculateGallons('cabinets');
+
+    const wallsText = createElement('p', null, `Walls (Economical Paint): ${wallsGallons} gallons needed`);
+    const ceilingText = createElement('p', null, `Ceiling (Standard Paint): ${ceilingGallons} gallons needed`);
+    const cabinetsText = createElement('p', null, `Cabinets (Premium Paint): ${cabinetsGallons} gallons needed`);
+
+    materialsSection.appendChild(wallsText);
+    materialsSection.appendChild(ceilingText);
+    materialsSection.appendChild(cabinetsText);
+    app.appendChild(materialsSection);
+
+    const finalPrice = calculateFinalPrice();
+    const finalPriceText = createElement('p', 'final-price', `Final Price: $${finalPrice.toFixed(2)}`);
+    finalPriceText.style.fontWeight = 'bold';
+    app.appendChild(finalPriceText);
+}
+
+
+
+    
   // Example of adding the button to your Summary page:
 function viewSummary() {
     const app = document.getElementById('app');
