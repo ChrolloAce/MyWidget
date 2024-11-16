@@ -82,190 +82,225 @@
 
 
 
-    // Create CSS styles dynamically
-    function injectStyles() {
-        const styles = `
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
+  function injectStyles() {
+    const styles = `
+        :root {
+            --primary-color: #00D0FF;
+            --secondary-color: #0078a6;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --border-color: #ddd;
+            --highlight-color: #004C99;
+            --danger-color: #ff4d4d;
+            --success-color: #28a745;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeIn var(--transition-speed) ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
             }
-
-            body {
-                font-family: 'Montserrat', sans-serif;
-                background-color: #f4f4f4;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
+            to {
+                opacity: 1;
+                transform: scale(1);
             }
+        }
 
-            @media (max-width: 767px) {
-    .container {
-        border-radius: 0;
-        padding: 20px;
-    }
+        h1, h2 {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 20px;
+            animation: slideDown var(--transition-speed) ease-in-out;
+        }
 
-    .room-summary, .material-summary {
-        border-radius: 10px;
-    }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        button {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all var(--transition-speed) ease-in-out;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: border var(--transition-speed) ease-in-out;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border: 1px solid var(--primary-color);
+            outline: none;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn var(--transition-speed) ease-in-out;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            margin-top: 20px;
+        }
+
+        .room-summary {
+            background-color: #f8f8f8;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            animation: slideUp var(--transition-speed) ease-in-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .materials-summary {
+            background-color: #fafafa;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            animation: fadeIn var(--transition-speed) ease-in-out;
+        }
+
+        .logo-section {
+            margin-bottom: 30px;
+            animation: popIn var(--transition-speed) ease-in-out;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .room-toolbar button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            transition: color var(--transition-speed) ease-in-out;
+        }
+
+        .room-toolbar button:hover {
+            color: var(--danger-color);
+        }
+
+        .selected-package {
+            border: 3px solid var(--highlight-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: scale(1.03);
+        }
+    `;
+    const styleElement = document.createElement('style');
+    styleElement.type = 'text/css';
+    styleElement.textContent = styles;
+    document.head.appendChild(styleElement);
 }
-
-
-            .container {
-                width: 100%;
-                max-width: 900px;
-                background: #fff;
-                padding: 40px;
-                border-radius: 10px;
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-                text-align: center;
-            }
-
-            h1, h2 {
-                text-align: center;
-                margin-bottom: 20px;
-            }
-
-
-            .logo-section {
-    margin-bottom: 20px;
-}
-
-.logo {
-    display: block;
-    margin: 0 auto;
-}
-
-.room-summary {
-    background-color: #f8f8f8;
-    padding: 15px;
-    margin: 10px 0;
-    border: 2px solid black;
-    border-radius: 10px;
-}
-
-ul {
-    list-style-type: disc;
-    margin-left: 20px;
-    text-align: left;
-}
-
-            
-            .button {
-                display: inline-block;
-                padding: 12px 20px;
-                margin: 10px;
-                background-color: #00D0FF;
-                color: #fff;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                font-weight: bold;
-                font-size: 16px;
-                text-align: center;
-                transition: 0.3s ease-in-out;
-            }
-
-            .button:hover {
-                background-color: #0078a6;
-            }
-
-            .button-group {
-                display: flex;
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 15px;
-            }
-
-            .modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-            }
-
-            .modal-content {
-                background: #fff;
-                padding: 30px;
-                border-radius: 10px;
-                width: 80%;
-                max-width: 600px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-                text-align: center;
-            }
-
-            .modal-content h2 {
-                margin-bottom: 20px;
-            }
-
-            .modal-content img {
-                width: 100px;
-                height: auto;
-                border-radius: 8px;
-                margin: 10px;
-                cursor: pointer;
-                transition: transform 0.3s ease;
-            }
-      .painted-option-btn.selected {
-    background-color: #00D0FF;
-    color: white;
-    font-weight: bold;
-    border: 2px solid #004C99;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-
-            .modal-content img:hover {
-                transform: scale(1.1);
-            }
-
-            .form-group {
-                text-align: left;
-                margin-bottom: 20px;
-            }
-
-            .form-group label {
-                display: block;
-                font-weight: bold;
-                margin-bottom: 8px;
-            }
-
-            .form-group input, .form-group select {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-            }
-
-            .modal-buttons {
-                margin-top: 20px;
-            }
-
-            .close-btn {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                background: red;
-                color: #fff;
-                border: none;
-                padding: 5px 10px;
-                cursor: pointer;
-                border-radius: 50%;
-                font-size: 16px;
-            }
-        `;
-        const styleElement = document.createElement('style');
-        styleElement.type = 'text/css';
-        styleElement.textContent = styles;
-        document.head.appendChild(styleElement);
-    }
 
 
 let quoteDetails = {
