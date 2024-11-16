@@ -319,8 +319,8 @@ button:hover {
 
 label {
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 100%;
+  height: auto;
   background-color: #f72414; /* Red for unchecked */
   border-radius: 4px; /* Square with rounded edges */
   cursor: pointer;
