@@ -297,11 +297,19 @@ function addRoom() {
     let currentRoom = { sqft: 0, items: [], paintingOption: null };
     rooms.push(currentRoom);
 
+    const packageContainer = createElement('div', 'package-container');
+    app.appendChild(packageContainer);
+
+    // Render Package Selection
+    renderPackageSelection(currentRoom, pricingOptions, packageContainer);
+
+    // Square Footage Input
     const sqftGroup = createElement('div', 'form-group');
     const sqftLabel = createElement('label', null, 'Enter Square Footage:');
     const sqftInput = createElement('input');
     sqftInput.type = 'number';
     sqftInput.placeholder = 'e.g., 1500';
+    sqftInput.value = currentRoom.sqft || '';
     sqftGroup.appendChild(sqftLabel);
     sqftGroup.appendChild(sqftInput);
     app.appendChild(sqftGroup);
@@ -310,14 +318,12 @@ function addRoom() {
         currentRoom.sqft = parseInt(sqftInput.value) || 0;
     });
 
-    const packageContainer = createElement('div', 'package-container');
-    app.appendChild(packageContainer);
-    renderPackageSelection(currentRoom, pricingOptions, packageContainer);
-
+    // Add Items Button
     const addItemButton = createElement('button', 'button', 'Add Items');
-    addItemButton.addEventListener('click', () => showItemModal(currentRoom));
+    addItemButton.addEventListener('click', () => showItemModal(currentRoom)); // Pass current room for item assignment
     app.appendChild(addItemButton);
 
+    // Save Room Button
     const saveButton = createElement('button', 'button', 'Save Room');
     saveButton.addEventListener('click', () => {
         if (!currentRoom.paintingOption) {
@@ -328,6 +334,7 @@ function addRoom() {
     });
     app.appendChild(saveButton);
 
+    // Back Button
     const backButton = createElement('button', 'button', 'Back');
     backButton.addEventListener('click', setupRoomQuestions);
     app.appendChild(backButton);
@@ -388,26 +395,36 @@ function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
         packageCard.appendChild(description);
 
         if (currentRoom.paintingOption && currentRoom.paintingOption.key === key) {
-            const changeButton = createElement('button', 'button', 'Change Package');
-            changeButton.addEventListener('click', () => renderPackageSelection(currentRoom, packageOptions, packageContainer));
+            // Display "Change Package" button for selected package
+            const changeButton = createElement('button', 'button change-package-button', 'Change Package');
+            changeButton.addEventListener('click', () => {
+                currentRoom.paintingOption = null; // Reset painting option
+                renderPackageSelection(currentRoom, packageOptions, packageContainer); // Rerender all options
+            });
             packageCard.appendChild(changeButton);
         } else {
+            // Display "Select Package" button for non-selected packages
             const selectButton = createElement('button', 'button', 'Select Package');
             selectButton.addEventListener('click', () => {
                 currentRoom.paintingOption = { key, ...option };
+                packageContainer.innerHTML = ''; // Clear container and display only the selected package
                 renderPackageSelection(currentRoom, packageOptions, packageContainer);
             });
             packageCard.appendChild(selectButton);
         }
 
-        packageContainer.appendChild(packageCard);
+        // Append only the selected package or all packages if none is selected
+        if (!currentRoom.paintingOption || currentRoom.paintingOption.key === key) {
+            packageContainer.appendChild(packageCard);
+        }
     });
 }
 
 
 
 
-   function showItemModal() {
+
+   function showItemModal(currentRoom) {
     const modal = createElement('div', 'modal');
     const modalContent = createElement('div', 'modal-content');
     modal.appendChild(modalContent);
@@ -419,46 +436,44 @@ function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
     const header = createElement('h2', null, 'Add an Item');
     modalContent.appendChild(header);
 
-    const itemContainer = createElement('div', 'item-container'); // For styling
+    const itemContainer = createElement('div', 'item-container');
     modalContent.appendChild(itemContainer);
 
-   modalItems.forEach(item => {
-    const itemDiv = createElement('div', 'item-div');
-    itemDiv.style.border = '3px solid black';
-    itemDiv.style.margin = '10px';
-    itemDiv.style.padding = '5px';
-    itemDiv.style.display = 'inline-block';
-    itemDiv.style.textAlign = 'center';
+    modalItems.forEach(item => {
+        const itemDiv = createElement('div', 'item-div');
+        itemDiv.style.border = '3px solid black';
+        itemDiv.style.margin = '10px';
+        itemDiv.style.padding = '5px';
+        itemDiv.style.display = 'inline-block';
+        itemDiv.style.textAlign = 'center';
 
-    const itemImage = createElement('img');
-    itemImage.src = item.imageUrl;
-    itemImage.alt = item.name;
-    itemImage.style.width = '100px';
-    itemImage.style.height = '100px';
+        const itemImage = createElement('img');
+        itemImage.src = item.imageUrl;
+        itemImage.alt = item.name;
+        itemImage.style.width = '100px';
+        itemImage.style.height = '100px';
 
-    const itemName = createElement('div', null, item.name);
-    itemName.style.marginTop = '5px';
+        const itemName = createElement('div', null, item.name);
+        itemName.style.marginTop = '5px';
 
-    itemDiv.appendChild(itemImage);
-    itemDiv.appendChild(itemName);
+        itemDiv.appendChild(itemImage);
+        itemDiv.appendChild(itemName);
 
-    itemDiv.addEventListener('click', () => {
-        document.body.removeChild(modal);
-        handleItemSelection(item);
+        itemDiv.addEventListener('click', () => {
+            document.body.removeChild(modal);
+            handleItemSelection(item, currentRoom); // Pass current room for proper assignment
+        });
+
+        itemContainer.appendChild(itemDiv);
     });
-
-    itemContainer.appendChild(itemDiv);
-});
-
 
     document.body.appendChild(modal);
 }
 
- function handleItemSelection(item) {
+
+ function handleItemSelection(item, currentRoom) {
     if (!item.requiresInput) {
-        // Directly add items without inputs (like Bathtub)
-        const currentRoom = rooms[rooms.length - 1];
-        if (!currentRoom) return alert('Please create a room first.');
+        // Add items without inputs (like Bathtub)
         currentRoom.items.push({ name: item.name, cost: additionalCosts[item.key] || 0, quantity: 1 });
         addRoom(); // Return to room setup
         return;
@@ -496,7 +511,7 @@ function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
         input.id = field.key;
         form.appendChild(input);
 
-        inputs[field.key] = input; // Store references to inputs for later
+        inputs[field.key] = input;
     });
 
     const saveButton = createElement('button', 'button', 'Save Item');
@@ -506,8 +521,6 @@ function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
             itemData[field.key] = inputs[field.key].value || 0;
         });
 
-        const currentRoom = rooms[rooms.length - 1];
-        if (!currentRoom) return alert('Please create a room first.');
         currentRoom.items.push(itemData);
         document.body.removeChild(modal);
         addRoom();
@@ -516,6 +529,7 @@ function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
 
     document.body.appendChild(modal);
 }
+
 
 function editRoom(index) {
     const roomToEdit = rooms[index];
