@@ -294,8 +294,7 @@ function addRoom() {
     const header = createElement('h2', null, 'Add Room');
     app.appendChild(header);
 
-    let currentRoom = { sqft: 0, items: [], paintingOption: null };
-    rooms.push(currentRoom);
+    let currentRoom = rooms[rooms.length - 1] || { sqft: 0, items: [], paintingOption: null };
 
     const packageContainer = createElement('div', 'package-container');
     app.appendChild(packageContainer);
@@ -320,7 +319,7 @@ function addRoom() {
 
     // Add Items Button
     const addItemButton = createElement('button', 'button', 'Add Items');
-    addItemButton.addEventListener('click', () => showItemModal(currentRoom)); // Pass current room for item assignment
+    addItemButton.addEventListener('click', () => showItemModal(currentRoom));
     app.appendChild(addItemButton);
 
     // Save Room Button
@@ -329,6 +328,9 @@ function addRoom() {
         if (!currentRoom.paintingOption) {
             alert('Please select a painting package.');
             return;
+        }
+        if (!rooms.includes(currentRoom)) {
+            rooms.push(currentRoom); // Add the room only once when saved
         }
         setupRoomQuestions();
     });
@@ -423,8 +425,7 @@ function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
 
 
 
-
-   function showItemModal(currentRoom) {
+function showItemModal(currentRoom) {
     const modal = createElement('div', 'modal');
     const modalContent = createElement('div', 'modal-content');
     modal.appendChild(modalContent);
@@ -461,7 +462,7 @@ function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
 
         itemDiv.addEventListener('click', () => {
             document.body.removeChild(modal);
-            handleItemSelection(item, currentRoom); // Pass current room for proper assignment
+            handleItemSelection(item, currentRoom); // Update the current room's items
         });
 
         itemContainer.appendChild(itemDiv);
@@ -471,11 +472,11 @@ function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
 }
 
 
+
  function handleItemSelection(item, currentRoom) {
     if (!item.requiresInput) {
         // Add items without inputs (like Bathtub)
         currentRoom.items.push({ name: item.name, cost: additionalCosts[item.key] || 0, quantity: 1 });
-        addRoom(); // Return to room setup
         return;
     }
 
@@ -521,9 +522,8 @@ function renderPackageSelection(currentRoom, packageOptions, packageContainer) {
             itemData[field.key] = inputs[field.key].value || 0;
         });
 
-        currentRoom.items.push(itemData);
+        currentRoom.items.push(itemData); // Update the current room's items
         document.body.removeChild(modal);
-        addRoom();
     });
     modalContent.appendChild(saveButton);
 
