@@ -421,16 +421,16 @@ function initInterface() {
     document.body.innerHTML = '';
     document.body.appendChild(app);
 
-    // Add Logo
     addLogo(app);
 
     const header = createElement('h1', null, 'Painting Quote Software');
     app.appendChild(header);
 
     const startButton = createElement('button', 'button', 'Begin Quote');
-    startButton.addEventListener('click', setupRoomQuestions);
+    startButton.addEventListener('click', generalQuestions);
     app.appendChild(startButton);
 }
+
 
 
     function setupRoomQuestions() {
