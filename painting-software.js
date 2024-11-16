@@ -178,15 +178,16 @@
             margin-top: 20px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
+     .form-group {
+    margin-bottom: 30px;
+}
 
-        .form-group label {
-            font-weight: bold;
-            color: var(--text-color);
-        }
+.form-group label {
+    margin-bottom: 10px;
+    display: block;
+    font-weight: bold;
+    color: var(--text-color);
+}
 
         .form-group input, .form-group select {
             width: 100%;
@@ -321,6 +322,11 @@ function generalQuestions() {
     const header = createElement('h2', null, 'General Questions');
     app.appendChild(header);
 
+    const formContainer = createElement('div', 'form-container');
+    formContainer.style.position = 'relative';
+    formContainer.style.paddingBottom = '80px'; // To avoid overlap with the button
+    app.appendChild(formContainer);
+
     // Job Type
     const jobTypeGroup = createElement('div', 'form-group');
     const jobTypeLabel = createElement('label', null, 'Is this a commercial or residential job?');
@@ -333,16 +339,19 @@ function generalQuestions() {
 
     jobTypeSelect.addEventListener('change', () => {
         quoteDetails.jobType = jobTypeSelect.value;
-        showJobSpecificQuestions(app);
+        showJobSpecificQuestions(formContainer);
     });
 
     jobTypeGroup.appendChild(jobTypeLabel);
     jobTypeGroup.appendChild(jobTypeSelect);
-    app.appendChild(jobTypeGroup);
+    formContainer.appendChild(jobTypeGroup);
 
+    // Continue Button
     const continueButton = createElement('button', 'button', 'Continue');
-    continueButton.style.marginTop = '20px';
-    continueButton.style.display = 'block';
+    continueButton.style.position = 'absolute';
+    continueButton.style.bottom = '10px';
+    continueButton.style.left = '50%';
+    continueButton.style.transform = 'translateX(-50%)';
     continueButton.disabled = true;
 
     continueButton.addEventListener('click', setupRoomQuestions);
@@ -352,16 +361,11 @@ function generalQuestions() {
         const existingQuestions = document.getElementById('job-specific-questions');
         if (existingQuestions) existingQuestions.remove();
 
-        if (quoteDetails.jobType === 'select') {
-            continueButton.disabled = true;
-            return;
-        }
-
         const jobSpecificQuestions = createElement('div', 'form-group');
         jobSpecificQuestions.id = 'job-specific-questions';
-        jobSpecificQuestions.style.animation = 'fadeIn 0.3s ease-in-out'; // Smooth animation
         parent.appendChild(jobSpecificQuestions);
 
+        // Residential or Commercial Specific Questions
         if (quoteDetails.jobType === 'residential') {
             const floorsLabel = createElement('label', null, 'Is it over 2 floors or under?');
             const floorsSelect = createElement('select');
@@ -396,19 +400,20 @@ function generalQuestions() {
             jobSpecificQuestions.appendChild(heightSelect);
         }
 
-        // Insurance Requirement
+        // Insurance Requirement with Custom Checkbox
         const insuranceGroup = createElement('div', 'form-group');
-        const insuranceLabel = createElement('label', null, 'Does the job require insurance?');
-        const insuranceCheckbox = createElement('input');
-        insuranceCheckbox.type = 'checkbox';
-
+        insuranceGroup.innerHTML = `
+            <input type="checkbox" id="_checkbox">
+            <label for="_checkbox">
+                <div id="tick_mark"></div>
+            </label>
+            <span style="margin-left: 120px; position: relative; top: -60px;">Does the job require insurance?</span>
+        `;
+        const insuranceCheckbox = insuranceGroup.querySelector('#_checkbox');
         insuranceCheckbox.addEventListener('change', () => {
             quoteDetails.requiresInsurance = insuranceCheckbox.checked;
             validateQuestions();
         });
-
-        insuranceGroup.appendChild(insuranceLabel);
-        insuranceGroup.appendChild(insuranceCheckbox);
         jobSpecificQuestions.appendChild(insuranceGroup);
 
         validateQuestions();
@@ -418,6 +423,8 @@ function generalQuestions() {
         continueButton.disabled = !(quoteDetails.jobType && quoteDetails.floors);
     }
 }
+
+
 
 
  
@@ -625,15 +632,21 @@ function showItemModal(currentRoom) {
     const header = createElement('h2', null, 'Add an Item');
     modalContent.appendChild(header);
 
-    const itemContainer = createElement('div', 'item-container');
-    modalContent.appendChild(itemContainer);
+    const damagesSection = createElement('div', 'item-section');
+    damagesSection.style.marginBottom = '20px';
+    const damagesHeader = createElement('h3', null, 'Damages');
+    damagesSection.appendChild(damagesHeader);
+
+    const extrasSection = createElement('div', 'item-section');
+    extrasSection.style.marginBottom = '20px';
+    const extrasHeader = createElement('h3', null, 'Extras');
+    extrasSection.appendChild(extrasHeader);
 
     modalItems.forEach(item => {
         const itemDiv = createElement('div', 'item-div');
         itemDiv.style.border = '3px solid black';
         itemDiv.style.margin = '10px';
         itemDiv.style.padding = '5px';
-        itemDiv.style.display = 'inline-block';
 
         const itemImage = createElement('img');
         itemImage.src = item.imageUrl;
@@ -641,16 +654,26 @@ function showItemModal(currentRoom) {
         itemImage.style.width = '100px';
         itemImage.style.height = '100px';
 
-        const itemName = createElement('div', null, item.name);
+        const itemName = createElement('p', null, item.name);
         itemDiv.appendChild(itemImage);
         itemDiv.appendChild(itemName);
 
         itemDiv.addEventListener('click', () => handleItemSelection(item, currentRoom));
-        itemContainer.appendChild(itemDiv);
+
+        if (['doors', 'crackRepairs', 'wallHoles', 'wallpaper', 'darkWalls'].includes(item.key)) {
+            damagesSection.appendChild(itemDiv);
+        } else {
+            extrasSection.appendChild(itemDiv);
+        }
     });
+
+    modalContent.appendChild(damagesSection);
+    modalContent.appendChild(extrasSection);
 
     document.body.appendChild(modal);
 }
+
+
 
 
 
@@ -816,6 +839,8 @@ function calculateRoomCost(room) {
 function viewSummary() {
     const app = document.getElementById('app');
     app.innerHTML = '';
+    app.style.overflowY = 'auto'; // Enable scrolling
+    app.style.paddingBottom = '20px'; // Extra padding for the bottom
 
     addLogo(app);
 
@@ -854,21 +879,12 @@ function viewSummary() {
 
             app.appendChild(roomSummary);
         });
-
-        displayMaterialsAndFinalPrice(app);
     }
 
     const addRoomButton = createElement('button', 'button', 'Add Another Room');
     addRoomButton.addEventListener('click', () => addRoom());
     app.appendChild(addRoomButton);
 }
-
-
-
-
-
-
-
     injectStyles();
     initInterface();
 })();
