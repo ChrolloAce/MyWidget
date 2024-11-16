@@ -267,3 +267,53 @@ button:disabled {
 .checkbox-wrapper-31 input[type='checkbox']:checked + svg .check {
     stroke-dashoffset: 0;
 }
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between buttons */
+    margin-top: 30px; /* Ensure proper spacing */
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.package-card {
+    border: 2px solid #000;
+    margin: 10px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.package-card:hover {
+    background-color: var(--background-color);
+    transform: scale(1.05);
+}
+
+.room-toolbar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color var(--transition-speed) ease-in-out;
+}
+
+.room-toolbar button:hover {
+    color: var(--danger-color);
+}
+
+.insurance-checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spacing between checkbox and label */
+    margin-bottom: 20px;
+}
+
+.insurance-checkbox-container span {
+    font-weight: bold;
+    color: var(--text-color);
+}
