@@ -796,7 +796,7 @@ function addItem(container) {
 
         const shapes = getShapesForType(designSelections.type);
         shapes.forEach(shape => {
-            const shapeBtn = createImageButton(shape.name, shape.imageUrl);
+            const shapeBtn = createImageButton(shape.name, shape.imageUrl, true);
             shapeContainer.appendChild(shapeBtn);
 
             shapeBtn.addEventListener('click', () => {
