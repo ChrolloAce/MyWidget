@@ -1079,6 +1079,18 @@ function getShapesForSubcategory(type, subcategory) {
 
 
 
+
+
+
+function getTypeImageUrl(type) {
+    const images = {
+        'Kitchen': 'https://i.ibb.co/4phdQ5q/4.png', // New Kitchen image
+        'Bathroom': 'https://i.ibb.co/RPJgsCB/2.png'  // New Bathroom image
+    };
+    return images[type] || 'https://via.placeholder.com/250';
+}
+
+
     
     // Choose Shape for Bathroom
     function chooseShapeBathroom(container) {
@@ -1496,27 +1508,26 @@ function updateItemList(itemListDiv) {
     });
 }
     
+// Modify the generateItemDescription function
 function generateItemDescription(item) {
-    let category = designSelections.type; // 'Kitchen' or 'Bathroom'
-    let type = '';
+    let typeDescription = '';
 
-    // Determine the type based on the shape
-    if (category === 'Kitchen') {
+    // Determine the type based on designSelections.type and item shape
+    if (designSelections.type === 'Kitchen') {
         if (item.shape.includes('Bartop')) {
-            type = 'Bartop';
+            typeDescription = 'Kitchen Bartop';
         } else if (item.shape.includes('Island')) {
-            type = 'Island';
+            typeDescription = 'Kitchen Island';
         } else {
-            type = 'Countertop';
+            typeDescription = 'Kitchen Countertop';
         }
-    } else if (category === 'Bathroom') {
-        type = 'Countertop';
+    } else if (designSelections.type === 'Bathroom') {
+        typeDescription = 'Bathroom Countertop';
     }
 
-    // Combine category, type, and shape name
-    return `${category} ${type} - ${item.shape}`;
+    // Return the type description followed by the item's shape name
+    return `${typeDescription} - ${item.shape}`;
 }
-
 
 
 
