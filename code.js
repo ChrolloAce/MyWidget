@@ -215,19 +215,22 @@ h3 {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
+/* Adjust .shape-diagram for larger, better-explained images */
 .shape-diagram {
-    width: 100%;                            /* Takes up full width of grid cell */
-    height: 100%;                           /* Takes up full height of grid cell */
-    background-size: contain;               /* Ensures the entire image fits within */
-    background-position: center;            /* Centers the image within the element */
-    background-repeat: no-repeat;           /* Prevents image repetition */
-    background-color: #f5f5f5;              /* Adds a background color for contrast */
-    border-radius: 10px;                    /* Adds rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
-    overflow: hidden;                       /* Keeps content within rounded corners */
-    display: flex;                          /* Enables flexible layout */
-    align-items: center;                    /* Vertically centers content */
-    justify-content: center;                /* Horizontally centers content */
+    width: 100%;                            /* Full width of parent container */
+    height: auto;                           /* Maintain aspect ratio */
+    max-height: 300px;                      /* Set maximum height for images */
+    background-size: contain;               /* Ensure the image is fully visible */
+    background-position: center;            /* Center the image */
+    background-repeat: no-repeat;           /* Prevent image repetition */
+    background-color: #f5f5f5;              /* Add a subtle background for contrast */
+    border-radius: 10px;                    /* Keep the rounded edges */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+    margin-top: 20px;                       /* Increase spacing around images */
+    overflow: hidden;                       /* Prevent content overflow */
+    display: flex;                          /* Flexible layout for centering */
+    align-items: center;                    /* Vertically center content */
+    justify-content: center;                /* Horizontally center content */
 }
 
 
@@ -1523,10 +1526,7 @@ function generateItemDescription(item) {
     let type = "Unknown";
     let shapeName = item.shape || "Unknown";
 
-    // Debug category
-    console.log("Detected category:", category);
-
-    // Determine the type based on the shape
+    // Detect type based on shape and category
     if (category === 'Kitchen') {
         if (shapeName.includes('Bartop')) {
             type = 'Bartop';
@@ -1536,11 +1536,11 @@ function generateItemDescription(item) {
             type = 'Countertop';
         }
     } else if (category === 'Bathroom') {
-        type = 'Countertop';
+        type = 'Countertop'; // All bathroom shapes default to Countertop
     }
 
     // Debug detected type
-    console.log("Detected type:", type);
+    console.log("Detected category and type:", category, type);
 
     // Combine category, type, and shape name
     const description = `${category} ${type} - ${shapeName}`;
@@ -1550,6 +1550,7 @@ function generateItemDescription(item) {
 
     return description;
 }
+
 
 
 
