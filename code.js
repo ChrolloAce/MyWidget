@@ -1508,26 +1508,41 @@ function updateItemList(itemListDiv) {
     });
 }
     
-// Modify the generateItemDescription function
 function generateItemDescription(item) {
-    let typeDescription = '';
+    console.log("Generating description for item:", item); // Debug the entire item
 
-    // Determine the type based on designSelections.type and item shape
-    if (designSelections.type === 'Kitchen') {
-        if (item.shape.includes('Bartop')) {
-            typeDescription = 'Kitchen Bartop';
-        } else if (item.shape.includes('Island')) {
-            typeDescription = 'Kitchen Island';
+    let category = designSelections.type || "Unknown"; // 'Kitchen' or 'Bathroom'
+    let type = "Unknown";
+    let shapeName = item.shape || "Unknown";
+
+    // Debug category
+    console.log("Detected category:", category);
+
+    // Determine the type based on the shape
+    if (category === 'Kitchen') {
+        if (shapeName.includes('Bartop')) {
+            type = 'Bartop';
+        } else if (shapeName.includes('Island')) {
+            type = 'Island';
         } else {
-            typeDescription = 'Kitchen Countertop';
+            type = 'Countertop';
         }
-    } else if (designSelections.type === 'Bathroom') {
-        typeDescription = 'Bathroom Countertop';
+    } else if (category === 'Bathroom') {
+        type = 'Countertop';
     }
 
-    // Return the type description followed by the item's shape name
-    return `${typeDescription} - ${item.shape}`;
+    // Debug detected type
+    console.log("Detected type:", type);
+
+    // Combine category, type, and shape name
+    const description = `${category} ${type} - ${shapeName}`;
+
+    // Debug final description
+    console.log("Generated description:", description);
+
+    return description;
 }
+
 
 
 
