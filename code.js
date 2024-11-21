@@ -1081,7 +1081,6 @@ function getShapesForSubcategory(type, subcategory) {
         }
     };
 
-    const normalizedSubcategory = subcategory.replace(/s$/, '');
     return shapes[type] && shapes[type][normalizedSubcategory] ? shapes[type][normalizedSubcategory] : [];
 }
 
