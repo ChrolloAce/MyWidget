@@ -916,6 +916,15 @@ function getSubcategoryImageUrl(subcategory) {
 
 
 function getShapesForSubcategory(type, subcategory) {
+
+     const subcategoryMap = {
+        'Countertops': 'Countertop',
+        'Bartops': 'Bartop',
+        'Islands': 'Island'
+    };
+
+    const normalizedSubcategory = subcategoryMap[subcategory] || subcategory;
+    
     const shapes = {
         'Kitchen': {
             'Countertop': [
