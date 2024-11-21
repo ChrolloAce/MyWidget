@@ -1109,12 +1109,17 @@ function getTypeImageUrl(type) {
     }
 function addToQuote(container, shape) {
     const itemToAdd = {
-        shape: shape.name,
-        measurements: shape.measurements,
-        backsplash: shape.hasBacksplash ? { width: shape.backsplashWidth, height: shape.backsplashHeight } : null
+        category: designSelections.type, // 'Kitchen' or 'Bathroom'
+        subcategory: shape.subcategory || 'Unknown', // Subcategory (e.g., 'Bartop', 'Countertop')
+        shape: shape.name,              // Shape name
+        measurements: shape.measurements, // Measurements
+        backsplash: shape.hasBacksplash ? {
+            width: shape.backsplashWidth,
+            height: shape.backsplashHeight
+        } : null
     };
-    
-    items.push(itemToAdd);
+
+    items.push(itemToAdd); // Add the item with category info
     calculateTotalCost();
     createInvoicePage(container);
 }
@@ -1520,36 +1525,18 @@ function updateItemList(itemListDiv) {
 }
     
 function generateItemDescription(item) {
-    console.log("Generating description for item:", item); // Debug the entire item
+    console.log("Generating description for item:", item);
 
-    let category = designSelections.type || "Unknown"; // 'Kitchen' or 'Bathroom'
-    let type = "Unknown";
-    let shapeName = item.shape || "Unknown";
+    const category = item.category || 'Unknown';
+    const subcategory = item.subcategory || 'Unknown';
+    const shapeName = item.shape || 'Unknown';
 
-    // Detect type based on shape and category
-    if (category === 'Kitchen') {
-        if (shapeName.includes('Bartop')) {
-            type = 'Bartop';
-        } else if (shapeName.includes('Island')) {
-            type = 'Island';
-        } else {
-            type = 'Countertop';
-        }
-    } else if (category === 'Bathroom') {
-        type = 'Countertop'; // All bathroom shapes default to Countertop
-    }
-
-    // Debug detected type
-    console.log("Detected category and type:", category, type);
-
-    // Combine category, type, and shape name
-    const description = `${category} ${type} - ${shapeName}`;
-
-    // Debug final description
+    const description = `${category} ${subcategory} - ${shapeName}`;
     console.log("Generated description:", description);
 
     return description;
 }
+
 
 
 
