@@ -784,7 +784,7 @@ function addItem(container) {
         const subcategories = ['Bartop', 'Countertop', 'Island'];
 
         subcategories.forEach(subcategory => {
-            const subcategoryBtn = createImageButton(subcategory, getSubcategoryImageUrl(subcategory),true);
+            const subcategoryBtn = createImageButton(subcategory, getSubcategoryImageUrl(subcategory));
             subcategoryContainer.appendChild(subcategoryBtn);
 
             subcategoryBtn.addEventListener('click', () => {
@@ -799,7 +799,7 @@ function addItem(container) {
 
         const shapes = getShapesForType(designSelections.type);
         shapes.forEach(shape => {
-            const shapeBtn = createImageButton(shape.name, shape.imageUrl, true);
+            const shapeBtn = createImageButton(shape.name, shape.imageUrl);
             shapeContainer.appendChild(shapeBtn);
 
             shapeBtn.addEventListener('click', () => {
