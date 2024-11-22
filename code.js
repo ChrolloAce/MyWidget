@@ -784,7 +784,7 @@ function addItem(container) {
         const subcategories = ['Bartop', 'Countertop', 'Island'];
 
         subcategories.forEach(subcategory => {
-            const subcategoryBtn = createImageButton(subcategory, getSubcategoryImageUrl(subcategory));
+            const subcategoryBtn = createImageButton(subcategory, getSubcategoryImageUrl(subcategory),true);
             subcategoryContainer.appendChild(subcategoryBtn);
 
             subcategoryBtn.addEventListener('click', () => {
