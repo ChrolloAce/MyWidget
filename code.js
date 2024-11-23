@@ -941,6 +941,8 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Standard',
                     code: 'KS',
+                                        type: 'Countertop', // Add the type field
+
                     measurements: ['Measurement 1'],
                     formula: (measurements) => ((measurements[0] * 25) / 144),
                     imageUrl: 'https://i.ibb.co/nn8k8Bf/1.png'
@@ -948,6 +950,8 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Standard L',
                     code: 'KSL',
+                                        type: 'Countertop', // Add the type field
+
                     measurements: ['Measurement 1', 'Measurement 2'],
                     formula: (measurements) => (((measurements[0] + measurements[1]) / 2 * 25) / 144),
                     imageUrl: 'https://i.ibb.co/ZdMvxQK/2.png'
@@ -955,6 +959,8 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Standard 3 Sides',
                     code: 'KS3',
+                                        type: 'Countertop', // Add the type field
+
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
                     formula: (measurements) => (((measurements[0] + measurements[1] + measurements[2]) * 25) / 144),
                     imageUrl: 'https://i.ibb.co/B28cv3j/3.png'
@@ -962,6 +968,8 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Standard Broken L',
                     code: 'KSBL',
+                                        type: 'Countertop', // Add the type field
+
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
                     formula: (measurements) => (((measurements[0] + measurements[1] + measurements[2] + measurements[3])) / 2 * 25/ 144),
                     imageUrl: 'https://i.ibb.co/5kb4k7G/4.png'
@@ -969,6 +977,8 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Standard Wing',
                     code: 'KSW',
+                                        type: 'Countertop', // Add the type field
+
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
                     formula: (measurements) => {
                         const part1 = ((measurements[0] + measurements[1] + (measurements[2] / 2)) * 25);
@@ -980,6 +990,8 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Standard Wing 3 Sides',
                     code: 'KSW3',
+                                        type: 'Countertop', // Add the type field
+
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
                     formula: (measurements) => {
                         const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
@@ -990,6 +1002,8 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Standard 4 Sides',
                     code: 'KS4',
+                                        type: 'Countertop', // Add the type field
+
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
                     formula: (measurements) => {
                         const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
@@ -1000,6 +1014,8 @@ function getShapesForSubcategory(type, subcategory) {
          {
                 name: 'Irregular L',
                 code: 'KIL',
+                                 type: 'Countertop', // Add the type field
+
                 measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
                 formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * 25)) / 144,
                 imageUrl: 'https://i.ibb.co/LhtPc1f/8.png'
@@ -1009,6 +1025,7 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Straight',
                     code: 'BarS',
+                    type: 'Bartop', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2'],
                     formula: (measurements) => ((measurements[0] * measurements[1]) / 144),
                     imageUrl: 'https://i.ibb.co/P69ZfHJ/9.png'
@@ -1016,6 +1033,7 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Standard L',
                     code: 'BarSL',
+                    type: 'Bartop', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
                     formula: (measurements) => (((measurements[0] + measurements[1]) / 2 * measurements[2]) / 144),
                     imageUrl: 'https://i.ibb.co/J55R5XS/10.png'
@@ -1023,6 +1041,7 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Irregular L',
                     code: 'BarIL',
+                    type: 'Bartop', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
                     formula: (measurements) => (((measurements[0] * measurements[1]) + (measurements[2] * measurements[3])) / 144),
                     imageUrl: 'https://i.ibb.co/mzpQz03/11.png'
@@ -1030,6 +1049,7 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Broken L',
                     code: 'BarBL',
+                    type: 'Bartop', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5'],
                     formula: (measurements) => {
                         const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3]) / 2;
@@ -1040,6 +1060,7 @@ function getShapesForSubcategory(type, subcategory) {
                {
     name: 'Standard 3 Sides',
     code: 'Bar3',
+                   type: 'Bartop', // Add the type field
     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
     formula: (measurements) => {
         const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
@@ -1050,6 +1071,7 @@ function getShapesForSubcategory(type, subcategory) {
 {
     name: 'Standard 4 Sides',
     code: 'Bar4',
+    type: 'Bartop', // Add the type field
     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7', 'Measurement 8', 'Measurement 9'],
     formula: (measurements) => {
         const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5] + measurements[6] + measurements[7]) / 2;
@@ -1063,6 +1085,7 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Rectangle',
                     code: 'IsR',
+                    type: 'Island', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2'],
                     formula: (measurements) => ((measurements[0] * measurements[1]) / 144),
                     imageUrl: 'https://i.ibb.co/Dwx1Rsw/18.png'
@@ -1070,6 +1093,7 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: 'Broken L',
                     code: 'IsBL',
+                    type: 'Island', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5'],
                     formula: (measurements) => {
                         const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3]) / 2;
@@ -1080,6 +1104,7 @@ function getShapesForSubcategory(type, subcategory) {
                 {
                     name: '3 Sides',
                     code: 'Is3',
+                    type: 'Island', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
                     formula: (measurements) => {
                         const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
@@ -1117,19 +1142,21 @@ function getTypeImageUrl(type) {
 function addToQuote(container, shape) {
     const itemToAdd = {
         category: designSelections.type, // 'Kitchen' or 'Bathroom'
-        subcategory: shape.subcategory || 'Unknown', // Subcategory (e.g., 'Bartop', 'Countertop')
-        shape: shape.name,              // Shape name
-        measurements: shape.measurements, // Measurements
+        subcategory: shape.type, // Use the new `type` field
+        shape: shape.name,
+        measurements: shape.measurements,
         backsplash: shape.hasBacksplash ? {
             width: shape.backsplashWidth,
             height: shape.backsplashHeight
         } : null
     };
 
-    items.push(itemToAdd); // Add the item with category info
+    console.log("Item being added:", itemToAdd);
+    items.push(itemToAdd);
     calculateTotalCost();
     createInvoicePage(container);
 }
+
 
 
 
@@ -1418,29 +1445,26 @@ function debugPricing(item) {
         } : 'none'
     })};
 
- function getShapeByName(name) {
+function getShapeByName(name) {
     let shape;
-    
-    // Try each subcategory to find the shape
+
+    // Search subcategories
     const subcategories = ['Countertop', 'Bartop', 'Island'];
-    
     for (const subcategory of subcategories) {
         const shapes = getShapesForSubcategory('Kitchen', subcategory);
         shape = shapes.find(s => s.name === name);
         if (shape) break;
     }
 
-    // If not found in kitchen shapes, try bathroom shapes
+    // Check Bathroom shapes if not found in Kitchen
     if (!shape) {
         const bathroomShapes = getShapesForType('Bathroom');
         shape = bathroomShapes.find(s => s.name === name);
     }
-    
-    console.log(`Looking for shape: ${name}`);
-    console.log(`Found shape:`, shape);
-    
+
     return shape;
 }
+
 
     
     // Get All Shapes
@@ -1532,16 +1556,11 @@ function updateItemList(itemListDiv) {
 }
     
 function generateItemDescription(item) {
-    console.log("Generating description for item:", item);
-
     const category = item.category || 'Unknown';
-    const subcategory = item.subcategory || 'Unknown';
+    const subcategory = item.subcategory || 'Unknown'; // Use the `type` field from shape
     const shapeName = item.shape || 'Unknown';
 
-    const description = `${category} ${subcategory} - ${shapeName}`;
-    console.log("Generated description:", description);
-
-    return description;
+    return `${category} ${subcategory} - ${shapeName}`;
 }
 
 
@@ -1777,6 +1796,7 @@ function getShapesForType(type) {
             {
                 name: 'Standard',
                 code: 'BathS',
+                type: 'Island', // Add the type field
                 measurements: ['Measurement 1'],
                 formula: (measurements) => ((measurements[0] * 22) / 144),
                 imageUrl: 'https://i.ibb.co/hcKgcJr/15.png'
@@ -1784,6 +1804,7 @@ function getShapesForType(type) {
             {
                 name: 'Standard L',
                 code: 'BathL',
+                type: 'Island', // Add the type field
                 measurements: ['Measurement 1', 'Measurement 2'],
                 formula: (measurements) => (((measurements[0] + measurements[1]) * 22) / 144),
                 imageUrl: 'https://i.ibb.co/Qv8p4Bx/16.png'
@@ -1791,6 +1812,7 @@ function getShapesForType(type) {
             {
                 name: 'Standard 3 Sides',
                 code: 'Bath3',
+                type: 'Island', // Add the type field
                 measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
                 formula: (measurements) => {
                     const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
