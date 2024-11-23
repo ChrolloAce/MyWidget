@@ -1469,6 +1469,7 @@ function calculateTotalCost() {
 }
 
 
+
 // Helper function to debug pricing
 function debugPricing(item) {
     const shape = getShapeByName(item.shape);
