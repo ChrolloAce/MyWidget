@@ -1185,7 +1185,7 @@ function getTypeImageUrl(type) {
 function addToQuote(container, shape) {
     const itemToAdd = {
         category: designSelections.type, // 'Kitchen' or 'Bathroom'
-        subcategory: shape.type, // Use the new `type` field
+        subcategory: designSelections.type === 'Bathroom' ? '' : shape.type || '', // Default to 'None' for Bathroom
         shape: shape.name,
         measurements: shape.measurements,
         backsplash: shape.hasBacksplash ? {
@@ -1199,6 +1199,7 @@ function addToQuote(container, shape) {
     calculateTotalCost();
     createInvoicePage(container);
 }
+
 
 
 
