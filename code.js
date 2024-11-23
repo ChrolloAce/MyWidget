@@ -1500,34 +1500,27 @@ function debugPricing(item) {
 function getShapeByName(name) {
     let shape;
 
-    // Debug: Log all shapes being checked
-    console.log('Checking shapes for:', name);
+    // Search Kitchen shapes first
+    const kitchenSubcategories = ['Countertop', 'Bartop', 'Island'];
+    for (const subcategory of kitchenSubcategories) {
+        const shapes = getShapesForSubcategory('Kitchen', subcategory);
+        shape = shapes.find(s => s.name === name);
+        if (shape) break;
+    }
 
-    // Check current category (Kitchen or Bathroom)
-    if (designSelections.type === 'Kitchen') {
-        const subcategories = ['Countertop', 'Bartop', 'Island'];
-        for (const subcategory of subcategories) {
-            const shapes = getShapesForSubcategory('Kitchen', subcategory);
-            shape = shapes.find(s => s.name === name);
-            if (shape) {
-                console.log('Match found in Kitchen:', shape);
-                break;
-            }
-        }
-    } else if (designSelections.type === 'Bathroom') {
+    // Search Bathroom shapes if not found in Kitchen
+    if (!shape) {
         const bathroomShapes = getShapesForType('Bathroom');
         shape = bathroomShapes.find(s => s.name === name);
-        if (shape) {
-            console.log('Match found in Bathroom:', shape);
-        }
     }
 
     if (!shape) {
-        console.error('Shape not found:', name);
+        console.warn(`Shape with name "${name}" not found in any category.`);
     }
 
     return shape;
 }
+
 
 
 
