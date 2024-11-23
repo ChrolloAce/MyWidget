@@ -818,7 +818,7 @@ function addItem(container) {
         const subcategoryContainer = createElement('div', 'button-group');
         container.appendChild(subcategoryContainer);
 
-        // Use singular forms
+        // Use singular forms for subcategories
         const subcategories = ['Bartop', 'Countertop', 'Island'];
 
         subcategories.forEach(subcategory => {
@@ -832,15 +832,15 @@ function addItem(container) {
         });
     } else {
         // For Bathroom, create grid of shapes
-        const shapeContainer = createElement('div', 'button-group');
+        const shapeContainer = createElement('div', 'shape-container'); // Use uniform class for shapes
         container.appendChild(shapeContainer);
 
-        const shapes = getShapesForType(designSelections.type);
+        const shapes = getShapesForType(designSelections.type); // Fetch bathroom shapes
         shapes.forEach(shape => {
-            const shapeBtn = createImageButton(shape.name, shape.imageUrl);
-            shapeContainer.appendChild(shapeBtn);
+            const shapeDiagram = createShapeDiagram(shape.name, shape.imageUrl); // Use the updated function
+            shapeContainer.appendChild(shapeDiagram);
 
-            shapeBtn.addEventListener('click', () => {
+            shapeDiagram.addEventListener('click', () => {
                 previousPage = () => addItem(container);
                 inputMeasurements(container, shape);
             });
