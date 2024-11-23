@@ -1848,6 +1848,8 @@ function getShapesForType(type) {
          {
             name: 'Standard',
             code: 'BathS',
+            type: '', // Add the type field
+
             measurements: ['Measurement 1'], // Only one measurement
             formula: (measurements) => ((measurements[0] * 22) / 144), // Correct depth
             imageUrl: 'https://i.ibb.co/hcKgcJr/15.png'
