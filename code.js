@@ -921,9 +921,9 @@ function getSubcategoryImageUrl(subcategory) {
 function getShapesForSubcategory(type, subcategory) {
 
      const subcategoryMap = {
-        'Countertops': 'Countertop',
-        'Bartops': 'Bartop',
-        'Islands': 'Island'
+        'Countertop': 'Countertop',
+        'Bartop': 'Bartop',
+        'Island': 'Island'
     };
 
     const normalizedSubcategory = subcategoryMap[subcategory] || subcategory;
