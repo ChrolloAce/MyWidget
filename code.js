@@ -1839,7 +1839,7 @@ function getShapesForType(type) {
             {
                 name: 'Standard',
                 code: 'BathS',
-                type: 'Island', // Add the type field
+                type: '', // Add the type field
                 measurements: ['Measurement 1'],
                 formula: (measurements) => ((measurements[0] * 22) / 144),
                 imageUrl: 'https://i.ibb.co/hcKgcJr/15.png'
@@ -1847,7 +1847,7 @@ function getShapesForType(type) {
             {
                 name: 'Standard L',
                 code: 'BathL',
-                type: 'Island', // Add the type field
+                type: '', // Add the type field
                 measurements: ['Measurement 1', 'Measurement 2'],
                 formula: (measurements) => (((measurements[0] + measurements[1]) * 22) / 144),
                 imageUrl: 'https://i.ibb.co/Qv8p4Bx/16.png'
@@ -1855,7 +1855,7 @@ function getShapesForType(type) {
             {
                 name: 'Standard 3 Sides',
                 code: 'Bath3',
-                type: 'Island', // Add the type field
+                type: '', // Add the type field
                 measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
                 formula: (measurements) => {
                     const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
