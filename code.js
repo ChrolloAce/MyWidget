@@ -364,6 +364,13 @@ h3 {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
+.shape-button-wrapper
+{
+    height:300px;
+    width: 500px;
+
+}
+
 .color-square span {
     width: 100%;
     color: #333333;
