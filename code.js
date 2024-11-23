@@ -948,7 +948,7 @@ function getSubcategoryImageUrl(subcategory) {
     container.appendChild(buttonWrapper);
 
     // Button text changed from "View Quote" to "See Available Shapes"
-    const viewShapesBtn = createElement('button', 'button', 'See Available Shapes');
+    const viewShapesBtn = createElement('button', 'button', 'Back To Quote');
     container.appendChild(viewShapesBtn);
 
     viewShapesBtn.addEventListener('click', () => {
