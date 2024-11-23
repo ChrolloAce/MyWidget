@@ -495,13 +495,13 @@ h3 {
         document.head.appendChild(styleElement);
     })();
 
-    // Helper Functions
     function createElement(tag, className, textContent) {
-        const element = document.createElement(tag);
-        if (className) element.className = className;
-        if (textContent) element.textContent = textContent;
-        return element;
-    }
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (textContent) element.textContent = textContent;
+    return element;
+}
+
 
 function createImageButton(text, imageUrl, isShapeDiagram = false) {
     const button = createElement('div', 'image-button');
@@ -875,6 +875,18 @@ function addItem(container) {
     backButton.addEventListener('click', () => {
         if (previousPage) previousPage();
     });
+}
+
+    function createShapeDiagram(name, imageUrl) {
+    const diagram = createElement('div', 'shape-diagram'); // Use uniform class
+    diagram.style.backgroundImage = `url(${imageUrl})`;
+
+    const label = createElement('div', 'shape-label', name); // Add label below
+    const wrapper = createElement('div', 'shape-button-wrapper'); // Wrap for alignment
+    wrapper.appendChild(diagram);
+    wrapper.appendChild(label);
+
+    return wrapper;
 }
 
 
