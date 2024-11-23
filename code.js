@@ -215,24 +215,66 @@ h3 {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
-/* Adjust .shape-diagram for larger, better-explained images */
-.shape-diagram {
-    width: 100%;                            /* Full width of parent container */
-    height: auto;                           /* Maintain aspect ratio */
-    max-height: 300px;                      /* Set maximum height for images */
-    background-size: contain;               /* Ensure the image is fully visible */
-    background-position: center;            /* Center the image */
-    background-repeat: no-repeat;           /* Prevent image repetition */
-    background-color: #f5f5f5;              /* Add a subtle background for contrast */
-    border-radius: 10px;                    /* Keep the rounded edges */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
-    margin-top: 20px;                       /* Increase spacing around images */
-    overflow: hidden;                       /* Prevent content overflow */
-    display: flex;                          /* Flexible layout for centering */
-    align-items: center;                    /* Vertically center content */
-    justify-content: center;                /* Horizontally center content */
+/* Container for the shape diagrams */
+.shape-container {
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between items */
+    justify-items: center; /* Center items horizontally */
+    align-items: start; /* Align items vertically to the start */
+    width: 100%; /* Full width of the parent container */
+    padding: 20px; /* Add padding for spacing */
 }
 
+/* Shape diagram button or div */
+.shape-diagram {
+    width: 100%; /* Full width of the parent container */
+    max-width: 300px; /* Limit maximum width */
+    height: auto; /* Maintain aspect ratio */
+    aspect-ratio: 4 / 3; /* Ensure consistent aspect ratio */
+    background-size: contain; /* Contain the image */
+    background-repeat: no-repeat; /* Prevent image repetition */
+    background-position: center; /* Center the image within the div */
+    background-color: #f5f5f5; /* Subtle background for contrast */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    overflow: hidden; /* Prevent overflow */
+    display: flex; /* Flexible layout */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+/* Hover effect for shape diagrams */
+.shape-diagram:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+    border: 2px solid #0264D9; /* Add border on hover */
+}
+
+/* Label below each shape diagram */
+.shape-label {
+    margin-top: 10px; /* Space between image and label */
+    text-align: center; /* Center align text */
+    font-size: 16px; /* Adjust font size */
+    font-weight: bold; /* Make text bold */
+    color: #333; /* Dark text color */
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    .shape-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Smaller grid for narrow screens */
+    }
+
+    .shape-diagram {
+        max-width: 200px; /* Reduce max-width for smaller screens */
+    }
+
+    .shape-label {
+        font-size: 14px; /* Adjust font size for labels */
+    }
+}
 
 
 .image-button:hover {
@@ -364,12 +406,6 @@ h3 {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
-.shape-button-wrapper
-{
-    height:300px;
-    width: 500px;
-
-}
 
 .color-square span {
     width: 100%;
