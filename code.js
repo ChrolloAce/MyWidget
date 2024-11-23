@@ -1436,12 +1436,19 @@ function calculateTotalCost() {
             return;
         }
 
+        // Debug formula and measurements
+        console.log('Shape formula:', shape.formula.toString());
+        console.log('Shape measurements:', item.measurements);
+
         // Calculate base area
         const area = shape.formula(item.measurements);
         console.log('Area calculated:', area);
 
-        // Calculate base cost
+        // Debug price per square foot
         const pricePerSqFt = designSelections.finishType === 'crystal' ? PRICE_CRYSTAL : PRICE_REGULAR;
+        console.log('Price per square foot:', pricePerSqFt);
+
+        // Calculate base cost
         let itemCost = area * pricePerSqFt;
         console.log('Base cost:', itemCost);
 
@@ -1456,17 +1463,18 @@ function calculateTotalCost() {
         totalCost += itemCost;
     });
 
-    // Apply the $50 fee once to the final total
+    // Debug base fee addition
     totalCost += 50;
     console.log('Added $50 base fee to final total cost.');
 
-    // Apply minimum price if necessary
+    // Debug minimum price logic
     totalCost = Math.max(totalCost, MINIMUM_PRICE);
     totalCost = Math.ceil(totalCost);
-
     console.log('Final total cost:', totalCost);
+
     return totalCost;
 }
+
 
 
 
