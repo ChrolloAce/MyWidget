@@ -1185,7 +1185,7 @@ function getTypeImageUrl(type) {
 function addToQuote(container, shape) {
     const itemToAdd = {
         category: designSelections.type, // 'Kitchen' or 'Bathroom'
-        subcategory: shape.type, // Use the new `type` field
+        type: shape.type, // Use the new `type` field from the shape
         shape: shape.name,
         measurements: shape.measurements,
         backsplash: shape.hasBacksplash ? {
@@ -1194,7 +1194,7 @@ function addToQuote(container, shape) {
         } : null
     };
 
-    console.log("Item being added:", itemToAdd);
+    console.log("Item being added:", itemToAdd); // Debug log
     items.push(itemToAdd);
     calculateTotalCost();
     createInvoicePage(container);
@@ -1430,7 +1430,7 @@ function calculateTotalCost() {
     items.forEach((item, index) => {
         console.log(`\nProcessing item ${index}:`, item);
 
-        const shape = getShapeByName(item.shape);
+        const shape = (item.shape);
         if (!shape) {
             console.error('Shape not found:', item.shape);
             return;
@@ -1861,8 +1861,7 @@ function getShapesForType(type) {
          {
             name: 'Standard',
             code: 'BathS',
-            type: '', // Add the type field
-
+            type: ' ', // Add the type field
             measurements: ['Measurement 1'], // Only one measurement
             formula: (measurements) => ((measurements[0] * 22) / 144), // Correct depth
             imageUrl: 'https://i.ibb.co/hcKgcJr/15.png'
@@ -1870,7 +1869,7 @@ function getShapesForType(type) {
             {
                 name: 'Standard L',
                 code: 'BathL',
-                type: '', // Add the type field
+                type: ' ', // Add the type field
                 measurements: ['Measurement 1', 'Measurement 2'],
                 formula: (measurements) => (((measurements[0] + measurements[1]) * 22) / 144),
                 imageUrl: 'https://i.ibb.co/Qv8p4Bx/16.png'
@@ -1878,7 +1877,7 @@ function getShapesForType(type) {
             {
                 name: 'Standard 3 Sides',
                 code: 'Bath3',
-                type: '', // Add the type field
+                type: ' ', // Add the type field
                 measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6'],
                 formula: (measurements) => {
                     const perimeter = (measurements[0] + measurements[1] + measurements[2] + measurements[3] + measurements[4] + measurements[5]) / 2;
