@@ -1185,7 +1185,7 @@ function getTypeImageUrl(type) {
 function addToQuote(container, shape) {
     const itemToAdd = {
         category: designSelections.type, // 'Kitchen' or 'Bathroom'
-        type: shape.type, // Use the new `type` field from the shape
+        subcategory: shape.type, // Use the new `type` field
         shape: shape.name,
         measurements: shape.measurements,
         backsplash: shape.hasBacksplash ? {
@@ -1194,7 +1194,7 @@ function addToQuote(container, shape) {
         } : null
     };
 
-    console.log("Item being added:", itemToAdd); // Debug log
+    console.log("Item being added:", itemToAdd);
     items.push(itemToAdd);
     calculateTotalCost();
     createInvoicePage(container);
@@ -1430,7 +1430,7 @@ function calculateTotalCost() {
     items.forEach((item, index) => {
         console.log(`\nProcessing item ${index}:`, item);
 
-        const shape = (item.shape);
+        const shape = getShapeByName(item.shape);
         if (!shape) {
             console.error('Shape not found:', item.shape);
             return;
@@ -1500,27 +1500,34 @@ function debugPricing(item) {
 function getShapeByName(name) {
     let shape;
 
-    // Search Kitchen shapes first
-    const kitchenSubcategories = ['Countertop', 'Bartop', 'Island'];
-    for (const subcategory of kitchenSubcategories) {
-        const shapes = getShapesForSubcategory('Kitchen', subcategory);
-        shape = shapes.find(s => s.name === name);
-        if (shape) break;
-    }
+    // Debug: Log all shapes being checked
+    console.log('Checking shapes for:', name);
 
-    // Search Bathroom shapes if not found in Kitchen
-    if (!shape) {
+    // Check current category (Kitchen or Bathroom)
+    if (designSelections.type === 'Kitchen') {
+        const subcategories = ['Countertop', 'Bartop', 'Island'];
+        for (const subcategory of subcategories) {
+            const shapes = getShapesForSubcategory('Kitchen', subcategory);
+            shape = shapes.find(s => s.name === name);
+            if (shape) {
+                console.log('Match found in Kitchen:', shape);
+                break;
+            }
+        }
+    } else if (designSelections.type === 'Bathroom') {
         const bathroomShapes = getShapesForType('Bathroom');
         shape = bathroomShapes.find(s => s.name === name);
+        if (shape) {
+            console.log('Match found in Bathroom:', shape);
+        }
     }
 
     if (!shape) {
-        console.warn(`Shape with name "${name}" not found in any category.`);
+        console.error('Shape not found:', name);
     }
 
     return shape;
 }
-
 
 
 
@@ -1855,6 +1862,7 @@ function getShapesForType(type) {
             name: 'Standard',
             code: 'BathS',
             type: '', // Add the type field
+
             measurements: ['Measurement 1'], // Only one measurement
             formula: (measurements) => ((measurements[0] * 22) / 144), // Correct depth
             imageUrl: 'https://i.ibb.co/hcKgcJr/15.png'
