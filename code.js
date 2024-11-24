@@ -687,8 +687,8 @@ function createColorSquare(colorName, hexCode) {
 
 
 
-let historyStack = []; // Stack to store the navigation history
 
+    
 // Adds the back button to the container and enables infinite back navigation
 function addBackButton(container) {
     const backButton = createElement('button', 'button back-button', 'Back');
