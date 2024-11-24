@@ -8,7 +8,9 @@
     let totalCost = 0;
     let previousPage = null;
     let userInfo = {};
-
+    let historyStack = []; // This will store the history of pages
+    
+    
 
     let designSelections = {
         type: '',         // 'Kitchen' or 'Bathroom'
@@ -541,15 +543,14 @@ function createImageButton(text, imageUrl, isShapeDiagram = false) {
         const types = ['Kitchen', 'Bathroom']; // Define your types here
 
         types.forEach(type => {
-            const typeBtn = createImageButton(type, getTypeImageUrl(type));
-            typeContainer.appendChild(typeBtn);
+        const typeBtn = createImageButton(type, getTypeImageUrl(type));
+        typeContainer.appendChild(typeBtn);
 
-            typeBtn.addEventListener('click', () => {
-                designSelections.type = type;
-                previousPage = initInterface;
-                chooseFinishType(container);
-            });
+        typeBtn.addEventListener('click', () => {
+            designSelections.type = type;
+            navigateTo(chooseFinishType, container); // Use navigateTo
         });
+    });
     }
 
     // Helper function to get type image URLs
@@ -587,8 +588,7 @@ function createImageButton(text, imageUrl, isShapeDiagram = false) {
 
     standardFinishBtn.addEventListener('click', () => {
         designSelections.finishType = 'standard';
-        previousPage = () => chooseFinishType(container);
-        chooseMaterial(container);
+        navigateTo(chooseMaterial, container); // Use navigateTo
     });
 
     // Crystal Top Finish Option
@@ -605,17 +605,12 @@ const crystalDescription = createElement('p', null, 'Our CrystalTop Pour gives a
 
     crystalFinishBtn.addEventListener('click', () => {
         designSelections.finishType = 'crystal';
-        previousPage = () => chooseFinishType(container);
-        chooseMaterial(container);
+        navigateTo(chooseMaterial, container); // Use navigateTo
+
     });
 
-    // Back Button
-    const backButton = createElement('button', 'button back-button', 'Back');
-    container.appendChild(backButton);
+    addBackButton(container);
 
-    backButton.addEventListener('click', () => {
-        if (previousPage) previousPage();
-    });
 }
 
 
@@ -630,7 +625,10 @@ function createColorSquare(colorName, hexCode) {
 }
 
 
-    
+    function saveCurrentPage(currentPageFunction) {
+    historyStack.push(currentPageFunction); // Save the current page function to the stack
+}
+
 
     // Helper function to get finish image URLs
     function getFinishImageUrl(finish) {
@@ -665,18 +663,12 @@ function createColorSquare(colorName, hexCode) {
 
             materialBtn.addEventListener('click', () => {
                 designSelections.material = material;
-                previousPage = () => chooseMaterial(container);
-                chooseColors(container);
+            navigateTo(chooseColors, container); // Use navigateTo
             });
         });
 
-        // Back Button
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
+          addBackButton(container);
 
-        backButton.addEventListener('click', () => {
-            if (previousPage) previousPage();
-        });
     }
 
     // Helper function to get material image URLs
@@ -701,15 +693,18 @@ let historyStack = []; // Stack to store the navigation history
 function addBackButton(container) {
     const backButton = createElement('button', 'button back-button', 'Back');
     container.appendChild(backButton);
-    
+
     backButton.addEventListener('click', () => {
         if (historyStack.length > 0) {
-            const previousState = historyStack.pop(); // Retrieve the last saved state
-            document.body.innerHTML = ''; // Clear the current screen
-            document.body.appendChild(previousState); // Display the previous state
+            const lastPage = historyStack.pop();
+            lastPage(); // Navigate to the last page in history
+        } else {
+            alert('No previous page to go back to.');
         }
     });
 }
+
+
 
 // Saves the current state to the history stack
 function saveCurrentState() {
@@ -725,7 +720,6 @@ function chooseColors(container) {
     const header = createElement('h2', null, 'Choose Colors');
     container.appendChild(header);
 
-    // Base Color Selection
     const baseColorLabel = createElement('h3', null, 'Choose a Base Color:');
     container.appendChild(baseColorLabel);
 
@@ -737,34 +731,28 @@ function chooseColors(container) {
         baseColorContainer.appendChild(colorSquare);
 
         colorSquare.addEventListener('click', () => {
-            Array.from(baseColorContainer.children).forEach(child => {
-                child.classList.remove('selected');
-            });
+            Array.from(baseColorContainer.children).forEach(child => child.classList.remove('selected'));
             colorSquare.classList.add('selected');
             designSelections.baseColor = colorName;
         });
     });
 
-    // Mix-in Colors Selection (Including base colors)
     const mixInLabel = createElement('h3', null, 'Choose up to 4 Mix-in Colors:');
     container.appendChild(mixInLabel);
 
     const mixInContainer = createElement('div', 'color-selection');
     container.appendChild(mixInContainer);
 
-    const allMixInColors = { ...mixInColors, ...baseColors }; // Restore base colors to mix-in options
-
     const selectedMixIns = [];
 
-    Object.entries(allMixInColors).forEach(([colorName, hexCode]) => {
+    Object.entries(mixInColors).forEach(([colorName, hexCode]) => {
         const colorSquare = createColorSquare(colorName, hexCode);
         mixInContainer.appendChild(colorSquare);
 
         colorSquare.addEventListener('click', () => {
             if (colorSquare.classList.contains('selected')) {
                 colorSquare.classList.remove('selected');
-                const index = selectedMixIns.indexOf(colorName);
-                if (index > -1) selectedMixIns.splice(index, 1);
+                selectedMixIns.splice(selectedMixIns.indexOf(colorName), 1);
             } else if (selectedMixIns.length < 4) {
                 colorSquare.classList.add('selected');
                 selectedMixIns.push(colorName);
@@ -775,11 +763,9 @@ function chooseColors(container) {
         });
     });
 
-    // Button Wrapper for consistency
     const buttonWrapper = createElement('div', 'button-wrapper');
     container.appendChild(buttonWrapper);
 
-    // Next Button
     const nextBtn = createElement('button', 'button', 'Next');
     buttonWrapper.appendChild(nextBtn);
 
@@ -792,17 +778,10 @@ function chooseColors(container) {
             alert('Please select at least one mix-in color.');
             return;
         }
-        previousPage = () => chooseColors(container);
-        addItem(container);
+        navigateTo(addItem, container); // Use navigateTo
     });
 
-    // Back Button
-    const backButton = createElement('button', 'button back-button', 'Back');
-    buttonWrapper.appendChild(backButton);
-
-    backButton.addEventListener('click', () => {
-        previousPage && previousPage();
-    });
+    addBackButton(container);
 }
 
 
@@ -814,68 +793,36 @@ function addItem(container) {
     container.appendChild(header);
 
     if (designSelections.type === 'Kitchen') {
-        // Create grid container for subcategories
         const subcategoryContainer = createElement('div', 'button-group');
         container.appendChild(subcategoryContainer);
 
-        // Use singular forms for subcategories
         const subcategories = ['Bartop', 'Countertop', 'Island'];
-
         subcategories.forEach(subcategory => {
             const subcategoryBtn = createImageButton(subcategory, getSubcategoryImageUrl(subcategory));
             subcategoryContainer.appendChild(subcategoryBtn);
 
             subcategoryBtn.addEventListener('click', () => {
-                previousPage = () => addItem(container);
-                chooseShape(container, subcategory);
+                navigateTo(() => chooseShape(container, subcategory), container); // Use navigateTo
             });
         });
     } else {
-        // For Bathroom, create grid of shapes
-        const shapeContainer = createElement('div', 'shape-container'); // Use uniform class for shapes
+        const shapeContainer = createElement('div', 'shape-container');
         container.appendChild(shapeContainer);
 
-        const shapes = getShapesForType(designSelections.type); // Fetch bathroom shapes
+        const shapes = getShapesForType(designSelections.type);
         shapes.forEach(shape => {
-            const shapeDiagram = createShapeDiagram(shape.name, shape.imageUrl); // Use the updated function
+            const shapeDiagram = createShapeDiagram(shape.name, shape.imageUrl);
             shapeContainer.appendChild(shapeDiagram);
 
             shapeDiagram.addEventListener('click', () => {
-                previousPage = () => addItem(container);
-                inputMeasurements(container, shape);
+                navigateTo(() => inputMeasurements(container, shape), container); // Use navigateTo
             });
         });
     }
 
-    // Show item list if items exist
-    if (items.length > 0) {
-        const itemListDiv = createElement('div', 'item-list');
-        container.appendChild(itemListDiv);
-        updateItemList(itemListDiv);
-
-        const buttonWrapper = createElement('div', 'button-wrapper');
-        container.appendChild(buttonWrapper);
-
-        const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
-        buttonWrapper.appendChild(viewInvoiceBtn);
-
-        viewInvoiceBtn.addEventListener('click', () => {
-            previousPage = () => addItem(container);
-            createInvoicePage(container);
-        });
-    }
-
-    // Navigation buttons
-    const buttonWrapper = createElement('div', 'button-wrapper');
-    container.appendChild(buttonWrapper);
-
-    const backButton = createElement('button', 'button back-button', 'Back');
-    buttonWrapper.appendChild(backButton);
-
-    backButton.addEventListener('click', () => {
-        if (previousPage) previousPage();
-    });
+    addBackButton(container);
 }
+
 
     function createShapeDiagram(name, imageUrl) {
     const diagram = createElement('div', 'shape-diagram'); // Use uniform class
@@ -1176,6 +1123,18 @@ function getTypeImageUrl(type) {
     return images[type] || 'https://via.placeholder.com/250';
 }
 
+function navigateTo(renderFunction, container) {
+    // Save the current page function to the history stack
+    if (typeof previousPage === 'function') {
+        historyStack.push(previousPage);
+    }
+
+    // Set the new render function as the previous page
+    previousPage = () => renderFunction(container);
+
+    // Render the new page
+    renderFunction(container);
+}
 
     
     // Choose Shape for Bathroom
@@ -1298,35 +1257,21 @@ function createQuotePage(container) {
 function inputMeasurements(container, shape) {
     container.innerHTML = '';
 
-    // Extract display name without the code
-    const displayName = shape.name.split(' - ')[0];
-    const header = createElement('h2', null, `Configure ${displayName}`);
+    const header = createElement('h2', null, `Configure ${shape.name}`);
     container.appendChild(header);
-
-    // Image container with proper sizing
-    const imageDiv = createElement('div', 'image-container');
-    const shapeImage = createElement('img');
-    shapeImage.src = shape.imageUrl;
-    shapeImage.alt = displayName;
-    imageDiv.appendChild(shapeImage);
-    container.appendChild(imageDiv);
 
     const form = createElement('div', 'form');
     container.appendChild(form);
 
-    // Create measurement grid
     const measurementGrid = createElement('div', 'measurement-input');
     form.appendChild(measurementGrid);
 
-    // Measurement Inputs
     const measurementInputs = [];
-    shape.measurements.forEach((label, index) => {
+    shape.measurements.forEach(label => {
         const formGroup = createElement('div', 'form-group');
         const inputLabel = createElement('label', null, label);
         const inputField = createElement('input');
         inputField.type = 'number';
-        inputField.min = '0';
-        inputField.step = 'any';
         inputField.placeholder = 'Enter measurement in inches';
         formGroup.appendChild(inputLabel);
         formGroup.appendChild(inputField);
@@ -1334,32 +1279,23 @@ function inputMeasurements(container, shape) {
         measurementInputs.push(inputField);
     });
 
-    // Button Wrapper
     const buttonWrapper = createElement('div', 'button-wrapper');
     container.appendChild(buttonWrapper);
 
-    // Next Button
     const nextBtn = createElement('button', 'button', 'Next');
     buttonWrapper.appendChild(nextBtn);
 
     nextBtn.addEventListener('click', () => {
         const measurements = measurementInputs.map(input => parseFloat(input.value));
         if (measurements.some(value => isNaN(value) || value <= 0)) {
-            alert('Please enter valid measurements for all fields.');
+            alert('Please enter valid measurements.');
             return;
         }
-
         shape.measurements = measurements;
-        askBacksplash(container, shape);
+        navigateTo(() => askBacksplash(container, shape), container); // Use navigateTo
     });
 
-    // Back Button
-    const backButton = createElement('button', 'button back-button', 'Back');
-    buttonWrapper.appendChild(backButton);
-
-    backButton.addEventListener('click', () => {
-        previousPage && previousPage();
-    });
+    addBackButton(container);
 }
 
 
@@ -1898,5 +1834,5 @@ function getShapesForType(type) {
     // Removed individual item addition steps as per user request
 
     // Finalize the Interface
-    initInterface();
+    ();
 })();
