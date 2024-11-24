@@ -1509,15 +1509,15 @@ function getShapeByName(name) {
         const subcategories = ['Countertop', 'Bartop', 'Island'];
         for (const subcategory of subcategories) {
             const shapes = getShapesForSubcategory('Kitchen', subcategory);
-            shape = shapes.find(s => s.name === name);
+            shape = shapes.find(s => s.name === name && s.type === subcategory); // Ensure subcategory matches
             if (shape) {
-                console.log('Match found in Kitchen:', shape);
+                console.log(`Match found in Kitchen (${subcategory}):`, shape);
                 break;
             }
         }
     } else if (designSelections.type === 'Bathroom') {
         const bathroomShapes = getShapesForType('Bathroom');
-        shape = bathroomShapes.find(s => s.name === name);
+        shape = bathroomShapes.find(s => s.name === name && s.type === 'Bathroom'); // Include type check
         if (shape) {
             console.log('Match found in Bathroom:', shape);
         }
@@ -1529,7 +1529,6 @@ function getShapeByName(name) {
 
     return shape;
 }
-
 
 
     
