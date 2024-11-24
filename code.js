@@ -1078,7 +1078,7 @@ function getShapesForSubcategory(type, subcategory) {
                     code: 'BarSL',
                     type: 'Bartop', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
-                    formula: (measurements) => (((measurements[0] + measurements[1]) / 2 * measurements[2]) / 144),
+                    formula: (measurements) => (((measurements[0] + measurements[1]) * measurements[2]) / 144),
                     imageUrl: 'https://i.ibb.co/J55R5XS/10.png'
                 },
                 {
