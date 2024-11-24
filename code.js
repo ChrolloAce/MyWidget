@@ -8,7 +8,6 @@
     let totalCost = 0;
     let previousPage = null;
     let userInfo = {};
-    const backButtonHistory = [];
 
 
     let designSelections = {
@@ -524,9 +523,12 @@ function createImageButton(text, imageUrl, isShapeDiagram = false) {
     return button;
 }
 
-// Function to initialize the interface
-function initInterface() {
-    navigateToPage((container) => {
+    // Initialization Function
+    function initInterface() {
+        const container = createElement('div', 'container');
+        document.body.innerHTML = '';
+        document.body.appendChild(container);
+
         const header = createElement('h1', null, 'Get a Countertop Quote');
         container.appendChild(header);
 
@@ -544,81 +546,11 @@ function initInterface() {
 
             typeBtn.addEventListener('click', () => {
                 designSelections.type = type;
-                chooseFinishType();
+                previousPage = initInterface;
+                chooseFinishType(container);
             });
         });
-    });
-}
-
-function chooseFinishType() {
-    navigateToPage((container) => {
-        const header = createElement('h2', null, 'Choose Finish Type');
-        container.appendChild(header);
-
-        const finishOptionsContainer = createElement('div', 'finish-options-container');
-        container.appendChild(finishOptionsContainer);
-
-        const standardOptionDiv = createElement('div', 'finish-option');
-        finishOptionsContainer.appendChild(standardOptionDiv);
-
-        const standardFinishBtn = createImageButton('Standard Finish', getFinishImageUrl('Standard Finish'));
-        standardOptionDiv.appendChild(standardFinishBtn);
-
-        const standardDescription = createElement('p', null, 'With our standard process, the customer can pick the colors and choose the pattern.');
-        standardOptionDiv.appendChild(standardDescription);
-
-        standardFinishBtn.addEventListener('click', () => {
-            designSelections.finishType = 'standard';
-            chooseMaterial();
-        });
-
-        const crystalOptionDiv = createElement('div', 'finish-option');
-        finishOptionsContainer.appendChild(crystalOptionDiv);
-
-        const crystalFinishBtn = createImageButton('Crystal Top Pour', getFinishImageUrl('Crystal Top Pour'));
-        crystalOptionDiv.appendChild(crystalFinishBtn);
-
-        const crystalDescription = createElement('p', null, 'Our CrystalTop Pour gives a soft flowing Marble look.');
-        crystalOptionDiv.appendChild(crystalDescription);
-
-        crystalFinishBtn.addEventListener('click', () => {
-            designSelections.finishType = 'crystal';
-            chooseMaterial();
-        });
-
-        addBackButton(container);
-    });
-}
-
-
-function chooseMaterial() {
-    navigateToPage((container) => {
-        const header = createElement('h2', null, 'Choose Material/Pour Type');
-        container.appendChild(header);
-
-        const materialContainer = createElement('div', 'button-group');
-        container.appendChild(materialContainer);
-
-        let materials = [];
-        if (designSelections.finishType === 'crystal') {
-            materials = ['Pour Swirl', 'Directional Pour'];
-        } else {
-            materials = ['Quartz', 'Granite', 'Marble'];
-        }
-
-        materials.forEach(material => {
-            const materialBtn = createImageButton(material, getMaterialImageUrl(material));
-            materialContainer.appendChild(materialBtn);
-
-            materialBtn.addEventListener('click', () => {
-                designSelections.material = material;
-                chooseColors();
-            });
-        });
-
-        addBackButton(container);
-    });
-}
+    }
 
     // Helper function to get type image URLs
     function getTypeImageUrl(type) {
@@ -629,6 +561,62 @@ function chooseMaterial() {
         return images[type] || 'https://via.placeholder.com/250'; // Fallback image
     }
 
+    
+
+  function chooseFinishType(container) {
+    container.innerHTML = '';
+
+    const header = createElement('h2', null, 'Choose Finish Type');
+    container.appendChild(header);
+
+    // Create a container for the finish options
+    const finishOptionsContainer = createElement('div', 'finish-options-container');
+    container.appendChild(finishOptionsContainer);
+
+    // Standard Finish Option
+    const standardOptionDiv = createElement('div', 'finish-option');
+    finishOptionsContainer.appendChild(standardOptionDiv);
+
+    const standardFinishBtn = createImageButton('Standard Finish', getFinishImageUrl('Standard Finish'));
+    standardOptionDiv.appendChild(standardFinishBtn);
+
+    const standardDescription = createElement('p', null, 'With our standard process, the customer can pick the colors and choose the pattern. Once all colors are complete, we go through with the customer and will “tweak” the pattern to their liking.');
+    standardDescription.style.marginTop = '10px';
+    standardDescription.style.textAlign = 'center';
+    standardOptionDiv.appendChild(standardDescription);
+
+    standardFinishBtn.addEventListener('click', () => {
+        designSelections.finishType = 'standard';
+        previousPage = () => chooseFinishType(container);
+        chooseMaterial(container);
+    });
+
+    // Crystal Top Finish Option
+    const crystalOptionDiv = createElement('div', 'finish-option');
+    finishOptionsContainer.appendChild(crystalOptionDiv);
+
+    const crystalFinishBtn = createImageButton('Crystal Top Pour', getFinishImageUrl('Crystal Top Pour'));
+    crystalOptionDiv.appendChild(crystalFinishBtn);
+
+const crystalDescription = createElement('p', null, 'Our CrystalTop Pour gives a soft flowing Marble look. This process allows the colors to meld together, giving nuances to the various colors chosen and very detailed subtleties. The customer can choose the general amount of the colors but cannot choose exactly how it flows out. This is always a two-day process due to the drying times and labor. On average, this process is about one and a half times the amount of the Standard process.');
+    crystalDescription.style.marginTop = '10px';
+    crystalDescription.style.textAlign = 'center';
+    crystalOptionDiv.appendChild(crystalDescription);
+
+    crystalFinishBtn.addEventListener('click', () => {
+        designSelections.finishType = 'crystal';
+        previousPage = () => chooseFinishType(container);
+        chooseMaterial(container);
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        if (previousPage) previousPage();
+    });
+}
 
 
 function createColorSquare(colorName, hexCode) {
@@ -654,6 +642,43 @@ function createColorSquare(colorName, hexCode) {
         return images[finish] || 'https://via.placeholder.com/250';
     }
 
+    // Choose Material/Pour Type
+    function chooseMaterial(container) {
+        container.innerHTML = '';
+
+        const header = createElement('h2', null, 'Choose Material/Pour Type');
+        container.appendChild(header);
+
+        const materialContainer = createElement('div', 'button-group');
+        container.appendChild(materialContainer);
+
+        let materials = [];
+        if (designSelections.finishType === 'crystal') {
+            materials = ['Pour Swirl', 'Directional Pour'];
+        } else {
+            materials = ['Quartz', 'Granite', 'Marble'];
+        }
+
+        materials.forEach(material => {
+            const materialBtn = createImageButton(material, getMaterialImageUrl(material));
+            materialContainer.appendChild(materialBtn);
+
+            materialBtn.addEventListener('click', () => {
+                designSelections.material = material;
+                previousPage = () => chooseMaterial(container);
+                chooseColors(container);
+            });
+        });
+
+        // Back Button
+        const backButton = createElement('button', 'button back-button', 'Back');
+        container.appendChild(backButton);
+
+        backButton.addEventListener('click', () => {
+            if (previousPage) previousPage();
+        });
+    }
+
     // Helper function to get material image URLs
     function getMaterialImageUrl(material) {
      const images = {
@@ -673,23 +698,18 @@ function createColorSquare(colorName, hexCode) {
 let historyStack = []; // Stack to store the navigation history
 
 // Adds the back button to the container and enables infinite back navigation
-// Adds the back button to the container only if there is a previous page
 function addBackButton(container) {
-    // Only show the back button if there is history
-    if (backButtonHistory.length > 0) {
-        const backButton = createElement('button', 'button back-button', 'Back');
-        container.appendChild(backButton);
-
-        backButton.addEventListener('click', () => {
-            if (backButtonHistory.length > 0) {
-                const previousContainer = backButtonHistory.pop(); // Get the last visited page
-                document.body.innerHTML = ''; // Clear the current page
-                document.body.appendChild(previousContainer); // Render the last visited page
-            }
-        });
-    }
+    const backButton = createElement('button', 'button back-button', 'Back');
+    container.appendChild(backButton);
+    
+    backButton.addEventListener('click', () => {
+        if (historyStack.length > 0) {
+            const previousState = historyStack.pop(); // Retrieve the last saved state
+            document.body.innerHTML = ''; // Clear the current screen
+            document.body.appendChild(previousState); // Display the previous state
+        }
+    });
 }
-
 
 // Saves the current state to the history stack
 function saveCurrentState() {
@@ -699,115 +719,161 @@ function saveCurrentState() {
     }
 }
     
-function chooseColors() {
-    navigateToPage((container) => {
-        const header = createElement('h2', null, 'Choose Colors');
-        container.appendChild(header);
+function chooseColors(container) {
+    container.innerHTML = '';
 
-        const baseColorLabel = createElement('h3', null, 'Choose a Base Color:');
-        container.appendChild(baseColorLabel);
+    const header = createElement('h2', null, 'Choose Colors');
+    container.appendChild(header);
 
-        const baseColorContainer = createElement('div', 'color-selection');
-        container.appendChild(baseColorContainer);
+    // Base Color Selection
+    const baseColorLabel = createElement('h3', null, 'Choose a Base Color:');
+    container.appendChild(baseColorLabel);
 
-        Object.entries(baseColors).forEach(([colorName, hexCode]) => {
-            const colorSquare = createColorSquare(colorName, hexCode);
-            baseColorContainer.appendChild(colorSquare);
+    const baseColorContainer = createElement('div', 'color-selection');
+    container.appendChild(baseColorContainer);
 
-            colorSquare.addEventListener('click', () => {
-                Array.from(baseColorContainer.children).forEach(child => {
-                    child.classList.remove('selected');
-                });
+    Object.entries(baseColors).forEach(([colorName, hexCode]) => {
+        const colorSquare = createColorSquare(colorName, hexCode);
+        baseColorContainer.appendChild(colorSquare);
+
+        colorSquare.addEventListener('click', () => {
+            Array.from(baseColorContainer.children).forEach(child => {
+                child.classList.remove('selected');
+            });
+            colorSquare.classList.add('selected');
+            designSelections.baseColor = colorName;
+        });
+    });
+
+    // Mix-in Colors Selection (Including base colors)
+    const mixInLabel = createElement('h3', null, 'Choose up to 4 Mix-in Colors:');
+    container.appendChild(mixInLabel);
+
+    const mixInContainer = createElement('div', 'color-selection');
+    container.appendChild(mixInContainer);
+
+    const allMixInColors = { ...mixInColors, ...baseColors }; // Restore base colors to mix-in options
+
+    const selectedMixIns = [];
+
+    Object.entries(allMixInColors).forEach(([colorName, hexCode]) => {
+        const colorSquare = createColorSquare(colorName, hexCode);
+        mixInContainer.appendChild(colorSquare);
+
+        colorSquare.addEventListener('click', () => {
+            if (colorSquare.classList.contains('selected')) {
+                colorSquare.classList.remove('selected');
+                const index = selectedMixIns.indexOf(colorName);
+                if (index > -1) selectedMixIns.splice(index, 1);
+            } else if (selectedMixIns.length < 4) {
                 colorSquare.classList.add('selected');
-                designSelections.baseColor = colorName;
+                selectedMixIns.push(colorName);
+            } else {
+                alert('You can select up to 4 mix-in colors.');
+            }
+            designSelections.mixInColors = selectedMixIns;
+        });
+    });
+
+    // Button Wrapper for consistency
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
+
+    // Next Button
+    const nextBtn = createElement('button', 'button', 'Next');
+    buttonWrapper.appendChild(nextBtn);
+
+    nextBtn.addEventListener('click', () => {
+        if (!designSelections.baseColor) {
+            alert('Please select a base color.');
+            return;
+        }
+        if (designSelections.mixInColors.length === 0) {
+            alert('Please select at least one mix-in color.');
+            return;
+        }
+        previousPage = () => chooseColors(container);
+        addItem(container);
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    buttonWrapper.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        previousPage && previousPage();
+    });
+}
+
+
+
+function addItem(container) {
+    container.innerHTML = '';
+
+    const header = createElement('h2', null, 'Add a Countertop');
+    container.appendChild(header);
+
+    if (designSelections.type === 'Kitchen') {
+        // Create grid container for subcategories
+        const subcategoryContainer = createElement('div', 'button-group');
+        container.appendChild(subcategoryContainer);
+
+        // Use singular forms for subcategories
+        const subcategories = ['Bartop', 'Countertop', 'Island'];
+
+        subcategories.forEach(subcategory => {
+            const subcategoryBtn = createImageButton(subcategory, getSubcategoryImageUrl(subcategory));
+            subcategoryContainer.appendChild(subcategoryBtn);
+
+            subcategoryBtn.addEventListener('click', () => {
+                previousPage = () => addItem(container);
+                chooseShape(container, subcategory);
             });
         });
+    } else {
+        // For Bathroom, create grid of shapes
+        const shapeContainer = createElement('div', 'shape-container'); // Use uniform class for shapes
+        container.appendChild(shapeContainer);
 
-        const mixInLabel = createElement('h3', null, 'Choose up to 4 Mix-in Colors:');
-        container.appendChild(mixInLabel);
+        const shapes = getShapesForType(designSelections.type); // Fetch bathroom shapes
+        shapes.forEach(shape => {
+            const shapeDiagram = createShapeDiagram(shape.name, shape.imageUrl); // Use the updated function
+            shapeContainer.appendChild(shapeDiagram);
 
-        const mixInContainer = createElement('div', 'color-selection');
-        container.appendChild(mixInContainer);
-
-        const allMixInColors = { ...mixInColors, ...baseColors };
-
-        const selectedMixIns = [];
-
-        Object.entries(allMixInColors).forEach(([colorName, hexCode]) => {
-            const colorSquare = createColorSquare(colorName, hexCode);
-            mixInContainer.appendChild(colorSquare);
-
-            colorSquare.addEventListener('click', () => {
-                if (colorSquare.classList.contains('selected')) {
-                    colorSquare.classList.remove('selected');
-                    const index = selectedMixIns.indexOf(colorName);
-                    if (index > -1) selectedMixIns.splice(index, 1);
-                } else if (selectedMixIns.length < 4) {
-                    colorSquare.classList.add('selected');
-                    selectedMixIns.push(colorName);
-                } else {
-                    alert('You can select up to 4 mix-in colors.');
-                }
-                designSelections.mixInColors = selectedMixIns;
+            shapeDiagram.addEventListener('click', () => {
+                previousPage = () => addItem(container);
+                inputMeasurements(container, shape);
             });
         });
+    }
+
+    // Show item list if items exist
+    if (items.length > 0) {
+        const itemListDiv = createElement('div', 'item-list');
+        container.appendChild(itemListDiv);
+        updateItemList(itemListDiv);
 
         const buttonWrapper = createElement('div', 'button-wrapper');
         container.appendChild(buttonWrapper);
 
-        const nextBtn = createElement('button', 'button', 'Next');
-        buttonWrapper.appendChild(nextBtn);
+        const viewInvoiceBtn = createElement('button', 'button', 'View Price Estimate for Free →');
+        buttonWrapper.appendChild(viewInvoiceBtn);
 
-        nextBtn.addEventListener('click', () => {
-            if (!designSelections.baseColor) {
-                alert('Please select a base color.');
-                return;
-            }
-            if (designSelections.mixInColors.length === 0) {
-                alert('Please select at least one mix-in color.');
-                return;
-            }
-            addItem();
+        viewInvoiceBtn.addEventListener('click', () => {
+            previousPage = () => addItem(container);
+            createInvoicePage(container);
         });
+    }
 
-        addBackButton(container);
-    });
-}
+    // Navigation buttons
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
 
-function addItem() {
-    navigateToPage((container) => {
-        const header = createElement('h2', null, 'Add a Countertop');
-        container.appendChild(header);
+    const backButton = createElement('button', 'button back-button', 'Back');
+    buttonWrapper.appendChild(backButton);
 
-        if (designSelections.type === 'Kitchen') {
-            const subcategoryContainer = createElement('div', 'button-group');
-            container.appendChild(subcategoryContainer);
-
-            const subcategories = ['Bartop', 'Countertop', 'Island'];
-            subcategories.forEach(subcategory => {
-                const subcategoryBtn = createImageButton(subcategory, getSubcategoryImageUrl(subcategory));
-                subcategoryContainer.appendChild(subcategoryBtn);
-
-                subcategoryBtn.addEventListener('click', () => {
-                    chooseShape(subcategory);
-                });
-            });
-        } else {
-            const shapeContainer = createElement('div', 'shape-container');
-            container.appendChild(shapeContainer);
-
-            const shapes = getShapesForType(designSelections.type);
-            shapes.forEach(shape => {
-                const shapeDiagram = createShapeDiagram(shape.name, shape.imageUrl);
-                shapeContainer.appendChild(shapeDiagram);
-
-                shapeDiagram.addEventListener('click', () => {
-                    inputMeasurements(shape);
-                });
-            });
-        }
-
-        addBackButton(container);
+    backButton.addEventListener('click', () => {
+        if (previousPage) previousPage();
     });
 }
 
@@ -1229,53 +1295,70 @@ function createQuotePage(container) {
 }
 
 
-function inputMeasurements(shape) {
-    navigateToPage((container) => {
-        const header = createElement('h2', null, `Configure ${shape.name}`);
-        container.appendChild(header);
+function inputMeasurements(container, shape) {
+    container.innerHTML = '';
 
-        const imageDiv = createElement('div', 'image-container');
-        const shapeImage = createElement('img');
-        shapeImage.src = shape.imageUrl;
-        imageDiv.appendChild(shapeImage);
-        container.appendChild(imageDiv);
+    // Extract display name without the code
+    const displayName = shape.name.split(' - ')[0];
+    const header = createElement('h2', null, `Configure ${displayName}`);
+    container.appendChild(header);
 
-        const form = createElement('div', 'form');
-        container.appendChild(form);
+    // Image container with proper sizing
+    const imageDiv = createElement('div', 'image-container');
+    const shapeImage = createElement('img');
+    shapeImage.src = shape.imageUrl;
+    shapeImage.alt = displayName;
+    imageDiv.appendChild(shapeImage);
+    container.appendChild(imageDiv);
 
-        const measurementGrid = createElement('div', 'measurement-input');
-        form.appendChild(measurementGrid);
+    const form = createElement('div', 'form');
+    container.appendChild(form);
 
-        const measurementInputs = [];
-        shape.measurements.forEach(label => {
-            const formGroup = createElement('div', 'form-group');
-            const inputLabel = createElement('label', null, label);
-            const inputField = createElement('input');
-            inputField.type = 'number';
-            inputField.min = '0';
-            formGroup.appendChild(inputLabel);
-            formGroup.appendChild(inputField);
-            measurementGrid.appendChild(formGroup);
-            measurementInputs.push(inputField);
-        });
+    // Create measurement grid
+    const measurementGrid = createElement('div', 'measurement-input');
+    form.appendChild(measurementGrid);
 
-        const buttonWrapper = createElement('div', 'button-wrapper');
-        container.appendChild(buttonWrapper);
+    // Measurement Inputs
+    const measurementInputs = [];
+    shape.measurements.forEach((label, index) => {
+        const formGroup = createElement('div', 'form-group');
+        const inputLabel = createElement('label', null, label);
+        const inputField = createElement('input');
+        inputField.type = 'number';
+        inputField.min = '0';
+        inputField.step = 'any';
+        inputField.placeholder = 'Enter measurement in inches';
+        formGroup.appendChild(inputLabel);
+        formGroup.appendChild(inputField);
+        measurementGrid.appendChild(formGroup);
+        measurementInputs.push(inputField);
+    });
 
-        const nextBtn = createElement('button', 'button', 'Next');
-        buttonWrapper.appendChild(nextBtn);
+    // Button Wrapper
+    const buttonWrapper = createElement('div', 'button-wrapper');
+    container.appendChild(buttonWrapper);
 
-        nextBtn.addEventListener('click', () => {
-            const measurements = measurementInputs.map(input => parseFloat(input.value));
-            if (measurements.some(value => isNaN(value) || value <= 0)) {
-                alert('Please enter valid measurements.');
-                return;
-            }
-            shape.measurements = measurements;
-            askBacksplash(shape);
-        });
+    // Next Button
+    const nextBtn = createElement('button', 'button', 'Next');
+    buttonWrapper.appendChild(nextBtn);
 
-        addBackButton(container);
+    nextBtn.addEventListener('click', () => {
+        const measurements = measurementInputs.map(input => parseFloat(input.value));
+        if (measurements.some(value => isNaN(value) || value <= 0)) {
+            alert('Please enter valid measurements for all fields.');
+            return;
+        }
+
+        shape.measurements = measurements;
+        askBacksplash(container, shape);
+    });
+
+    // Back Button
+    const backButton = createElement('button', 'button back-button', 'Back');
+    buttonWrapper.appendChild(backButton);
+
+    backButton.addEventListener('click', () => {
+        previousPage && previousPage();
     });
 }
 
@@ -1810,20 +1893,6 @@ function getShapesForType(type) {
 }
 
 
-function navigateToPage(renderPage) {
-    // Save the current state to the stack if there's content
-    const currentContainer = document.querySelector('.container');
-    if (currentContainer) {
-        backButtonHistory.push(currentContainer.cloneNode(true)); // Save a clone of the current container
-    }
-
-    // Render the new page
-    const container = createElement('div', 'container');
-    document.body.innerHTML = ''; // Clear the current page
-    document.body.appendChild(container);
-
-    renderPage(container); // Call the provided render function for the new page
-}
 
     // Calculate and Add Item to Invoice (Unused in streamlined flow)
     // Removed individual item addition steps as per user request
