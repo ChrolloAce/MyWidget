@@ -1066,7 +1066,7 @@ function getShapesForSubcategory(type, subcategory) {
                 ],
             'Bartop': [
                 {
-                    name: 'Straight',
+                    name: 'Bartop Straight',
                     code: 'BarS',
                     type: 'Bartop', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2'],
@@ -1074,7 +1074,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/P69ZfHJ/9.png'
                 },
                 {
-                    name: 'Standard L',
+                    name: 'Bartop Standard L',
                     code: 'BarSL',
                     type: 'Bartop', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
@@ -1082,7 +1082,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/J55R5XS/10.png'
                 },
                 {
-                    name: 'Irregular L',
+                    name: 'Bartop Irregular L',
                     code: 'BarIL',
                     type: 'Bartop', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4'],
@@ -1090,7 +1090,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/mzpQz03/11.png'
                 },
                 {
-                    name: 'Broken L',
+                    name: 'Bartop Broken L',
                     code: 'BarBL',
                     type: 'Bartop', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5'],
@@ -1101,7 +1101,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/cg9YBY2/12.png'
                 },
                {
-    name: 'Standard 3 Sides',
+    name: 'Bartop Standard 3 Sides',
     code: 'Bar3',
                    type: 'Bartop', // Add the type field
     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
@@ -1112,7 +1112,7 @@ function getShapesForSubcategory(type, subcategory) {
     imageUrl: 'https://i.ibb.co/qMpW4WB/13.png'
 },
 {
-    name: 'Standard 4 Sides',
+    name: 'Bartop Standard 4 Sides',
     code: 'Bar4',
     type: 'Bartop', // Add the type field
     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7', 'Measurement 8', 'Measurement 9'],
@@ -1126,7 +1126,7 @@ function getShapesForSubcategory(type, subcategory) {
             ],
             'Island': [
                 {
-                    name: 'Rectangle',
+                    name: 'Island Rectangle',
                     code: 'IsR',
                     type: 'Island', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2'],
@@ -1134,7 +1134,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/Dwx1Rsw/18.png'
                 },
                 {
-                    name: 'Broken L',
+                    name: 'Island Broken L',
                     code: 'IsBL',
                     type: 'Island', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5'],
@@ -1145,7 +1145,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/JHrP44S/19.png'
                 },
                 {
-                    name: '3 Sides',
+                    name: 'Island 3 Sides',
                     code: 'Is3',
                     type: 'Island', // Add the type field
                     measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3', 'Measurement 4', 'Measurement 5', 'Measurement 6', 'Measurement 7'],
@@ -1625,7 +1625,7 @@ function generateItemDescription(item) {
     const subcategory = item.subcategory || 'Unknown'; // Use the `type` field from shape
     const shapeName = item.shape || 'Unknown';
 
-    return `${category} ${subcategory} - ${shapeName}`;
+    return `${category} - ${shapeName}`;
 }
 
 
