@@ -982,7 +982,7 @@ function getShapesForSubcategory(type, subcategory) {
         'Kitchen': {
             'Countertop': [
                 {
-                    name: 'Standard',
+                    name: 'Countertop Standard',
                     code: 'KS',
                                         type: 'Countertop', // Add the type field
 
@@ -991,7 +991,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/nn8k8Bf/1.png'
                 },
                 {
-                    name: 'Standard L',
+                    name: 'Countertop Standard L',
                     code: 'KSL',
                                         type: 'Countertop', // Add the type field
 
@@ -1000,7 +1000,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/ZdMvxQK/2.png'
                 },
                 {
-                    name: 'Standard 3 Sides',
+                    name: 'Countertop Standard 3 Sides',
                     code: 'KS3',
                                         type: 'Countertop', // Add the type field
 
@@ -1009,7 +1009,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/B28cv3j/3.png'
                 },
                 {
-                    name: 'Standard Broken L',
+                    name: 'Countertop Standard Broken L',
                     code: 'KSBL',
                                         type: 'Countertop', // Add the type field
 
@@ -1018,7 +1018,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/5kb4k7G/4.png'
                 },
                 {
-                    name: 'Standard Wing',
+                    name: 'Countertop Standard Wing',
                     code: 'KSW',
                                         type: 'Countertop', // Add the type field
 
@@ -1031,7 +1031,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/qnLVKrS/5.png'
                 },
                 {
-                    name: 'Standard Wing 3 Sides',
+                    name: 'Countertop Standard Wing 3 Sides',
                     code: 'KSW3',
                                         type: 'Countertop', // Add the type field
 
@@ -1043,7 +1043,7 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/WKscbzZ/6.png'
                 },
                 {
-                    name: 'Standard 4 Sides',
+                    name: 'Countertop Standard 4 Sides',
                     code: 'KS4',
                                         type: 'Countertop', // Add the type field
 
@@ -1055,9 +1055,9 @@ function getShapesForSubcategory(type, subcategory) {
                     imageUrl: 'https://i.ibb.co/dQ4sD7Y/7.png'
                 },
          {
-                name: 'Irregular L',
+                name: 'Countertop Irregular L',
                 code: 'KIL',
-                                 type: 'Countertop', // Add the type field
+                type: 'Countertop', // Add the type field
 
                 measurements: ['Measurement 1', 'Measurement 2', 'Measurement 3'],
                 formula: (measurements) => ((measurements[0] * measurements[1]) + (measurements[2] * 25)) / 144,
