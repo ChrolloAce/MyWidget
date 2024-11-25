@@ -996,7 +996,7 @@ function getShapesForSubcategory(type, subcategory) {
                                         type: 'Countertop', // Add the type field
 
                     measurements: ['Measurement 1', 'Measurement 2'],
-                    formula: (measurements) => (((measurements[0] + measurements[1]) / 2 * 25) / 144),
+                    formula: (measurements) => (((measurements[0] + measurements[1]) * 25) / 144),
                     imageUrl: 'https://i.ibb.co/ZdMvxQK/2.png'
                 },
                 {
