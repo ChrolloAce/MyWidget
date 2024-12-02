@@ -382,7 +382,7 @@ h3 {
 }
 
 .color-square {
-    width: 100px;
+    width: 125px;
     height: 100px;
     border: 3px solid #dddddd;
     border-radius: 10px;
