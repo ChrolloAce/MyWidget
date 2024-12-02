@@ -405,7 +405,7 @@ h3 {
 .color-square span {
     width: 100%;
     color: #333333;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     text-align: center;
     background-color: white;
