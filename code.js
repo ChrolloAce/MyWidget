@@ -746,7 +746,7 @@ function chooseColors(container) {
     });
 
     // Mix-in Colors Selection (Including base colors)
-    const mixInLabel = createElement('h3', null, 'Choose up to 4 Mix-in Colors:');
+    const mixInLabel = createElement('h3', null, 'Choose up to 4 Accent Colors:');
     container.appendChild(mixInLabel);
 
     const mixInContainer = createElement('div', 'color-selection');
