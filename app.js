@@ -1,96 +1,109 @@
 (function () {
-    let reports = [];
-    let snippets = [];
+    let sections = [];
+    let prepopulatedSnippets = [
+        {
+            title: "Tenant Move Out Inspection Summary",
+            content: `Junk left on site: Yes / No  
+            General Conditions: Bad / Decent / Good / Very Good  
+            Drains Flush Test: Passed / Clogged  
+            Damages Exceeding normal "Tear and Wear Standards": Yes / No  
+            Cleaning Conditions: Very Dirty / Dirty / Acceptable / Clean / Professionally Cleaned`
+        },
+        {
+            title: "Dryer Vent Clean Up",
+            content: `Dryer Vent Clean Up needed. Ensure proper air circulation and lint removal.`
+        },
+        {
+            title: "Inspection Summary",
+            content: `Inspection date 08/01/2023  
+            Inspection time frame 04:25-4:50 pm  
+            Utilities are still available. All the tenants have moved out and left some junk to remove.`
+        }
+    ];
 
-    // Monochrome Style Injection
+    // Inject Monochrome Styles
     (function injectStyles() {
         const styles = `
             body {
                 margin: 0;
-                font-family: 'Arial', sans-serif;
-                background: #f5f5f5;
+                font-family: Arial, sans-serif;
+                background: #f0f0f0;
                 color: #333;
                 display: flex;
-                justify-content: center;
-                align-items: flex-start;
-                min-height: 100vh;
+                flex-direction: column;
+                align-items: center;
                 padding: 20px;
             }
             .container {
                 width: 90%;
                 max-width: 1200px;
-                background-color: #fff;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                background: #fff;
+                border-radius: 8px;
                 padding: 20px;
-                margin: 20px 0;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
             }
-            h1, h2 {
-                color: #222;
+            h1, h2, h3 {
+                color: #333;
                 margin-bottom: 10px;
             }
             .button {
                 background-color: #555;
-                color: #fff;
-                padding: 10px 20px;
+                color: white;
+                padding: 10px 15px;
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
-                margin-right: 10px;
                 font-size: 14px;
+                margin-right: 10px;
             }
             .button:hover {
                 background-color: #333;
             }
-            .button-group {
-                margin: 20px 0;
+            .drop-area {
+                border: 2px dashed #bbb;
+                border-radius: 8px;
+                padding: 20px;
+                text-align: center;
+                color: #777;
+                margin-bottom: 15px;
+            }
+            .drop-area.dragover {
+                background-color: #eee;
+            }
+            .photo-preview {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 10px;
-            }
-            .form-group {
                 margin-bottom: 15px;
             }
-            label {
-                display: block;
-                font-weight: bold;
-                margin-bottom: 5px;
+            .photo-preview img {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                border-radius: 5px;
+                border: 1px solid #ccc;
             }
-            input, textarea {
-                width: 100%;
+            .rich-text {
                 padding: 10px;
                 border: 1px solid #ddd;
                 border-radius: 5px;
-                font-size: 14px;
+                margin-bottom: 15px;
+                min-height: 100px;
+                background: #fafafa;
             }
-            .snippet, .photo-section {
-                padding: 15px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                margin-bottom: 10px;
-                background-color: #f9f9f9;
-            }
-            .snippet-title, .photo-title {
-                font-weight: bold;
-                margin-bottom: 10px;
-                color: #444;
-            }
-            .photo-img {
-                width: 100%;
-                max-height: 300px;
-                object-fit: cover;
-                margin-bottom: 10px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
+            .section {
+                margin-bottom: 20px;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 10px;
             }
         `;
-        const styleElement = document.createElement("style");
-        styleElement.type = "text/css";
-        styleElement.appendChild(document.createTextNode(styles));
-        document.head.appendChild(styleElement);
+        const styleEl = document.createElement("style");
+        styleEl.innerHTML = styles;
+        document.head.appendChild(styleEl);
     })();
 
-    // Helper Function: Create DOM Elements
+    // Create DOM Elements
     function createElement(tag, className, textContent) {
         const el = document.createElement(tag);
         if (className) el.className = className;
@@ -98,7 +111,7 @@
         return el;
     }
 
-    // Main Dashboard Initialization
+    // Initialize Dashboard
     function initDashboard() {
         const container = createElement("div", "container");
         document.body.innerHTML = "";
@@ -107,185 +120,121 @@
         const header = createElement("h1", null, "Report Dashboard");
         container.appendChild(header);
 
-        // Button Group
-        const buttonGroup = createElement("div", "button-group");
-        container.appendChild(buttonGroup);
-
-        const addPhotoBtn = createElement("button", "button", "Add Photo Section");
-        addPhotoBtn.addEventListener("click", () => addPhotoSection(container));
-        buttonGroup.appendChild(addPhotoBtn);
-
-        const addSnippetBtn = createElement("button", "button", "Add Snippet");
-        addSnippetBtn.addEventListener("click", () => addSnippet(container));
-        buttonGroup.appendChild(addSnippetBtn);
+        const addSectionBtn = createElement("button", "button", "Add Section");
+        addSectionBtn.addEventListener("click", () => addSection(container));
+        container.appendChild(addSectionBtn);
 
         const generateReportBtn = createElement("button", "button", "Generate Report");
-        generateReportBtn.addEventListener("click", () => generateReport(container));
-        buttonGroup.appendChild(generateReportBtn);
+        generateReportBtn.addEventListener("click", generateReport);
+        container.appendChild(generateReportBtn);
 
-        // Display Sections
-        displaySections(container);
+        renderSections(container);
     }
 
-    // Display Photos and Snippets
-    function displaySections(container) {
-        const photoHeader = createElement("h2", null, "Photo Sections");
-        container.appendChild(photoHeader);
+    // Render Sections
+    function renderSections(container) {
+        sections.forEach((section, index) => {
+            const sectionDiv = createElement("div", "section");
+            container.appendChild(sectionDiv);
 
-        reports.forEach((photo, index) => {
-            const photoDiv = createElement("div", "photo-section");
-            const title = createElement("div", "photo-title", photo.title);
-            const img = createElement("img", "photo-img");
-            img.src = photo.image;
+            const title = createElement("h3", null, section.title);
+            sectionDiv.appendChild(title);
 
-            const itemList = createElement("ul", null);
-            photo.items.forEach(item => {
-                const li = createElement("li", null, item);
-                itemList.appendChild(li);
+            // Drop Area for Images
+            const dropArea = createElement("div", "drop-area", "Drag and drop images here, or click to upload.");
+            sectionDiv.appendChild(dropArea);
+
+            const previewContainer = createElement("div", "photo-preview");
+            sectionDiv.appendChild(previewContainer);
+
+            dropArea.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                dropArea.classList.add("dragover");
             });
 
-            const removeBtn = createElement("button", "button red", "Remove");
-            removeBtn.addEventListener("click", () => {
-                reports.splice(index, 1);
-                initDashboard();
+            dropArea.addEventListener("dragleave", () => dropArea.classList.remove("dragover"));
+
+            dropArea.addEventListener("drop", (e) => {
+                e.preventDefault();
+                dropArea.classList.remove("dragover");
+                handleFiles(e.dataTransfer.files, previewContainer);
             });
 
-            photoDiv.appendChild(title);
-            photoDiv.appendChild(img);
-            photoDiv.appendChild(itemList);
-            photoDiv.appendChild(removeBtn);
-            container.appendChild(photoDiv);
-        });
-
-        const snippetHeader = createElement("h2", null, "Snippets");
-        container.appendChild(snippetHeader);
-
-        snippets.forEach((snippet, index) => {
-            const snippetDiv = createElement("div", "snippet");
-            const title = createElement("div", "snippet-title", snippet.title);
-            const text = createElement("p", null, snippet.content);
-
-            const removeBtn = createElement("button", "button red", "Remove");
-            removeBtn.addEventListener("click", () => {
-                snippets.splice(index, 1);
-                initDashboard();
+            dropArea.addEventListener("click", () => {
+                const fileInput = document.createElement("input");
+                fileInput.type = "file";
+                fileInput.multiple = true;
+                fileInput.accept = "image/*";
+                fileInput.addEventListener("change", () => {
+                    handleFiles(fileInput.files, previewContainer);
+                });
+                fileInput.click();
             });
 
-            snippetDiv.appendChild(title);
-            snippetDiv.appendChild(text);
-            snippetDiv.appendChild(removeBtn);
-            container.appendChild(snippetDiv);
+            // Rich Text Editor
+            const richText = createElement("div", "rich-text");
+            richText.contentEditable = true;
+            richText.innerHTML = section.content || "Click to edit text...";
+            sectionDiv.appendChild(richText);
+
+            // Prepopulated Snippets
+            const snippetSelect = createElement("select", "button");
+            const defaultOption = createElement("option", null, "Insert Predefined Snippet");
+            snippetSelect.appendChild(defaultOption);
+            prepopulatedSnippets.forEach((snippet, i) => {
+                const option = createElement("option", null, snippet.title);
+                option.value = i;
+                snippetSelect.appendChild(option);
+            });
+
+            snippetSelect.addEventListener("change", (e) => {
+                const snippet = prepopulatedSnippets[e.target.value];
+                if (snippet) {
+                    richText.innerHTML += `<p>${snippet.content}</p>`;
+                }
+                snippetSelect.value = "Insert Predefined Snippet";
+            });
+
+            sectionDiv.appendChild(snippetSelect);
         });
     }
 
-    // Add Photo Section
-    function addPhotoSection(container) {
-        container.innerHTML = "";
-        const form = createElement("div", "form-group");
-
-        const titleInput = createInputField("Photo Title");
-        form.appendChild(titleInput);
-
-        const imageInput = createInputField("Photo URL");
-        form.appendChild(imageInput);
-
-        const itemsInput = createTextareaField("Itemized List (Comma Separated)");
-        form.appendChild(itemsInput);
-
-        const addBtn = createElement("button", "button", "Add Photo");
-        addBtn.addEventListener("click", () => {
-            reports.push({
-                title: titleInput.querySelector("input").value,
-                image: imageInput.querySelector("input").value,
-                items: itemsInput.querySelector("textarea").value.split(","),
-            });
+    // Add New Section
+    function addSection(container) {
+        const title = prompt("Enter section title:");
+        if (title) {
+            sections.push({ title, content: "" });
             initDashboard();
-        });
-        form.appendChild(addBtn);
-        container.appendChild(form);
+        }
     }
 
-    // Add Snippet
-    function addSnippet(container) {
-        container.innerHTML = "";
-        const form = createElement("div", "form-group");
+    // Handle File Uploads
+    function handleFiles(files, previewContainer) {
+        Array.from(files).forEach((file) => {
+            if (!file.type.startsWith("image/")) return;
 
-        const titleInput = createInputField("Snippet Title");
-        form.appendChild(titleInput);
-
-        const contentInput = createTextareaField("Snippet Content");
-        form.appendChild(contentInput);
-
-        const addBtn = createElement("button", "button", "Add Snippet");
-        addBtn.addEventListener("click", () => {
-            snippets.push({
-                title: titleInput.querySelector("input").value,
-                content: contentInput.querySelector("textarea").value,
-            });
-            initDashboard();
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = createElement("img");
+                img.src = e.target.result;
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
         });
-        form.appendChild(addBtn);
-        container.appendChild(form);
     }
 
     // Generate Report
-    function generateReport(container) {
-        container.innerHTML = "";
-        const header = createElement("h1", null, "Generated Report");
-        container.appendChild(header);
+    function generateReport() {
+        const reportWindow = window.open("", "_blank");
+        reportWindow.document.write("<h1>Generated Report</h1>");
 
-        reports.forEach(photo => {
-            const photoDiv = createElement("div", "photo-section");
-            const title = createElement("div", "photo-title", photo.title);
-            const img = createElement("img", "photo-img");
-            img.src = photo.image;
-
-            const itemList = createElement("ul", null);
-            photo.items.forEach(item => {
-                const li = createElement("li", null, item);
-                itemList.appendChild(li);
-            });
-
-            photoDiv.appendChild(title);
-            photoDiv.appendChild(img);
-            photoDiv.appendChild(itemList);
-            container.appendChild(photoDiv);
+        sections.forEach((section) => {
+            reportWindow.document.write(`<h2>${section.title}</h2>`);
+            reportWindow.document.write(`<p>${section.content}</p>`);
         });
 
-        snippets.forEach(snippet => {
-            const snippetDiv = createElement("div", "snippet");
-            const title = createElement("div", "snippet-title", snippet.title);
-            const text = createElement("p", null, snippet.content);
-
-            snippetDiv.appendChild(title);
-            snippetDiv.appendChild(text);
-            container.appendChild(snippetDiv);
-        });
-
-        const backBtn = createElement("button", "button", "Back to Dashboard");
-        backBtn.addEventListener("click", initDashboard);
-        container.appendChild(backBtn);
+        reportWindow.document.close();
     }
 
-    // Input Fields
-    function createInputField(labelText) {
-        const group = createElement("div", "form-group");
-        const label = createElement("label", null, labelText);
-        const input = createElement("input");
-        group.appendChild(label);
-        group.appendChild(input);
-        return group;
-    }
-
-    function createTextareaField(labelText) {
-        const group = createElement("div", "form-group");
-        const label = createElement("label", null, labelText);
-        const textarea = createElement("textarea");
-        group.appendChild(label);
-        group.appendChild(textarea);
-        return group;
-    }
-
-    // Initialize Dashboard
     initDashboard();
 })();
