@@ -5,29 +5,29 @@
             title: "Tenant Move Out Inspection Summary",
             content: `Junk left on site: Yes / No  
             General Conditions: Bad / Decent / Good / Very Good  
-            Drains Flush Test: Passed / Clogged  
-            Damages Exceeding normal "Tear and Wear Standards": Yes / No  
-            Cleaning Conditions: Very Dirty / Dirty / Acceptable / Clean / Professionally Cleaned`
+            Drains Flush Test: Passed / Clogged`,
+            date: "2023-08-01"
         },
         {
             title: "Dryer Vent Clean Up",
-            content: `Dryer Vent Clean Up needed. Ensure proper air circulation and lint removal.`
+            content: `Dryer Vent Clean Up needed. Ensure proper air circulation and lint removal.`,
+            date: "2023-07-15"
         },
         {
             title: "Inspection Summary",
             content: `Inspection date 08/01/2023  
-            Inspection time frame 04:25-4:50 pm  
-            Utilities are still available. All the tenants have moved out and left some junk to remove.`
+            Utilities are still available. All the tenants have moved out and left some junk to remove.`,
+            date: "2023-06-20"
         }
     ];
 
-    // Inject Monochrome Styles
+    // Inject Styles
     (function injectStyles() {
         const styles = `
             body {
                 margin: 0;
                 font-family: Arial, sans-serif;
-                background: #f0f0f0;
+                background: #f8f9fa;
                 color: #333;
                 display: flex;
                 flex-direction: column;
@@ -60,6 +60,14 @@
             .button:hover {
                 background-color: #333;
             }
+            .rich-text {
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin-bottom: 15px;
+                min-height: 100px;
+                background: #f9f9f9;
+            }
             .drop-area {
                 border: 2px dashed #bbb;
                 border-radius: 8px;
@@ -71,31 +79,74 @@
             .drop-area.dragover {
                 background-color: #eee;
             }
-            .photo-preview {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                margin-bottom: 15px;
-            }
             .photo-preview img {
                 width: 100px;
                 height: 100px;
                 object-fit: cover;
                 border-radius: 5px;
                 border: 1px solid #ccc;
-            }
-            .rich-text {
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                margin-bottom: 15px;
-                min-height: 100px;
-                background: #fafafa;
+                margin-right: 5px;
             }
             .section {
                 margin-bottom: 20px;
                 border-bottom: 1px solid #ddd;
                 padding-bottom: 10px;
+            }
+            /* Modal Styles */
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                visibility: hidden;
+                opacity: 0;
+                transition: visibility 0s, opacity 0.3s;
+            }
+            .modal.show {
+                visibility: visible;
+                opacity: 1;
+            }
+            .modal-content {
+                background: #fff;
+                border-radius: 8px;
+                padding: 20px;
+                width: 90%;
+                max-width: 600px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                position: relative;
+            }
+            .modal-close {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: #ccc;
+                border: none;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+            .snippet {
+                margin-bottom: 10px;
+                padding: 10px;
+                background: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+            .snippet-title {
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .sort-controls {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
             }
         `;
         const styleEl = document.createElement("style");
@@ -121,7 +172,7 @@
         container.appendChild(header);
 
         const addSectionBtn = createElement("button", "button", "Add Section");
-        addSectionBtn.addEventListener("click", () => addSection(container));
+        addSectionBtn.addEventListener("click", () => addSection());
         container.appendChild(addSectionBtn);
 
         const generateReportBtn = createElement("button", "button", "Generate Report");
@@ -177,30 +228,15 @@
             richText.innerHTML = section.content || "Click to edit text...";
             sectionDiv.appendChild(richText);
 
-            // Prepopulated Snippets
-            const snippetSelect = createElement("select", "button");
-            const defaultOption = createElement("option", null, "Insert Predefined Snippet");
-            snippetSelect.appendChild(defaultOption);
-            prepopulatedSnippets.forEach((snippet, i) => {
-                const option = createElement("option", null, snippet.title);
-                option.value = i;
-                snippetSelect.appendChild(option);
-            });
-
-            snippetSelect.addEventListener("change", (e) => {
-                const snippet = prepopulatedSnippets[e.target.value];
-                if (snippet) {
-                    richText.innerHTML += `<p>${snippet.content}</p>`;
-                }
-                snippetSelect.value = "Insert Predefined Snippet";
-            });
-
-            sectionDiv.appendChild(snippetSelect);
+            // Insert Snippet Button
+            const snippetBtn = createElement("button", "button", "Insert Snippet");
+            snippetBtn.addEventListener("click", () => showSnippetModal(richText));
+            sectionDiv.appendChild(snippetBtn);
         });
     }
 
-    // Add New Section
-    function addSection(container) {
+    // Add Section
+    function addSection() {
         const title = prompt("Enter section title:");
         if (title) {
             sections.push({ title, content: "" });
@@ -234,6 +270,68 @@
         });
 
         reportWindow.document.close();
+    }
+
+    // Snippet Modal
+    function showSnippetModal(richText) {
+        const modal = createElement("div", "modal show");
+        const modalContent = createElement("div", "modal-content");
+        const closeModal = createElement("button", "modal-close", "×");
+
+        closeModal.addEventListener("click", () => document.body.removeChild(modal));
+        modalContent.appendChild(closeModal);
+
+        const sortControls = createElement("div", "sort-controls");
+        const sortAlphaBtn = createElement("button", "button", "Sort Alphabetically");
+        const sortDateBtn = createElement("button", "button", "Sort by Date");
+        const searchInput = createElement("input");
+        searchInput.placeholder = "Search snippets...";
+        sortControls.appendChild(sortAlphaBtn);
+        sortControls.appendChild(sortDateBtn);
+        sortControls.appendChild(searchInput);
+        modalContent.appendChild(sortControls);
+
+        const snippetContainer = createElement("div", null);
+        modalContent.appendChild(snippetContainer);
+
+        const renderSnippets = (filteredSnippets) => {
+            snippetContainer.innerHTML = "";
+            filteredSnippets.forEach((snippet) => {
+                const snippetDiv = createElement("div", "snippet");
+                const title = createElement("div", "snippet-title", snippet.title);
+                const content = createElement("p", null, snippet.content);
+                const insertBtn = createElement("button", "button", "Insert");
+                insertBtn.addEventListener("click", () => {
+                    richText.innerHTML += `<p>${snippet.content}</p>`;
+                    document.body.removeChild(modal);
+                });
+                snippetDiv.appendChild(title);
+                snippetDiv.appendChild(content);
+                snippetDiv.appendChild(insertBtn);
+                snippetContainer.appendChild(snippetDiv);
+            });
+        };
+
+        renderSnippets(prepopulatedSnippets);
+
+        sortAlphaBtn.addEventListener("click", () => {
+            renderSnippets([...prepopulatedSnippets].sort((a, b) => a.title.localeCompare(b.title)));
+        });
+
+        sortDateBtn.addEventListener("click", () => {
+            renderSnippets([...prepopulatedSnippets].sort((a, b) => new Date(b.date) - new Date(a.date)));
+        });
+
+        searchInput.addEventListener("input", (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = prepopulatedSnippets.filter((snippet) =>
+                snippet.title.toLowerCase().includes(query) || snippet.content.toLowerCase().includes(query)
+            );
+            renderSnippets(filtered);
+        });
+
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
     }
 
     initDashboard();
