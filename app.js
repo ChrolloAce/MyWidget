@@ -137,6 +137,52 @@ function initReportGenerator(content) {
 
     let currentScreen = "snippetManager"; // Default screen
 
+
+
+function initSnippetManager() {
+    // Initialize the snippet storage
+    const snippets = [];
+
+    console.log("Snippet Manager Initialized");
+
+    // Function to add a new snippet
+    function addSnippet(title, content) {
+        snippets.push({ title, content });
+        console.log(`Snippet added: ${title}`);
+    }
+
+    // Function to remove a snippet by title
+    function removeSnippet(title) {
+        const index = snippets.findIndex(snippet => snippet.title === title);
+        if (index !== -1) {
+            snippets.splice(index, 1);
+            console.log(`Snippet removed: ${title}`);
+        } else {
+            console.log(`Snippet not found: ${title}`);
+        }
+    }
+
+    // Function to list all snippets
+    function listSnippets() {
+        if (snippets.length === 0) {
+            console.log("No snippets available.");
+        } else {
+            console.log("Snippets:");
+            snippets.forEach(snippet => console.log(`- ${snippet.title}`));
+        }
+    }
+
+    // Expose the snippet manager methods globally or return them
+    window.snippetManager = {
+        addSnippet,
+        removeSnippet,
+        listSnippets
+    };
+}
+
+
+
+    
     function initDashboard() {
     document.body.innerHTML = ""; // Clear existing content
 
