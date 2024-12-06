@@ -1,3 +1,4 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 (function () {
     let sections = [];
     let snippetCategories = {
@@ -247,82 +248,88 @@
         renderSections(container);
     }
 
-    // Render Sections
-    function renderSections(container) {
-        sections.forEach((section) => {
-            const sectionDiv = createElement("div", "section");
-            container.appendChild(sectionDiv);
+   function renderSections(container) {
+    sections.forEach((section, index) => {
+        const sectionDiv = createElement("div", "section");
+        container.appendChild(sectionDiv);
 
-            const title = createElement("h3", null, section.title);
-            sectionDiv.appendChild(title);
+        const title = createElement("h3", null, section.title);
+        sectionDiv.appendChild(title);
 
-            // Drop Area for Images
-            const dropArea = createElement("div", "drop-area", "Drag and drop images here, or click to upload.");
-            sectionDiv.appendChild(dropArea);
+        // Drop Area for Images
+        const dropArea = createElement("div", "drop-area", "Drag and drop images here, or click to upload.");
+        sectionDiv.appendChild(dropArea);
 
-            const previewContainer = createElement("div", "photo-preview");
-            sectionDiv.appendChild(previewContainer);
+        const previewContainer = createElement("div", "photo-preview");
+        sectionDiv.appendChild(previewContainer);
 
-            dropArea.addEventListener("dragover", (e) => {
-                e.preventDefault();
-                dropArea.classList.add("dragover");
-            });
-
-            dropArea.addEventListener("dragleave", () => dropArea.classList.remove("dragover"));
-
-            dropArea.addEventListener("drop", (e) => {
-                e.preventDefault();
-                dropArea.classList.remove("dragover");
-                handleFiles(e.dataTransfer.files, previewContainer);
-            });
-
-            dropArea.addEventListener("click", () => {
-                const fileInput = document.createElement("input");
-                fileInput.type = "file";
-                fileInput.multiple = true;
-                fileInput.accept = "image/*";
-                fileInput.addEventListener("change", () => {
-                    handleFiles(fileInput.files, previewContainer);
-                });
-                fileInput.click();
-            });
-
-            // Rich Text Editor
-            const richText = createElement("div", "rich-text");
-            richText.contentEditable = true;
-            richText.innerHTML = section.content || "Click to edit text...";
-            sectionDiv.appendChild(richText);
-
-            // Insert Snippet Button
-            const snippetBtn = createElement("button", "button", "Insert Snippet");
-            snippetBtn.addEventListener("click", () => showSnippetModal(richText));
-            sectionDiv.appendChild(snippetBtn);
+        dropArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropArea.classList.add("dragover");
         });
-    }
 
-    // Add Section
+        dropArea.addEventListener("dragleave", () => dropArea.classList.remove("dragover"));
+
+        dropArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropArea.classList.remove("dragover");
+            handleFiles(e.dataTransfer.files, previewContainer, index);
+        });
+
+        dropArea.addEventListener("click", () => {
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.multiple = true;
+            fileInput.accept = "image/*";
+            fileInput.addEventListener("change", () => {
+                handleFiles(fileInput.files, previewContainer, index);
+            });
+            fileInput.click();
+        });
+
+        // Rich Text Editor
+        const richText = createElement("div", "rich-text");
+        richText.contentEditable = true;
+        richText.innerHTML = section.content || "Click to edit text...";
+        richText.addEventListener("input", () => {
+            sections[index].content = richText.innerHTML;
+        });
+        sectionDiv.appendChild(richText);
+
+        // Insert Snippet Button
+        const snippetBtn = createElement("button", "button", "Insert Snippet");
+        snippetBtn.addEventListener("click", () => showSnippetModal(richText));
+        sectionDiv.appendChild(snippetBtn);
+    });
+}
+
+
     function addSection() {
-        const title = prompt("Enter section title:");
-        if (title) {
-            sections.push({ title, content: "" });
-            initDashboard();
-        }
+    const title = prompt("Enter section title:");
+    if (title) {
+        sections.push({ title, content: "", images: [] });
+        initDashboard();
     }
+}
 
-    // Handle File Uploads
-    function handleFiles(files, previewContainer) {
-        Array.from(files).forEach((file) => {
-            if (!file.type.startsWith("image/")) return;
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = createElement("img");
-                img.src = e.target.result;
-                previewContainer.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
+   function handleFiles(files, previewContainer, sectionIndex) {
+    Array.from(files).forEach((file) => {
+        if (!file.type.startsWith("image/")) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = createElement("img");
+            img.src = e.target.result;
+            previewContainer.appendChild(img);
+
+            // Store image in the section
+            sections[sectionIndex].images.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
 
     // Generate Report
     function generateReport() {
