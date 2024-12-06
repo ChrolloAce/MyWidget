@@ -183,38 +183,34 @@ function initSnippetManager() {
 
 
     
-    function initDashboard() {
-    document.body.innerHTML = ""; // Clear existing content
+// Initialize the Dashboard
+function initDashboard() {
+    console.log("Dashboard Initializing...");
 
-    const appBar = createElement("div", "app-bar");
-    const content = createElement("div", "content");
+    // Step 1: Initialize Snippet Manager
+    initSnippetManager();
 
-    const appTitle = createElement("h2", null, "Dashboard");
-    appBar.appendChild(appTitle);
+    // Example: Add some default snippets
+    snippetManager.addSnippet("Example Snippet 1", "console.log('Hello World!');");
+    snippetManager.addSnippet("Example Snippet 2", "alert('Snippet Manager is ready!');");
 
-    const navItems = [
-        { id: "snippetManager", label: "Snippet Manager" },
-        { id: "reportGenerator", label: "Report Generator" }
-    ];
+    // Step 2: Display snippets on the dashboard
+    snippetManager.listSnippets();
 
-    navItems.forEach((item) => {
-        const navItem = createElement("div", "nav-item", item.label);
-        if (item.id === currentScreen) navItem.classList.add("active");
-        navItem.addEventListener("click", () => {
-            currentScreen = item.id;
-            initDashboard(); // Reinitialize dashboard when switching screens
+    // Step 3: Attach event listeners (example)
+    const addSnippetButton = document.getElementById('add-snippet');
+    if (addSnippetButton) {
+        addSnippetButton.addEventListener('click', () => {
+            const title = prompt("Enter snippet title:");
+            const content = prompt("Enter snippet content:");
+            if (title && content) {
+                snippetManager.addSnippet(title, content);
+                snippetManager.listSnippets();
+            }
         });
-        appBar.appendChild(navItem);
-    });
-
-    document.body.appendChild(appBar);
-    document.body.appendChild(content);
-
-    if (currentScreen === "snippetManager") {
-        initSnippetManager(content); // Render Snippet Manager screen
-    } else if (currentScreen === "reportGenerator") {
-        initReportGenerator(content); // Render Report Generator screen
     }
+
+    console.log("Dashboard Initialized");
 }
 
 
