@@ -30,13 +30,6 @@
             Fridge: Needs cleaning  
             Dishwasher: Functional but needs exterior cleaning`,
             date: "2023-08-30"
-        },
-        {
-            title: "Property Cleanliness Evaluation",
-            content: `Flooring: Acceptable  
-            Walls: Needs minor cleaning  
-            Windows: Very dirty`,
-            date: "2023-07-18"
         }
     ];
 
@@ -113,13 +106,17 @@
             .drop-area.dragover {
                 background-color: #eee;
             }
+            .photo-preview {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
             .photo-preview img {
                 width: 100px;
                 height: 100px;
                 object-fit: cover;
                 border-radius: 5px;
                 border: 1px solid #ccc;
-                margin-right: 5px;
             }
             .section {
                 margin-bottom: 20px;
@@ -239,6 +236,37 @@
             const title = createElement("h3", null, section.title);
             sectionDiv.appendChild(title);
 
+            // Drop Area for Images
+            const dropArea = createElement("div", "drop-area", "Drag and drop images here, or click to upload.");
+            sectionDiv.appendChild(dropArea);
+
+            const previewContainer = createElement("div", "photo-preview");
+            sectionDiv.appendChild(previewContainer);
+
+            dropArea.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                dropArea.classList.add("dragover");
+            });
+
+            dropArea.addEventListener("dragleave", () => dropArea.classList.remove("dragover"));
+
+            dropArea.addEventListener("drop", (e) => {
+                e.preventDefault();
+                dropArea.classList.remove("dragover");
+                handleFiles(e.dataTransfer.files, previewContainer);
+            });
+
+            dropArea.addEventListener("click", () => {
+                const fileInput = document.createElement("input");
+                fileInput.type = "file";
+                fileInput.multiple = true;
+                fileInput.accept = "image/*";
+                fileInput.addEventListener("change", () => {
+                    handleFiles(fileInput.files, previewContainer);
+                });
+                fileInput.click();
+            });
+
             // Toolbar for Rich Text Editor
             const toolbar = createElement("div", "rich-text-toolbar");
             sectionDiv.appendChild(toolbar);
@@ -273,6 +301,21 @@
             sections.push({ title, content: "" });
             initDashboard();
         }
+    }
+
+    // Handle File Uploads
+    function handleFiles(files, previewContainer) {
+        Array.from(files).forEach((file) => {
+            if (!file.type.startsWith("image/")) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = createElement("img");
+                img.src = e.target.result;
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
     }
 
     // Generate Report
