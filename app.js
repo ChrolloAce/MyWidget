@@ -1,403 +1,322 @@
-(function () {
-    let sections = [];
-    let snippetCategories = {
-        "All": [], // Dynamically populated later
-        "Inspection": [
-            {
-                title: "Tenant Move Out Inspection Summary",
-                content: `Junk left on site: Yes / No  
-                General Conditions: Bad / Decent / Good / Very Good  
-                Drains Flush Test: Passed / Clogged`,
-                date: "2023-08-01"
-            },
-            {
-                title: "Inspection Summary",
-                content: `Inspection date 08/01/2023  
-                Utilities are still available. All the tenants have moved out and left some junk to remove.`,
-                date: "2023-06-20"
-            }
-        ],
-        "Maintenance": [
-            {
-                title: "Dryer Vent Clean Up",
-                content: `Dryer Vent Clean Up needed. Ensure proper air circulation and lint removal.`,
-                date: "2023-07-15"
-            },
-            {
-                title: "Wall Damage Report",
-                content: `Damage found on the north wall. Paint peeling and requires patching. Estimated repair time: 2 hours.`,
-                date: "2023-09-12"
-            },
-            {
-                title: "Appliance Inspection",
-                content: `Oven: Clean  
-                Fridge: Needs cleaning  
-                Dishwasher: Functional but needs exterior cleaning`,
-                date: "2023-08-30"
-            }
-        ],
-        "General Notes": [
-            {
-                title: "Property Cleanliness Evaluation",
-                content: `Flooring: Acceptable  
-                Walls: Needs minor cleaning  
-                Windows: Very dirty`,
-                date: "2023-07-18"
-            },
-            {
-                title: "Landscape Condition",
-                content: `Lawn: Overgrown  
-                Bushes: Trim required  
-                General: Needs maintenance`,
-                date: "2023-08-05"
-            }
-        ]
-    };
-
-    // Combine all snippets into the "All" category
-    snippetCategories["All"] = Object.values(snippetCategories)
-        .filter((category) => category !== snippetCategories["All"])
-        .flat();
-
-    // Inject Styles
-    (function injectStyles() {
-        const styles = `
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        display: flex;
-        min-height: 100vh;
-        background: #f8f9fa;
-    }
-    .app-bar {
-        width: 250px;
-        background: #333;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    }
-    .app-bar h2 {
-        margin-bottom: 20px;
-        font-size: 20px;
-        text-align: center;
-    }
-    .nav-item {
-        padding: 10px;
-        color: white;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-    .nav-item:hover {
-        background: #555;
-    }
-    .nav-item.active {
-        background: #555;
-    }
-    .content {
-        flex: 1;
-        padding: 20px;
-        overflow-y: auto;
-    }
-`;
-
-        const styleEl = document.createElement("style");
-        styleEl.innerHTML = styles;
-        document.head.appendChild(styleEl);
-    })();
-
-
-function initReportGenerator(content) {
-    const container = createElement("div", "container");
-    content.appendChild(container);
-
-    const header = createElement("h1", null, "Report Generator");
-    container.appendChild(header);
-
-    const addReportBtn = createElement("button", "button", "Add Report Template");
-    addReportBtn.addEventListener("click", () => {
-        alert("Report Generator: Add Template functionality coming soon.");
-    });
-    container.appendChild(addReportBtn);
-}
-
-
-
-    
-    // Create DOM Elements
-    function createElement(tag, className, textContent) {
-        const el = document.createElement(tag);
-        if (className) el.className = className;
-        if (textContent) el.textContent = textContent;
-        return el;
-    }
-
-    let currentScreen = "snippetManager"; // Default screen
-
-
-
-function initSnippetManager() {
-    // Initialize the snippet storage
-    const snippets = [];
-
-    console.log("Snippet Manager Initialized");
-
-    // Function to add a new snippet
-    function addSnippet(title, content) {
-        snippets.push({ title, content });
-        console.log(`Snippet added: ${title}`);
-    }
-
-    // Function to remove a snippet by title
-    function removeSnippet(title) {
-        const index = snippets.findIndex(snippet => snippet.title === title);
-        if (index !== -1) {
-            snippets.splice(index, 1);
-            console.log(`Snippet removed: ${title}`);
-        } else {
-            console.log(`Snippet not found: ${title}`);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functional Dashboard</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: #f8f9fa;
         }
-    }
 
-    // Function to list all snippets
-    function listSnippets() {
-        if (snippets.length === 0) {
-            console.log("No snippets available.");
-        } else {
-            console.log("Snippets:");
-            snippets.forEach(snippet => console.log(`- ${snippet.title}`));
+        /* App Bar */
+        .app-bar {
+            width: 250px;
+            background: #333;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
-    }
 
-    // Expose the snippet manager methods globally or return them
-    window.snippetManager = {
-        addSnippet,
-        removeSnippet,
-        listSnippets
-    };
-}
-
-
-
-    
-// Initialize the Dashboard
-function initDashboard() {
-    console.log("Dashboard Initializing...");
-
-    // Step 1: Initialize Snippet Manager
-    initSnippetManager();
-
-    // Example: Add some default snippets
-    snippetManager.addSnippet("Example Snippet 1", "console.log('Hello World!');");
-    snippetManager.addSnippet("Example Snippet 2", "alert('Snippet Manager is ready!');");
-
-    // Step 2: Display snippets on the dashboard
-    snippetManager.listSnippets();
-
-    // Step 3: Attach event listeners (example)
-    const addSnippetButton = document.getElementById('add-snippet');
-    if (addSnippetButton) {
-        addSnippetButton.addEventListener('click', () => {
-            const title = prompt("Enter snippet title:");
-            const content = prompt("Enter snippet content:");
-            if (title && content) {
-                snippetManager.addSnippet(title, content);
-                snippetManager.listSnippets();
-            }
-        });
-    }
-
-    console.log("Dashboard Initialized");
-}
-
-
-    // Render Sections
-    function renderSections(container) {
-        sections.forEach((section) => {
-            const sectionDiv = createElement("div", "section");
-            container.appendChild(sectionDiv);
-
-            const title = createElement("h3", null, section.title);
-            sectionDiv.appendChild(title);
-
-            // Drop Area for Images
-            const dropArea = createElement("div", "drop-area", "Drag and drop images here, or click to upload.");
-            sectionDiv.appendChild(dropArea);
-
-            const previewContainer = createElement("div", "photo-preview");
-            sectionDiv.appendChild(previewContainer);
-
-            dropArea.addEventListener("dragover", (e) => {
-                e.preventDefault();
-                dropArea.classList.add("dragover");
-            });
-
-            dropArea.addEventListener("dragleave", () => dropArea.classList.remove("dragover"));
-
-            dropArea.addEventListener("drop", (e) => {
-                e.preventDefault();
-                dropArea.classList.remove("dragover");
-                handleFiles(e.dataTransfer.files, previewContainer);
-            });
-
-            dropArea.addEventListener("click", () => {
-                const fileInput = document.createElement("input");
-                fileInput.type = "file";
-                fileInput.multiple = true;
-                fileInput.accept = "image/*";
-                fileInput.addEventListener("change", () => {
-                    handleFiles(fileInput.files, previewContainer);
-                });
-                fileInput.click();
-            });
-
-            // Rich Text Editor
-            const richText = createElement("div", "rich-text");
-            richText.contentEditable = true;
-            richText.innerHTML = section.content || "Click to edit text...";
-            sectionDiv.appendChild(richText);
-
-            // Insert Snippet Button
-            const snippetBtn = createElement("button", "button", "Insert Snippet");
-            snippetBtn.addEventListener("click", () => showSnippetModal(richText));
-            sectionDiv.appendChild(snippetBtn);
-        });
-    }
-
-    // Add Section
-    function addSection() {
-        const title = prompt("Enter section title:");
-        if (title) {
-            sections.push({ title, content: "" });
-            initDashboard();
+        .app-bar h2 {
+            text-align: center;
+            margin-bottom: 20px;
         }
-    }
 
-    // Handle File Uploads
-    function handleFiles(files, previewContainer) {
-        Array.from(files).forEach((file) => {
-            if (!file.type.startsWith("image/")) return;
+        .nav-item {
+            padding: 10px;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = createElement("img");
-                img.src = e.target.result;
-                previewContainer.appendChild(img);
+        .nav-item:hover,
+        .nav-item.active {
+            background: #555;
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Buttons and Inputs */
+        .button {
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        .button:hover {
+            background: #0056b3;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .snippet {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .snippet-title {
+            font-weight: bold;
+        }
+
+        /* Image Upload */
+        .drop-area {
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+
+        .drop-area.dragover {
+            background: #f0f0f0;
+        }
+
+        .photo-preview img {
+            width: 100px;
+            height: 100px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-bar">
+        <h2>Dashboard</h2>
+        <div class="nav-item" data-section="snippetManager">Snippet Manager</div>
+        <div class="nav-item" data-section="reportGenerator">Report Generator</div>
+        <div class="nav-item" data-section="imageUpload">Image Upload</div>
+    </div>
+    <div class="content" id="content">
+        <!-- Dynamic Content Here -->
+    </div>
+
+    <script>
+        (function () {
+            const sections = []; // Holds dynamically created sections
+            const snippetCategories = {
+                All: [],
+                Inspection: [
+                    {
+                        title: "Tenant Move Out Inspection Summary",
+                        content: `Junk left on site: Yes / No  
+                                General Conditions: Bad / Decent / Good / Very Good  
+                                Drains Flush Test: Passed / Clogged`,
+                        date: "2023-08-01",
+                    },
+                    {
+                        title: "Inspection Summary",
+                        content: `Inspection date 08/01/2023  
+                                Utilities are still available. All the tenants have moved out and left some junk to remove.`,
+                        date: "2023-06-20",
+                    },
+                ],
+                Maintenance: [
+                    {
+                        title: "Dryer Vent Clean Up",
+                        content: `Dryer Vent Clean Up needed. Ensure proper air circulation and lint removal.`,
+                        date: "2023-07-15",
+                    },
+                ],
             };
-            reader.readAsDataURL(file);
-        });
-    }
 
-    // Generate Report
-    function generateReport() {
-        const reportWindow = window.open("", "_blank");
-        reportWindow.document.write(`<h1 class="report-title">Generated Report</h1>`);
+            // Combine snippets into the "All" category
+            snippetCategories["All"] = Object.values(snippetCategories)
+                .filter((category) => category !== snippetCategories["All"])
+                .flat();
 
-        sections.forEach((section) => {
-            reportWindow.document.write(`<div class="report-section">`);
-            reportWindow.document.write(`<h2>${section.title}</h2>`);
-            reportWindow.document.write(`<p>${section.content}</p>`);
-            reportWindow.document.write(`</div>`);
-        });
+            // Helper: Create Elements
+            function createElement(tag, className, textContent) {
+                const el = document.createElement(tag);
+                if (className) el.className = className;
+                if (textContent) el.textContent = textContent;
+                return el;
+            }
 
-        reportWindow.document.close();
-    }
+            // Initialize Dashboard
+            function initDashboard() {
+                const content = document.getElementById("content");
+                content.innerHTML = ""; // Clear existing content
 
-    // Snippet Modal
-  function showSnippetModal(richText) {
-    const modal = createElement("div", "modal show");
-    const modalContent = createElement("div", "modal-content");
-    const closeModal = createElement("button", "modal-close", "×");
+                const activeSection = document.querySelector(".nav-item.active");
+                const sectionName = activeSection ? activeSection.dataset.section : "snippetManager";
 
-    closeModal.addEventListener("click", () => document.body.removeChild(modal));
-    modalContent.appendChild(closeModal);
+                switch (sectionName) {
+                    case "snippetManager":
+                        initSnippetManager(content);
+                        break;
+                    case "reportGenerator":
+                        initReportGenerator(content);
+                        break;
+                    case "imageUpload":
+                        initImageUpload(content);
+                        break;
+                    default:
+                        content.textContent = "Section not found.";
+                }
+            }
 
-    // Create a dropdown for categories
-    const dropdown = createElement("select", "category-dropdown");
-    Object.keys(snippetCategories).forEach((category) => {
-        const option = createElement("option", null, category);
-        dropdown.appendChild(option);
-    });
-    modalContent.appendChild(dropdown);
+            // Snippet Manager
+            function initSnippetManager(container) {
+                const header = createElement("h1", null, "Snippet Manager");
+                container.appendChild(header);
 
-    // Add search input
-    const searchInput = createElement("input", "category-search");
-    searchInput.type = "text";
-    searchInput.placeholder = "Search snippets...";
-    modalContent.appendChild(searchInput);
+                const searchInput = createElement("input", null);
+                searchInput.placeholder = "Search snippets...";
+                container.appendChild(searchInput);
 
-    // Sort controls
-    const sortControls = createElement("div", "sort-controls");
-    const sortAlphaBtn = createElement("button", "button", "Sort Alphabetically");
-    const sortDateBtn = createElement("button", "button", "Sort by Date");
-    sortControls.appendChild(sortAlphaBtn);
-    sortControls.appendChild(sortDateBtn);
-    modalContent.appendChild(sortControls);
+                const snippetList = createElement("div", "snippet-list");
+                container.appendChild(snippetList);
 
-    // Snippet container
-    const snippetContainer = createElement("div", null);
-    modalContent.appendChild(snippetContainer);
+                // Render snippets
+                function renderSnippets(query = "") {
+                    snippetList.innerHTML = "";
+                    const snippets = snippetCategories.All.filter(
+                        (snippet) =>
+                            snippet.title.toLowerCase().includes(query.toLowerCase()) ||
+                            snippet.content.toLowerCase().includes(query.toLowerCase())
+                    );
+                    snippets.forEach((snippet) => {
+                        const snippetDiv = createElement("div", "snippet");
+                        const title = createElement("div", "snippet-title", snippet.title);
+                        const content = createElement("div", null, snippet.content);
+                        snippetDiv.appendChild(title);
+                        snippetDiv.appendChild(content);
+                        snippetList.appendChild(snippetDiv);
+                    });
+                }
 
-    // Render snippets based on category, sort function, and search query
-    const renderSnippets = (category, sortFn = null, searchQuery = "") => {
-        snippetContainer.innerHTML = "";
-        let snippets = snippetCategories[category];
-        if (sortFn) snippets = [...snippets].sort(sortFn);
+                searchInput.addEventListener("input", (e) => renderSnippets(e.target.value));
 
-        // Filter snippets by search query
-        snippets = snippets.filter(
-            (snippet) =>
-                snippet.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                snippet.content.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+                renderSnippets();
+            }
 
-        // Render each snippet
-        snippets.forEach((snippet) => {
-            const snippetDiv = createElement("div", "snippet");
-            const title = createElement("div", "snippet-title", snippet.title);
-            const content = createElement("p", null, snippet.content);
-            const insertBtn = createElement("button", "button", "Insert");
-            insertBtn.addEventListener("click", () => {
-                richText.innerHTML += `<p>${snippet.content}</p>`;
-                document.body.removeChild(modal);
+            // Report Generator
+            function initReportGenerator(container) {
+                const header = createElement("h1", null, "Report Generator");
+                container.appendChild(header);
+
+                const addReportButton = createElement("button", "button", "Add Report Template");
+                container.appendChild(addReportButton);
+            }
+
+            // Image Upload
+            function initImageUpload(container) {
+                const header = createElement("h1", null, "Image Upload");
+                container.appendChild(header);
+
+                const dropArea = createElement("div", "drop-area", "Drag and drop images here");
+                container.appendChild(dropArea);
+
+                const previewContainer = createElement("div", "photo-preview");
+                container.appendChild(previewContainer);
+
+                dropArea.addEventListener("dragover", (e) => {
+                    e.preventDefault();
+                    dropArea.classList.add("dragover");
+                });
+
+                dropArea.addEventListener("dragleave", () => dropArea.classList.remove("dragover"));
+
+                dropArea.addEventListener("drop", (e) => {
+                    e.preventDefault();
+                    dropArea.classList.remove("dragover");
+                    handleFiles(e.dataTransfer.files, previewContainer);
+                });
+
+                function handleFiles(files, preview) {
+                    Array.from(files).forEach((file) => {
+                        if (!file.type.startsWith("image/")) return;
+
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            const img = createElement("img");
+                            img.src = reader.result;
+                            preview.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+            }
+
+            // App Bar Navigation
+            document.querySelectorAll(".nav-item").forEach((navItem) => {
+                navItem.addEventListener("click", () => {
+                    document
+                        .querySelectorAll(".nav-item")
+                        .forEach((item) => item.classList.remove("active"));
+                    navItem.classList.add("active");
+                    initDashboard();
+                });
             });
-            snippetDiv.appendChild(title);
-            snippetDiv.appendChild(content);
-            snippetDiv.appendChild(insertBtn);
-            snippetContainer.appendChild(snippetDiv);
-        });
-    };
 
-    // Initial rendering of the "All" category
-    renderSnippets("All");
-
-    // Event listeners for dropdown, sorting, and search
-    dropdown.addEventListener("change", (e) => {
-        renderSnippets(e.target.value, null, searchInput.value);
-    });
-
-    sortAlphaBtn.addEventListener("click", () => {
-        const category = dropdown.value;
-        renderSnippets(category, (a, b) => a.title.localeCompare(b.title), searchInput.value);
-    });
-
-    sortDateBtn.addEventListener("click", () => {
-        const category = dropdown.value;
-        renderSnippets(category, (a, b) => new Date(b.date) - new Date(a.date), searchInput.value);
-    });
-
-    searchInput.addEventListener("input", () => {
-        const category = dropdown.value;
-        renderSnippets(category, null, searchInput.value);
-    });
-
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-}
-
-
-    initDashboard();
-})();
+            // Initialize the first section
+            document.querySelector(".nav-item").classList.add("active");
+            initDashboard();
+        })();
+    </script>
+</body>
+</html>
