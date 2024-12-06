@@ -109,6 +109,23 @@
         document.head.appendChild(styleEl);
     })();
 
+
+function initReportGenerator(content) {
+    const container = createElement("div", "container");
+    content.appendChild(container);
+
+    const header = createElement("h1", null, "Report Generator");
+    container.appendChild(header);
+
+    const addReportBtn = createElement("button", "button", "Add Report Template");
+    addReportBtn.addEventListener("click", () => {
+        alert("Report Generator: Add Template functionality coming soon.");
+    });
+    container.appendChild(addReportBtn);
+}
+
+
+
     
     // Create DOM Elements
     function createElement(tag, className, textContent) {
