@@ -340,70 +340,97 @@
     }
 
     // Snippet Modal
-    function showSnippetModal(richText) {
-        const modal = createElement("div", "modal show");
-        const modalContent = createElement("div", "modal-content");
-        const closeModal = createElement("button", "modal-close", "×");
+  function showSnippetModal(richText) {
+    const modal = createElement("div", "modal show");
+    const modalContent = createElement("div", "modal-content");
+    const closeModal = createElement("button", "modal-close", "×");
 
-        closeModal.addEventListener("click", () => document.body.removeChild(modal));
-        modalContent.appendChild(closeModal);
+    closeModal.addEventListener("click", () => document.body.removeChild(modal));
+    modalContent.appendChild(closeModal);
 
-        const dropdown = createElement("select", "category-dropdown");
-        Object.keys(snippetCategories).forEach((category) => {
-            const option = createElement("option", null, category);
-            dropdown.appendChild(option);
-        });
-        modalContent.appendChild(dropdown);
+    // Create a dropdown for categories
+    const dropdown = createElement("select", "category-dropdown");
+    Object.keys(snippetCategories).forEach((category) => {
+        const option = createElement("option", null, category);
+        dropdown.appendChild(option);
+    });
+    modalContent.appendChild(dropdown);
 
-        const sortControls = createElement("div", "sort-controls");
-        const sortAlphaBtn = createElement("button", "button", "Sort Alphabetically");
-        const sortDateBtn = createElement("button", "button", "Sort by Date");
-        sortControls.appendChild(sortAlphaBtn);
-        sortControls.appendChild(sortDateBtn);
-        modalContent.appendChild(sortControls);
+    // Add search input
+    const searchInput = createElement("input", "category-search");
+    searchInput.type = "text";
+    searchInput.placeholder = "Search snippets...";
+    modalContent.appendChild(searchInput);
 
-        const snippetContainer = createElement("div", null);
-        modalContent.appendChild(snippetContainer);
+    // Sort controls
+    const sortControls = createElement("div", "sort-controls");
+    const sortAlphaBtn = createElement("button", "button", "Sort Alphabetically");
+    const sortDateBtn = createElement("button", "button", "Sort by Date");
+    sortControls.appendChild(sortAlphaBtn);
+    sortControls.appendChild(sortDateBtn);
+    modalContent.appendChild(sortControls);
 
-        const renderSnippets = (category, sortFn = null) => {
-            snippetContainer.innerHTML = "";
-            let snippets = snippetCategories[category];
-            if (sortFn) snippets = [...snippets].sort(sortFn);
+    // Snippet container
+    const snippetContainer = createElement("div", null);
+    modalContent.appendChild(snippetContainer);
 
-            snippets.forEach((snippet) => {
-                const snippetDiv = createElement("div", "snippet");
-                const title = createElement("div", "snippet-title", snippet.title);
-                const content = createElement("p", null, snippet.content);
-                const insertBtn = createElement("button", "button", "Insert");
-                insertBtn.addEventListener("click", () => {
-                    richText.innerHTML += `<p>${snippet.content}</p>`;
-                    document.body.removeChild(modal);
-                });
-                snippetDiv.appendChild(title);
-                snippetDiv.appendChild(content);
-                snippetDiv.appendChild(insertBtn);
-                snippetContainer.appendChild(snippetDiv);
+    // Render snippets based on category, sort function, and search query
+    const renderSnippets = (category, sortFn = null, searchQuery = "") => {
+        snippetContainer.innerHTML = "";
+        let snippets = snippetCategories[category];
+        if (sortFn) snippets = [...snippets].sort(sortFn);
+
+        // Filter snippets by search query
+        snippets = snippets.filter(
+            (snippet) =>
+                snippet.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                snippet.content.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        // Render each snippet
+        snippets.forEach((snippet) => {
+            const snippetDiv = createElement("div", "snippet");
+            const title = createElement("div", "snippet-title", snippet.title);
+            const content = createElement("p", null, snippet.content);
+            const insertBtn = createElement("button", "button", "Insert");
+            insertBtn.addEventListener("click", () => {
+                richText.innerHTML += `<p>${snippet.content}</p>`;
+                document.body.removeChild(modal);
             });
-        };
-
-        dropdown.addEventListener("change", (e) => {
-            renderSnippets(e.target.value);
+            snippetDiv.appendChild(title);
+            snippetDiv.appendChild(content);
+            snippetDiv.appendChild(insertBtn);
+            snippetContainer.appendChild(snippetDiv);
         });
+    };
 
-        sortAlphaBtn.addEventListener("click", () => {
-            const category = dropdown.value;
-            renderSnippets(category, (a, b) => a.title.localeCompare(b.title));
-        });
+    // Initial rendering of the "All" category
+    renderSnippets("All");
 
-        sortDateBtn.addEventListener("click", () => {
-            const category = dropdown.value;
-            renderSnippets(category, (a, b) => new Date(b.date) - new Date(a.date));
-        });
+    // Event listeners for dropdown, sorting, and search
+    dropdown.addEventListener("change", (e) => {
+        renderSnippets(e.target.value, null, searchInput.value);
+    });
 
-        renderSnippets("All"); // Default to "All" category
-        modal.appendChild(modalContent);
-        document.body.appendChild(modal);
-    }
+    sortAlphaBtn.addEventListener("click", () => {
+        const category = dropdown.value;
+        renderSnippets(category, (a, b) => a.title.localeCompare(b.title), searchInput.value);
+    });
+
+    sortDateBtn.addEventListener("click", () => {
+        const category = dropdown.value;
+        renderSnippets(category, (a, b) => new Date(b.date) - new Date(a.date), searchInput.value);
+    });
+
+    searchInput.addEventListener("input", () => {
+        const category = dropdown.value;
+        renderSnippets(category, null, searchInput.value);
+    });
+
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+}
+
 
     initDashboard();
 })();
