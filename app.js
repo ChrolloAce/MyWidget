@@ -330,20 +330,60 @@
 }
 
 
-    // Generate Report
-    function generateReport() {
-        const reportWindow = window.open("", "_blank");
-        reportWindow.document.write(`<h1 class="report-title">Generated Report</h1>`);
+  // Generate Report as PDF
+function generateReport() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
 
-        sections.forEach((section) => {
-            reportWindow.document.write(`<div class="report-section">`);
-            reportWindow.document.write(`<h2>${section.title}</h2>`);
-            reportWindow.document.write(`<p>${section.content}</p>`);
-            reportWindow.document.write(`</div>`);
-        });
+    // Set initial Y position
+    let yPosition = 20;
 
-        reportWindow.document.close();
-    }
+    // Add Report Title
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(20);
+    pdf.text("Generated Report", 105, yPosition, { align: "center" });
+    yPosition += 10;
+
+    sections.forEach((section, sectionIndex) => {
+        // Check if a new page is needed
+        if (yPosition + 50 > 280) {
+            pdf.addPage();
+            yPosition = 20;
+        }
+
+        // Add Section Title
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(16);
+        pdf.text(`${sectionIndex + 1}. ${section.title}`, 10, yPosition);
+        yPosition += 10;
+
+        // Add Section Content (text)
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(12);
+        const wrappedText = pdf.splitTextToSize(section.content, 180);
+        pdf.text(wrappedText, 10, yPosition);
+        yPosition += wrappedText.length * 6;
+
+        // Add Images (if available)
+        if (section.images && section.images.length > 0) {
+            section.images.forEach((imgSrc) => {
+                // Check if there’s room for the image
+                if (yPosition + 60 > 280) {
+                    pdf.addPage();
+                    yPosition = 20;
+                }
+                pdf.addImage(imgSrc, "JPEG", 10, yPosition, 50, 50);
+                yPosition += 60;
+            });
+        }
+
+        // Add a gap between sections
+        yPosition += 10;
+    });
+
+    // Save the PDF
+    pdf.save("Report.pdf");
+}
 
     // Snippet Modal
   function showSnippetModal(richText) {
