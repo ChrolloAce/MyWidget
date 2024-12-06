@@ -1,37 +1,57 @@
 (function () {
     let sections = [];
-    let prepopulatedSnippets = [
-        {
-            title: "Tenant Move Out Inspection Summary",
-            content: `Junk left on site: Yes / No  
-            General Conditions: Bad / Decent / Good / Very Good  
-            Drains Flush Test: Passed / Clogged`,
-            date: "2023-08-01"
-        },
-        {
-            title: "Dryer Vent Clean Up",
-            content: `Dryer Vent Clean Up needed. Ensure proper air circulation and lint removal.`,
-            date: "2023-07-15"
-        },
-        {
-            title: "Inspection Summary",
-            content: `Inspection date 08/01/2023  
-            Utilities are still available. All the tenants have moved out and left some junk to remove.`,
-            date: "2023-06-20"
-        },
-        {
-            title: "Wall Damage Report",
-            content: `Damage found on the north wall. Paint peeling and requires patching. Estimated repair time: 2 hours.`,
-            date: "2023-09-12"
-        },
-        {
-            title: "Appliance Inspection",
-            content: `Oven: Clean  
-            Fridge: Needs cleaning  
-            Dishwasher: Functional but needs exterior cleaning`,
-            date: "2023-08-30"
-        }
-    ];
+    let snippetCategories = {
+        "Inspection": [
+            {
+                title: "Tenant Move Out Inspection Summary",
+                content: `Junk left on site: Yes / No  
+                General Conditions: Bad / Decent / Good / Very Good  
+                Drains Flush Test: Passed / Clogged`,
+                date: "2023-08-01"
+            },
+            {
+                title: "Inspection Summary",
+                content: `Inspection date 08/01/2023  
+                Utilities are still available. All the tenants have moved out and left some junk to remove.`,
+                date: "2023-06-20"
+            }
+        ],
+        "Maintenance": [
+            {
+                title: "Dryer Vent Clean Up",
+                content: `Dryer Vent Clean Up needed. Ensure proper air circulation and lint removal.`,
+                date: "2023-07-15"
+            },
+            {
+                title: "Wall Damage Report",
+                content: `Damage found on the north wall. Paint peeling and requires patching. Estimated repair time: 2 hours.`,
+                date: "2023-09-12"
+            },
+            {
+                title: "Appliance Inspection",
+                content: `Oven: Clean  
+                Fridge: Needs cleaning  
+                Dishwasher: Functional but needs exterior cleaning`,
+                date: "2023-08-30"
+            }
+        ],
+        "General Notes": [
+            {
+                title: "Property Cleanliness Evaluation",
+                content: `Flooring: Acceptable  
+                Walls: Needs minor cleaning  
+                Windows: Very dirty`,
+                date: "2023-07-18"
+            },
+            {
+                title: "Landscape Condition",
+                content: `Lawn: Overgrown  
+                Bushes: Trim required  
+                General: Needs maintenance`,
+                date: "2023-08-05"
+            }
+        ]
+    };
 
     // Inject Styles
     (function injectStyles() {
@@ -79,21 +99,6 @@
                 margin-bottom: 15px;
                 min-height: 100px;
                 background: #f9f9f9;
-            }
-            .rich-text-toolbar {
-                display: flex;
-                gap: 5px;
-                margin-bottom: 10px;
-            }
-            .toolbar-button {
-                padding: 5px 10px;
-                border: 1px solid #ccc;
-                background: #f0f0f0;
-                cursor: pointer;
-                border-radius: 4px;
-            }
-            .toolbar-button:hover {
-                background: #e0e0e0;
             }
             .drop-area {
                 border: 2px dashed #bbb;
@@ -163,6 +168,9 @@
                 font-size: 16px;
                 cursor: pointer;
             }
+            .category-dropdown {
+                margin-bottom: 15px;
+            }
             .snippet {
                 margin-bottom: 10px;
                 padding: 10px;
@@ -173,11 +181,6 @@
             .snippet-title {
                 font-weight: bold;
                 margin-bottom: 5px;
-            }
-            .sort-controls {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 10px;
             }
             /* Report Styles */
             .report-title {
@@ -267,16 +270,6 @@
                 fileInput.click();
             });
 
-            // Toolbar for Rich Text Editor
-            const toolbar = createElement("div", "rich-text-toolbar");
-            sectionDiv.appendChild(toolbar);
-
-            ["Bold", "Italic", "Underline", "Bullet List", "Numbered List"].forEach((tool) => {
-                const button = createElement("button", "toolbar-button", tool);
-                button.addEventListener("click", () => formatText(tool));
-                toolbar.appendChild(button);
-            });
-
             // Rich Text Editor
             const richText = createElement("div", "rich-text");
             richText.contentEditable = true;
@@ -288,10 +281,6 @@
             snippetBtn.addEventListener("click", () => showSnippetModal(richText));
             sectionDiv.appendChild(snippetBtn);
         });
-    }
-
-    function formatText(action) {
-        document.execCommand(action.toLowerCase().replace(" ", ""));
     }
 
     // Add Section
@@ -342,22 +331,19 @@
         closeModal.addEventListener("click", () => document.body.removeChild(modal));
         modalContent.appendChild(closeModal);
 
-        const sortControls = createElement("div", "sort-controls");
-        const sortAlphaBtn = createElement("button", "button", "Sort Alphabetically");
-        const sortDateBtn = createElement("button", "button", "Sort by Date");
-        const searchInput = createElement("input");
-        searchInput.placeholder = "Search snippets...";
-        sortControls.appendChild(sortAlphaBtn);
-        sortControls.appendChild(sortDateBtn);
-        sortControls.appendChild(searchInput);
-        modalContent.appendChild(sortControls);
+        const dropdown = createElement("select", "category-dropdown");
+        Object.keys(snippetCategories).forEach((category) => {
+            const option = createElement("option", null, category);
+            dropdown.appendChild(option);
+        });
+        modalContent.appendChild(dropdown);
 
         const snippetContainer = createElement("div", null);
         modalContent.appendChild(snippetContainer);
 
-        const renderSnippets = (filteredSnippets) => {
+        const renderSnippets = (category) => {
             snippetContainer.innerHTML = "";
-            filteredSnippets.forEach((snippet) => {
+            snippetCategories[category].forEach((snippet) => {
                 const snippetDiv = createElement("div", "snippet");
                 const title = createElement("div", "snippet-title", snippet.title);
                 const content = createElement("p", null, snippet.content);
@@ -373,24 +359,11 @@
             });
         };
 
-        renderSnippets(prepopulatedSnippets);
-
-        sortAlphaBtn.addEventListener("click", () => {
-            renderSnippets([...prepopulatedSnippets].sort((a, b) => a.title.localeCompare(b.title)));
+        dropdown.addEventListener("change", (e) => {
+            renderSnippets(e.target.value);
         });
 
-        sortDateBtn.addEventListener("click", () => {
-            renderSnippets([...prepopulatedSnippets].sort((a, b) => new Date(b.date) - new Date(a.date)));
-        });
-
-        searchInput.addEventListener("input", (e) => {
-            const query = e.target.value.toLowerCase();
-            const filtered = prepopulatedSnippets.filter((snippet) =>
-                snippet.title.toLowerCase().includes(query) || snippet.content.toLowerCase().includes(query)
-            );
-            renderSnippets(filtered);
-        });
-
+        renderSnippets(Object.keys(snippetCategories)[0]); // Default to first category
         modal.appendChild(modalContent);
         document.body.appendChild(modal);
     }
