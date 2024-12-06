@@ -1,6 +1,4 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 (function () {
-    
     let sections = [];
     let snippetCategories = {
         "All": [], // Dynamically populated later
@@ -249,129 +247,97 @@
         renderSections(container);
     }
 
-  function renderSections(container) {
-    sections.forEach((section, index) => {
-        const sectionDiv = createElement("div", "section");
-        container.appendChild(sectionDiv);
+    // Render Sections
+    function renderSections(container) {
+        sections.forEach((section) => {
+            const sectionDiv = createElement("div", "section");
+            container.appendChild(sectionDiv);
 
-        const title = createElement("h3", null, section.title);
-        sectionDiv.appendChild(title);
+            const title = createElement("h3", null, section.title);
+            sectionDiv.appendChild(title);
 
-        // Drop Area for Images
-        const dropArea = createElement("div", "drop-area", "Drag and drop images here, or click to upload.");
-        sectionDiv.appendChild(dropArea);
+            // Drop Area for Images
+            const dropArea = createElement("div", "drop-area", "Drag and drop images here, or click to upload.");
+            sectionDiv.appendChild(dropArea);
 
-        const previewContainer = createElement("div", "photo-preview");
-        sectionDiv.appendChild(previewContainer);
+            const previewContainer = createElement("div", "photo-preview");
+            sectionDiv.appendChild(previewContainer);
 
-        dropArea.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            dropArea.classList.add("dragover");
-        });
-
-        dropArea.addEventListener("dragleave", () => dropArea.classList.remove("dragover"));
-
-        dropArea.addEventListener("drop", (e) => {
-            e.preventDefault();
-            dropArea.classList.remove("dragover");
-            handleFiles(e.dataTransfer.files, previewContainer, index);
-        });
-
-        dropArea.addEventListener("click", () => {
-            const fileInput = document.createElement("input");
-            fileInput.type = "file";
-            fileInput.multiple = true;
-            fileInput.accept = "image/*";
-            fileInput.addEventListener("change", () => {
-                handleFiles(fileInput.files, previewContainer, index);
+            dropArea.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                dropArea.classList.add("dragover");
             });
-            fileInput.click();
+
+            dropArea.addEventListener("dragleave", () => dropArea.classList.remove("dragover"));
+
+            dropArea.addEventListener("drop", (e) => {
+                e.preventDefault();
+                dropArea.classList.remove("dragover");
+                handleFiles(e.dataTransfer.files, previewContainer);
+            });
+
+            dropArea.addEventListener("click", () => {
+                const fileInput = document.createElement("input");
+                fileInput.type = "file";
+                fileInput.multiple = true;
+                fileInput.accept = "image/*";
+                fileInput.addEventListener("change", () => {
+                    handleFiles(fileInput.files, previewContainer);
+                });
+                fileInput.click();
+            });
+
+            // Rich Text Editor
+            const richText = createElement("div", "rich-text");
+            richText.contentEditable = true;
+            richText.innerHTML = section.content || "Click to edit text...";
+            sectionDiv.appendChild(richText);
+
+            // Insert Snippet Button
+            const snippetBtn = createElement("button", "button", "Insert Snippet");
+            snippetBtn.addEventListener("click", () => showSnippetModal(richText));
+            sectionDiv.appendChild(snippetBtn);
         });
-
-        // Rich Text Editor
-        const richText = createElement("div", "rich-text");
-        richText.contentEditable = true;
-        richText.innerHTML = section.content || "Click to edit text...";
-        richText.addEventListener("input", () => {
-            sections[index].content = richText.innerHTML;
-        });
-        sectionDiv.appendChild(richText);
-
-        // Insert Snippet Button
-        const snippetBtn = createElement("button", "button", "Insert Snippet");
-        snippetBtn.addEventListener("click", () => showSnippetModal(richText));
-        sectionDiv.appendChild(snippetBtn);
-    });
-}
-
-
-   function addSection() {
-    const title = prompt("Enter section title:");
-    if (title) {
-        sections.push({ title, content: "", images: [] });
-        initDashboard();
     }
-}
 
-   function handleFiles(files, previewContainer, sectionIndex) {
-    Array.from(files).forEach((file) => {
-        if (!file.type.startsWith("image/")) return;
+    // Add Section
+    function addSection() {
+        const title = prompt("Enter section title:");
+        if (title) {
+            sections.push({ title, content: "" });
+            initDashboard();
+        }
+    }
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = createElement("img");
-            img.src = e.target.result;
-            previewContainer.appendChild(img);
+    // Handle File Uploads
+    function handleFiles(files, previewContainer) {
+        Array.from(files).forEach((file) => {
+            if (!file.type.startsWith("image/")) return;
 
-            // Store image in the section
-            sections[sectionIndex].images.push(e.target.result);
-        };
-        reader.readAsDataURL(file);
-    });
-}
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = createElement("img");
+                img.src = e.target.result;
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
+    // Generate Report
+    function generateReport() {
+        const reportWindow = window.open("", "_blank");
+        reportWindow.document.write(`<h1 class="report-title">Generated Report</h1>`);
 
-   // Generate Report as PDF
-function generateReport() {
-    // Include jsPDF
-    const pdf = new jsPDF();
-
-    // Add a title to the PDF
-    pdf.setFontSize(18);
-    pdf.text("Generated Report", 105, 20, { align: "center" });
-
-    let yPosition = 30; // Start position for the first section
-
-    // Loop through sections to add content
-    sections.forEach((section) => {
-        // Add Section Title
-        pdf.setFontSize(16);
-        pdf.text(section.title, 10, yPosition);
-        yPosition += 10;
-
-        // Add Section Content
-        pdf.setFontSize(12);
-        const splitText = pdf.splitTextToSize(section.content, 190); // Split text to fit the page
-        pdf.text(splitText, 10, yPosition);
-        yPosition += splitText.length * 10;
-
-        // Add images (if any)
-        const imgContainer = section.images || [];
-        imgContainer.forEach((imgSrc) => {
-            if (yPosition + 50 > 280) {
-                pdf.addPage(); // Add a new page if the content exceeds the current page
-                yPosition = 10;
-            }
-            pdf.addImage(imgSrc, "JPEG", 10, yPosition, 50, 50);
-            yPosition += 60;
+        sections.forEach((section) => {
+            reportWindow.document.write(`<div class="report-section">`);
+            reportWindow.document.write(`<h2>${section.title}</h2>`);
+            reportWindow.document.write(`<p>${section.content}</p>`);
+            reportWindow.document.write(`</div>`);
         });
 
-        yPosition += 10; // Space between sections
-    });
-
-    // Save the PDF
-    pdf.save("Report.pdf");
-}
+        reportWindow.document.close();
+    }
 
     // Snippet Modal
   function showSnippetModal(richText) {
