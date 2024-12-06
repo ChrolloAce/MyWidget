@@ -18,6 +18,25 @@
             content: `Inspection date 08/01/2023  
             Utilities are still available. All the tenants have moved out and left some junk to remove.`,
             date: "2023-06-20"
+        },
+        {
+            title: "Wall Damage Report",
+            content: `Damage found on the north wall. Paint peeling and requires patching. Estimated repair time: 2 hours.`,
+            date: "2023-09-12"
+        },
+        {
+            title: "Appliance Inspection",
+            content: `Oven: Clean  
+            Fridge: Needs cleaning  
+            Dishwasher: Functional but needs exterior cleaning`,
+            date: "2023-08-30"
+        },
+        {
+            title: "Property Cleanliness Evaluation",
+            content: `Flooring: Acceptable  
+            Walls: Needs minor cleaning  
+            Windows: Very dirty`,
+            date: "2023-07-18"
         }
     ];
 
@@ -67,6 +86,21 @@
                 margin-bottom: 15px;
                 min-height: 100px;
                 background: #f9f9f9;
+            }
+            .rich-text-toolbar {
+                display: flex;
+                gap: 5px;
+                margin-bottom: 10px;
+            }
+            .toolbar-button {
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                background: #f0f0f0;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+            .toolbar-button:hover {
+                background: #e0e0e0;
             }
             .drop-area {
                 border: 2px dashed #bbb;
@@ -148,6 +182,20 @@
                 justify-content: space-between;
                 margin-bottom: 10px;
             }
+            /* Report Styles */
+            .report-title {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            .report-section {
+                margin-bottom: 20px;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background: #f9f9f9;
+            }
         `;
         const styleEl = document.createElement("style");
         styleEl.innerHTML = styles;
@@ -168,7 +216,7 @@
         document.body.innerHTML = "";
         document.body.appendChild(container);
 
-        const header = createElement("h1", null, "Report Dashboard");
+        const header = createElement("h1", null, "Professional Report Dashboard");
         container.appendChild(header);
 
         const addSectionBtn = createElement("button", "button", "Add Section");
@@ -191,35 +239,14 @@
             const title = createElement("h3", null, section.title);
             sectionDiv.appendChild(title);
 
-            // Drop Area for Images
-            const dropArea = createElement("div", "drop-area", "Drag and drop images here, or click to upload.");
-            sectionDiv.appendChild(dropArea);
+            // Toolbar for Rich Text Editor
+            const toolbar = createElement("div", "rich-text-toolbar");
+            sectionDiv.appendChild(toolbar);
 
-            const previewContainer = createElement("div", "photo-preview");
-            sectionDiv.appendChild(previewContainer);
-
-            dropArea.addEventListener("dragover", (e) => {
-                e.preventDefault();
-                dropArea.classList.add("dragover");
-            });
-
-            dropArea.addEventListener("dragleave", () => dropArea.classList.remove("dragover"));
-
-            dropArea.addEventListener("drop", (e) => {
-                e.preventDefault();
-                dropArea.classList.remove("dragover");
-                handleFiles(e.dataTransfer.files, previewContainer);
-            });
-
-            dropArea.addEventListener("click", () => {
-                const fileInput = document.createElement("input");
-                fileInput.type = "file";
-                fileInput.multiple = true;
-                fileInput.accept = "image/*";
-                fileInput.addEventListener("change", () => {
-                    handleFiles(fileInput.files, previewContainer);
-                });
-                fileInput.click();
+            ["Bold", "Italic", "Underline", "Bullet List", "Numbered List"].forEach((tool) => {
+                const button = createElement("button", "toolbar-button", tool);
+                button.addEventListener("click", () => formatText(tool));
+                toolbar.appendChild(button);
             });
 
             // Rich Text Editor
@@ -235,6 +262,10 @@
         });
     }
 
+    function formatText(action) {
+        document.execCommand(action.toLowerCase().replace(" ", ""));
+    }
+
     // Add Section
     function addSection() {
         const title = prompt("Enter section title:");
@@ -244,29 +275,16 @@
         }
     }
 
-    // Handle File Uploads
-    function handleFiles(files, previewContainer) {
-        Array.from(files).forEach((file) => {
-            if (!file.type.startsWith("image/")) return;
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = createElement("img");
-                img.src = e.target.result;
-                previewContainer.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
     // Generate Report
     function generateReport() {
         const reportWindow = window.open("", "_blank");
-        reportWindow.document.write("<h1>Generated Report</h1>");
+        reportWindow.document.write(`<h1 class="report-title">Generated Report</h1>`);
 
         sections.forEach((section) => {
+            reportWindow.document.write(`<div class="report-section">`);
             reportWindow.document.write(`<h2>${section.title}</h2>`);
             reportWindow.document.write(`<p>${section.content}</p>`);
+            reportWindow.document.write(`</div>`);
         });
 
         reportWindow.document.close();
