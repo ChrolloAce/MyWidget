@@ -1,6 +1,7 @@
 (function () {
     let sections = [];
     let snippetCategories = {
+        "All": [], // Dynamically populated later
         "Inspection": [
             {
                 title: "Tenant Move Out Inspection Summary",
@@ -52,6 +53,11 @@
             }
         ]
     };
+
+    // Combine all snippets into the "All" category
+    snippetCategories["All"] = Object.values(snippetCategories)
+        .filter((category) => category !== snippetCategories["All"])
+        .flat();
 
     // Inject Styles
     (function injectStyles() {
@@ -152,7 +158,7 @@
                 border-radius: 8px;
                 padding: 20px;
                 width: 90%;
-                max-width: 600px;
+                max-width: 700px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                 position: relative;
             }
@@ -169,6 +175,17 @@
                 cursor: pointer;
             }
             .category-dropdown {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                margin-bottom: 15px;
+                font-size: 16px;
+                background: #f9f9f9;
+            }
+            .sort-controls {
+                display: flex;
+                gap: 10px;
                 margin-bottom: 15px;
             }
             .snippet {
@@ -232,7 +249,7 @@
 
     // Render Sections
     function renderSections(container) {
-        sections.forEach((section, index) => {
+        sections.forEach((section) => {
             const sectionDiv = createElement("div", "section");
             container.appendChild(sectionDiv);
 
@@ -338,12 +355,22 @@
         });
         modalContent.appendChild(dropdown);
 
+        const sortControls = createElement("div", "sort-controls");
+        const sortAlphaBtn = createElement("button", "button", "Sort Alphabetically");
+        const sortDateBtn = createElement("button", "button", "Sort by Date");
+        sortControls.appendChild(sortAlphaBtn);
+        sortControls.appendChild(sortDateBtn);
+        modalContent.appendChild(sortControls);
+
         const snippetContainer = createElement("div", null);
         modalContent.appendChild(snippetContainer);
 
-        const renderSnippets = (category) => {
+        const renderSnippets = (category, sortFn = null) => {
             snippetContainer.innerHTML = "";
-            snippetCategories[category].forEach((snippet) => {
+            let snippets = snippetCategories[category];
+            if (sortFn) snippets = [...snippets].sort(sortFn);
+
+            snippets.forEach((snippet) => {
                 const snippetDiv = createElement("div", "snippet");
                 const title = createElement("div", "snippet-title", snippet.title);
                 const content = createElement("p", null, snippet.content);
@@ -363,7 +390,17 @@
             renderSnippets(e.target.value);
         });
 
-        renderSnippets(Object.keys(snippetCategories)[0]); // Default to first category
+        sortAlphaBtn.addEventListener("click", () => {
+            const category = dropdown.value;
+            renderSnippets(category, (a, b) => a.title.localeCompare(b.title));
+        });
+
+        sortDateBtn.addEventListener("click", () => {
+            const category = dropdown.value;
+            renderSnippets(category, (a, b) => new Date(b.date) - new Date(a.date));
+        });
+
+        renderSnippets("All"); // Default to "All" category
         modal.appendChild(modalContent);
         document.body.appendChild(modal);
     }
