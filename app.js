@@ -62,163 +62,54 @@
     // Inject Styles
     (function injectStyles() {
         const styles = `
-            body {
-                margin: 0;
-                font-family: Arial, sans-serif;
-                background: #f8f9fa;
-                color: #333;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 20px;
-            }
-            .container {
-                width: 90%;
-                max-width: 1200px;
-                background: #fff;
-                border-radius: 8px;
-                padding: 20px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                margin-bottom: 20px;
-            }
-            h1, h2, h3 {
-                color: #333;
-                margin-bottom: 10px;
-            }
-            .button {
-                background-color: #555;
-                color: white;
-                padding: 10px 15px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 14px;
-                margin-right: 10px;
-            }
-            .button:hover {
-                background-color: #333;
-            }
-            .rich-text {
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                margin-bottom: 15px;
-                min-height: 100px;
-                background: #f9f9f9;
-            }
-            .drop-area {
-                border: 2px dashed #bbb;
-                border-radius: 8px;
-                padding: 20px;
-                text-align: center;
-                color: #777;
-                margin-bottom: 15px;
-            }
-            .drop-area.dragover {
-                background-color: #eee;
-            }
-            .photo-preview {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            .photo-preview img {
-                width: 100px;
-                height: 100px;
-                object-fit: cover;
-                border-radius: 5px;
-                border: 1px solid #ccc;
-            }
-            .section {
-                margin-bottom: 20px;
-                border-bottom: 1px solid #ddd;
-                padding-bottom: 10px;
-            }
-            /* Modal Styles */
-            .modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                visibility: hidden;
-                opacity: 0;
-                transition: visibility 0s, opacity 0.3s;
-            }
-            .modal.show {
-                visibility: visible;
-                opacity: 1;
-            }
-            .modal-content {
-                background: #fff;
-                border-radius: 8px;
-                padding: 20px;
-                width: 90%;
-                max-width: 700px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                position: relative;
-            }
-            .modal-close {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                background: #ccc;
-                border: none;
-                border-radius: 50%;
-                width: 30px;
-                height: 30px;
-                font-size: 16px;
-                cursor: pointer;
-            }
-            .category-dropdown {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                margin-bottom: 15px;
-                font-size: 16px;
-                background: #f9f9f9;
-            }
-            .sort-controls {
-                display: flex;
-                gap: 10px;
-                margin-bottom: 15px;
-            }
-            .snippet {
-                margin-bottom: 10px;
-                padding: 10px;
-                background: #f9f9f9;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-            }
-            .snippet-title {
-                font-weight: bold;
-                margin-bottom: 5px;
-            }
-            /* Report Styles */
-            .report-title {
-                font-size: 24px;
-                font-weight: bold;
-                margin-bottom: 10px;
-                text-align: center;
-            }
-            .report-section {
-                margin-bottom: 20px;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                background: #f9f9f9;
-            }
-        `;
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        min-height: 100vh;
+        background: #f8f9fa;
+    }
+    .app-bar {
+        width: 250px;
+        background: #333;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+    .app-bar h2 {
+        margin-bottom: 20px;
+        font-size: 20px;
+        text-align: center;
+    }
+    .nav-item {
+        padding: 10px;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .nav-item:hover {
+        background: #555;
+    }
+    .nav-item.active {
+        background: #555;
+    }
+    .content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+    }
+`;
+
         const styleEl = document.createElement("style");
         styleEl.innerHTML = styles;
         document.head.appendChild(styleEl);
     })();
 
+    
     // Create DOM Elements
     function createElement(tag, className, textContent) {
         const el = document.createElement(tag);
@@ -227,25 +118,42 @@
         return el;
     }
 
-    // Initialize Dashboard
+    let currentScreen = "snippetManager"; // Default screen
+
     function initDashboard() {
-        const container = createElement("div", "container");
-        document.body.innerHTML = "";
-        document.body.appendChild(container);
+    document.body.innerHTML = ""; // Clear existing content
 
-        const header = createElement("h1", null, "Professional Report Dashboard");
-        container.appendChild(header);
+    const appBar = createElement("div", "app-bar");
+    const content = createElement("div", "content");
 
-        const addSectionBtn = createElement("button", "button", "Add Section");
-        addSectionBtn.addEventListener("click", () => addSection());
-        container.appendChild(addSectionBtn);
+    const appTitle = createElement("h2", null, "Dashboard");
+    appBar.appendChild(appTitle);
 
-        const generateReportBtn = createElement("button", "button", "Generate Report");
-        generateReportBtn.addEventListener("click", generateReport);
-        container.appendChild(generateReportBtn);
+    const navItems = [
+        { id: "snippetManager", label: "Snippet Manager" },
+        { id: "reportGenerator", label: "Report Generator" }
+    ];
 
-        renderSections(container);
+    navItems.forEach((item) => {
+        const navItem = createElement("div", "nav-item", item.label);
+        if (item.id === currentScreen) navItem.classList.add("active");
+        navItem.addEventListener("click", () => {
+            currentScreen = item.id;
+            initDashboard(); // Reinitialize dashboard when switching screens
+        });
+        appBar.appendChild(navItem);
+    });
+
+    document.body.appendChild(appBar);
+    document.body.appendChild(content);
+
+    if (currentScreen === "snippetManager") {
+        initSnippetManager(content); // Render Snippet Manager screen
+    } else if (currentScreen === "reportGenerator") {
+        initReportGenerator(content); // Render Report Generator screen
     }
+}
+
 
     // Render Sections
     function renderSections(container) {
