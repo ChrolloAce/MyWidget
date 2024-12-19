@@ -1663,6 +1663,9 @@ function collectUserInfo(container) {
     const emailInput = createInputField('Email', 'email');
     form.appendChild(emailInput);
 
+    const addressInput = createInputField('Address', 'text');
+    form.appendChild(addressInput);
+
     const zipCodeInput = createInputField('Zip Code', 'text');
     form.appendChild(zipCodeInput);
 
@@ -1675,6 +1678,7 @@ function collectUserInfo(container) {
             name: nameInput.querySelector('input').value.trim(),
             phone: phoneInput.querySelector('input').value.trim(),
             email: emailInput.querySelector('input').value.trim(),
+            address: addressInput.querySelector('input').value.trim(),
             zipCode: zipCodeInput.querySelector('input').value.trim()
         };
 
@@ -1692,13 +1696,18 @@ function collectUserInfo(container) {
             return;
         }
 
+        if (!userInfo.address) {
+            alert('Please enter your address.');
+            return;
+        }
+
         if (!zipCodeRegex.test(userInfo.zipCode)) {
             alert('Please enter a valid 5-digit zip code.');
             return;
         }
 
         calculateTotalCost();
-        
+
         // Prepare items list with codes
         const itemsList = items.map(item => {
             const shape = getShapeByName(item.shape);
@@ -1717,33 +1726,53 @@ function collectUserInfo(container) {
                 : total;
         }, 0);
 
-      const payload = {
-    userInfo,
-    totalCost,  // Use totalCost here instead of totalPrice
-    totalSquareFootage: Math.ceil(totalSquareFootage),
-    items: itemsList
-};
+        const payload = {
+            userInfo,
+            totalCost,  // Use totalCost here instead of totalPrice
+            totalSquareFootage: Math.ceil(totalSquareFootage),
+            items: itemsList
+        };
 
+       fetch(window.WEBHOOK_URL, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        userInfo: {
+            name: userInfo.name,
+            phone: userInfo.phone,
+            email: userInfo.email,
+            address: userInfo.address,
+            zipCode: userInfo.zipCode
+        },
+        totalCost: totalCost, // The total price of the quote
+        totalSquareFootage: Math.ceil(totalSquareFootage), // The total area in square feet, rounded up
+        items: items.map(item => {
+            const shape = getShapeByName(item.shape);
+            return {
+                shapeName: item.shape,
+                shapeCode: shape.code, // Add the unique code for the shape
+                measurements: item.measurements,
+                backsplash: item.backsplash, // Include backsplash dimensions, if any
+                area: shape.formula(item.measurements).toFixed(2) // Calculate and include area for each item
+            };
+        })
+    })
+})
+.then(response => {
+    if (response.ok) {
+        finalizeInvoice(container); // Proceed to the final invoice screen
+    } else {
+        alert('Failed to submit the quote. Please try again.');
+    }
+})
+.catch(error => {
+    console.error('Error sending data to webhook:', error);
+});
 
-        fetch(window.WEBHOOK_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        })
-        .then(response => {
-            if (response.ok) {
-                finalizeInvoice(container);
-            } else {
-                alert('Failed to submit the quote. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error sending data to webhook:', error);
-        });
-    });
 }
+
 
 
 
