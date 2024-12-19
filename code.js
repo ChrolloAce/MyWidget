@@ -1666,6 +1666,12 @@ function collectUserInfo(container) {
     const zipCodeInput = createInputField('Zip Code', 'text');
     form.appendChild(zipCodeInput);
 
+    const addressInput = createInputField('Address', 'text');
+    form.appendChild(addressInput);
+
+    const cityInput = createInputField('City', 'text');
+    form.appendChild(cityInput);
+
     // Submit Button
     const submitBtn = createElement('button', 'button', 'Submit');
     form.appendChild(submitBtn);
@@ -1675,7 +1681,9 @@ function collectUserInfo(container) {
             name: nameInput.querySelector('input').value.trim(),
             phone: phoneInput.querySelector('input').value.trim(),
             email: emailInput.querySelector('input').value.trim(),
-            zipCode: zipCodeInput.querySelector('input').value.trim()
+            zipCode: zipCodeInput.querySelector('input').value.trim(),
+            address: addressInput.querySelector('input').value.trim(),
+            city: cityInput.querySelector('input').value.trim()
         };
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -1694,6 +1702,11 @@ function collectUserInfo(container) {
 
         if (!zipCodeRegex.test(userInfo.zipCode)) {
             alert('Please enter a valid 5-digit zip code.');
+            return;
+        }
+
+        if (!userInfo.address || !userInfo.city) {
+            alert('Please enter your address and city.');
             return;
         }
 
@@ -1717,13 +1730,12 @@ function collectUserInfo(container) {
                 : total;
         }, 0);
 
-      const payload = {
-    userInfo,
-    totalCost,  // Use totalCost here instead of totalPrice
-    totalSquareFootage: Math.ceil(totalSquareFootage),
-    items: itemsList
-};
-
+        const payload = {
+            userInfo,
+            totalCost,  // Use totalCost here instead of totalPrice
+            totalSquareFootage: Math.ceil(totalSquareFootage),
+            items: itemsList
+        };
 
         fetch(window.WEBHOOK_URL, {
             method: 'POST',
